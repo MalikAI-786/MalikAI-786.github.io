@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Mīzān — a daily self-audit of Khudī</title>
+<meta name="description" content="A private daily instrument: Quranic measures, Iqbal's Khudi ladder, attention and intoxicant ledgers. All data stays in this browser." />
+<style>
+/* ===================================================================
+   MĪZĀN — the Balance
+   A self-audit instrument for Khudi.
+   Identity inherits the calibration-instrument motif of the main site:
+   hairline rules, mono labels, measurement against a reference line.
+   The Quranic register adds a second voice: serif, gold, unhurried.
+   =================================================================== */
+
+:root{
+  color-scheme: dark light;
+  --ground:#0b1015; --surface:#121a21; --raise:#18222c; --sunk:#0d141a;
+  --ink:#e6ecf1; --muted:#93a1ae; --faint:#65727f; --line:#1f2c39; --line2:#2b3a49;
+  --accent:#45aab4; --accent2:#63c2cb; --accent-wash:rgba(69,170,180,.11);
+  --gold:#d9a441; --gold-wash:rgba(217,164,65,.10);
+  --signal:#e0a244; --bad:#d4664f; --good:#4fa87a;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 18px 44px -26px rgba(0,0,0,.9);
+  --display:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --read:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --mono:ui-monospace,"SF Mono",Menlo,"Cascadia Mono","Roboto Mono",monospace;
+  --arabic:"SBL BibLit","Scheherazade New",Amiri,"Noto Naskh Arabic","Traditional Arabic","Geeza Pro","Al Bayan",serif;
+  --maxw:1140px;
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --ground:#f2f0ea; --surface:#fffefb; --raise:#eae7de; --sunk:#e6e2d8;
+  --ink:#161d22; --muted:#57626d; --faint:#818c97; --line:#dcd7cb; --line2:#c9c3b4;
+  --accent:#0b5d66; --accent2:#094a52; --accent-wash:rgba(11,93,102,.08);
+  --gold:#8a6316; --gold-wash:rgba(138,99,22,.09);
+  --signal:#a15c00; --bad:#a63a22; --good:#2f7550;
+  --shadow:0 1px 2px rgba(20,25,30,.05), 0 16px 38px -24px rgba(20,25,30,.4);
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} }
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--display);
+  line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+h1,h2,h3,h4{letter-spacing:-.02em;margin:0;text-wrap:balance;}
+a{color:var(--accent2);text-underline-offset:3px;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
+button{font-family:inherit;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+
+/* ---------- typographic utilities ---------- */
+.eyebrow{font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 14px;display:flex;align-items:center;gap:10px;}
+.eyebrow::before{content:"";width:16px;height:0;border-top:1.5px solid var(--accent);}
+.eyebrow.gold{color:var(--gold);} .eyebrow.gold::before{border-color:var(--gold);}
+.mono{font-family:var(--mono);}
+.tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--faint);}
+.lede{font-family:var(--read);font-size:1.02rem;line-height:1.66;color:var(--muted);max-width:66ch;}
+.lede strong{color:var(--ink);font-weight:600;}
+.small{font-size:.82rem;color:var(--muted);line-height:1.6;}
+.tiny{font-size:.73rem;color:var(--faint);line-height:1.55;}
+.hr{height:0;border-top:1px solid var(--line);margin:34px 0;}
+
+/* ---------- nav ---------- */
+nav.top{position:sticky;top:0;z-index:80;border-bottom:1px solid var(--line);
+  background:color-mix(in srgb, var(--ground) 90%, transparent);backdrop-filter:saturate(150%) blur(10px);}
+.nav-inner{display:flex;align-items:center;gap:16px;height:56px;max-width:var(--maxw);
+  margin:0 auto;padding:0 24px;}
+.brand{font-weight:700;font-size:.95rem;text-decoration:none;color:var(--ink);white-space:nowrap;}
+.brand em{font-style:normal;color:var(--accent);}
+.nav-links{display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none;flex:1;}
+.nav-links::-webkit-scrollbar{display:none;}
+.nav-links a{font-family:var(--mono);font-size:.67rem;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;padding:7px 9px;border-radius:3px;white-space:nowrap;}
+.nav-links a:hover{color:var(--ink);background:var(--raise);}
+.nav-links a.on{color:var(--accent);}
+.icon-btn{border:1px solid var(--line2);background:var(--surface);color:var(--muted);
+  font-family:var(--mono);font-size:.66rem;padding:6px 10px;border-radius:3px;cursor:pointer;}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ---------- section ---------- */
+section{padding:56px 0;border-top:1px solid var(--line);}
+section:first-of-type{border-top:none;}
+.sec-head{margin-bottom:26px;}
+.sec-head h2{font-size:clamp(1.4rem,2.6vw,1.9rem);margin-bottom:8px;}
+.sec-head .sub{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);}
+
+/* ---------- cards ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:20px;
+  box-shadow:var(--shadow);}
+.card.flat{box-shadow:none;background:var(--sunk);}
+.grid{display:grid;gap:16px;}
+.g2{grid-template-columns:repeat(2,1fr);}
+.g3{grid-template-columns:repeat(3,1fr);}
+.g4{grid-template-columns:repeat(4,1fr);}
+.g-2-1{grid-template-columns:2fr 1fr;}
+.g-1-2{grid-template-columns:1fr 2fr;}
+@media (max-width:900px){ .g2,.g3,.g4,.g-2-1,.g-1-2{grid-template-columns:1fr;} }
+
+/* ---------- ayah block ---------- */
+.ayah{border-left:2px solid var(--gold);background:var(--gold-wash);padding:14px 18px;
+  border-radius:0 3px 3px 0;margin:0 0 14px;}
+.ayah .ar{font-family:var(--arabic);font-size:1.5rem;line-height:2.15;direction:rtl;text-align:right;
+  color:var(--ink);margin-bottom:6px;font-weight:400;}
+.ayah .tr{font-family:var(--read);font-size:.97rem;line-height:1.6;color:var(--ink);}
+.ayah .ref{font-family:var(--mono);font-size:.65rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--gold);margin-top:8px;}
+.iq{border-left:2px solid var(--accent);background:var(--accent-wash);padding:14px 18px;
+  border-radius:0 3px 3px 0;margin:0 0 14px;}
+.iq .ur{font-family:var(--arabic);font-size:1.24rem;line-height:2;direction:rtl;text-align:right;color:var(--ink);}
+.iq .rom{font-family:var(--read);font-style:italic;font-size:.9rem;color:var(--muted);margin-top:4px;}
+.iq .tr{font-family:var(--read);font-size:.95rem;line-height:1.58;color:var(--ink);margin-top:6px;}
+.iq .ref{font-family:var(--mono);font-size:.65rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--accent);margin-top:8px;}
+
+/* ---------- hero ---------- */
+header.hero{padding:64px 0 8px;}
+.hero h1{font-size:clamp(2.2rem,5.4vw,3.5rem);line-height:1.04;margin-bottom:18px;font-weight:700;max-width:16ch;}
+.hero h1 .g{color:var(--gold);}
+.hero-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:44px;align-items:start;}
+@media (max-width:900px){ .hero-grid{grid-template-columns:1fr;gap:28px;} }
+
+/* ---------- dial / index ---------- */
+.dial{display:flex;align-items:center;gap:18px;}
+.dial svg{flex:0 0 auto;}
+.dial .num{font-family:var(--mono);font-size:2.6rem;font-weight:600;letter-spacing:-.03em;line-height:1;}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:4px;overflow:hidden;}
+.stat{background:var(--surface);padding:13px 14px;}
+.stat .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);}
+.stat .v{font-family:var(--mono);font-size:1.32rem;font-weight:600;margin-top:3px;letter-spacing:-.02em;}
+.stat .v small{font-size:.7rem;color:var(--faint);font-weight:400;letter-spacing:0;}
+
+/* ---------- measure rows ---------- */
+.measure{border-top:1px solid var(--line);padding:15px 0;display:grid;
+  grid-template-columns:1fr auto;gap:14px;align-items:start;}
+.measure:first-child{border-top:none;}
+.measure .name{font-weight:600;font-size:.98rem;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;}
+.measure .name .ar{font-family:var(--arabic);font-size:1.12rem;color:var(--gold);font-weight:400;}
+.measure .why{font-size:.83rem;color:var(--muted);margin-top:4px;max-width:62ch;}
+.measure .why b{color:var(--ink);font-weight:600;}
+.measure .cite{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--gold);
+  text-transform:uppercase;margin-top:6px;}
+.seg{display:flex;gap:0;border:1px solid var(--line2);border-radius:3px;overflow:hidden;flex:0 0 auto;}
+.seg button{border:0;border-left:1px solid var(--line2);background:var(--sunk);color:var(--muted);
+  font-family:var(--mono);font-size:.75rem;padding:7px 12px;cursor:pointer;transition:background .15s,color .15s;}
+.seg button:first-child{border-left:0;}
+.seg button:hover{background:var(--raise);color:var(--ink);}
+.seg button.on{background:var(--accent);color:var(--ground);font-weight:600;}
+.seg button.on.s0{background:var(--bad);}
+.seg button.on.s1{background:var(--signal);}
+.seg.sm button{padding:5px 9px;font-size:.7rem;}
+
+.rubric{font-family:var(--mono);font-size:.66rem;color:var(--faint);margin-top:7px;line-height:1.7;}
+.rubric b{color:var(--muted);font-weight:600;}
+
+/* ---------- inputs ---------- */
+input[type=text],input[type=number],input[type=date],select,textarea{
+  font-family:var(--display);font-size:.9rem;background:var(--sunk);color:var(--ink);
+  border:1px solid var(--line2);border-radius:3px;padding:9px 11px;width:100%;}
+textarea{resize:vertical;min-height:62px;line-height:1.55;}
+label.fl{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--faint);display:block;margin:0 0 6px;}
+.field{margin-bottom:14px;}
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.72rem;
+  letter-spacing:.04em;text-decoration:none;padding:10px 15px;border-radius:3px;cursor:pointer;
+  border:1px solid var(--line2);background:transparent;color:var(--ink);transition:.15s;}
+.btn:hover{border-color:var(--accent);color:var(--accent);}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--ground);font-weight:600;}
+.btn.primary:hover{filter:brightness(1.08);color:var(--ground);}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--ground);font-weight:600;}
+.btn.gold:hover{filter:brightness(1.08);color:var(--ground);}
+.btn.danger:hover{border-color:var(--bad);color:var(--bad);}
+.btn-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center;}
+.chk{display:flex;align-items:flex-start;gap:9px;padding:8px 0;cursor:pointer;font-size:.88rem;}
+.chk input{margin-top:3px;flex:0 0 auto;accent-color:var(--accent);width:15px;height:15px;}
+
+/* ---------- prayer spine ---------- */
+.spine{position:relative;border:1px solid var(--line);border-radius:4px;
+  background:var(--sunk);overflow:hidden;}
+.spine svg{display:block;width:100%;height:auto;}
+.prayer-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-top:14px;}
+.pcell{background:var(--surface);padding:11px 10px;text-align:center;}
+.pcell .pn{font-family:var(--mono);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);}
+.pcell .pt{font-family:var(--mono);font-size:1.02rem;font-weight:600;margin:3px 0 7px;letter-spacing:-.01em;}
+.pcell .seg{justify-content:center;}
+.pcell.now{background:var(--accent-wash);box-shadow:inset 0 -2px 0 var(--accent);}
+
+/* ---------- ladder ---------- */
+.rung{border:1px solid var(--line);border-radius:4px;padding:18px;background:var(--surface);
+  position:relative;overflow:hidden;}
+.rung.active{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold), var(--shadow);}
+.rung.done{border-color:var(--accent);}
+.rung .stg{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);}
+.rung h3{font-size:1.12rem;margin:6px 0 2px;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;}
+.rung h3 .ar{font-family:var(--arabic);font-size:1.3rem;color:var(--gold);font-weight:400;}
+.rung .gate{font-family:var(--mono);font-size:.67rem;color:var(--muted);line-height:1.85;margin-top:11px;
+  border-top:1px solid var(--line);padding-top:10px;}
+.gate-line{display:flex;justify-content:space-between;gap:10px;}
+.gate-line .ok{color:var(--good);} .gate-line .no{color:var(--bad);}
+.badge{position:absolute;top:0;right:0;font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;
+  text-transform:uppercase;padding:4px 10px;background:var(--gold);color:var(--ground);font-weight:700;}
+
+/* ---------- charts ---------- */
+.chartbox{background:var(--sunk);border:1px solid var(--line);border-radius:4px;padding:16px;}
+.chartbox h4{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:12px;font-weight:500;}
+svg.chart{display:block;width:100%;height:auto;overflow:visible;}
+.heat{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;}
+.heat i{aspect-ratio:1;border-radius:2px;background:var(--raise);display:block;position:relative;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--mono);font-size:.62rem;color:var(--faint);margin-top:10px;}
+.legend span{display:flex;align-items:center;gap:5px;}
+.legend i{width:9px;height:9px;border-radius:2px;display:inline-block;}
+
+/* ---------- tables ---------- */
+table.t{width:100%;border-collapse:collapse;font-size:.85rem;}
+table.t th{font-family:var(--mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--faint);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line2);font-weight:500;}
+table.t td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+table.t tr:last-child td{border-bottom:none;}
+table.t td.n{font-family:var(--mono);}
+
+/* ---------- pills / notices ---------- */
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.62rem;
+  letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:20px;
+  border:1px solid var(--line2);color:var(--muted);}
+.pill.good{border-color:var(--good);color:var(--good);}
+.pill.bad{border-color:var(--bad);color:var(--bad);}
+.pill.warn{border-color:var(--signal);color:var(--signal);}
+.notice{border:1px solid var(--line2);border-left:3px solid var(--signal);background:var(--sunk);
+  padding:13px 16px;border-radius:0 3px 3px 0;font-size:.85rem;color:var(--muted);line-height:1.62;}
+.notice b{color:var(--ink);}
+.notice.gold{border-left-color:var(--gold);}
+.notice.teal{border-left-color:var(--accent);}
+
+/* ---------- timer ---------- */
+.timer{font-family:var(--mono);font-size:3.1rem;font-weight:600;letter-spacing:-.03em;line-height:1;}
+.timer.run{color:var(--accent);}
+.timer.done{color:var(--good);}
+
+/* ---------- path phases ---------- */
+.phase{border:1px solid var(--line);border-radius:4px;padding:17px;background:var(--surface);position:relative;}
+.phase.cur{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold);}
+.phase .d{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+.phase h4{font-size:1.02rem;margin:5px 0 8px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;}
+.phase h4 .ar{font-family:var(--arabic);font-size:1.16rem;color:var(--gold);font-weight:400;}
+.phase ul{margin:9px 0 0;padding-left:17px;font-size:.84rem;color:var(--muted);line-height:1.68;}
+.phase ul li::marker{color:var(--accent);}
+
+/* ---------- misc ---------- */
+.stack>*+*{margin-top:14px;}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+.hide{display:none !important;}
+footer{border-top:1px solid var(--line);padding:34px 0 60px;}
+.kv{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:.74rem;
+  padding:6px 0;border-bottom:1px dotted var(--line);}
+.kv:last-child{border-bottom:none;}
+.kv .k{color:var(--faint);} .kv .v{color:var(--ink);}
+@media print{ nav.top,.btn,.seg{display:none !important;} body{background:#fff;color:#000;} }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="#top">Mīzān<em>.</em></a>
+    <div class="nav-links" id="navLinks">
+      <a href="#today">Today</a>
+      <a href="#measures">Measures</a>
+      <a href="#ladder">Khudī</a>
+      <a href="#attention">Attention</a>
+      <a href="#ledger">Ledger</a>
+      <a href="#trend">Trend</a>
+      <a href="#path">The Path</a>
+      <a href="#settings">Settings</a>
+    </div>
+    <button class="icon-btn" id="themeBtn" title="Toggle theme">◐</button>
+  </div>
+</nav>
+
+<div class="wrap" id="top">
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-grid">
+    <div>
+      <p class="eyebrow gold">Ḥāsibū anfusakum qabla an tuḥāsabū</p>
+      <h1>Audit the <span class="g">self</span> before the self is audited.</h1>
+      <p class="lede">You spend your working life measuring whether a control that exists on paper actually holds under load. This is the same instrument, turned inward. Seven <strong>Quranic measures</strong>, scored daily on a defined rubric. A <strong>Khudī ladder</strong> after Iqbal, where your stage is a computed rating you can lose — not a badge you keep. Two ledgers for the two things that quietly set your ceiling: <strong>attention</strong> and <strong>intoxicant</strong>.</p>
+      <div class="btn-row" style="margin-top:22px">
+        <a class="btn primary" href="#today">Open today's sheet</a>
+        <a class="btn" href="#path">The 40-day path</a>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="ayah">
+        <div class="ar">وَلْتَنظُرْ نَفْسٌ مَّا قَدَّمَتْ لِغَدٍ</div>
+        <div class="tr">"And let every soul look to what it has put forward for tomorrow."</div>
+        <div class="ref">Al-Ḥashr 59:18</div>
+      </div>
+      <div class="notice teal">
+        <b>Private by construction.</b> Every entry lives in this browser's localStorage. Nothing is sent anywhere — there is no server, no account, no analytics, no network call in this file. Clear your browser data and it is gone, so export a backup from Settings.
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= TODAY ================= -->
+<section id="today">
+  <div class="sec-head spread">
+    <div>
+      <p class="eyebrow">The instrument</p>
+      <h2 id="todayTitle">Today's sheet</h2>
+      <div class="sub" id="todayMeta">—</div>
+    </div>
+    <div class="row">
+      <button class="btn" id="prevDay">← prev</button>
+      <input type="date" id="dayPicker" style="width:160px" />
+      <button class="btn" id="nextDay">next →</button>
+    </div>
+  </div>
+
+  <div class="grid g-2-1" style="margin-bottom:18px">
+    <div class="card">
+      <div class="spread" style="margin-bottom:14px">
+        <div class="dial">
+          <svg width="86" height="86" viewBox="0 0 86 86" id="dialSvg" aria-hidden="true"></svg>
+          <div>
+            <div class="num" id="idxNum">—</div>
+            <div class="tag">Khudī index · today</div>
+            <div class="tiny" id="idxDelta" style="margin-top:4px"></div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="tag">Computed stage</div>
+          <div style="font-size:1.16rem;font-weight:600;margin-top:3px" id="stageNow">—</div>
+          <div class="tiny" id="stageNote"></div>
+        </div>
+      </div>
+      <div class="stat-row" id="facultyRow"></div>
+      <div class="tiny" style="margin-top:10px">Faculties after Iqbal's line <em>yaqīn-e-muḥkam, ʿamal-e-paiham, moḥabbat</em> — firm conviction, ceaseless action, love. Weighting shown under Measures.</div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Calibration</p>
+      <div class="field">
+        <label class="fl" for="fcInput">Morning forecast — where will today land? (0–100)</label>
+        <input type="number" id="fcInput" min="0" max="100" step="1" placeholder="e.g. 72" />
+      </div>
+      <div class="tiny">Set it before noon, never after. The gap between your forecast and the close is the only honest read on whether you know yourself — the same diagnostic you run on a model. Bias and MAE accumulate under <a href="#trend">Trend</a>.</div>
+      <div class="hr" style="margin:16px 0"></div>
+      <div class="kv"><span class="k">Forecast</span><span class="v" id="kvFc">—</span></div>
+      <div class="kv"><span class="k">Actual</span><span class="v" id="kvAc">—</span></div>
+      <div class="kv"><span class="k">Error</span><span class="v" id="kvEr">—</span></div>
+    </div>
+  </div>
+
+  <!-- prayer spine -->
+  <div class="card" style="margin-bottom:18px">
+    <div class="spread" style="margin-bottom:12px">
+      <div>
+        <p class="eyebrow gold" style="margin-bottom:6px">The spine of the day</p>
+        <div class="tiny">Prayer times computed locally from solar position for your coordinates — no network. Verify against your masjid; treat ±2 min as noise. Bars below the line are logged events, placed at the hour they happened.</div>
+      </div>
+      <div class="tag" id="spineMeta">—</div>
+    </div>
+    <div class="spine"><svg class="chart" id="spineSvg" viewBox="0 0 1000 96"></svg></div>
+    <div class="prayer-grid" id="prayerGrid"></div>
+    <div class="legend">
+      <span><i style="background:var(--accent)"></i> prayer window</span>
+      <span><i style="background:var(--gold)"></i> ʿamal sprint</span>
+      <span><i style="background:var(--bad)"></i> intoxicant session</span>
+      <span><i style="background:var(--muted)"></i> now</span>
+    </div>
+    <div id="collisionWarn" style="margin-top:12px"></div>
+  </div>
+
+  <!-- the seven measures -->
+  <div class="grid g-2-1">
+    <div class="card">
+      <p class="eyebrow">The seven measures</p>
+      <div id="measureList"></div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <p class="eyebrow">One thing</p>
+        <div class="field">
+          <label class="fl" for="oneThing">The single task that makes today count</label>
+          <input type="text" id="oneThing" placeholder="e.g. Ch.3 methods section — 900 words" />
+        </div>
+        <label class="chk"><input type="checkbox" id="oneThingDone" /><span>It moved today.</span></label>
+        <div class="tiny">A list of twelve is a list of zero. One target, named the night before, is the single highest-yield accommodation for an attention-regulation problem — it removes the decision, which is the part that costs you.</div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Nightly close · muḥāsaba</p>
+        <div class="field"><label class="fl" for="mShukr">One thing to be grateful for</label><textarea id="mShukr" placeholder="Specific. Not 'my family.'"></textarea></div>
+        <div class="field"><label class="fl" for="mKhata">One error, named without excuse</label><textarea id="mKhata" placeholder="What you did, not what happened to you."></textarea></div>
+        <div class="field"><label class="fl" for="mKal">One correction for tomorrow</label><textarea id="mKal" placeholder="A single, specific, small change."></textarea></div>
+        <div class="btn-row">
+          <button class="btn gold" id="closeDay">Close the day</button>
+          <span class="pill" id="closedPill">open</span>
+        </div>
+        <div class="tiny" style="margin-top:10px">An unclosed day is an <b>unaudited</b> day — it shows as an exception in the trend, not as a zero. Missing evidence and bad evidence are different findings.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MEASURES (reference) ================= -->
+<section id="measures">
+  <div class="sec-head">
+    <p class="eyebrow gold">The reference line</p>
+    <h2>What is being measured, and on whose authority</h2>
+    <p class="lede" style="margin-top:10px">Seven measures, each anchored to a verse and each carrying a fixed weight. Scoring is 0–3 against a written rubric, because a scale without definitions is a mood ring. References are given by <em>sūrah:āyah</em> so you can verify every one against a muṣḥaf — renderings below are working translations, not a substitute for the Arabic.</p>
+  </div>
+
+  <div class="ayah" style="margin-bottom:22px">
+    <div class="ar">وَٱلسَّمَآءَ رَفَعَهَا وَوَضَعَ ٱلْمِيزَانَ <span style="color:var(--gold);font-family:var(--display);font-size:.55em;vertical-align:.4em">&#9670;</span> أَلَّا تَطْغَوْا۟ فِى ٱلْمِيزَانِ <span style="color:var(--gold);font-family:var(--display);font-size:.55em;vertical-align:.4em">&#9670;</span> وَأَقِيمُوا۟ ٱلْوَزْنَ بِٱلْقِسْطِ وَلَا تُخْسِرُوا۟ ٱلْمِيزَانَ</div>
+    <div class="tr">"And the heaven He raised, and He set the balance — that you not transgress within the balance. So establish weight in justice, and do not fall short in the balance."</div>
+    <div class="ref">Ar-Raḥmān 55:7–9 · the instrument is named in the Book before it is named here</div>
+  </div>
+
+  <div id="measureRef" class="grid g2"></div>
+
+  <div class="hr"></div>
+  <div class="grid g2">
+    <div class="card flat">
+      <p class="eyebrow">Weighting</p>
+      <div id="weightTable"></div>
+      <div class="tiny" style="margin-top:10px">Weights are a judgment, and judgments should be declared rather than smuggled in. Ṣalāh carries the most because it is the only measure with a fixed external clock — everything else can be rationalised, that one cannot. Change them in Settings if you disagree; the change is logged against the day it takes effect.</div>
+    </div>
+    <div class="card flat">
+      <p class="eyebrow">Three faculties</p>
+      <div class="stack">
+        <div><b>Yaqīn</b> <span class="tag">· conviction · ṣalāh + dhikr</span><div class="small">The measures with a fixed form. Iqbal's point is that form precedes feeling: the discipline installs the certainty, not the reverse.</div></div>
+        <div><b>ʿAmal</b> <span class="tag">· action · work + attention + body</span><div class="small">Khudī is proved in output. <em>"And that there is nothing for man except what he strives for"</em> — 53:39.</div></div>
+        <div><b>ʿIshq</b> <span class="tag">· love · iḥsān + restraint</span><div class="small">Restraint sits under love deliberately. In Iqbal, <em>zabt</em> is not repression; it is what love pays. Restraint without love produces a brittle self that snaps.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LADDER ================= -->
+<section id="ladder">
+  <div class="sec-head">
+    <p class="eyebrow">Maturity model</p>
+    <h2>The Khudī ladder</h2>
+    <p class="lede" style="margin-top:10px">In <em>Asrār-i-Khudī</em> (1915) Iqbal sets out three stages in the education of the self: obedience to the law, then self-control, then vicegerency — the self strong enough to be entrusted with the world. It maps almost exactly onto the Qur'an's three namings of the <em>nafs</em>. It also maps onto something you already know how to read: a control maturity rating, computed on evidence, revisable downward.</p>
+  </div>
+
+  <div class="grid g4" id="ladderGrid" style="margin-bottom:20px"></div>
+
+  <div class="grid g2">
+    <div class="card">
+      <p class="eyebrow gold">The Qur'an's three selves</p>
+      <div class="ayah">
+        <div class="ar">إِنَّ ٱلنَّفْسَ لَأَمَّارَةٌۢ بِٱلسُّوٓءِ إِلَّا مَا رَحِمَ رَبِّىٓ</div>
+        <div class="tr">"Indeed the self is a persistent enjoiner of evil, except those on which my Lord has mercy."</div>
+        <div class="ref">Yūsuf 12:53 · an-nafs al-ammārah — the self that commands</div>
+      </div>
+      <div class="ayah">
+        <div class="ar">وَلَآ أُقْسِمُ بِٱلنَّفْسِ ٱللَّوَّامَةِ</div>
+        <div class="tr">"And I swear by the self-reproaching soul."</div>
+        <div class="ref">Al-Qiyāmah 75:2 · an-nafs al-lawwāmah — the self that argues back</div>
+      </div>
+      <div class="ayah" style="margin-bottom:0">
+        <div class="ar">يَـٰٓأَيَّتُهَا ٱلنَّفْسُ ٱلْمُطْمَئِنَّةُ ٱرْجِعِىٓ إِلَىٰ رَبِّكِ رَاضِيَةً مَّرْضِيَّةً</div>
+        <div class="tr">"O soul at peace, return to your Lord, well-pleased and well-pleasing."</div>
+        <div class="ref">Al-Fajr 89:27–28 · an-nafs al-muṭma'innah — the settled self</div>
+      </div>
+      <div class="tiny" style="margin-top:12px">Note the middle stage. The self-reproaching soul is <em>sworn by</em> — the internal argument is not a symptom of failure, it is the sound of the second stage working. Most people quit there because they mistake the noise for regression.</div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Iqbal, in his own register</p>
+      <div class="iq">
+        <div class="ur">خودی کو کر بلند اتنا کہ ہر تقدیر سے پہلے<br/>خدا بندے سے خود پوچھے، بتا تیری رضا کیا ہے</div>
+        <div class="rom">Khudī ko kar buland itnā ke har taqdīr se pahle / Khudā bande se khud pūchhe, batā terī razā kyā hai</div>
+        <div class="tr">"Raise the self so high that, before each decree, God Himself asks the servant: tell Me, what is it that you want."</div>
+        <div class="ref">Bāl-e-Jibrīl</div>
+      </div>
+      <div class="iq">
+        <div class="ur">یقین محکم، عمل پیہم، محبت فاتحِ عالم<br/>جہادِ زندگانی میں ہیں یہ مردوں کی شمشیریں</div>
+        <div class="rom">Yaqīn-e-muḥkam, ʿamal-e-paiham, moḥabbat fātiḥ-e-ʿālam / Jihād-e-zindagānī meñ haiñ ye mardoñ kī shamshīreñ</div>
+        <div class="tr">"Firm conviction, ceaseless action, love that conquers the world — in the struggle of life, these are a man's swords."</div>
+        <div class="ref">Bāl-e-Jibrīl · the three faculties this instrument scores</div>
+      </div>
+      <div class="small" style="margin-top:14px">
+        <b>What Iqbal is not saying.</b> <em>Khudī</em> is not ego in the English sense and not self-esteem. It is selfhood — a centre of will that becomes more real the more it acts, resists dissolution, and takes responsibility. In the <em>Reconstruction</em> lectures he argues the self is sharpened by contact with resistant reality, not by escaping it. Which is why his sharpest polemic is against inherited quietism: the trance, the withdrawal, the pleasant dissolving of the self into a mood. He would have had a specific and unkind word for anything that softens the edges of the self on a Tuesday night.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ATTENTION ================= -->
+<section id="attention">
+  <div class="sec-head">
+    <p class="eyebrow gold">Attention is an amānah</p>
+    <h2>Working with the wiring, not against it</h2>
+    <p class="lede" style="margin-top:10px">An attention-regulation difference is not a character defect and this instrument does not treat it as one. What it does assume: your working memory is unreliable as a storage device, your motivation is interest-driven rather than importance-driven, and transitions cost you more than the tasks do. Every mechanic below is built around those three facts.</p>
+  </div>
+
+  <div class="grid g-1-2" style="margin-bottom:18px">
+    <div class="card">
+      <p class="eyebrow">ʿAmal sprint</p>
+      <div class="timer" id="sprintTimer">25:00</div>
+      <div class="tiny" id="sprintState" style="margin:6px 0 12px">idle</div>
+      <div class="field">
+        <label class="fl" for="niyyah">Niyyah — for what, and for whom</label>
+        <input type="text" id="niyyah" placeholder="One line. Written before you start." />
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" id="sprintStart">Start</button>
+        <button class="btn" id="sprintStop">Stop</button>
+        <select id="sprintLen" style="width:auto"><option value="15">15 min</option><option value="25" selected>25 min</option><option value="45">45 min</option><option value="90">90 min</option></select>
+      </div>
+      <div class="kv" style="margin-top:14px"><span class="k">Sprints today</span><span class="v" id="sprintCount">0</span></div>
+      <div class="kv"><span class="k">7-day mean</span><span class="v" id="sprint7">—</span></div>
+      <div class="tiny" style="margin-top:10px">Completed sprints feed the ʿAmal measure directly — that score is not a self-assessment, it is a count.</div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <p class="eyebrow">The transition ritual</p>
+        <p class="small" style="margin-top:0">The expensive moment is not the work. It is the eleven minutes between deciding to work and starting. You already own a state-change ritual with a fixed sequence, a physical component, cold water and a defined endpoint, and you perform it five times a day. Chain onto it:</p>
+        <div class="grid g4" style="margin-top:12px;gap:10px">
+          <div class="card flat" style="padding:12px"><div class="tag">01</div><div style="font-weight:600;font-size:.9rem;margin-top:4px">Wuḍūʾ</div><div class="tiny">Cold water, fixed sequence. The body registers a boundary.</div></div>
+          <div class="card flat" style="padding:12px"><div class="tag">02</div><div style="font-weight:600;font-size:.9rem;margin-top:4px">Ṣalāh</div><div class="tiny">Eight minutes of externally-timed, embodied attention.</div></div>
+          <div class="card flat" style="padding:12px"><div class="tag">03</div><div style="font-weight:600;font-size:.9rem;margin-top:4px">Niyyah</div><div class="tiny">Write the line above. Decision made on paper, not in the head.</div></div>
+          <div class="card flat" style="padding:12px"><div class="tag">04</div><div style="font-weight:600;font-size:.9rem;margin-top:4px">Sprint</div><div class="tiny">Timer starts within 90 seconds. No inbox in between.</div></div>
+        </div>
+        <div class="tiny" style="margin-top:11px">Ẓuhr and ʿAṣr are the two that fall inside the working day. Those are your two guaranteed cold starts — the highest-leverage real estate you have, and they arrive whether or not you feel like it.</div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow gold">The laghw filter</p>
+        <div class="ayah" style="margin-bottom:12px">
+          <div class="ar">قَدْ أَفْلَحَ ٱلْمُؤْمِنُونَ <span style="color:var(--gold);font-family:var(--display);font-size:.55em;vertical-align:.4em">&#9670;</span> ٱلَّذِينَ هُمْ فِى صَلَاتِهِمْ خَـٰشِعُونَ <span style="color:var(--gold);font-family:var(--display);font-size:.55em;vertical-align:.4em">&#9670;</span> وَٱلَّذِينَ هُمْ عَنِ ٱللَّغْوِ مُعْرِضُونَ</div>
+          <div class="tr">"Successful are the believers — those who are humbly submissive in their prayer, and those who turn away from what is vain."</div>
+          <div class="ref">Al-Mu'minūn 23:1–3 · laghw: the empty, the idle, the noise</div>
+        </div>
+        <p class="small" style="margin-top:0">Note the ordering: focus in prayer, then turning from noise. Attention is treated as one faculty with one budget. The feed is not competing with your leisure — it is competing with your khushūʿ, and it is winning because it was engineered to.</p>
+        <div id="frictionList" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <p class="eyebrow">Hyperfocus harvest</p>
+      <div class="field">
+        <label class="fl" for="hyper">Where did the intensity go today?</label>
+        <input type="text" id="hyper" placeholder="e.g. 3 hrs on the calibration chart — unplanned, but shippable" />
+      </div>
+      <p class="small">The same wiring that will not produce twenty minutes on a form will produce five unbroken hours on something that has hooked it. That is not a deficit, it is an unaimed asset — and it is very close to what Iqbal means by <em>ʿishq</em>: intensity with a direction. The discipline is not manufacturing focus. It is <b>pointing it at the doctorate on Sunday rather than at a rabbit hole on Sunday</b>, and logging where it actually landed so the pattern becomes visible.</p>
+      <div id="hyperLog" class="tiny" style="margin-top:12px"></div>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Design rules this page follows</p>
+      <table class="t">
+        <tr><td><b>Externalised state</b></td><td class="small">Nothing here asks you to remember. The page is the working memory.</td></tr>
+        <tr><td><b>One decision</b></td><td class="small">One target per day, one score per measure, one button to close.</td></tr>
+        <tr><td><b>Immediate feedback</b></td><td class="small">The index moves the instant you score. Delayed reward does not work on this wiring; the loop has to close now.</td></tr>
+        <tr><td><b>No streak shame</b></td><td class="small">Streaks are shown but never gate the ladder. A broken streak that gets logged honestly is worth more than a clean one that is fiction.</td></tr>
+        <tr><td><b>Body first</b></td><td class="small">Sleep window and movement are scored measures, not wellness garnish. Sleep debt reproduces every symptom you are trying to manage.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LEDGER ================= -->
+<section id="ledger">
+  <div class="sec-head">
+    <p class="eyebrow gold">The intoxicant ledger</p>
+    <h2>The staged approach, applied to the thing itself</h2>
+    <p class="lede" style="margin-top:10px">You asked for both roads — how to be rid of it, and how to use it in a way you actually enjoy. Both are built here. But start with the thing that should be pointed out to an auditor before anything else: <strong>the Qur'an does not address intoxicants in one move.</strong> It addresses them in three, over years, in a defined sequence. The method is already in the text.</p>
+  </div>
+
+  <div class="grid g3" style="margin-bottom:22px">
+    <div class="card">
+      <div class="tag">Stage one · acknowledge the benefit</div>
+      <div class="ayah" style="margin-top:10px">
+        <div class="ar">يَسْـَٔلُونَكَ عَنِ ٱلْخَمْرِ وَٱلْمَيْسِرِ ۖ قُلْ فِيهِمَآ إِثْمٌ كَبِيرٌ وَمَنَـٰفِعُ لِلنَّاسِ وَإِثْمُهُمَآ أَكْبَرُ مِن نَّفْعِهِمَا</div>
+        <div class="tr">"They ask you about intoxicants and gambling. Say: in them is great harm, and benefits for people — but their harm is greater than their benefit."</div>
+        <div class="ref">Al-Baqarah 2:219</div>
+      </div>
+      <div class="small">It concedes the benefit. It does not pretend there is nothing in it for you — it says the ledger nets out against you. Anyone who tells you it does nothing for you has already lost your trust, and they should.</div>
+    </div>
+    <div class="card">
+      <div class="tag">Stage two · protect the spine first</div>
+      <div class="ayah" style="margin-top:10px">
+        <div class="ar">يَـٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوا۟ لَا تَقْرَبُوا۟ ٱلصَّلَوٰةَ وَأَنتُمْ سُكَـٰرَىٰ حَتَّىٰ تَعْلَمُوا۟ مَا تَقُولُونَ</div>
+        <div class="tr">"Do not approach prayer while intoxicated, until you know what you are saying."</div>
+        <div class="ref">An-Nisāʾ 4:43</div>
+      </div>
+      <div class="small">Not "stop" — <em>ring-fence it</em>. Carve out the hours the spine occupies. In practice that is a large and awkward share of the waking day, which is exactly the point: the constraint does the arguing for you. This instrument computes those windows and flags collisions automatically.</div>
+    </div>
+    <div class="card">
+      <div class="tag">Stage three · the clean break</div>
+      <div class="ayah" style="margin-top:10px">
+        <div class="ar">إِنَّمَا ٱلْخَمْرُ وَٱلْمَيْسِرُ ... رِجْسٌ مِّنْ عَمَلِ ٱلشَّيْطَـٰنِ فَٱجْتَنِبُوهُ لَعَلَّكُمْ تُفْلِحُونَ</div>
+        <div class="tr">"Intoxicants and gambling … are defilement from the work of Satan, so avoid it, that you may be successful."</div>
+        <div class="ref">Al-Māʾidah 5:90</div>
+      </div>
+      <div class="small">Only at the end, after the ground had been prepared for years, does the instruction become total. <b>A staged taper is not a compromise with the text. It is the text's own method.</b></div>
+    </div>
+  </div>
+
+  <div class="notice gold" style="margin-bottom:22px">
+    <b>Two things stated plainly, so nothing here is smuggled past you.</b> On the fiqh: the majority position treats anything that intoxicates or clouds the mind — cannabis explicitly included in the classical discussions from Ibn Taymiyyah onward — under the same ruling as khamr. This page does not have standing to issue a ruling and does not attempt one; take that question to a scholar you trust. On the medicine: I am not a clinician and none of this is medical advice. If ADD is undiagnosed or untreated, an actual evaluation will outperform every mechanic on this page combined, and it is the single highest-return action available to you. If use is daily and heavy, stopping abruptly can produce a genuinely rough week — irritability, sleep disruption, appetite loss — which is a reason to taper with support, not a reason to keep going.
+  </div>
+
+  <div class="grid g-2-1" style="margin-bottom:18px">
+    <div class="card">
+      <div class="spread" style="margin-bottom:14px">
+        <p class="eyebrow" style="margin-bottom:0">Today's entry</p>
+        <div class="row" id="pathPills"></div>
+      </div>
+      <div class="row" style="margin-bottom:14px">
+        <button class="btn" id="freeDayBtn">Log a clean day</button>
+        <button class="btn danger" id="addSession">Log a session</button>
+      </div>
+      <div id="sessionList"></div>
+      <div class="field" style="margin-top:14px">
+        <label class="fl">Next-morning cost — how much fog did yesterday buy you?</label>
+        <div class="seg sm" id="fogSeg"></div>
+      </div>
+      <div id="pathPanel" style="margin-top:18px"></div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <p class="eyebrow">Delay &amp; decide</p>
+        <div class="timer" id="urgeTimer">20:00</div>
+        <div class="tiny" id="urgeState" style="margin:6px 0 12px">The urge is a wave, not a command. Twenty minutes is longer than almost any of them last.</div>
+        <div class="field">
+          <label class="fl" for="urgeTask">What are you avoiding right now?</label>
+          <input type="text" id="urgeTask" placeholder="Name the task. Be exact." />
+        </div>
+        <div class="btn-row">
+          <button class="btn primary" id="urgeStart">Start 20 min</button>
+          <button class="btn" id="urgePassed">I passed</button>
+          <button class="btn danger" id="urgeUsed">I used</button>
+        </div>
+        <div class="hr" style="margin:16px 0"></div>
+        <div class="kv"><span class="k">Urges delayed</span><span class="v" id="urgeN">0</span></div>
+        <div class="kv"><span class="k">Passed after delay</span><span class="v" id="urgePct">—</span></div>
+        <div class="tiny" style="margin-top:10px">This number is the entire argument. Once you have thirty of these logged, "I can't not" stops being a belief and becomes a testable claim with your own data against it.</div>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Ledger metrics · 30 days</p>
+        <div id="weedStats"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="chartbox">
+      <h4>Trigger distribution — what is actually being medicated</h4>
+      <div id="triggerChart"></div>
+      <div class="tiny" style="margin-top:12px">The one to watch is <b>avoidance</b>. Reaching for it when bored is a habit problem and habits are tractable. Reaching for it at the exact moment a hard, unstructured, high-stakes task comes into view — the chapter, the exam prep, the difficult email — is an <em>escape from an aversive state</em>, and that is the mechanism that costs you the doctorate rather than the evening. If avoidance dominates this chart, the intervention is not willpower; it is making the task smaller until it stops triggering the escape.</div>
+    </div>
+    <div class="chartbox">
+      <h4>Displacement — what it took, priced honestly</h4>
+      <div id="displaceChart"></div>
+      <div class="tiny" style="margin-top:12px">Sleep is the compounding one. Cannabis reliably shortens the time to fall asleep and reliably suppresses REM; you wake with the subjective sense of having slept and the cognitive profile of someone who has not. For a brain already short on executive fuel, that is a tax levied the next morning, on the exact faculty you need most — which then makes the next evening's urge stronger. That is a loop, and loops are what you get paid to find.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TREND ================= -->
+<section id="trend">
+  <div class="sec-head">
+    <p class="eyebrow">Deviation from the reference line</p>
+    <h2>The record</h2>
+    <p class="lede" style="margin-top:10px">One good day proves nothing — you already have plenty of those. The question this section answers is the only one that matters: <strong>does the line hold?</strong></p>
+  </div>
+
+  <div class="grid g4" style="margin-bottom:18px" id="trendStats"></div>
+
+  <div class="grid g2" style="margin-bottom:18px">
+    <div class="chartbox">
+      <h4>Khudī index — 60 days, with 7-day median</h4>
+      <svg class="chart" id="lineChart" viewBox="0 0 640 220"></svg>
+    </div>
+    <div class="chartbox">
+      <h4>Calendar — index by day</h4>
+      <div class="heat" id="heatGrid"></div>
+      <div class="legend">
+        <span><i style="background:var(--raise)"></i> no entry</span>
+        <span><i style="background:rgba(212,102,79,.85)"></i> &lt;40</span>
+        <span><i style="background:rgba(224,162,68,.85)"></i> 40–64</span>
+        <span><i style="background:rgba(69,170,180,.85)"></i> 65–79</span>
+        <span><i style="background:rgba(79,168,122,.95)"></i> 80+</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="chartbox">
+      <h4>Per-measure deviation from target (14-day mean vs 2.5 / 3.0)</h4>
+      <svg class="chart" id="devChart" viewBox="0 0 640 260"></svg>
+      <div class="tiny" style="margin-top:10px">Bars left of the line are where the system is actually failing. Fix the leftmost one and stop redesigning the whole thing — the temptation to rebuild the instrument instead of doing the thing it measures is itself a symptom, and this note exists because you will do it.</div>
+    </div>
+    <div class="chartbox">
+      <h4>Self-calibration — forecast vs actual</h4>
+      <svg class="chart" id="calChart" viewBox="0 0 640 260"></svg>
+      <div id="calStats" class="tiny" style="margin-top:10px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PATH ================= -->
+<section id="path">
+  <div class="sec-head">
+    <p class="eyebrow gold">Arbaʿīn · forty days</p>
+    <h2>The path, phased</h2>
+    <p class="lede" style="margin-top:10px">Forty is the classical interval — the period of Mūsā's appointment (2:51, 7:142), the age of prophethood, the traditional length of a spiritual discipline. It is also, conveniently, long enough for a behaviour to stop requiring negotiation. Four phases of ten days. <strong>Each phase adds; nothing is dropped.</strong> The instrument only holds you to the measures the current phase has switched on — scoring all seven from day one is how this fails in week two.</p>
+  </div>
+
+  <div class="grid g4" id="phaseGrid" style="margin-bottom:20px"></div>
+
+  <div class="grid g-2-1">
+    <div class="card">
+      <p class="eyebrow">Why this order and not another</p>
+      <div class="stack small">
+        <div><b>Form before feeling.</b> Phase one changes almost nothing except that it starts measuring. An auditor does not remediate during the walkthrough — you take the baseline first, or you will never know what moved. Ten days of honest logging with zero moralising is not a soft start, it is the control period, and skipping it is why previous attempts had nothing to point at.</div>
+        <div><b>Restraint second, not first.</b> Phase two tightens once, on one thing: the intoxicant does not precede the day's ʿamal. Not "quit" — <em>reorder</em>. Everything you want from it is still available at the end of the day; what is removed is its function as an escape hatch, which is the only function that is actually costing you.</div>
+        <div><b>Love third, because restraint alone goes brittle.</b> Iqbal is emphatic on this and it is the part every self-improvement scheme misses. A self built only from prohibition is thin and it snaps under load. Phase three adds the two measures that put something <em>in</em> — the night portion, and one concrete act toward another person daily. This is the phase that decides whether the other thirty days survive.</div>
+        <div><b>Output last, because that is the whole point.</b> <em>Niyābat</em> is not a feeling of closeness. It is being trusted with something. Phase four requires you to ship — a chapter section, a lecture built, a tool published, a comment letter filed. Khudī is proved in creation. A self-audit that produces only a well-audited self has failed its own test.</div>
+      </div>
+      <div class="ayah" style="margin-top:16px;margin-bottom:0">
+        <div class="ar">إِنَّ ٱللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّىٰ يُغَيِّرُوا۟ مَا بِأَنفُسِهِمْ</div>
+        <div class="tr">"Indeed God does not change the condition of a people until they change what is in themselves."</div>
+        <div class="ref">Ar-Raʿd 13:11 · the verse Iqbal built a philosophy on</div>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <p class="eyebrow">Day counter</p>
+        <div class="dial">
+          <div><div class="num" id="dayN">—</div><div class="tag">of 40</div></div>
+        </div>
+        <div class="field" style="margin-top:14px">
+          <label class="fl" for="startDate">Start date</label>
+          <input type="date" id="startDate" />
+        </div>
+        <div class="tiny" id="phaseNow"></div>
+        <div class="btn-row" style="margin-top:12px"><button class="btn" id="restartPath">Re-baseline (start a new 40)</button></div>
+        <div class="tiny" style="margin-top:10px">At day 40 you do not stop — you re-baseline and run it again with the targets raised. The ask was every single day, and a protocol with a finish line cannot answer that.</div>
+      </div>
+      <div class="card">
+        <p class="eyebrow gold">When it breaks</p>
+        <div class="ayah" style="margin-bottom:10px">
+          <div class="ar">لَا تَقْنَطُوا۟ مِن رَّحْمَةِ ٱللَّهِ ۚ إِنَّ ٱللَّهَ يَغْفِرُ ٱلذُّنُوبَ جَمِيعًا</div>
+          <div class="tr">"Do not despair of the mercy of God. Indeed God forgives all sins."</div>
+          <div class="ref">Az-Zumar 39:53</div>
+        </div>
+        <div class="small">It will break. The failure mode is not the broken day — it is the four unlogged days after it, when the instrument goes dark precisely when it would have been most useful. <b>Log the bad day. Score it honestly. Close it.</b> A logged relapse is a data point in a system that is still running. An abandoned week is a system that stopped, and stopped systems are the only ones that never recover.</div>
+        <div class="ayah" style="margin:12px 0 0">
+          <div class="ar">لَا يُكَلِّفُ ٱللَّهُ نَفْسًا إِلَّا وُسْعَهَا</div>
+          <div class="tr">"God does not burden a soul beyond its capacity."</div>
+          <div class="ref">Al-Baqarah 2:286</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SETTINGS ================= -->
+<section id="settings">
+  <div class="sec-head">
+    <p class="eyebrow">Configuration</p>
+    <h2>Settings, data, provenance</h2>
+  </div>
+  <div class="grid g3">
+    <div class="card">
+      <p class="eyebrow">Location &amp; method</p>
+      <div class="grid g2" style="gap:10px">
+        <div class="field"><label class="fl" for="setLat">Latitude</label><input type="number" id="setLat" step="0.0001" /></div>
+        <div class="field"><label class="fl" for="setLng">Longitude</label><input type="number" id="setLng" step="0.0001" /></div>
+      </div>
+      <div class="field"><label class="fl" for="setMethod">Calculation method</label>
+        <select id="setMethod">
+          <option value="ISNA">ISNA — North America (15° / 15°)</option>
+          <option value="MWL">Muslim World League (18° / 17°)</option>
+          <option value="EGYPT">Egyptian General Authority (19.5° / 17.5°)</option>
+          <option value="KARACHI">Univ. of Islamic Sciences, Karachi (18° / 18°)</option>
+          <option value="MAKKAH">Umm al-Qurā (18.5° / 90 min)</option>
+        </select>
+      </div>
+      <div class="field"><label class="fl" for="setAsr">ʿAṣr</label>
+        <select id="setAsr"><option value="1">Standard — Shāfiʿī, Mālikī, Ḥanbalī</option><option value="2">Ḥanafī</option></select>
+      </div>
+      <div class="btn-row"><button class="btn" id="geoBtn">Use my location</button></div>
+      <div class="tiny" style="margin-top:10px">Times are computed in-browser from solar geometry. Accurate to a couple of minutes at mid-latitudes; defer to your masjid where they differ.</div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Weights</p>
+      <div id="weightEditor"></div>
+      <div class="btn-row" style="margin-top:12px"><button class="btn" id="resetWeights">Reset to default</button></div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Data</p>
+      <div class="btn-row" style="margin-bottom:12px">
+        <button class="btn primary" id="exportBtn">Export JSON</button>
+        <button class="btn" id="importBtn">Import</button>
+        <input type="file" id="importFile" accept="application/json" class="hide" />
+      </div>
+      <div class="btn-row" style="margin-bottom:12px">
+        <button class="btn" id="sampleBtn">Load sample fortnight</button>
+        <button class="btn danger" id="wipeBtn">Erase everything</button>
+      </div>
+      <div id="dataStats" class="tiny"></div>
+      <div class="notice" style="margin-top:12px;font-size:.78rem">
+        <b>Sample data is synthetic.</b> If you load it, every day it creates is tagged <span class="mono">synthetic:true</span> and excluded from your real streaks and calibration statistics. It exists so the charts have something to draw before you have two weeks of your own.
+      </div>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="grid g2">
+    <div class="card flat">
+      <p class="eyebrow">Provenance</p>
+      <div class="small stack">
+        <div><b>Qur'anic citations</b> are given by sūrah:āyah throughout so that every one can be checked against a muṣḥaf. The Arabic is set for reading, not for recitation reference — verify before quoting publicly. English renderings are working translations aimed at conveying sense; where a rendering carries interpretive weight the reference is there so you can go behind it.</div>
+        <div><b>Iqbal</b> is quoted where the attribution is established — the two couplets under the Khudī ladder are from <em>Bāl-e-Jibrīl</em>. The three-stage structure of the education of khudī (<em>iṭāʿat</em>, <em>ẓabt-e-nafs</em>, <em>niyābat-e-ilāhī</em>) is from <em>Asrār-i-Khudī</em>. Statements about his broader position — the self sharpened by resistant reality, the polemic against quietism — are paraphrase of the argument in <em>The Reconstruction of Religious Thought in Islam</em> (1930), not quotation.</div>
+        <div><b>Scoring rubrics, weights, thresholds and phase design</b> are constructed for this instrument. They are not derived from any classical source and carry no authority beyond their usefulness. They are declared rather than hidden so you can argue with them, which you should.</div>
+        <div><b>Claims about sleep, cannabis and attention</b> reflect the general direction of the research literature as of the model's training, stated without citation. Treat them as prompts to verify, not as evidence. This page is not medical, psychiatric or religious advice.</div>
+      </div>
+    </div>
+    <div class="card flat">
+      <p class="eyebrow">A closing note on the method</p>
+      <p class="small">The reason this is built as an audit instrument rather than a habit tracker is that habit trackers measure compliance, and compliance is not what you are after. An audit asks a harder question: <em>is the control designed correctly, and does it operate effectively?</em> A day where you prayed all five and shipped nothing passed one test and failed the other. The index is built to make that visible instead of letting a high score on the easy measures cover a structural failure on the hard ones.</p>
+      <p class="small">The second reason: you are the population of one that your own research is about. You study how professional judgment degrades when an assistant makes an answer feel more certain than the evidence supports. The forecast field is that same experiment run on yourself, with you as both the model and the reviewer. If your morning forecast is systematically optimistic — and it will be — you have just measured, on your own behaviour, the precise failure mode you are writing a dissertation about.</p>
+      <div class="ayah" style="margin:14px 0 0">
+        <div class="ar">وَأَن لَّيْسَ لِلْإِنسَـٰنِ إِلَّا مَا سَعَىٰ <span style="color:var(--gold);font-family:var(--display);font-size:.55em;vertical-align:.4em">&#9670;</span> وَأَنَّ سَعْيَهُۥ سَوْفَ يُرَىٰ</div>
+        <div class="tr">"And that there is nothing for man except what he strives for, and that his striving is going to be seen."</div>
+        <div class="ref">An-Najm 53:39–40</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="spread">
+    <div class="tiny">Mīzān · a private instrument · data never leaves this browser</div>
+    <div class="tiny mono" id="footVer">—</div>
+  </div>
+</footer>
+
+</div>
+<script>
+(function(){
+'use strict';
+
+/* ==================================================================
+   MĪZĀN — engine
+   No dependencies, no network. Everything below runs locally.
+   ================================================================== */
+
+var KEY='mizan.v1';
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var pad=function(n){return String(n).padStart(2,'0')};
+function iso(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function parseISO(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2])}
+function addDays(s,n){var d=parseISO(s);d.setDate(d.getDate()+n);return iso(d)}
+function dayDiff(a,b){return Math.round((parseISO(b).getTime()-parseISO(a).getTime())/864e5)}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function median(a){if(!a.length)return 0;var s=a.slice().sort(function(x,y){return x-y});
+  var m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2}
+function mean(a){return a.length? a.reduce(function(x,y){return x+y},0)/a.length : 0}
+function hm(h){if(h==null||isNaN(h))return '—';var t=Math.round(h*60);t=((t%1440)+1440)%1440;
+  return pad(Math.floor(t/60))+':'+pad(t%60)}
+
+/* ---------------- measures ---------------- */
+var MEASURES=[
+ {id:'salah',name:'Ṣalāh',ar:'ٱلصَّلَاة',sub:'the spine',fac:'yaqin',auto:true,
+  cite:'Q 4:103 · 20:14',
+  why:'The only measure on this sheet with an <b>external clock</b>. Every other one can be quietly renegotiated at eleven at night; this one has already passed or it has not. That is why it carries the heaviest weight — not piety, <b>auditability</b>.',
+  rubric:['nothing, or one','two or three','four, or five with slippage','all five, each inside its window']},
+ {id:'dhikr',name:'Dhikr &amp; Qur’ān',ar:'ٱلذِّكْر',sub:'the ground',fac:'yaqin',
+  cite:'Q 13:28 · 33:41 · 73:6',
+  why:'A fixed daily portion — a <em>wird</em> — however small, held on the days you do not feel like it. <b>Small and unbroken beats large and occasional</b>; the point is that the ground stays under you, not that today was moving.',
+  rubric:['none','under five minutes, distracted','five to fifteen, attentive','the fixed portion kept, whatever the day did']},
+ {id:'amal',name:'ʿAmal',ar:'ٱلْعَمَل',sub:'ceaseless action',fac:'amal',auto:true,
+  cite:'Q 53:39 · 94:7 · 62:10',
+  why:'Counted, not felt. Each completed sprint scores one, capped at three; moving the One Thing adds one. <b>This score cannot be talked up at the end of the day</b> — it is a tally of blocks that actually ran.',
+  rubric:['no focused block ran','one block','two blocks','three blocks, or two and the One Thing moved']},
+ {id:'zabt',name:'Ẓabt-e-nafs',ar:'ضَبْطُ ٱلنَّفْس',sub:'restraint',fac:'ishq',
+  cite:'Q 79:40–41 · 7:31 · 25:67',
+  why:'Not abstinence — <b>restraint under load</b>. Holding a line on a quiet Sunday is not evidence of anything. Holding it on the evening the chapter would not come is the whole test, and naming the trigger is what turns it into data.',
+  rubric:['commitment broken, unexamined','broken, but the trigger was named honestly','held, with no real pressure on it','held under genuine pressure, trigger named']},
+ {id:'attn',name:'Ḥifẓ al-intibāh',ar:'ٱللَّغْو',sub:'the laghw filter',fac:'amal',
+  cite:'Q 23:3 · 17:36',
+  why:'Where the first hour of the day went, and where the phone was during work. <b>The first hour sets the register for the other fifteen</b> — a feed before Fajr does not cost you ten minutes, it costs you the whole morning’s depth.',
+  rubric:['the feed had the first hour','fragmented; phone within reach all day','sprints were protected','first hour protected and phone out of the room']},
+ {id:'body',name:'Badan',ar:'ٱلْبَدَن',sub:'the mount',fac:'amal',
+  cite:'Ṣaḥīḥ al-Bukhārī — "your body has a right over you"',
+  why:'Sleep window, movement, real food. <b>Not wellness garnish — an input to every other measure.</b> A short night reproduces, by lunchtime, every symptom you are otherwise trying to manage, and then gets blamed on character.',
+  rubric:['short night, no movement, ate badly','one of the three','two of the three','sleep window kept, moved, fed properly']},
+ {id:'ihsan',name:'Iḥsān',ar:'ٱلْإِحْسَان',sub:'toward people',fac:'ishq',
+  cite:'Q 55:60 · 4:36 · 2:177',
+  why:'One concrete act toward a specific person, named. <b>Not a disposition — a transaction with a date on it.</b> This is the measure that stops the whole exercise from curdling into a very well-instrumented self-absorption.',
+  rubric:['nothing','passive kindness — you were pleasant','one deliberate act, named','an act that cost you time, money or ego']}
+];
+var MI={}; MEASURES.forEach(function(m){MI[m.id]=m});
+var DEFW={salah:22,amal:18,zabt:16,dhikr:14,attn:12,body:10,ihsan:8};
+var FACULTY={yaqin:['salah','dhikr'],amal:['amal','attn','body'],ishq:['zabt','ihsan']};
+var FACNAME={yaqin:'Yaqīn · conviction',amal:'ʿAmal · action',ishq:'ʿIshq · love'};
+var PRAYERS=[{id:'fajr',n:'Fajr'},{id:'dhuhr',n:'Ẓuhr'},{id:'asr',n:'ʿAṣr'},
+             {id:'maghrib',n:'Maghrib'},{id:'isha',n:'ʿIshāʾ'}];
+var TRIGGERS=[['avoidance','avoiding a hard task'],['winddown','wind-down / decompress'],
+  ['boredom','boredom'],['anxiety','anxiety'],['sleep','to get to sleep'],
+  ['social','social'],['celebration','celebration'],['pain','pain / physical'],['cue','habit cue — no reason']];
+var DISPLACED=[['sleep','sleep quality'],['work','the work'],['family','family / presence'],
+  ['salah','a prayer'],['exercise','movement'],['nothing','nothing — the day was done']];
+var SETTINGS_LIST=[['alone','alone'],['partner','with someone'],['group','group']];
+var FRICTION=['Phone in another room during every sprint',
+  'Feeds logged out / blocked on the work machine',
+  'No screen before wuḍūʾ and Fajr',
+  'Tomorrow’s One Thing written before bed',
+  'Work surface cleared to a single object'];
+var PHASES=[
+ {n:1,d:'Days 1–10',t:'Iṭāʿat',ar:'إِطَاعَة',s:'Form. Baseline.',
+  ms:['salah','body','amal'],
+  li:['Score only three measures. Ignore the rest — they are switched off.',
+      'Log the ledger honestly and <b>change nothing about it</b>. This is the walkthrough, not the remediation.',
+      'Fixed sleep window and a fixed wake time, seven days a week.',
+      'One Thing written the night before, every night.']},
+ {n:2,d:'Days 11–20',t:'Ẓabt-e-nafs',ar:'ضَبْطُ ٱلنَّفْس',s:'One tightening.',
+  ms:['salah','body','amal','zabt','attn'],
+  li:['Restraint and attention switch on.',
+      '<b>Nothing before the day’s ʿamal is done.</b> Not "less" — <em>after</em>. Reorder it.',
+      'Every urge goes through Delay &amp; Decide. No exceptions, including the ones you win easily.',
+      'Phone leaves the room for sprints. This is the week that decides the other thirty days.']},
+ {n:3,d:'Days 21–30',t:'ʿIshq',ar:'عِشْق',s:'Put something in.',
+  ms:['salah','body','amal','zabt','attn','dhikr','ihsan'],
+  li:['Dhikr and iḥsān switch on — the full seven.',
+      'A night portion, however short. <em>Nāshi’at al-layl</em> — 73:6.',
+      'One deliberate act toward a specific person, daily, logged.',
+      'Restraint alone goes brittle by now. This phase is the fuel, not the decoration.']},
+ {n:4,d:'Days 31–40',t:'Niyābat',ar:'نِيَابَة',s:'Ship.',
+  ms:['salah','body','amal','zabt','attn','dhikr','ihsan'],
+  li:['All seven, plus one external requirement: <b>something leaves your hands each week.</b>',
+      'A chapter section, a lecture built, a tool published, a comment letter filed.',
+      'Vicegerency is being trusted with something — it is measured in output, not in mood.',
+      'At day 40, re-baseline and run it again with the targets raised.']}
+];
+
+/* ---------------- state ---------------- */
+var S=null;
+function blankDay(k){return {date:k,forecast:null,prayers:{},dhikrMin:0,sprints:0,
+  oneThing:'',oneThingDone:false,scores:{},weed:{sessions:[],clean:false,fog:0},
+  friction:[false,false,false,false,false],hyper:'',
+  muhasaba:{shukr:'',khata:'',kal:''},closed:false,synthetic:false}}
+function defaults(){return {v:1,settings:{lat:40.7357,lng:-74.1724,method:'ISNA',asr:1,
+  path:'taper',start:iso(new Date()),cap:2,floorHour:20,weights:Object.assign({},DEFW)},
+  days:{},urges:[],ships:{}}}
+function load(){
+  try{var raw=localStorage.getItem(KEY); S=raw?JSON.parse(raw):defaults();}
+  catch(e){S=defaults()}
+  var d=defaults(); S.settings=Object.assign({},d.settings,S.settings||{});
+  S.settings.weights=Object.assign({},DEFW,S.settings.weights||{});
+  S.days=S.days||{}; S.urges=S.urges||[]; S.ships=S.ships||{};
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
+  console.warn('storage full',e)}}
+function day(k){ if(!S.days[k]) S.days[k]=blankDay(k);
+  var d=S.days[k]; d.weed=d.weed||{sessions:[],clean:false,fog:0};
+  d.weed.sessions=d.weed.sessions||[]; d.scores=d.scores||{}; d.prayers=d.prayers||{};
+  d.muhasaba=d.muhasaba||{shukr:'',khata:'',kal:''};
+  if(!Array.isArray(d.friction)||d.friction.length!==5) d.friction=[false,false,false,false,false];
+  return d}
+function has(k){return Object.prototype.hasOwnProperty.call(S.days,k)}
+
+var CUR=iso(new Date());
+
+/* ---------------- prayer times ---------------- */
+var DEG=Math.PI/180;
+function sind(d){return Math.sin(d*DEG)} function cosd(d){return Math.cos(d*DEG)}
+function tand(d){return Math.tan(d*DEG)}
+function asind(x){return Math.asin(x)/DEG} function acosd(x){return Math.acos(x)/DEG}
+function atan2d(y,x){return Math.atan2(y,x)/DEG} function acotd(x){return Math.atan(1/x)/DEG}
+function fix(a,b){a=a-b*Math.floor(a/b);return a<0?a+b:a}
+function fixh(a){return fix(a,24)}
+function julian(y,m,d){ if(m<=2){y-=1;m+=12}
+  var A=Math.floor(y/100), B=2-A+Math.floor(A/4);
+  return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5}
+function sunPos(jd){
+  var D=jd-2451545.0;
+  var g=fix(357.529+0.98560028*D,360);
+  var q=fix(280.459+0.98564736*D,360);
+  var L=fix(q+1.915*sind(g)+0.020*sind(2*g),360);
+  var e=23.439-0.00000036*D;
+  var RA=fixh(atan2d(cosd(e)*sind(L),cosd(L))/15);
+  return {decl:asind(sind(e)*sind(L)), eqt:q/15-RA};
+}
+var METHODS={ISNA:{fajr:15,isha:15},MWL:{fajr:18,isha:17},EGYPT:{fajr:19.5,isha:17.5},
+  KARACHI:{fajr:18,isha:18},MAKKAH:{fajr:18.5,isha:null,ishaMin:90}};
+function prayerTimes(dateObj){
+  var st=S.settings, lat=+st.lat, lng=+st.lng, meth=METHODS[st.method]||METHODS.ISNA;
+  var asrF=+st.asr||1;
+  var tz=-dateObj.getTimezoneOffset()/60;
+  var jd=julian(dateObj.getFullYear(),dateObj.getMonth()+1,dateObj.getDate())-lng/15/24;
+  function midDay(t){return fixh(12-sunPos(jd+t/24).eqt)}
+  function angleTime(angle,t,ccw){
+    var decl=sunPos(jd+t/24).decl;
+    var c=(-sind(angle)-sind(decl)*sind(lat))/(cosd(decl)*cosd(lat));
+    if(c>1||c<-1) return NaN;
+    var T=acosd(c)/15; return midDay(t)+(ccw?-T:T);
+  }
+  function asrTime(t){
+    var decl=sunPos(jd+t/24).decl;
+    var angle=-acotd(asrF+tand(Math.abs(lat-decl)));
+    return angleTime(angle,t,false);
+  }
+  var t={fajr:5,sunrise:6,dhuhr:12,asr:13,maghrib:18,isha:19};
+  for(var i=0;i<3;i++){
+    t={ fajr:angleTime(meth.fajr,t.fajr,true),
+        sunrise:angleTime(0.833,t.sunrise,true),
+        dhuhr:midDay(t.dhuhr)+2/60,
+        asr:asrTime(t.asr),
+        maghrib:angleTime(0.833,t.maghrib,false),
+        isha: meth.isha!=null? angleTime(meth.isha,t.isha,false) : angleTime(0.833,t.maghrib,false)+meth.ishaMin/60 };
+  }
+  var adj=tz-lng/15, out={};
+  Object.keys(t).forEach(function(k){out[k]=isNaN(t[k])?NaN:t[k]+adj});
+  return out;
+}
+function windows(pt){
+  return {fajr:[pt.fajr,pt.sunrise],dhuhr:[pt.dhuhr,pt.asr],asr:[pt.asr,pt.maghrib],
+          maghrib:[pt.maghrib,pt.isha],isha:[pt.isha,Math.min(24,pt.fajr+24)]};
+}
+function windowOf(pt,h){
+  var w=windows(pt),k;
+  for(k in w){ if(!w.hasOwnProperty(k))continue;
+    var a=w[k][0],b=w[k][1];
+    if(k==='isha'){ if(h>=a||h<pt.fajr) return 'isha'; }
+    else if(h>=a&&h<b) return k; }
+  return null;
+}
+
+/* ---------------- scoring ---------------- */
+function salahScore(d){
+  var v={'in':1,'late':0.5,'miss':0},s=0;
+  PRAYERS.forEach(function(p){var st=d.prayers[p.id]; if(st) s+=v[st]||0});
+  return s>=5?3:s>=4?2:s>=2.5?1:0;
+}
+function amalScore(d){
+  var s=Math.min(+d.sprints||0,3);
+  if(d.oneThingDone) s=Math.min(3,s+1);
+  return s;
+}
+function scoreOf(d,id){
+  if(id==='salah') return salahScore(d);
+  if(id==='amal') return amalScore(d);
+  var v=d.scores[id]; return v==null?null:+v;
+}
+function phaseFor(k){
+  var n=dayDiff(S.settings.start,k)+1;
+  if(n<1) return null;
+  if(n<=10) return PHASES[0]; if(n<=20) return PHASES[1];
+  if(n<=30) return PHASES[2]; if(n<=40) return PHASES[3];
+  return PHASES[3];
+}
+function activeMeasures(k){
+  var p=phaseFor(k);
+  return p? p.ms : MEASURES.map(function(m){return m.id});
+}
+function indexOf(k){
+  var d=S.days[k]; if(!d) return null;
+  var act=activeMeasures(k),W=S.settings.weights,tot=0,got=0,any=false;
+  act.forEach(function(id){
+    var s=scoreOf(d,id); var w=+W[id]||0;
+    if(s==null) return; any=true; tot+=w; got+=(s/3)*w;
+  });
+  if(!any||tot===0) return null;
+  return Math.round(got/tot*100);
+}
+function facultyScore(k){
+  var d=S.days[k]; if(!d) return {};
+  var W=S.settings.weights,out={},act=activeMeasures(k);
+  Object.keys(FACULTY).forEach(function(f){
+    var tot=0,got=0,any=false;
+    FACULTY[f].forEach(function(id){
+      if(act.indexOf(id)<0) return;
+      var s=scoreOf(d,id); if(s==null) return; any=true;
+      tot+=+W[id]||0; got+=(s/3)*(+W[id]||0);
+    });
+    out[f]=any&&tot?Math.round(got/tot*100):null;
+  });
+  return out;
+}
+function recentKeys(n,endK){
+  var end=endK||todayK(),out=[];
+  for(var i=n-1;i>=0;i--) out.push(addDays(end,-i));
+  return out;
+}
+function todayK(){return iso(new Date())}
+
+/* ---------------- ladder ---------------- */
+function ladderEval(){
+  var ks=recentKeys(14),days=ks.map(function(k){return S.days[k]}).filter(Boolean);
+  var idx=ks.map(indexOf).filter(function(v){return v!=null});
+  var med=median(idx);
+  var closed=days.filter(function(d){return d.closed}).length;
+  function cnt(id,thr){return ks.filter(function(k){var d=S.days[k];
+    if(!d)return false; var s=scoreOf(d,id); return s!=null&&s>=thr}).length}
+  var logged=days.length;
+  var cleanDays=days.filter(function(d){return !d.weed.sessions.length}).length;
+  var cleanRatio=logged? cleanDays/logged : 0;
+  var medAll=MEASURES.every(function(m){
+    var v=ks.map(function(k){var d=S.days[k];return d?scoreOf(d,m.id):null})
+            .filter(function(x){return x!=null});
+    return v.length>=7 && median(v)>=2;
+  });
+  var g1=[['≥7 of 14 days closed',closed>=7,closed+'/14'],
+          ['14-day median index ≥ 40',med>=40,Math.round(med)],
+          ['Ṣalāh ≥ 2 on ≥ 9 days',cnt('salah',2)>=9,cnt('salah',2)+'/14']];
+  var g2=[['14-day median index ≥ 60',med>=60,Math.round(med)],
+          ['Ẓabt ≥ 2 on ≥ 10 days',cnt('zabt',2)>=10,cnt('zabt',2)+'/14'],
+          ['Clean-day ratio ≥ 60%',cleanRatio>=0.6,Math.round(cleanRatio*100)+'%']];
+  var g3=[['14-day median index ≥ 78',med>=78,Math.round(med)],
+          ['≥12 of 14 days closed',closed>=12,closed+'/14'],
+          ['Iḥsān ≥ 2 on ≥ 10 days',cnt('ihsan',2)>=10,cnt('ihsan',2)+'/14'],
+          ['Every measure median ≥ 2',medAll,medAll?'yes':'no']];
+  var p1=g1.every(function(g){return g[1]});
+  var p2=p1&&g2.every(function(g){return g[1]});
+  var p3=p2&&g3.every(function(g){return g[1]});
+  return {stage:p3?3:p2?2:p1?1:0,gates:[g1,g2,g3],med:med,closed:closed};
+}
+var STAGES=[
+ {n:0,t:'Bekhudī',ar:'بے خودی',s:'drift',d:'Not a moral verdict — a measurement state. The instrument does not yet have enough evidence, or the evidence says the line is not holding. Everyone starts here, including after a good month.'},
+ {n:1,t:'Iṭāʿat',ar:'إِطَاعَة',s:'obedience to the law',d:'Iqbal’s first stage. Form is installed and holds without negotiation. He uses the camel: enduring, patient, going where it is pointed. Not yet free — but load-bearing, which is the prerequisite for everything after.'},
+ {n:2,t:'Ẓabt-e-nafs',ar:'ضَبْطُ ٱلنَّفْس',s:'self-control',d:'The self now argues with itself and wins more often than it loses. This is the stage the Qur’an swears by — <em>an-nafs al-lawwāmah</em>. The internal argument is the sound of it working, not of it failing.'},
+ {n:3,t:'Niyābat-e-Ilāhī',ar:'نِيَابَتِ إِلٰہی',s:'vicegerency',d:'The self strong enough to be entrusted. Iqbal’s <em>mard-e-mo’min</em> — not a mystic in retreat but a maker: creative, responsible, world-facing. Measured in what leaves your hands.'}
+];
+
+/* ---------------- ledger analytics ---------------- */
+function realDays(){return Object.keys(S.days).filter(function(k){return !S.days[k].synthetic})}
+function ledger(n){
+  var ks=recentKeys(n||30),sess=[],logged=0,clean=0,cleanStreak=0,best=0,run=0;
+  ks.forEach(function(k){
+    var d=S.days[k]; if(!d) return;
+    var used=d.weed.sessions.length>0;
+    if(used||d.weed.clean||d.closed){logged++; if(!used) clean++;}
+    d.weed.sessions.forEach(function(s){sess.push(Object.assign({date:k},s))});
+  });
+  var all=Object.keys(S.days).sort();
+  all.forEach(function(k){
+    var d=S.days[k]; if(d.synthetic) return;
+    if(d.weed.sessions.length){run=0} else if(d.weed.clean||d.closed){run++; if(run>best)best=run}
+  });
+  var k=todayK();
+  while(true){ var d=S.days[k];
+    if(!d||d.synthetic) break;
+    if(d.weed.sessions.length) break;
+    if(!(d.weed.clean||d.closed)) break;
+    cleanStreak++; k=addDays(k,-1); }
+  var byTrig={},byDisp={};
+  sess.forEach(function(s){byTrig[s.trigger]=(byTrig[s.trigger]||0)+1;
+    byDisp[s.displaced]=(byDisp[s.displaced]||0)+1});
+  var avoid=sess.filter(function(s){return s.trigger==='avoidance'}).length;
+  return {sessions:sess,logged:logged,clean:clean,streak:cleanStreak,best:best,
+    byTrig:byTrig,byDisp:byDisp,avoidRatio:sess.length?avoid/sess.length:0,
+    useRate:logged?(logged-clean)/logged:0};
+}
+function collisions(k){
+  var d=S.days[k]; if(!d||!d.weed.sessions.length) return [];
+  var pt=prayerTimes(parseISO(k)),out=[];
+  d.weed.sessions.forEach(function(s){
+    var h=timeToH(s.time); if(h==null) return;
+    var w=windowOf(pt,h);
+    if(w && d.prayers[w]!=='in') out.push({time:s.time,w:w});
+  });
+  return out;
+}
+function timeToH(t){ if(!t) return null; var p=String(t).split(':');
+  if(p.length<2) return null; var h=+p[0]+(+p[1])/60; return isNaN(h)?null:h}
+
+function guardrails(){
+  var ks=recentKeys(14),ex=[],tests=[];
+  var st=S.settings;
+  var collideN=0,earlyN=0,consecN=0,capN=0,avoidN=0,fogN=0,sessN=0,aloneT=0;
+  var weekCount={};
+  ks.forEach(function(k,i){
+    var d=S.days[k]; if(!d) return;
+    var ss=d.weed.sessions; sessN+=ss.length;
+    collideN+=collisions(k).length;
+    var wk=weekKey(k); weekCount[wk]=(weekCount[wk]||0)+ss.length;
+    var aScore=amalScore(d);
+    ss.forEach(function(s){
+      var h=timeToH(s.time);
+      if((h!=null && h<st.floorHour) || aScore<2) earlyN++;
+      if(s.trigger==='avoidance') avoidN++;
+      if(s.setting==='alone') aloneT++;
+    });
+    var prev=S.days[addDays(k,-1)];
+    if(ss.length && prev && prev.weed.sessions.length) consecN++;
+    if(ss.length && (+d.weed.fog||0)>=2) fogN++;
+  });
+  Object.keys(weekCount).forEach(function(w){if(weekCount[w]>st.cap) capN++});
+  tests=[
+   ['No session inside a prayer window before that prayer is made (4:43)',collideN],
+   ['Not before hour '+st.floorHour+':00, and not on a day the ʿamal did not happen',earlyN],
+   ['Never as an escape from a hard task',avoidN],
+   ['Never two days running',consecN],
+   ['Weekly cap of '+st.cap+' sessions',capN],
+   ['Sleep protected — no session followed by fog ≥ 2',fogN]
+  ];
+  var total=tests.reduce(function(a,t){return a+t[1]},0);
+  return {tests:tests,exceptions:total,sessions:sessN,alone:sessN?aloneT/sessN:0};
+}
+function weekKey(k){ var d=parseISO(k); var day=(d.getDay()+6)%7;
+  d.setDate(d.getDate()-day); return iso(d)}
+function taper(){
+  var st=S.settings, start=st.start;
+  var n=dayDiff(start,todayK());
+  var wk=Math.floor(n/7)+1;
+  var base=0;
+  for(var i=0;i<7;i++){var d=S.days[addDays(start,i)]; if(d) base+=d.weed.sessions.length}
+  if(base===0){ var l=ledger(14); base=Math.max(1,Math.round(l.sessions.length/2)) }
+  var sched=[];
+  for(var w=1;w<=8;w++){
+    var a= w===1? base : Math.max(0,Math.round(base*(1-(w-1)/7)));
+    if(w===8) a=0;
+    sched.push(a);
+  }
+  var thisWeek=weekKey(todayK()),used=0;
+  recentKeys(14).forEach(function(k){ if(weekKey(k)===thisWeek){var d=S.days[k];
+    if(d) used+=d.weed.sessions.length} });
+  var allow= wk>=1&&wk<=8? sched[wk-1] : 0;
+  return {week:clamp(wk,1,9),sched:sched,base:base,allow:allow,used:used};
+}
+
+/* ==================================================================
+   RENDER
+   ================================================================== */
+function donut(el,val){
+  var r=36,c=2*Math.PI*r,v=val==null?0:clamp(val,0,100);
+  var col=val==null?'var(--line2)':v>=80?'var(--good)':v>=65?'var(--accent)':v>=40?'var(--signal)':'var(--bad)';
+  el.innerHTML='<circle cx="43" cy="43" r="'+r+'" fill="none" stroke="var(--line)" stroke-width="7"/>'+
+   '<circle cx="43" cy="43" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="7" stroke-linecap="round" '+
+   'stroke-dasharray="'+(c*v/100).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 43 43)"/>';
+}
+
+function renderToday(){
+  var d=day(CUR),dt=parseISO(CUR);
+  $('#dayPicker').value=CUR;
+  var n=dayDiff(S.settings.start,CUR)+1;
+  $('#todayTitle').textContent = CUR===todayK()? 'Today’s sheet' : dt.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+  var ph=phaseFor(CUR);
+  $('#todayMeta').innerHTML = dt.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'})
+    +(ph? ' · day '+n+' · phase '+ph.n+' — '+ph.t+' · '+ph.ms.length+' measures active':'');
+
+  var idx=indexOf(CUR);
+  $('#idxNum').textContent=idx==null?'—':idx;
+  donut($('#dialSvg'),idx);
+  var prev=indexOf(addDays(CUR,-1));
+  $('#idxDelta').innerHTML = (idx!=null&&prev!=null)
+    ? (idx-prev>=0?'▲ +':'▼ ')+(idx-prev)+' vs yesterday' : '';
+
+  var f=facultyScore(CUR);
+  $('#facultyRow').innerHTML=Object.keys(FACULTY).map(function(k){
+    return '<div class="stat"><div class="k">'+FACNAME[k]+'</div><div class="v">'+
+      (f[k]==null?'—':f[k])+'<small> / 100</small></div></div>'}).join('');
+
+  var L=ladderEval();
+  $('#stageNow').innerHTML=STAGES[L.stage].t+' <span class="tag">· stage '+L.stage+'</span>';
+  $('#stageNote').textContent=STAGES[L.stage].s+' · 14-day median '+Math.round(L.med);
+
+  $('#fcInput').value=d.forecast==null?'':d.forecast;
+  $('#kvFc').textContent=d.forecast==null?'—':d.forecast;
+  $('#kvAc').textContent=idx==null?'—':idx;
+  $('#kvEr').innerHTML=(d.forecast!=null&&idx!=null)
+    ? (function(){var e=idx-d.forecast;return '<span style="color:'+(Math.abs(e)<=7?'var(--good)':Math.abs(e)<=15?'var(--signal)':'var(--bad)')+'">'+(e>0?'+':'')+e+'</span>'})() : '—';
+
+  $('#oneThing').value=d.oneThing||'';
+  $('#oneThingDone').checked=!!d.oneThingDone;
+  $('#mShukr').value=d.muhasaba.shukr||'';
+  $('#mKhata').value=d.muhasaba.khata||'';
+  $('#mKal').value=d.muhasaba.kal||'';
+  $('#hyper').value=d.hyper||'';
+  var cp=$('#closedPill');
+  cp.textContent=d.closed?'closed':'open';
+  cp.className='pill '+(d.closed?'good':'');
+  $('#sprintCount').textContent=d.sprints||0;
+  var s7=recentKeys(7).map(function(k){return S.days[k]?(S.days[k].sprints||0):null})
+    .filter(function(x){return x!=null});
+  $('#sprint7').textContent=s7.length?mean(s7).toFixed(1):'—';
+
+  renderPrayers(d,dt);
+  renderMeasures(d);
+  renderFriction(d);
+  renderLedgerToday(d);
+  renderHyperLog();
+}
+
+function renderPrayers(d,dt){
+  var pt=prayerTimes(dt),W=windows(pt);
+  var now=new Date(),nowH=(CUR===todayK())? now.getHours()+now.getMinutes()/60 : null;
+  var curW=nowH!=null? windowOf(pt,nowH):null;
+  $('#spineMeta').textContent=S.settings.method+' · asr '+(S.settings.asr==2?'ḥanafī':'std')+
+    ' · '+(+S.settings.lat).toFixed(3)+', '+(+S.settings.lng).toFixed(3);
+  $('#prayerGrid').innerHTML=PRAYERS.map(function(p){
+    var st=d.prayers[p.id];
+    return '<div class="pcell'+(curW===p.id?' now':'')+'"><div class="pn">'+p.n+'</div>'+
+      '<div class="pt">'+hm(pt[p.id])+'</div>'+
+      '<div class="seg sm" data-prayer="'+p.id+'">'+
+      ['in','late','miss'].map(function(v,i){
+        return '<button data-v="'+v+'" class="'+(st===v?('on '+(v==='miss'?'s0':v==='late'?'s1':'')):'')+'">'+
+          (v==='in'?'in':v==='late'?'late':'✕')+'</button>'}).join('')+
+      '</div></div>'}).join('');
+
+  // spine svg
+  var X=function(h){return clamp(h,0,24)/24*1000};
+  var g='';
+  g+='<rect x="0" y="0" width="1000" height="96" fill="none"/>';
+  for(var h=0;h<=24;h+=3){ g+='<line x1="'+X(h)+'" y1="0" x2="'+X(h)+'" y2="96" stroke="var(--line)" stroke-width="1"/>'+
+    '<text x="'+(X(h)+4)+'" y="12" fill="var(--faint)" font-size="9" font-family="ui-monospace,monospace">'+pad(h)+'</text>'; }
+  PRAYERS.forEach(function(p){
+    var w=W[p.id],a=X(w[0]),b=X(Math.min(w[1],24));
+    if(isNaN(a)||isNaN(b)||b<=a) return;
+    var st=d.prayers[p.id];
+    var fill=st==='in'?'rgba(69,170,180,.34)':st==='late'?'rgba(224,162,68,.30)':st==='miss'?'rgba(212,102,79,.28)':'rgba(120,140,160,.13)';
+    g+='<rect x="'+a+'" y="20" width="'+(b-a)+'" height="30" fill="'+fill+'" stroke="var(--line2)" stroke-width=".5"/>';
+    g+='<text x="'+(a+5)+'" y="39" fill="var(--muted)" font-size="10" font-family="ui-monospace,monospace">'+p.n+'</text>';
+  });
+  d.weed.sessions.forEach(function(s){
+    var h=timeToH(s.time); if(h==null) return;
+    g+='<rect x="'+(X(h)-2)+'" y="56" width="4" height="26" fill="var(--bad)"/>';
+  });
+  var sp=(d.sprints||0);
+  for(var i=0;i<sp;i++){
+    g+='<rect x="'+(X(9+i*1.2)-2)+'" y="56" width="4" height="14" fill="var(--gold)" opacity=".8"/>';
+  }
+  if(nowH!=null){ g+='<line x1="'+X(nowH)+'" y1="14" x2="'+X(nowH)+'" y2="90" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 3"/>'; }
+  $('#spineSvg').innerHTML=g;
+
+  var col=collisions(CUR);
+  $('#collisionWarn').innerHTML= col.length?
+    '<div class="notice"><b>'+col.length+' collision'+(col.length>1?'s':'')+' with a prayer window.</b> '+
+    col.map(function(c){return c.time+' fell inside '+c.w}).join('; ')+
+    '. This is the 4:43 boundary — not a verdict, just the instrument showing you where the day’s spine and the ledger overlapped.</div>':'';
+}
+
+function renderMeasures(d){
+  var act=activeMeasures(CUR);
+  $('#measureList').innerHTML=MEASURES.map(function(m){
+    var on=act.indexOf(m.id)>=0;
+    var s=scoreOf(d,m.id);
+    var ctl;
+    if(m.auto){
+      ctl='<div style="text-align:right"><div class="mono" style="font-size:1.5rem;font-weight:600;color:'+
+        (s>=2?'var(--accent)':'var(--muted)')+'">'+s+'<span style="font-size:.7rem;color:var(--faint)">/3</span></div>'+
+        '<div class="tag">computed</div></div>';
+    } else {
+      ctl='<div class="seg" data-measure="'+m.id+'">'+[0,1,2,3].map(function(v){
+        return '<button data-v="'+v+'" class="'+(s===v?('on '+(v===0?'s0':v===1?'s1':'')):'')+'">'+v+'</button>'}).join('')+'</div>';
+    }
+    return '<div class="measure" style="'+(on?'':'opacity:.38')+'">'+
+      '<div><div class="name">'+m.name+' <span class="ar">'+m.ar+'</span>'+
+      '<span class="tag">· '+m.sub+' · w'+(S.settings.weights[m.id])+
+      (on?'':' · off this phase')+'</span></div>'+
+      '<div class="why">'+m.why+'</div>'+
+      '<div class="cite">'+m.cite+'</div>'+
+      '<div class="rubric">'+m.rubric.map(function(r,i){
+        return '<b>'+i+'</b> '+r}).join(' &nbsp;·&nbsp; ')+'</div></div>'+
+      ctl+'</div>';
+  }).join('');
+  var dm=$('#dhikrMinWrap'); if(dm) dm.remove();
+}
+
+function renderFriction(d){
+  $('#frictionList').innerHTML=FRICTION.map(function(f,i){
+    return '<label class="chk"><input type="checkbox" data-fr="'+i+'"'+(d.friction[i]?' checked':'')+
+      ' /><span>'+f+'</span></label>'}).join('');
+}
+
+function renderHyperLog(){
+  var ks=recentKeys(14).reverse().filter(function(k){return S.days[k]&&S.days[k].hyper});
+  $('#hyperLog').innerHTML=ks.length? '<div class="tag" style="margin-bottom:6px">Recent</div>'+
+    ks.slice(0,5).map(function(k){return '<div class="kv"><span class="k">'+k.slice(5)+'</span><span class="v" style="text-align:right;font-family:var(--display)">'+esc(S.days[k].hyper)+'</span></div>'}).join('')
+    : '';
+}
+
+/* ---------------- ledger ui ---------------- */
+function renderLedgerToday(d){
+  $('#pathPills').innerHTML=
+    '<button class="btn '+(S.settings.path==='taper'?'primary':'')+'" data-path="taper">Path A · taper to zero</button>'+
+    '<button class="btn '+(S.settings.path==='guard'?'primary':'')+'" data-path="guard">Path B · guardrails</button>';
+
+  $('#sessionList').innerHTML = d.weed.sessions.length
+    ? '<table class="t"><tr><th>Time</th><th>Trigger</th><th>Setting</th><th>Displaced</th><th></th></tr>'+
+      d.weed.sessions.map(function(s,i){
+        return '<tr><td class="n">'+esc(s.time)+'</td><td>'+esc(lbl(TRIGGERS,s.trigger))+'</td>'+
+        '<td>'+esc(lbl(SETTINGS_LIST,s.setting))+'</td><td>'+esc(lbl(DISPLACED,s.displaced))+'</td>'+
+        '<td style="text-align:right"><button class="icon-btn" data-delsess="'+i+'">✕</button></td></tr>'}).join('')+
+      '</table>'
+    : (d.weed.clean? '<div class="pill good">clean day logged</div>'
+       : '<div class="tiny">No entry yet for this day. An unlogged day is not a clean day — log one or the other.</div>');
+
+  $('#fogSeg').innerHTML=[0,1,2,3].map(function(v){
+    return '<button data-fog="'+v+'" class="'+((+d.weed.fog||0)===v?('on '+(v>=2?'s0':v===1?'s1':'')):'')+'">'+
+      ['none','slight','heavy','wrote off the morning'][v]+'</button>'}).join('');
+
+  var l=ledger(30);
+  $('#weedStats').innerHTML=
+    kv('Current clean streak',l.streak+' d')+
+    kv('Best clean streak',l.best+' d')+
+    kv('Days logged (30d)',l.logged)+
+    kv('Use rate',l.logged?Math.round(l.useRate*100)+'%':'—')+
+    kv('Sessions (30d)',l.sessions.length)+
+    kv('Avoidance share',l.sessions.length?Math.round(l.avoidRatio*100)+'%':'—');
+
+  var u=S.urges.length,passed=S.urges.filter(function(x){return x.outcome==='passed'}).length;
+  $('#urgeN').textContent=u;
+  $('#urgePct').textContent=u?Math.round(passed/u*100)+'%':'—';
+
+  renderPathPanel();
+  renderTriggerCharts(l);
+}
+function lbl(list,v){for(var i=0;i<list.length;i++){if(list[i][0]===v)return list[i][1]} return v||'—'}
+function kv(k,v){return '<div class="kv"><span class="k">'+k+'</span><span class="v">'+v+'</span></div>'}
+
+function renderPathPanel(){
+  var el=$('#pathPanel');
+  if(S.settings.path==='taper'){
+    var t=taper();
+    el.innerHTML='<p class="eyebrow gold">Path A · tark — the staged withdrawal</p>'+
+      '<p class="small" style="margin-top:0">Eight weeks, following the Qur’an’s own sequence: acknowledge, ring-fence, then remove. The allowance is derived from <b>your measured baseline</b> ('+t.base+' in the first week), not from a number someone else picked.</p>'+
+      '<div class="grid g3" style="gap:10px;margin:12px 0">'+
+      '<div class="stat"><div class="k">Week</div><div class="v">'+t.week+'<small> / 8</small></div></div>'+
+      '<div class="stat"><div class="k">Allowance</div><div class="v">'+t.allow+'</div></div>'+
+      '<div class="stat"><div class="k">Used this week</div><div class="v" style="color:'+(t.used>t.allow?'var(--bad)':'var(--good)')+'">'+t.used+'</div></div>'+
+      '</div>'+
+      '<div class="chartbox"><h4>Schedule</h4>'+
+      '<table class="t"><tr><th>Week</th>'+t.sched.map(function(_,i){return '<th>'+(i+1)+'</th>'}).join('')+'</tr>'+
+      '<tr><td class="n">allow</td>'+t.sched.map(function(a,i){
+        return '<td class="n" style="'+(i+1===t.week?'color:var(--gold);font-weight:700':'')+'">'+a+'</td>'}).join('')+'</tr></table>'+
+      '<div class="tiny" style="margin-top:10px"><b>Tightening rules, in order.</b> Wk 1–2: nothing changes but the log, and the hour floor moves to '+S.settings.floorHour+':00. Wk 3–4: never on a day the One Thing did not move — it stops being an escape. Wk 5–6: never alone. Wk 7: one session, named in advance, on a chosen day. Wk 8: none, and the evening it would have filled gets a replacement written down before the week starts. <b>Plan the replacement, or the slot will plan itself.</b></div></div>';
+  } else {
+    var g=guardrails();
+    el.innerHTML='<p class="eyebrow gold">Path B · ḥudūd — control testing on your own rules</p>'+
+      '<p class="small" style="margin-top:0">If zero is not where you are, then the honest alternative is not "less" — it is <b>bounded, and tested</b>. These are the boundaries; below is the exception report over 14 days, run exactly the way you would run it on someone else’s control environment.</p>'+
+      '<table class="t" style="margin-top:12px"><tr><th>Control</th><th style="text-align:right">Exceptions</th></tr>'+
+      g.tests.map(function(t){
+        return '<tr><td>'+t[0]+'</td><td class="n" style="text-align:right;color:'+(t[1]?'var(--bad)':'var(--good)')+'">'+
+          (t[1]||'—')+'</td></tr>'}).join('')+'</table>'+
+      '<div class="notice '+(g.exceptions>3?'':'teal')+'" style="margin-top:12px">'+
+      (g.exceptions===0? '<b>No exceptions in 14 days.</b> Path B is holding. Keep the re-evaluation date — a control that has never been stressed has not been tested, and quiet fortnights are exactly when the review gets skipped.'
+        : g.exceptions<=3? '<b>'+g.exceptions+' exceptions in 14 days.</b> Within tolerance, but every one of them has a story. Read them; do not average them.'
+        : '<b>'+g.exceptions+' exceptions in 14 days.</b> This is the finding. When a control fails this often, the conclusion is not "try harder to comply" — it is that the control is not designed for the risk. That is the case for Path A, made by your own data rather than by anybody’s lecture.')+
+      '</div>'+
+      (g.sessions&&g.alone>0.7? '<div class="tiny" style="margin-top:10px"><b>'+Math.round(g.alone*100)+'% of sessions were alone.</b> Solitary use is the pattern most closely tied to the escape function rather than the enjoyment one. If the stated aim is to actually enjoy it, that number is the first thing to move — and moving it costs nothing in restraint.</div>':'');
+  }
+}
+
+function renderTriggerCharts(l){
+  function bars(el,obj,list,color){
+    var tot=Object.keys(obj).reduce(function(a,k){return a+obj[k]},0);
+    if(!tot){ el.innerHTML='<div class="tiny">No sessions logged in the last 30 days.</div>'; return }
+    el.innerHTML=list.map(function(p){
+      var v=obj[p[0]]||0,pct=v/tot*100;
+      if(!v) return '';
+      var c=(p[0]==='avoidance'||p[0]==='sleep')?'var(--bad)':color;
+      return '<div style="margin-bottom:9px"><div class="spread" style="margin-bottom:3px">'+
+        '<span style="font-size:.84rem">'+p[1]+'</span><span class="mono" style="font-size:.75rem;color:var(--faint)">'+v+' · '+Math.round(pct)+'%</span></div>'+
+        '<div style="height:7px;background:var(--raise);border-radius:4px;overflow:hidden">'+
+        '<div style="height:100%;width:'+pct+'%;background:'+c+'"></div></div></div>'}).join('');
+  }
+  bars($('#triggerChart'),l.byTrig,TRIGGERS,'var(--accent)');
+  bars($('#displaceChart'),l.byDisp,DISPLACED,'var(--gold)');
+}
+
+/* ---------------- reference / ladder / phases ---------------- */
+function renderReference(){
+  $('#measureRef').innerHTML=MEASURES.map(function(m){
+    return '<div class="card"><div class="spread" style="align-items:flex-start">'+
+      '<div><h3 style="font-size:1.05rem">'+m.name+' <span style="font-family:var(--arabic);color:var(--gold);font-weight:400">'+m.ar+'</span></h3>'+
+      '<div class="tag">'+m.sub+'</div></div>'+
+      '<div class="mono" style="font-size:1.3rem;color:var(--accent)">'+S.settings.weights[m.id]+'</div></div>'+
+      '<div class="small" style="margin-top:10px">'+m.why+'</div>'+
+      '<div class="cite" style="font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--gold);text-transform:uppercase;margin-top:9px">'+m.cite+'</div>'+
+      '<div class="rubric" style="margin-top:9px">'+m.rubric.map(function(r,i){return '<div><b>'+i+'</b> — '+r+'</div>'}).join('')+'</div>'+
+      '</div>'}).join('');
+  var W=S.settings.weights,tot=MEASURES.reduce(function(a,m){return a+(+W[m.id]||0)},0);
+  $('#weightTable').innerHTML=MEASURES.map(function(m){
+    var w=+W[m.id]||0;
+    return '<div style="margin-bottom:7px"><div class="spread" style="margin-bottom:2px">'+
+      '<span style="font-size:.85rem">'+m.name+'</span><span class="mono" style="font-size:.75rem;color:var(--faint)">'+w+'</span></div>'+
+      '<div style="height:6px;background:var(--raise);border-radius:3px;overflow:hidden">'+
+      '<div style="height:100%;width:'+(w/tot*100)+'%;background:var(--accent)"></div></div></div>'}).join('')+
+      '<div class="kv" style="margin-top:8px"><span class="k">Total</span><span class="v">'+tot+'</span></div>';
+}
+function renderLadder(){
+  var L=ladderEval();
+  $('#ladderGrid').innerHTML=STAGES.map(function(s,i){
+    var cls=i===L.stage?'rung active':i<L.stage?'rung done':'rung';
+    var gates=i>0? L.gates[i-1]:null;
+    return '<div class="'+cls+'">'+(i===L.stage?'<div class="badge">you are here</div>':'')+
+      '<div class="stg">stage '+i+'</div>'+
+      '<h3>'+s.t+' <span class="ar">'+s.ar+'</span></h3>'+
+      '<div class="tag">'+s.s+'</div>'+
+      '<div class="small" style="margin-top:9px">'+s.d+'</div>'+
+      (gates? '<div class="gate">'+gates.map(function(g){
+        return '<div class="gate-line"><span>'+g[0]+'</span><span class="'+(g[1]?'ok':'no')+'">'+g[2]+'</span></div>'}).join('')+'</div>':'')+
+      '</div>'}).join('');
+}
+function renderPhases(){
+  var cur=phaseFor(todayK());
+  $('#phaseGrid').innerHTML=PHASES.map(function(p){
+    var isCur=cur&&cur.n===p.n;
+    var wk=weekKey(todayK());
+    return '<div class="phase'+(isCur?' cur':'')+'">'+
+      '<div class="d">'+p.d+'</div><h4>'+p.t+' <span class="ar">'+p.ar+'</span></h4>'+
+      '<div class="tag">'+p.s+' · '+p.ms.length+' measures</div>'+
+      '<ul>'+p.li.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>'+
+      (p.n===4? '<label class="chk" style="margin-top:8px"><input type="checkbox" id="shipChk"'+
+        (S.ships[wk]?' checked':'')+' /><span>Something left my hands this week</span></label>':'')+
+      '</div>'}).join('');
+  var n=dayDiff(S.settings.start,todayK())+1;
+  $('#dayN').textContent=n>0?Math.min(n,40):'—';
+  $('#startDate').value=S.settings.start;
+  $('#phaseNow').innerHTML=cur? 'Currently in <b>phase '+cur.n+' — '+cur.t+'</b>. '+
+    (n>40? 'You are past day 40 — re-baseline below and raise the targets.' : (41-n)+' days to re-baseline.') : 'Path not started.';
+}
+
+/* ---------------- charts ---------------- */
+function renderTrend(){
+  var ks=recentKeys(60),vals=ks.map(indexOf);
+  var have=vals.filter(function(v){return v!=null});
+  var closed=ks.filter(function(k){return S.days[k]&&S.days[k].closed}).length;
+  var l=ledger(30);
+  var realN=realDays().length;
+  $('#trendStats').innerHTML=
+    '<div class="stat"><div class="k">60-day median</div><div class="v">'+(have.length?Math.round(median(have)):'—')+'</div></div>'+
+    '<div class="stat"><div class="k">Days closed</div><div class="v">'+closed+'<small> / 60</small></div></div>'+
+    '<div class="stat"><div class="k">Clean streak</div><div class="v">'+l.streak+'<small> d</small></div></div>'+
+    '<div class="stat"><div class="k">Entries on record</div><div class="v">'+realN+'</div></div>';
+
+  // line chart
+  var W=640,H=220,PL=34,PR=8,PT=10,PB=22;
+  var X=function(i){return PL+i/(ks.length-1)*(W-PL-PR)};
+  var Y=function(v){return PT+(1-v/100)*(H-PT-PB)};
+  var g='';
+  [0,25,50,75,100].forEach(function(v){
+    g+='<line x1="'+PL+'" y1="'+Y(v)+'" x2="'+(W-PR)+'" y2="'+Y(v)+'" stroke="var(--line)" stroke-width="1"/>'+
+       '<text x="'+(PL-6)+'" y="'+(Y(v)+3)+'" text-anchor="end" fill="var(--faint)" font-size="9" font-family="ui-monospace,monospace">'+v+'</text>';
+  });
+  var seg=[],pts=[];
+  vals.forEach(function(v,i){ if(v==null){ if(seg.length){pts.push(seg);seg=[]} }
+    else seg.push([X(i),Y(v)]) });
+  if(seg.length) pts.push(seg);
+  pts.forEach(function(p){
+    if(p.length===1){g+='<circle cx="'+p[0][0]+'" cy="'+p[0][1]+'" r="2" fill="var(--accent)"/>';return}
+    g+='<polyline points="'+p.map(function(q){return q[0].toFixed(1)+','+q[1].toFixed(1)}).join(' ')+
+      '" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round"/>';
+  });
+  // 7-day rolling median
+  var roll=vals.map(function(_,i){
+    var w=vals.slice(Math.max(0,i-6),i+1).filter(function(v){return v!=null});
+    return w.length>=3? median(w):null});
+  var rseg=[],rp=[];
+  roll.forEach(function(v,i){ if(v==null){if(rseg.length){rp.push(rseg);rseg=[]}} else rseg.push([X(i),Y(v)])});
+  if(rseg.length) rp.push(rseg);
+  rp.forEach(function(p){ if(p.length<2) return;
+    g+='<polyline points="'+p.map(function(q){return q[0].toFixed(1)+','+q[1].toFixed(1)}).join(' ')+
+      '" fill="none" stroke="var(--gold)" stroke-width="2" stroke-dasharray="4 3" opacity=".9"/>'});
+  vals.forEach(function(v,i){ if(v!=null&&S.days[ks[i]]&&S.days[ks[i]].weed.sessions.length)
+    g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(v).toFixed(1)+'" r="2.6" fill="var(--bad)"/>'});
+  g+='<text x="'+PL+'" y="'+(H-6)+'" fill="var(--faint)" font-size="9" font-family="ui-monospace,monospace">'+ks[0].slice(5)+'</text>'+
+     '<text x="'+(W-PR)+'" y="'+(H-6)+'" text-anchor="end" fill="var(--faint)" font-size="9" font-family="ui-monospace,monospace">'+ks[ks.length-1].slice(5)+'</text>'+
+     '<text x="'+(W/2)+'" y="'+(H-6)+'" text-anchor="middle" fill="var(--bad)" font-size="9" font-family="ui-monospace,monospace">● = session logged</text>';
+  $('#lineChart').innerHTML=g;
+
+  // heat
+  $('#heatGrid').innerHTML=ks.map(function(k){
+    var v=indexOf(k);
+    var c=v==null?'var(--raise)':v>=80?'rgba(79,168,122,.95)':v>=65?'rgba(69,170,180,.85)':v>=40?'rgba(224,162,68,.85)':'rgba(212,102,79,.85)';
+    return '<i style="background:'+c+'" title="'+k+(v==null?' — no entry':' — '+v)+'"></i>'}).join('');
+
+  // deviation
+  var W2=640,H2=260,mid=W2*0.52,rowH=(H2-30)/MEASURES.length;
+  var d='';
+  d+='<line x1="'+mid+'" y1="6" x2="'+mid+'" y2="'+(H2-24)+'" stroke="var(--muted)" stroke-width="1.5"/>';
+  d+='<text x="'+mid+'" y="'+(H2-8)+'" text-anchor="middle" fill="var(--muted)" font-size="9" font-family="ui-monospace,monospace">target 2.5 / 3</text>';
+  MEASURES.forEach(function(m,i){
+    var k14=recentKeys(14).map(function(k){var dd=S.days[k];return dd?scoreOf(dd,m.id):null})
+      .filter(function(x){return x!=null});
+    var mu=k14.length?mean(k14):null;
+    var y=10+i*rowH;
+    d+='<text x="4" y="'+(y+rowH/2)+'" fill="var(--muted)" font-size="10" font-family="ui-monospace,monospace">'+m.name.replace(/&amp;/,'&')+'</text>';
+    if(mu==null){ d+='<text x="'+(mid+8)+'" y="'+(y+rowH/2)+'" fill="var(--faint)" font-size="9" font-family="ui-monospace,monospace">no data</text>'; return }
+    var dev=mu-2.5, px=dev/2.5*(W2-mid-20);
+    var x0=Math.min(mid,mid+px), w=Math.abs(px);
+    d+='<rect x="'+x0+'" y="'+(y+rowH/2-7)+'" width="'+Math.max(w,1.5)+'" height="14" fill="'+(dev<0?'var(--bad)':'var(--good)')+'" opacity=".82"/>'+
+       '<text x="'+(dev<0? x0-5 : x0+w+5)+'" y="'+(y+rowH/2+4)+'" text-anchor="'+(dev<0?'end':'start')+'" fill="var(--faint)" font-size="9" font-family="ui-monospace,monospace">'+mu.toFixed(2)+'</text>';
+  });
+  $('#devChart').innerHTML=d;
+
+  // calibration
+  var pairs=Object.keys(S.days).filter(function(k){var dd=S.days[k];
+    return !dd.synthetic && dd.forecast!=null && indexOf(k)!=null})
+    .map(function(k){return [S.days[k].forecast,indexOf(k)]});
+  var W3=640,H3=260,P=34;
+  var CX=function(v){return P+v/100*(W3-P-14)}, CY=function(v){return H3-24-v/100*(H3-24-10)};
+  var c='';
+  c+='<line x1="'+CX(0)+'" y1="'+CY(0)+'" x2="'+CX(100)+'" y2="'+CY(100)+'" stroke="var(--muted)" stroke-width="1" stroke-dasharray="4 4"/>';
+  c+='<line x1="'+P+'" y1="'+CY(0)+'" x2="'+(W3-14)+'" y2="'+CY(0)+'" stroke="var(--line2)"/>';
+  c+='<line x1="'+P+'" y1="'+CY(0)+'" x2="'+P+'" y2="'+CY(100)+'" stroke="var(--line2)"/>';
+  c+='<text x="'+(W3/2)+'" y="'+(H3-4)+'" text-anchor="middle" fill="var(--faint)" font-size="9" font-family="ui-monospace,monospace">forecast →</text>';
+  c+='<text x="10" y="18" fill="var(--faint)" font-size="9" font-family="ui-monospace,monospace">actual ↑</text>';
+  pairs.forEach(function(p){
+    c+='<circle cx="'+CX(p[0]).toFixed(1)+'" cy="'+CY(p[1]).toFixed(1)+'" r="3.4" fill="var(--accent)" opacity=".8"/>'});
+  $('#calChart').innerHTML=c;
+  if(pairs.length>=3){
+    var errs=pairs.map(function(p){return p[1]-p[0]});
+    var bias=mean(errs), mae=mean(errs.map(Math.abs));
+    var over=errs.filter(function(e){return e<0}).length;
+    $('#calStats').innerHTML='<b>n = '+pairs.length+'</b> · MAE '+mae.toFixed(1)+
+      ' · bias '+(bias>0?'+':'')+bias.toFixed(1)+' · optimistic on '+over+' of '+pairs.length+' days. '+
+      (bias<-4? '<b>You are systematically over-forecasting yourself.</b> This is the same failure you study — confidence outrunning the evidence base. The correction is not to try harder; it is to <b>forecast the day you usually have, not the day you intend</b>.'
+       : bias>4? 'You are under-forecasting — scoring higher than you predict. Either the mornings are pessimistic or the scoring is generous. Re-read the rubrics before assuming the first.'
+       : 'Well calibrated. Your read on yourself is holding within a few points, which is more than most models manage.');
+  } else {
+    $('#calStats').innerHTML='Needs at least three days with both a morning forecast and a closed evening. '+
+      'This is the panel worth waiting for — it is the only one that measures your judgment rather than your behaviour.';
+  }
+}
+
+/* ---------------- settings ---------------- */
+function renderSettings(){
+  var st=S.settings;
+  $('#setLat').value=st.lat; $('#setLng').value=st.lng;
+  $('#setMethod').value=st.method; $('#setAsr').value=st.asr;
+  $('#weightEditor').innerHTML=MEASURES.map(function(m){
+    return '<div class="field" style="margin-bottom:8px"><label class="fl">'+m.name+'</label>'+
+      '<input type="number" min="0" max="60" data-w="'+m.id+'" value="'+st.weights[m.id]+'" /></div>'}).join('');
+  var real=realDays().length,syn=Object.keys(S.days).length-real;
+  $('#dataStats').innerHTML=kv('Real day entries',real)+kv('Synthetic entries',syn)+
+    kv('Urge decisions',S.urges.length)+
+    kv('Storage used',(JSON.stringify(S).length/1024).toFixed(1)+' KB');
+  $('#footVer').textContent='mizan.v1 · '+real+' entries · '+new Date().toISOString().slice(0,10);
+}
+
+/* ---------------- render all ---------------- */
+function renderAll(){
+  renderToday(); renderReference(); renderLadder(); renderPhases(); renderTrend(); renderSettings();
+}
+
+/* ==================================================================
+   EVENTS
+   ================================================================== */
+function on(sel,ev,fn){var e=$(sel); if(e) e.addEventListener(ev,fn)}
+function touch(){save(); renderAll()}
+
+document.addEventListener('click',function(e){
+  var t=e.target;
+  if(t.tagName!=='BUTTON') return;
+  var segM=t.closest('[data-measure]');
+  if(segM){ var d=day(CUR); d.scores[segM.getAttribute('data-measure')]=+t.getAttribute('data-v'); touch(); return }
+  var segP=t.closest('[data-prayer]');
+  if(segP){ var d2=day(CUR),id=segP.getAttribute('data-prayer'),v=t.getAttribute('data-v');
+    d2.prayers[id]= d2.prayers[id]===v? null : v; touch(); return }
+  if(t.hasAttribute('data-fog')){ day(CUR).weed.fog=+t.getAttribute('data-fog'); touch(); return }
+  if(t.hasAttribute('data-path')){ S.settings.path=t.getAttribute('data-path'); touch(); return }
+  if(t.hasAttribute('data-delsess')){ day(CUR).weed.sessions.splice(+t.getAttribute('data-delsess'),1); touch(); return }
+});
+
+document.addEventListener('change',function(e){
+  var t=e.target;
+  if(t.hasAttribute&&t.hasAttribute('data-fr')){ day(CUR).friction[+t.getAttribute('data-fr')]=t.checked; save(); return }
+  if(t.id==='shipChk'){ S.ships[weekKey(todayK())]=t.checked; save(); return }
+  if(t.hasAttribute&&t.hasAttribute('data-w')){
+    S.settings.weights[t.getAttribute('data-w')]=clamp(+t.value||0,0,60); touch(); return }
+});
+
+on('#dayPicker','change',function(e){CUR=e.target.value||todayK(); renderAll()});
+on('#prevDay','click',function(){CUR=addDays(CUR,-1); renderAll()});
+on('#nextDay','click',function(){CUR=addDays(CUR,1); renderAll()});
+on('#fcInput','change',function(e){var v=e.target.value;
+  day(CUR).forecast= v===''? null : clamp(+v,0,100); touch()});
+on('#oneThing','input',function(e){day(CUR).oneThing=e.target.value; save()});
+on('#oneThingDone','change',function(e){day(CUR).oneThingDone=e.target.checked; touch()});
+on('#hyper','input',function(e){day(CUR).hyper=e.target.value; save()});
+['#mShukr','#mKhata','#mKal'].forEach(function(sel){
+  on(sel,'input',function(e){
+    var f={'mShukr':'shukr','mKhata':'khata','mKal':'kal'}[e.target.id];
+    day(CUR).muhasaba[f]=e.target.value; save()})});
+on('#closeDay','click',function(){
+  var d=day(CUR); d.closed=!d.closed;
+  if(d.closed&&!d.weed.sessions.length) d.weed.clean=true;
+  touch()});
+on('#freeDayBtn','click',function(){var d=day(CUR); d.weed.clean=true; d.weed.sessions=[]; touch()});
+
+on('#addSession','click',function(){
+  var host=$('#sessionList');
+  if($('#sessForm')) return;
+  var now=new Date();
+  var f=document.createElement('div'); f.id='sessForm'; f.className='card flat';
+  f.style.marginTop='12px';
+  f.innerHTML='<div class="grid g2" style="gap:10px">'+
+    '<div class="field" style="margin:0"><label class="fl">Time</label><input type="time" id="sTime" value="'+pad(now.getHours())+':'+pad(now.getMinutes())+'" /></div>'+
+    '<div class="field" style="margin:0"><label class="fl">Trigger — be honest, this is the whole point</label><select id="sTrig">'+
+      TRIGGERS.map(function(t){return '<option value="'+t[0]+'">'+t[1]+'</option>'}).join('')+'</select></div>'+
+    '<div class="field" style="margin:0"><label class="fl">Setting</label><select id="sSet">'+
+      SETTINGS_LIST.map(function(t){return '<option value="'+t[0]+'">'+t[1]+'</option>'}).join('')+'</select></div>'+
+    '<div class="field" style="margin:0"><label class="fl">What it displaced</label><select id="sDisp">'+
+      DISPLACED.map(function(t){return '<option value="'+t[0]+'">'+t[1]+'</option>'}).join('')+'</select></div>'+
+    '</div><div class="btn-row" style="margin-top:12px"><button class="btn primary" id="sSave">Log it</button>'+
+    '<button class="btn" id="sCancel">Cancel</button></div>';
+  host.parentNode.insertBefore(f,host.nextSibling);
+  $('#sSave').addEventListener('click',function(){
+    var d=day(CUR);
+    d.weed.sessions.push({time:$('#sTime').value||'00:00',trigger:$('#sTrig').value,
+      setting:$('#sSet').value,displaced:$('#sDisp').value});
+    d.weed.clean=false; f.remove(); touch()});
+  $('#sCancel').addEventListener('click',function(){f.remove()});
+});
+
+/* ---- timers ---- */
+function mkTimer(elSel,stateSel,mins,onDone){
+  var end=null,iv=null,el=$(elSel),st=$(stateSel);
+  function tick(){
+    var left=Math.max(0,Math.round((end-Date.now())/1000));
+    el.textContent=pad(Math.floor(left/60))+':'+pad(left%60);
+    if(left<=0){ clearInterval(iv); iv=null; el.className='timer done';
+      if(st) st.textContent='complete'; onDone&&onDone(); }
+  }
+  return {
+    start:function(m){ end=Date.now()+(m||mins)*60000; el.className='timer run';
+      if(st) st.textContent='running'; if(iv)clearInterval(iv); iv=setInterval(tick,250); tick()},
+    stop:function(){ if(iv)clearInterval(iv); iv=null; el.className='timer';
+      if(st) st.textContent='stopped'; el.textContent=pad(mins)+':00'},
+    running:function(){return !!iv}
+  };
+}
+var sprint=mkTimer('#sprintTimer','#sprintState',25,function(){
+  var d=day(CUR); d.sprints=(d.sprints||0)+1; touch();
+  try{ if(window.Notification&&Notification.permission==='granted')
+    new Notification('Sprint complete — log it and stand up.') }catch(e){}
+});
+on('#sprintStart','click',function(){
+  var m=+$('#sprintLen').value||25; sprint.start(m);
+  try{ if(window.Notification&&Notification.permission==='default') Notification.requestPermission() }catch(e){}
+});
+on('#sprintStop','click',function(){sprint.stop()});
+
+var urge=mkTimer('#urgeTimer','#urgeState',20,function(){
+  var el=$('#urgeState');
+  if(el) el.innerHTML='<b>Twenty minutes are up.</b> Now choose deliberately — that is the only difference between a decision and a reflex.';
+});
+on('#urgeStart','click',function(){ urge.start(20);
+  S.urges.push({ts:Date.now(),date:CUR,task:$('#urgeTask').value||'',outcome:null}); save()});
+function resolveUrge(outcome){
+  for(var i=S.urges.length-1;i>=0;i--){ if(S.urges[i].outcome==null){S.urges[i].outcome=outcome;break} }
+  urge.stop(); touch();
+}
+on('#urgePassed','click',function(){resolveUrge('passed')});
+on('#urgeUsed','click',function(){resolveUrge('used')});
+
+/* ---- settings ---- */
+['#setLat','#setLng','#setMethod','#setAsr'].forEach(function(sel){
+  on(sel,'change',function(e){
+    var f={'setLat':'lat','setLng':'lng','setMethod':'method','setAsr':'asr'}[e.target.id];
+    S.settings[f]= (f==='lat'||f==='lng'||f==='asr')? +e.target.value : e.target.value;
+    touch()})});
+on('#geoBtn','click',function(){
+  if(!navigator.geolocation){alert('Geolocation unavailable — enter coordinates manually.');return}
+  navigator.geolocation.getCurrentPosition(function(p){
+    S.settings.lat=+p.coords.latitude.toFixed(4); S.settings.lng=+p.coords.longitude.toFixed(4); touch();
+  },function(){alert('Location denied — enter coordinates manually.')});
+});
+on('#resetWeights','click',function(){S.settings.weights=Object.assign({},DEFW); touch()});
+on('#startDate','change',function(e){S.settings.start=e.target.value||todayK(); touch()});
+on('#restartPath','click',function(){
+  if(confirm('Start a new 40-day cycle from today? Your logged days are kept — only the phase clock resets.')){
+    S.settings.start=todayK(); touch()}});
+on('#exportBtn','click',function(){
+  var blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='mizan-'+todayK()+'.json'; a.click(); URL.revokeObjectURL(a.href)});
+on('#importBtn','click',function(){$('#importFile').click()});
+on('#importFile','change',function(e){
+  var f=e.target.files[0]; if(!f) return;
+  var r=new FileReader();
+  r.onload=function(){ try{ var o=JSON.parse(r.result);
+    if(!o||!o.days) throw new Error('not a mizan file');
+    if(confirm('Replace all current data with this file?')){ S=o; load2(); touch() }
+  }catch(err){ alert('Could not read that file: '+err.message) } };
+  r.readAsText(f)});
+function load2(){ var d=defaults();
+  S.settings=Object.assign({},d.settings,S.settings||{});
+  S.settings.weights=Object.assign({},DEFW,S.settings.weights||{});
+  S.days=S.days||{}; S.urges=S.urges||[]; S.ships=S.ships||{} }
+on('#wipeBtn','click',function(){
+  if(confirm('Erase every entry permanently? Export first if you want a copy.')){
+    localStorage.removeItem(KEY); S=defaults(); touch()}});
+on('#sampleBtn','click',function(){ makeSample(); touch();
+  location.hash='#trend'});
+
+on('#themeBtn','click',function(){
+  var root=document.documentElement;
+  var next=(root.getAttribute('data-theme')||'dark')==='dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  try{localStorage.setItem('mizan.theme',next)}catch(e){}
+  renderAll();
+});
+
+/* ---- sample data (clearly synthetic) ---- */
+function makeSample(){
+  var seed=7; function rnd(){seed=(seed*1103515245+12345)%2147483648; return seed/2147483648}
+  for(var i=13;i>=0;i--){
+    var k=addDays(todayK(),-i);
+    if(has(k)&&!S.days[k].synthetic) continue;
+    var d=blankDay(k); d.synthetic=true;
+    var arc=(14-i)/14;
+    var pr=0.45+arc*0.5;
+    PRAYERS.forEach(function(p){ var r=rnd();
+      d.prayers[p.id]= r<pr?'in': r<pr+0.2?'late':'miss'});
+    d.sprints=Math.floor(rnd()*3+arc*1.6);
+    d.oneThingDone=rnd()<0.3+arc*0.45;
+    d.oneThing='sample target';
+    ['dhikr','zabt','attn','body','ihsan'].forEach(function(id){
+      d.scores[id]=clamp(Math.round(rnd()*2+arc*1.4),0,3)});
+    if(rnd()<0.55-arc*0.35){
+      d.weed.sessions.push({time:(rnd()<0.4?'16':'21')+':'+(rnd()<0.5?'15':'40'),
+        trigger:TRIGGERS[Math.floor(rnd()*TRIGGERS.length)][0],
+        setting:rnd()<0.7?'alone':'partner',
+        displaced:DISPLACED[Math.floor(rnd()*DISPLACED.length)][0]});
+      d.weed.fog=Math.floor(rnd()*3);
+    } else d.weed.clean=true;
+    d.closed=rnd()<0.55+arc*0.35;
+    d.muhasaba={shukr:'sample',khata:'sample',kal:'sample'};
+    S.days[k]=d;
+    d.forecast=clamp(Math.round(45+arc*35+rnd()*18),0,100);
+  }
+}
+
+/* ---- nav highlight ---- */
+if('IntersectionObserver' in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(en){
+      if(!en.isIntersecting) return;
+      $$('#navLinks a').forEach(function(a){
+        a.classList.toggle('on', a.getAttribute('href')==='#'+en.target.id)})})
+  },{rootMargin:'-45% 0px -50% 0px'});
+  $$('section[id]').forEach(function(s){io.observe(s)});
+}
+
+/* ---- boot ---- */
+try{ var th=localStorage.getItem('mizan.theme'); if(th) document.documentElement.setAttribute('data-theme',th) }catch(e){}
+load();
+renderAll();
+setInterval(function(){ if(CUR===todayK()) renderPrayers(day(CUR),parseISO(CUR)) },60000);
+
+})();
+</script>
+</body>
+</html>
