@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="The Reference Mark on ember">
+  <title>The Reference Mark on ember</title>
+  <rect width="64" height="64" rx="14" fill="#E0662E"/>
+  <g transform="translate(32 32) scale(.8) translate(-32 -32)">
+    <path d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke="#1A1109" stroke-width="4.4" stroke-linecap="round"/>
+    <circle cx="12.85" cy="15.93" r="3.9" fill="#1A1109"/>
+    <path d="M20 47 L32 19.5 L44 47" stroke="#1A1109" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+    <path d="M21.09 38 H51.5" stroke="#1A1109" stroke-width="5.2" stroke-linecap="butt"/>
+  </g>
+</svg>
