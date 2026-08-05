@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#0E1114"/>
+  <rect x="0" y="0" width="1200" height="6" fill="#E0662E"/>
+  <g transform="translate(830 -60) scale(11)" opacity=".07">
+    <path d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke="#E0662E" stroke-width="4.4" stroke-linecap="round"/>
+    <circle cx="12.85" cy="15.93" r="3.9" fill="#E0662E"/>
+    <path d="M20 47 L32 19.5 L44 47" stroke="#EDEFF1" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+    <path d="M21.09 38 H51.5" stroke="#EDEFF1" stroke-width="5.2" stroke-linecap="butt"/>
+  </g>
+  <g transform="translate(88 96) scale(2.05)">
+    <path d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke="#E0662E" stroke-width="4.4" stroke-linecap="round"/>
+    <circle cx="12.85" cy="15.93" r="3.9" fill="#E0662E"/>
+    <path d="M20 47 L32 19.5 L44 47" stroke="#EDEFF1" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+    <path d="M21.09 38 H51.5" stroke="#EDEFF1" stroke-width="5.2" stroke-linecap="butt"/>
+  </g>
+  <text x="88" y="336" font-family="&#39;Bitstream Charter&#39;,Charter,&#39;Iowan Old Style&#39;,&#39;Palatino Linotype&#39;,Palatino,&#39;Book Antiqua&#39;,Georgia,serif" font-size="76" letter-spacing="0" fill="#EDEFF1">Yasir A. Malik</text>
+  <path d="M90 372 H150" stroke="#E0662E" stroke-width="2.5"/>
+  <text x="92" y="404" font-family="ui-monospace,&#39;SF Mono&#39;,Menlo,&#39;Cascadia Mono&#39;,&#39;Roboto Mono&#39;,monospace" font-size="19" letter-spacing="6.5" fill="#A6B0BA">AUDIT · RISK · GOVERNANCE</text>
+  <text x="88" y="486" font-family="&#39;Bitstream Charter&#39;,Charter,&#39;Iowan Old Style&#39;,&#39;Palatino Linotype&#39;,Palatino,&#39;Book Antiqua&#39;,Georgia,serif" font-size="28" fill="#A6B0BA">Regulator, operator, and researcher — on how</text>
+  <text x="88" y="524" font-family="&#39;Bitstream Charter&#39;,Charter,&#39;Iowan Old Style&#39;,&#39;Palatino Linotype&#39;,Palatino,&#39;Book Antiqua&#39;,Georgia,serif" font-size="28" fill="#A6B0BA">professional judgment holds under scrutiny.</text>
+  <text x="88" y="580" font-family="ui-monospace,&#39;SF Mono&#39;,Menlo,&#39;Cascadia Mono&#39;,&#39;Roboto Mono&#39;,monospace" font-size="16" letter-spacing="3" fill="#5A646E">MALIKAI-786.GITHUB.IO</text>
+</svg>

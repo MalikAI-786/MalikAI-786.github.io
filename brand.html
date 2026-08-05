@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Reference Mark — Identity System · Yasir A. Malik</title>
+<meta name="description" content="The identity system behind Yasir A. Malik: the Reference Mark, the Ember palette, three typographic voices, and the rules that hold them together." />
+<link rel="stylesheet" href="assets/brand/tokens.css" />
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="assets/brand/icon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png" />
+<meta name="theme-color" content="#E0662E" />
+<meta name="robots" content="noindex" />
+</head>
+<body>
+<style>
+  /* ===================================================================
+     Identity system reference. Everything on this page is driven by
+     assets/brand/tokens.css — if a swatch here is wrong, the token is
+     wrong. That is the point of the page.
+     =================================================================== */
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--statement);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:var(--accent-ink);text-underline-offset:3px;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
+
+  .wrap{max-width:1000px;margin:0 auto;padding:0 28px;}
+
+  .eyebrow{font-family:var(--instrument);font-size:.7rem;
+    letter-spacing:var(--track-instrument);text-transform:uppercase;
+    color:var(--accent-ink);margin:0 0 16px;display:flex;align-items:center;gap:11px;}
+  .eyebrow::before{content:"";width:18px;height:0;border-top:1.5px solid var(--accent);}
+
+  nav.top{position:sticky;top:0;z-index:60;
+    background:color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter:saturate(150%) blur(9px);
+    border-bottom:1px solid var(--line);border-top:3px solid var(--accent);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;
+    height:58px;max-width:1000px;margin:0 auto;padding:0 28px;}
+  .brand{display:inline-flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink);}
+  .brand .name{font-family:var(--record);font-size:1.06rem;font-weight:700;
+    letter-spacing:var(--track-record);}
+  .nav-links{display:flex;gap:18px;align-items:center;}
+  .nav-links a{font-family:var(--instrument);font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--muted);text-decoration:none;}
+  .nav-links a:hover{color:var(--ink);}
+  .theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--muted);
+    font-family:var(--instrument);font-size:.7rem;padding:6px 11px;border-radius:var(--radius);
+    cursor:pointer;}
+  .theme-btn:hover{border-color:var(--accent);color:var(--accent-ink);}
+  @media (max-width:820px){ .nav-links a{display:none;} }
+
+  .logo{display:block;flex:0 0 auto;}
+  .logo .ring{stroke:var(--accent);}
+  .logo .node{fill:var(--accent);}
+  .logo .letter{stroke:currentColor;}
+
+  header.hero{padding:76px 0 44px;}
+  h1{font-family:var(--record);font-size:clamp(2.1rem,4.6vw,3.2rem);line-height:1.12;
+    margin:0 0 20px;letter-spacing:var(--track-record);font-weight:700;max-width:20ch;}
+  .lede{font-family:var(--record);font-size:1.1rem;line-height:1.7;color:var(--muted);
+    max-width:62ch;margin:0;}
+  .lede strong{color:var(--ink);font-weight:600;}
+
+  section{padding:64px 0;border-top:1px solid var(--line);}
+  h2{font-family:var(--record);font-size:clamp(1.5rem,2.9vw,2rem);margin:0 0 10px;
+    letter-spacing:var(--track-record);font-weight:700;}
+  h3{font-family:var(--record);font-size:1.16rem;margin:38px 0 12px;
+    letter-spacing:var(--track-record);}
+  .sub{color:var(--muted);max-width:64ch;margin:0 0 28px;}
+  p{max-width:64ch;}
+
+  /* ---------- swatches ---------- */
+  .ramp{display:grid;grid-template-columns:repeat(6,1fr);gap:0;border-radius:var(--radius);
+    overflow:hidden;border:1px solid var(--line);}
+  @media (max-width:760px){ .ramp{grid-template-columns:repeat(3,1fr);} }
+  .sw{padding:14px 12px 12px;min-height:96px;display:flex;flex-direction:column;
+    justify-content:flex-end;}
+  .sw .n{font-family:var(--instrument);font-size:.6rem;letter-spacing:.1em;
+    text-transform:uppercase;opacity:.85;}
+  .sw .h{font-family:var(--instrument);font-size:.72rem;margin-top:3px;}
+
+  .roles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px;}
+  @media (max-width:820px){ .roles{grid-template-columns:1fr;} }
+  .role{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+    padding:18px;}
+  .role .chipline{display:flex;align-items:center;gap:10px;margin-bottom:11px;}
+  .role .dot{width:26px;height:26px;border-radius:50%;flex:0 0 auto;
+    border:1px solid rgba(0,0,0,.12);}
+  .role .t{font-weight:700;font-size:.98rem;}
+  .role p{margin:0;font-size:.87rem;color:var(--muted);line-height:1.55;}
+
+  /* ---------- contrast table ---------- */
+  .tbl-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--surface);}
+  table{border-collapse:collapse;width:100%;min-width:640px;}
+  th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);
+    font-size:.86rem;vertical-align:middle;}
+  th{font-family:var(--instrument);font-size:.62rem;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--muted);font-weight:400;background:var(--raise);}
+  tr:last-child td{border-bottom:0;}
+  .ratio{font-family:var(--instrument);font-variant-numeric:tabular-nums;}
+  .verdict{font-family:var(--instrument);font-size:.68rem;letter-spacing:.1em;
+    padding:3px 8px;border-radius:2px;white-space:nowrap;}
+  .pass{background:var(--evidence-wash);color:var(--evidence);
+    border:1px solid color-mix(in srgb, var(--evidence) 40%, transparent);}
+  .swatch-cell{display:inline-flex;align-items:center;gap:9px;}
+  .swatch-cell i{width:16px;height:16px;border-radius:3px;display:inline-block;
+    border:1px solid rgba(128,128,128,.3);}
+
+  /* ---------- logo board ---------- */
+  .board{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  @media (max-width:880px){ .board{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:480px){ .board{grid-template-columns:1fr;} }
+  .cell{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+    padding:22px;display:flex;flex-direction:column;align-items:center;gap:16px;
+    justify-content:space-between;}
+  .cell.on-dark{background:var(--ink-950);color:#EDEFF1;border-color:var(--ink-700);}
+  .cell.on-ember{background:var(--ember-500);color:#1A1109;border-color:var(--ember-600);}
+  .cell.on-ember .logo .ring, .cell.on-ember .logo .node{stroke:#1A1109;fill:#1A1109;}
+  .cell.on-ember .logo .ring{fill:none;}
+  .cell .cap{font-family:var(--instrument);font-size:.62rem;letter-spacing:.11em;
+    text-transform:uppercase;opacity:.72;text-align:center;}
+
+  .sizes{display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap;
+    border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+    padding:26px;}
+  .size-item{display:flex;flex-direction:column;align-items:center;gap:9px;}
+  .size-item .cap{font-family:var(--instrument);font-size:.6rem;color:var(--muted);}
+
+  /* clear space diagram */
+  .clearspace{display:inline-block;position:relative;padding:25px;
+    background:var(--accent-wash);
+    outline:1px dashed color-mix(in srgb, var(--accent) 55%, transparent);
+    border-radius:var(--radius);}
+
+  /* ---------- misuse ---------- */
+  .misuse{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  @media (max-width:880px){ .misuse{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:480px){ .misuse{grid-template-columns:1fr;} }
+  .dont{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+    padding:20px;text-align:center;}
+  .dont .demo{height:74px;display:flex;align-items:center;justify-content:center;
+    margin-bottom:13px;}
+  .dont .x{font-family:var(--instrument);font-size:.62rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--accent-ink);display:block;margin-bottom:6px;}
+  .dont p{font-size:.8rem;color:var(--muted);margin:0;line-height:1.5;}
+  .sq{filter:none;}
+  .d-stretch .logo{transform:scaleX(1.55);}
+  .d-rotate .logo{transform:rotate(22deg);}
+  .d-recolour .logo .ring, .d-recolour .logo .node{stroke:#2E7FD4;fill:#2E7FD4;}
+  .d-recolour .logo .ring{fill:none;}
+  .d-lowcon{background:var(--ember-500);border-radius:var(--radius);padding:9px;}
+  .d-lowcon .logo .ring, .d-lowcon .logo .node{stroke:var(--ember-600);fill:var(--ember-600);}
+  .d-lowcon .logo .ring{fill:none;}
+  .d-lowcon .logo .letter{stroke:var(--ember-700);}
+
+  /* ---------- type ---------- */
+  .voice{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+    padding:22px;margin-bottom:14px;display:grid;grid-template-columns:150px 1fr;gap:24px;}
+  @media (max-width:720px){ .voice{grid-template-columns:1fr;gap:12px;} }
+  .voice .meta{font-family:var(--instrument);font-size:.63rem;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--muted);line-height:1.8;}
+  .voice .meta b{color:var(--accent-ink);display:block;font-size:.72rem;
+    letter-spacing:.13em;margin-bottom:6px;}
+  .spec-record{font-family:var(--record);font-size:1.7rem;letter-spacing:var(--track-record);
+    font-weight:700;line-height:1.25;}
+  .spec-statement{font-family:var(--statement);font-size:1rem;line-height:1.62;}
+  .spec-instrument{font-family:var(--instrument);font-size:.78rem;
+    letter-spacing:var(--track-instrument);text-transform:uppercase;}
+
+  .note{background:var(--surface);border:1px solid var(--line);
+    border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+    padding:17px 20px;font-size:.9rem;line-height:1.6;color:var(--muted);max-width:74ch;}
+  .note b{color:var(--ink);}
+
+  .rule-list{list-style:none;margin:0;padding:0;display:grid;gap:13px;max-width:70ch;}
+  .rule-list li{position:relative;padding-left:34px;font-size:.94rem;line-height:1.6;}
+  .rule-list li .num{position:absolute;left:0;top:.06em;font-family:var(--instrument);
+    font-size:.68rem;color:var(--accent-ink);border:1px solid var(--line);
+    border-radius:2px;padding:1px 5px;}
+
+  .files{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border:1px solid var(--line);
+    border-radius:var(--radius);overflow:hidden;background:var(--surface);}
+  @media (max-width:720px){ .files{grid-template-columns:1fr;} }
+  .file{padding:13px 16px;border-bottom:1px solid var(--line);
+    border-right:1px solid var(--line);font-size:.84rem;}
+  .file:nth-child(2n){border-right:0;}
+  .file code{font-family:var(--instrument);font-size:.79rem;color:var(--accent-ink);}
+  .file span{display:block;color:var(--muted);font-size:.79rem;margin-top:3px;}
+
+  footer.foot{padding:30px 0 48px;color:var(--muted);font-size:.76rem;
+    font-family:var(--instrument);border-top:1px solid var(--line);}
+  .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+</style>
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <svg class="logo" width="26" height="26" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" class="ring" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="14.38" cy="17.22" r="5.46" class="node"/>
+        <path d="M19.5 46.5 L32 19 L44.5 46.5" class="letter" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+        <path d="M21.6 38.4 H42.4" class="letter" stroke-width="8" stroke-linecap="butt"/>
+      </svg>
+      <span class="name">Yasir A. Malik</span>
+    </a>
+    <div class="nav-links">
+      <a href="#mark">Mark</a>
+      <a href="#colour">Colour</a>
+      <a href="#type">Type</a>
+      <a href="#rules">Rules</a>
+      <a href="index.html">← Site</a>
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle colour theme">Theme</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Identity System · v1</div>
+    <h1>The Reference Mark.</h1>
+    <p class="lede">An identity built from a measuring instrument rather than a logo trend.
+    An open ring, an anchor node, and a reference line extended past the figure.
+    <strong>Ember marks what pulls you. Verdigris marks what was verified.</strong>
+    Everything on this page is driven by one token file — if a swatch here is wrong,
+    the token is wrong.</p>
+  </div>
+</header>
+
+<!-- ============================== MARK ============================== -->
+<section id="mark">
+  <div class="wrap">
+    <div class="eyebrow">The Mark</div>
+    <h2>An instrument, not an emblem.</h2>
+    <p class="sub">Three elements, each carrying an argument the practice actually makes.</p>
+
+    <div class="roles">
+      <div class="role">
+        <div class="chipline"><div class="t">The open ring</div></div>
+        <p>A recurring engagement, deliberately not closed. A finished loop would say the
+        judgment is settled. It isn't — that is the whole subject.</p>
+      </div>
+      <div class="role">
+        <div class="chipline"><div class="t">The node</div></div>
+        <p>The anchor, floating <em>in</em> the break rather than sitting on the ring. The
+        anchor is the thing pulling on the judgment, and it is not part of the process.</p>
+      </div>
+      <div class="role">
+        <div class="chipline"><div class="t">The extended crossbar</div></div>
+        <p>A reference line pushed past the letterform, reaching for the ring without
+        closing on it. Measurement that keeps going after the figure stops.</p>
+      </div>
+    </div>
+
+    <h3>The family</h3>
+    <div class="board">
+      <div class="cell">
+        <svg class="logo" width="92" height="92" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path class="ring" d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke-width="4.4" stroke-linecap="round"/>
+          <circle class="node" cx="12.85" cy="15.93" r="3.9"/>
+          <path class="letter" d="M20 47 L32 19.5 L44 47" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+          <path class="letter" d="M21.09 38 H51.5" stroke-width="5.2" stroke-linecap="butt"/>
+        </svg>
+        <div class="cap">Primary · on paper</div>
+      </div>
+      <div class="cell on-dark">
+        <svg class="logo" width="92" height="92" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path class="ring" d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke-width="4.4" stroke-linecap="round"/>
+          <circle class="node" cx="12.85" cy="15.93" r="3.9"/>
+          <path class="letter" d="M20 47 L32 19.5 L44 47" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+          <path class="letter" d="M21.09 38 H51.5" stroke-width="5.2" stroke-linecap="butt"/>
+        </svg>
+        <div class="cap">Reversed · on night</div>
+      </div>
+      <div class="cell on-ember">
+        <svg class="logo" width="92" height="92" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path class="ring" d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke-width="4.4" stroke-linecap="round"/>
+          <circle class="node" cx="12.85" cy="15.93" r="3.9"/>
+          <path class="letter" d="M20 47 L32 19.5 L44 47" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+          <path class="letter" d="M21.09 38 H51.5" stroke-width="5.2" stroke-linecap="butt"/>
+        </svg>
+        <div class="cap">Ink on ember · the badge</div>
+      </div>
+      <div class="cell">
+        <svg class="logo" width="92" height="92" viewBox="0 0 64 64" fill="none" aria-hidden="true" style="color:var(--ink)">
+          <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" class="ring" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="14.38" cy="17.22" r="5.46" class="node"/>
+          <path d="M19.5 46.5 L32 19 L44.5 46.5" class="letter" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+          <path d="M21.6 38.4 H42.4" class="letter" stroke-width="8" stroke-linecap="butt"/>
+        </svg>
+        <div class="cap">Micro cut · below 32px</div>
+      </div>
+    </div>
+
+    <h3>Two cuts, one mark</h3>
+    <p class="sub">The primary cut's interior clearances are 2.3–3.8px in a 64px box. Below
+    roughly 32px those close up and the mark turns to mud. The micro cut opens the break,
+    fattens both strokes and drops the overshoot. Use it in favicons, avatars and nav bars.</p>
+    <div class="sizes">
+      <div class="size-item">
+        <svg class="logo" width="64" height="64" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path class="ring" d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke-width="4.4" stroke-linecap="round"/>
+          <circle class="node" cx="12.85" cy="15.93" r="3.9"/>
+          <path class="letter" d="M20 47 L32 19.5 L44 47" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+          <path class="letter" d="M21.09 38 H51.5" stroke-width="5.2" stroke-linecap="butt"/>
+        </svg>
+        <div class="cap">64 · primary</div>
+      </div>
+      <div class="size-item">
+        <svg class="logo" width="40" height="40" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path class="ring" d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke-width="4.4" stroke-linecap="round"/>
+          <circle class="node" cx="12.85" cy="15.93" r="3.9"/>
+          <path class="letter" d="M20 47 L32 19.5 L44 47" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+          <path class="letter" d="M21.09 38 H51.5" stroke-width="5.2" stroke-linecap="butt"/>
+        </svg>
+        <div class="cap">40 · primary</div>
+      </div>
+      <div class="size-item">
+        <svg class="logo" width="32" height="32" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" class="ring" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="14.38" cy="17.22" r="5.46" class="node"/>
+          <path d="M19.5 46.5 L32 19 L44.5 46.5" class="letter" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+          <path d="M21.6 38.4 H42.4" class="letter" stroke-width="8" stroke-linecap="butt"/>
+        </svg>
+        <div class="cap">32 · micro</div>
+      </div>
+      <div class="size-item">
+        <svg class="logo" width="24" height="24" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" class="ring" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="14.38" cy="17.22" r="5.46" class="node"/>
+          <path d="M19.5 46.5 L32 19 L44.5 46.5" class="letter" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+          <path d="M21.6 38.4 H42.4" class="letter" stroke-width="8" stroke-linecap="butt"/>
+        </svg>
+        <div class="cap">24 · micro</div>
+      </div>
+      <div class="size-item">
+        <svg class="logo" width="16" height="16" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" class="ring" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="14.38" cy="17.22" r="5.46" class="node"/>
+          <path d="M19.5 46.5 L32 19 L44.5 46.5" class="letter" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+          <path d="M21.6 38.4 H42.4" class="letter" stroke-width="8" stroke-linecap="butt"/>
+        </svg>
+        <div class="cap">16 · micro</div>
+      </div>
+    </div>
+
+    <h3>Clear space</h3>
+    <p class="sub">One ring radius on every side — half the mark's own height. Nothing sets
+    inside it: no type, no rule, no image edge.</p>
+    <div class="clearspace">
+      <img src="assets/brand/lockup-horizontal.svg" alt="Horizontal lockup: the Reference Mark beside Yasir A. Malik, Audit · Risk · Governance" width="380" style="display:block;max-width:100%;height:auto;" />
+    </div>
+
+    <h3>Misuse</h3>
+    <div class="misuse">
+      <div class="dont">
+        <div class="demo d-stretch">
+          <svg class="logo" width="52" height="52" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <path class="ring" d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke-width="4.4" stroke-linecap="round"/>
+            <circle class="node" cx="12.85" cy="15.93" r="3.9"/>
+            <path class="letter" d="M20 47 L32 19.5 L44 47" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+            <path class="letter" d="M21.09 38 H51.5" stroke-width="5.2" stroke-linecap="butt"/>
+          </svg>
+        </div>
+        <span class="x">Don't</span>
+        <p>Stretch or condense. The ring is a circle; distortion is immediately legible.</p>
+      </div>
+      <div class="dont">
+        <div class="demo d-rotate">
+          <svg class="logo" width="52" height="52" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <path class="ring" d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke-width="4.4" stroke-linecap="round"/>
+            <circle class="node" cx="12.85" cy="15.93" r="3.9"/>
+            <path class="letter" d="M20 47 L32 19.5 L44 47" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+            <path class="letter" d="M21.09 38 H51.5" stroke-width="5.2" stroke-linecap="butt"/>
+          </svg>
+        </div>
+        <span class="x">Don't</span>
+        <p>Rotate. The break sits upper-left and the crossbar reads level. Both are load-bearing.</p>
+      </div>
+      <div class="dont">
+        <div class="demo d-recolour">
+          <svg class="logo" width="52" height="52" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <path class="ring" d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke-width="4.4" stroke-linecap="round"/>
+            <circle class="node" cx="12.85" cy="15.93" r="3.9"/>
+            <path class="letter" d="M20 47 L32 19.5 L44 47" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+            <path class="letter" d="M21.09 38 H51.5" stroke-width="5.2" stroke-linecap="butt"/>
+          </svg>
+        </div>
+        <span class="x">Don't</span>
+        <p>Recolour the ring. Ember or a single flat ink — never another hue, never a gradient.</p>
+      </div>
+      <div class="dont">
+        <div class="demo">
+          <div class="d-lowcon">
+            <svg class="logo" width="46" height="46" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <path class="ring" d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke-width="4.4" stroke-linecap="round"/>
+              <circle class="node" cx="12.85" cy="15.93" r="3.9"/>
+              <path class="letter" d="M20 47 L32 19.5 L44 47" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+              <path class="letter" d="M21.09 38 H51.5" stroke-width="5.2" stroke-linecap="butt"/>
+            </svg>
+          </div>
+        </div>
+        <span class="x">Don't</span>
+        <p>Set ember on ember. On an ember ground the mark goes to warm black, full stop.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= COLOUR ============================= -->
+<section id="colour">
+  <div class="wrap">
+    <div class="eyebrow">Colour</div>
+    <h2>Ember, ink, and one quiet green.</h2>
+    <p class="sub">Ember was sampled from the leather of a physical badge under tungsten
+    light, white-balanced against the card behind it, and cleaned to
+    <strong>#E0662E</strong>. The rest of the system is built to serve it.</p>
+
+    <h3>Ember — the anchor</h3>
+    <div class="ramp">
+      <div class="sw" style="background:var(--ember-100);color:#47190A"><div class="n">Ember 100</div><div class="h">#FAE3D6</div></div>
+      <div class="sw" style="background:var(--ember-300);color:#47190A"><div class="n">Ember 300</div><div class="h">#EDA37D</div></div>
+      <div class="sw" style="background:var(--ember-500);color:#1A1109"><div class="n">Ember 500 ·<br>the brand</div><div class="h">#E0662E</div></div>
+      <div class="sw" style="background:var(--ember-650);color:#fff"><div class="n">Ember 650 ·<br>text on light</div><div class="h">#AD4317</div></div>
+      <div class="sw" style="background:var(--ember-800);color:#fff"><div class="n">Ember 800</div><div class="h">#7C2E10</div></div>
+      <div class="sw" style="background:var(--ember-tint);color:#47190A"><div class="n">Ember tint ·<br>text on dark</div><div class="h">#F58E5C</div></div>
+    </div>
+
+    <h3>Ink — the record</h3>
+    <div class="ramp">
+      <div class="sw" style="background:var(--paper);color:#171A1D"><div class="n">Paper</div><div class="h">#F6F3F0</div></div>
+      <div class="sw" style="background:var(--ink-100);color:#171A1D"><div class="n">Hairline</div><div class="h">#E2DAD3</div></div>
+      <div class="sw" style="background:var(--ink-300);color:#171A1D"><div class="n">Muted · dark</div><div class="h">#A6B0BA</div></div>
+      <div class="sw" style="background:var(--ink-500);color:#fff"><div class="n">Muted · light</div><div class="h">#5A646E</div></div>
+      <div class="sw" style="background:var(--ink-900);color:#EDEFF1"><div class="n">Surface · dark</div><div class="h">#14181C</div></div>
+      <div class="sw" style="background:var(--ink-950);color:#EDEFF1"><div class="n">Night</div><div class="h">#0E1114</div></div>
+    </div>
+
+    <h3>Verdigris — evidence confirmed</h3>
+    <div class="ramp" style="grid-template-columns:repeat(3,1fr);max-width:520px;">
+      <div class="sw" style="background:var(--verd-600);color:#fff"><div class="n">Verd 600 · light</div><div class="h">#0F5F5A</div></div>
+      <div class="sw" style="background:var(--verd-500);color:#fff"><div class="n">Verd 500</div><div class="h">#127A70</div></div>
+      <div class="sw" style="background:var(--verd-300);color:#0E1114"><div class="n">Verd 300 · dark</div><div class="h">#4FC0B2</div></div>
+    </div>
+
+    <div class="roles">
+      <div class="role">
+        <div class="chipline"><span class="dot" style="background:var(--ember-500)"></span><div class="t">Ember</div></div>
+        <p>What pulls you. The anchor, the signal, the thing demanding attention. Spend it
+        sparingly — one ember element per view carries the weight.</p>
+      </div>
+      <div class="role">
+        <div class="chipline"><span class="dot" style="background:var(--ink-500)"></span><div class="t">Ink</div></div>
+        <p>The record. Warm graphite on warm paper, never pure black on cold grey. A cold
+        neutral beside this ember reads as a mistake.</p>
+      </div>
+      <div class="role">
+        <div class="chipline"><span class="dot" style="background:var(--verd-600)"></span><div class="t">Verdigris</div></div>
+        <p>What was verified. Deliberately quiet — evidence doesn't shout. Never swapped
+        with ember for visual variety; the semantics are the point.</p>
+      </div>
+    </div>
+
+    <h3>The rule that shapes everything</h3>
+    <div class="note">
+      <b>Ember 500 is 3.11:1 on paper.</b> It can carry rules, fills, marks and large
+      display type — and it can never carry body text on a light ground. That single
+      constraint is why the ramp has a 650 step, why the eyebrows and small labels sit in
+      <b>#AD4317</b>, and why buttons put warm-black on ember rather than white. Designing
+      around it is what keeps the palette from going soft.
+    </div>
+
+    <h3>Verified pairs</h3>
+    <p class="sub">Every combination the system actually ships, measured against WCAG 2.1.
+    Body text is held to 4.5:1; marks, rules and large display type to 3:1.</p>
+    <div class="tbl-scroll">
+      <table>
+        <thead>
+          <tr><th scope="col">Foreground</th><th scope="col">Ground</th><th scope="col">Use</th><th scope="col">Ratio</th><th scope="col">Result</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="swatch-cell"><i style="background:#171A1D"></i>Ink #171A1D</span></td><td><span class="swatch-cell"><i style="background:#F6F3F0"></i>Paper</span></td><td>Body text</td><td class="ratio">15.81:1</td><td><span class="verdict pass">AA · AAA</span></td></tr>
+          <tr><td><span class="swatch-cell"><i style="background:#5A646E"></i>Muted #5A646E</span></td><td><span class="swatch-cell"><i style="background:#F6F3F0"></i>Paper</span></td><td>Secondary text</td><td class="ratio">5.45:1</td><td><span class="verdict pass">AA</span></td></tr>
+          <tr><td><span class="swatch-cell"><i style="background:#AD4317"></i>Ember 650</span></td><td><span class="swatch-cell"><i style="background:#F6F3F0"></i>Paper</span></td><td>Links, labels</td><td class="ratio">5.29:1</td><td><span class="verdict pass">AA</span></td></tr>
+          <tr><td><span class="swatch-cell"><i style="background:#AD4317"></i>Ember 650</span></td><td><span class="swatch-cell"><i style="background:#EFE9E3"></i>Raise</span></td><td>Worst-case light surface</td><td class="ratio">4.85:1</td><td><span class="verdict pass">AA</span></td></tr>
+          <tr><td><span class="swatch-cell"><i style="background:#1A1109"></i>Warm black</span></td><td><span class="swatch-cell"><i style="background:#E0662E"></i>Ember 500</span></td><td>Primary button label</td><td class="ratio">5.42:1</td><td><span class="verdict pass">AA</span></td></tr>
+          <tr><td><span class="swatch-cell"><i style="background:#E0662E"></i>Ember 500</span></td><td><span class="swatch-cell"><i style="background:#F6F3F0"></i>Paper</span></td><td>Marks, rules, display type</td><td class="ratio">3.11:1</td><td><span class="verdict pass">AA large / UI</span></td></tr>
+          <tr><td><span class="swatch-cell"><i style="background:#0F5F5A"></i>Verdigris 600</span></td><td><span class="swatch-cell"><i style="background:#FFFFFF"></i>Surface</span></td><td>Verified-evidence text</td><td class="ratio">7.49:1</td><td><span class="verdict pass">AA · AAA</span></td></tr>
+          <tr><td><span class="swatch-cell"><i style="background:#EDEFF1"></i>Ink #EDEFF1</span></td><td><span class="swatch-cell"><i style="background:#0E1114"></i>Night</span></td><td>Body text, dark</td><td class="ratio">16.43:1</td><td><span class="verdict pass">AA · AAA</span></td></tr>
+          <tr><td><span class="swatch-cell"><i style="background:#A6B0BA"></i>Muted #A6B0BA</span></td><td><span class="swatch-cell"><i style="background:#0E1114"></i>Night</span></td><td>Secondary text, dark</td><td class="ratio">8.60:1</td><td><span class="verdict pass">AA · AAA</span></td></tr>
+          <tr><td><span class="swatch-cell"><i style="background:#F58E5C"></i>Ember tint</span></td><td><span class="swatch-cell"><i style="background:#0E1114"></i>Night</span></td><td>Links, labels, dark</td><td class="ratio">8.03:1</td><td><span class="verdict pass">AA · AAA</span></td></tr>
+          <tr><td><span class="swatch-cell"><i style="background:#4FC0B2"></i>Verdigris 300</span></td><td><span class="swatch-cell"><i style="background:#0E1114"></i>Night</span></td><td>Verified-evidence, dark</td><td class="ratio">8.58:1</td><td><span class="verdict pass">AA · AAA</span></td></tr>
+          <tr><td><span class="swatch-cell"><i style="background:#0E1114"></i>Night</span></td><td><span class="swatch-cell"><i style="background:#E0662E"></i>Ember 500</span></td><td>Button label, dark</td><td class="ratio">5.51:1</td><td><span class="verdict pass">AA</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== TYPE ============================== -->
+<section id="type">
+  <div class="wrap">
+    <div class="eyebrow">Typography</div>
+    <h2>Three voices.</h2>
+    <p class="sub">Not three fonts chosen for variety — three jobs. Each voice says a
+    different kind of thing, and mixing them up is the fastest way to make the work look
+    like marketing.</p>
+
+    <div class="voice">
+      <div class="meta"><b>Record</b>Charter · 700<br>tracking −0.015em<br>Headlines, argument</div>
+      <div>
+        <div class="spec-record">Judgment under scrutiny.</div>
+        <p style="margin:12px 0 0;font-size:.89rem;color:var(--muted);">The person signing
+        the work. A serif against a geometric mark is the whole tonal argument: this is a
+        practice with a name on it, not a product launch.</p>
+      </div>
+    </div>
+
+    <div class="voice">
+      <div class="meta"><b>Statement</b>System sans<br>tracking −0.025em<br>Running text, data</div>
+      <div>
+        <div class="spec-statement">Fifteen years in audit and risk, a regulator's seat before
+        that, and a doctorate examining how professional judgment behaves when the evidence
+        arrives pre-interpreted.</div>
+        <p style="margin:12px 0 0;font-size:.89rem;color:var(--muted);">The finding, stated
+        plainly. Native on every device, no webfont cost, and it never competes with the
+        Record voice for authority.</p>
+      </div>
+    </div>
+
+    <div class="voice">
+      <div class="meta"><b>Instrument</b>Mono · uppercase<br>tracking 0.16em<br>Labels, keys, metadata</div>
+      <div>
+        <div class="spec-instrument">Panel screened · Eligible · Reframed as</div>
+        <p style="margin:12px 0 0;font-size:.89rem;color:var(--muted);">Anything the
+        measuring device itself says. Wide tracking and uppercase read as instrument-panel
+        legends — the signature that ties the identity to the subject matter.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== RULES ============================= -->
+<section id="rules">
+  <div class="wrap">
+    <div class="eyebrow">Working Rules</div>
+    <h2>Seven things that keep it honest.</h2>
+    <ol class="rule-list">
+      <li><span class="num">01</span>Ember never carries body text on a light ground. Ember 650 does.</li>
+      <li><span class="num">02</span>One ember element per view carries the weight. If two things shout, neither is a signal.</li>
+      <li><span class="num">03</span>Ember marks what pulls you; verdigris marks what was verified. Never swap them for visual variety.</li>
+      <li><span class="num">04</span>Warm neutrals only. A cold grey next to this ember reads as an error.</li>
+      <li><span class="num">05</span>Below 32px, use the micro cut. The primary cut's clearances close up and the mark turns to mud.</li>
+      <li><span class="num">06</span>Clear space is one ring radius. Nothing sets inside it.</li>
+      <li><span class="num">07</span>The mark is ember, warm black, or reversed white — never a third hue, never a gradient.</li>
+    </ol>
+
+    <h3>Provenance</h3>
+    <div class="note">
+      <b>On where this came from:</b> the ember was sampled from a photograph of an
+      existing badge, and the idea of a letterform inside a broken ring is a shared one.
+      Everything drawn here is original geometry — a different break angle, a floating
+      anchor node, an overshooting crossbar, and a two-cut size system — built to carry
+      this practice's own argument. It is a family resemblance, not a copy, and it should
+      never be presented as any other organisation's mark.
+    </div>
+
+    <h3>Files</h3>
+    <div class="files">
+      <div class="file"><code>tokens.css</code><span>Every colour, voice and measure. The single source of truth.</span></div>
+      <div class="file"><code>mark.svg</code><span>Primary cut, currentColor. Inherits whatever it sits in.</span></div>
+      <div class="file"><code>mark-ember.svg</code><span>Two-tone: ember ring, ink letterform.</span></div>
+      <div class="file"><code>mark-micro.svg</code><span>Micro cut for use below 32px.</span></div>
+      <div class="file"><code>mark-badge.svg</code><span>Ink reversed out of an ember tile — the badge.</span></div>
+      <div class="file"><code>favicon.svg</code><span>Micro cut on an ember tile, plus 32/180/192/512 PNG.</span></div>
+      <div class="file"><code>lockup-horizontal.svg</code><span>Mark, rule, name, descriptor. Light and dark.</span></div>
+      <div class="file"><code>lockup-stacked.svg</code><span>Centred lockup for square and vertical space.</span></div>
+      <div class="file"><code>wordmark.svg</code><span>Name and descriptor, no mark. Light and dark.</span></div>
+      <div class="file"><code>og-card.png</code><span>1200×630 social card.</span></div>
+      <div class="file"><code>theme-ember-instrument.md</code><span>The palette as a portable theme, for decks and documents.</span></div>
+      <div class="file"><code>make_marks.py</code><span>Generates the whole family from one set of constants.</span></div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>The Reference Mark · Identity System v1</span>
+    <span><a href="index.html">← Back to the site</a></span>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var btn=document.getElementById('themeBtn');
+    if(btn){
+      btn.addEventListener('click',function(){
+        var root=document.documentElement;
+        var cur=root.getAttribute('data-theme');
+        var dark=cur? cur==='dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.setAttribute('data-theme', dark? 'light':'dark');
+      });
+    }
+  })();
+</script>
+</body>
+</html>
