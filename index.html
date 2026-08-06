@@ -283,6 +283,43 @@
     text-transform:uppercase;color:var(--muted);margin-top:5px;}
   .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
 
+
+  /* ---------- the road: stops as anchor nodes on a reference line ---------- */
+  .road{position:relative;padding-left:36px;margin-top:32px;}
+  .road::before{content:"";position:absolute;left:7.5px;top:10px;bottom:10px;
+    width:1px;background:var(--line);}
+  .stop{position:relative;padding:0 0 28px;}
+  .stop:last-child{padding-bottom:0;}
+  .stop::before{content:"";position:absolute;left:-36px;top:5px;
+    width:16px;height:16px;border-radius:50%;
+    background:var(--ground);border:2.5px solid var(--accent);}
+  .stop.now::before{background:var(--accent);}
+  .stop .place{font-family:var(--mono);font-size:.67rem;letter-spacing:.17em;
+    text-transform:uppercase;color:var(--accent-ink);}
+  .stop h4{font-family:var(--read);font-size:1.1rem;font-weight:700;
+    letter-spacing:-.015em;margin:5px 0 6px;}
+  .stop p{margin:0;font-size:.93rem;color:var(--muted);line-height:1.62;max-width:60ch;}
+  .motto{font-family:var(--read);font-style:italic;font-size:1.12rem;
+    color:var(--ink);border-left:3px solid var(--accent);padding:3px 0 3px 18px;
+    margin:26px 0 0;max-width:56ch;}
+  .motto span{display:block;font-style:normal;font-family:var(--mono);
+    font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);margin-top:10px;}
+
+  /* ---------- verse ---------- */
+  .verse{background:var(--surface);border:1px solid var(--line);
+    border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+    padding:26px 28px;margin:30px 0;max-width:64ch;}
+  .verse .urdu{font-family:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq",
+    "Urdu Typesetting",serif;font-size:1.42rem;line-height:2.5;
+    direction:rtl;text-align:right;color:var(--ink);margin:0 0 18px;}
+  .verse .translit{font-family:var(--read);font-style:italic;font-size:1rem;
+    line-height:1.75;color:var(--muted);margin:0 0 14px;}
+  .verse .english{font-family:var(--read);font-size:1.06rem;line-height:1.7;
+    color:var(--ink);margin:0 0 14px;}
+  .verse .attr{font-family:var(--mono);font-size:.66rem;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--muted);margin:0;}
+
   .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;}
   .reveal.in{opacity:1;transform:none;}
   @media (prefers-reduced-motion: reduce){ .reveal{opacity:1;transform:none;transition:none;} }
@@ -303,6 +340,7 @@
       <a href="#research">Research</a>
       <a href="#advisory">Advisory</a>
       <a href="#record">Record</a>
+      <a href="#road">The Road</a>
       <a href="#work">Work</a>
       <a href="#collaborate">Collaborate</a>
       <a href="#contact">Contact</a>
@@ -317,8 +355,8 @@
     <div class="hero-grid">
       <div>
         <div class="eyebrow">Audit · Risk · Governance</div>
-        <h1><span class="seat">Twenty years</span> auditing how decisions get made.</h1>
-        <p class="thesis">A regulator's seat, then fifteen years running audits inside global banks, and now doctoral research on <strong>what happens to professional judgment when the analysis arrives already formed</strong> — and what a control environment has to catch.</p>
+        <h1>The most dangerous number in the room is <span class="seat">the one nobody questions.</span></h1>
+        <p class="thesis">Twenty years auditing how decisions get made — a regulator's seat, then internal audit inside global banks, now doctoral research on <strong>what happens to professional judgment when the analysis arrives already formed.</strong> I have spent a career on one question: when everyone in the room agrees, who is still checking?</p>
         <div class="cta-row">
           <a class="btn primary" href="mailto:YasirAMalik@gmail.com?subject=15-minute%20chat">Set up a 15-minute chat</a>
           <a class="btn ghost" href="#research">Read the research</a>
@@ -547,6 +585,121 @@
 
     <div class="disclaimer">
       <b>On the research instrument:</b> not investment advice, not a trading service, not a track record. It is an educational research testbed for studying AI-assisted judgment. The ledger is synthetic; no real funds are traded through it. Nothing here is a recommendation to buy, sell or hold any security.
+    </div>
+  </div>
+</section>
+
+<!-- ============================ THE ROAD ============================ -->
+<section id="road">
+  <div class="wrap">
+    <div class="eyebrow">The Road</div>
+    <h2>Lahore to Newark, the long way.</h2>
+    <p class="sub">Seven cities. One habit that survived all of them: check it yourself.</p>
+
+    <div class="road reveal">
+      <div class="stop">
+        <div class="place">Lahore</div>
+        <h4>Aitchison College</h4>
+        <p>A school that hands you a motto at seven years old and expects you to spend
+        the rest of your life earning it. Mine turned out to be less about winning than
+        about not putting the question down.</p>
+      </div>
+      <div class="stop">
+        <div class="place">Dubai</div>
+        <h4>Leaving early</h4>
+        <p>The first move that taught me a professional reputation does not travel in
+        your luggage. You rebuild it, in a new market, from the work outward.</p>
+      </div>
+      <div class="stop">
+        <div class="place">Miami</div>
+        <h4>The classroom and the ledger</h4>
+        <p>Graduate business school, and the beginning of a twenty-year argument with
+        myself about the distance between what a control says and what it does.</p>
+      </div>
+      <div class="stop">
+        <div class="place">West Palm Beach</div>
+        <h4>The regulator's seat</h4>
+        <p>Safety-and-soundness examination. The first time I understood that the most
+        expensive failures are rarely the ones nobody saw — they are the ones everybody
+        saw and nobody was willing to write down.</p>
+      </div>
+      <div class="stop">
+        <div class="place">Tampa</div>
+        <h4>Scale</h4>
+        <p>Larger books, longer chains of reliance, and the first real lesson in how a
+        number acquires authority simply by being repeated.</p>
+      </div>
+      <div class="stop">
+        <div class="place">New York</div>
+        <h4>Fifteen years inside</h4>
+        <p>Internal audit and risk at global banks, to Vice President. Resolution
+        planning, capital adequacy, consent-order remediation — and eventually building
+        and shipping an AI assistant into a live audit function.</p>
+      </div>
+      <div class="stop now">
+        <div class="place">Newark · Now</div>
+        <h4>The question that outlasted the jobs</h4>
+        <p>Doctoral research on professional judgment, and an advisory practice built on
+        it. Same habit, new adversary: a system that has read everything, answers
+        instantly, and agrees with you.</p>
+      </div>
+    </div>
+
+    <blockquote class="motto">
+      Perseverance Commands Success.
+      <span>Aitchison College · the motto, and the whole method</span>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ============================== KHUDI ============================= -->
+<section id="khudi">
+  <div class="wrap">
+    <div class="eyebrow">Reflection · Sufism through Iqbal</div>
+    <h2>Khudi, and the discipline of not dissolving.</h2>
+    <p class="sub">Why a bank examiner keeps a philosopher on the desk.</p>
+
+    <div class="spine">
+      <span class="mark"></span>
+      <p>Iqbal took Rumi as his guide and then spent a lifetime arguing with the
+      tradition that raised him. The strand of mysticism that counsels withdrawal from
+      the world — that treats the self as something to be thinned out and finally erased
+      — he could not accept. Against it he set <strong>khudi</strong>: selfhood, not as
+      ego or appetite, but as the disciplined fortification of the individual against
+      everything that would flatten it.</p>
+
+      <p>I did not come to this as a scholar. I came to it the way most Lahori
+      schoolboys do — recited at assembly, half understood, filed away. It took twenty
+      years of professional life to see what he was actually asking for.</p>
+
+      <p>Because <strong>professional skepticism is khudi in a control environment.</strong>
+      An auditor's entire value is a refusal to dissolve: into the client's framing,
+      into last year's number, into the confident consensus of a room that has already
+      decided. Independence is not a reporting line on an organisational chart. It is a
+      condition of the self, and it has to be actively held.</p>
+
+      <p>Which is why the current moment interests me so much. We have built systems
+      that are fluent, tireless, and tuned to agree — most agreeable, as it happens,
+      exactly where a reviewer most needs to be contradicted. Iqbal warned against a
+      spirituality that dissolves the self into a comfortable infinite. I spend my
+      working life on a narrower version of the same worry: a profession dissolving its
+      judgment into a machine that flatters it.</p>
+    </div>
+
+    <div class="verse reveal">
+      <p class="urdu" lang="ur" dir="rtl">خودی کو کر بلند اتنا کہ ہر تقدیر سے پہلے<br>خدا بندے سے خود پوچھے، بتا تیری رضا کیا ہے</p>
+      <p class="translit">Khudi ko kar buland itna ke har taqdeer se pehle<br>
+      Khuda bande se khud poochhe, bata teri raza kya hai</p>
+      <p class="english">Raise your selfhood so high that, before each decree,<br>
+      God Himself asks you: tell me, what is it you wish?</p>
+      <p class="attr">Muhammad Iqbal · Bal-e-Jibril</p>
+    </div>
+
+    <div class="spine">
+      <p>Read it as theology and it is audacious. Read it as a professional standard and
+      it is simply the job: <strong>raise the quality of your own judgment to the point
+      where it has to be consulted</strong> — not overwritten, not assumed, not quietly
+      routed around. That is what I am trying to build, and what I am trying to measure.</p>
     </div>
   </div>
 </section>
