@@ -1,0 +1,24 @@
+# Python — the brand generators in assets/brand/ leave these behind
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# OS cruft
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+
+# Local notes and scratch work — never publish, this repo is a live website
+scratch/
+*.local
+*.local.*
+
+# NOTE: generated brand assets (SVG/PNG/PDF under assets/brand/) are committed
+# on purpose. GitHub Pages serves them directly; nothing rebuilds them on deploy.
