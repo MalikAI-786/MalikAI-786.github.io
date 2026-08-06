@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#
+# Blocks two things a data-dump repo tends to swallow by accident:
+# oversized files, and anything that looks like a credential.
+#
+set -euo pipefail
+
+MAX_MB="${MAX_MB:-50}"
+MAX_BYTES=$(( MAX_MB * 1024 * 1024 ))
+fail=0
+
+while IFS= read -r -d '' f; do
+  [ -f "$f" ] || continue
+
+  size=$(wc -c < "$f" | tr -d ' ')
+  if [ "$size" -gt "$MAX_BYTES" ]; then
+    printf 'BLOCKED  %s is %sMB (limit %sMB)\n' "$f" "$(( size / 1024 / 1024 ))" "$MAX_MB" >&2
+    fail=1
+  fi
+
+  case "${f##*/}" in
+    .env|.env.*|*.pem|*.key|id_rsa|id_dsa|credentials.json|service-account*.json|.netrc)
+      printf 'BLOCKED  %s looks like a credential\n' "$f" >&2
+      fail=1
+      ;;
+  esac
+done < <(git diff --cached --name-only --diff-filter=AM -z)
+
+if [ "$fail" -ne 0 ]; then
+  cat >&2 <<'MSG'
+
+Commit stopped. Unstage the file (git restore --staged <file>), or if you
+are certain, re-run with: git commit --no-verify
+MSG
+  exit 1
+fi
