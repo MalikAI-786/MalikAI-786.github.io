@@ -82,6 +82,7 @@ SURFACES = [
     ("claudebot-onboarding","ClaudeBot Onboarding", "PRACTICAL AI ADOPTION"),
     ("yasir-malik-biolink", "Links",                "DIRECTORY"),
     ("index007",            "SPX 0DTE Dashboard",   "RESEARCH INSTRUMENT · NOT ADVICE"),
+    ("research",            "Research",             "AI &amp; PROFESSIONAL JUDGMENT"),
 ]
 
 if __name__ == "__main__":
