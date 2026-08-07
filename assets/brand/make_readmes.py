@@ -540,11 +540,36 @@ def render_master():
         md += f"**{heading}** — {row}\n\n"
 
     md += (
-        "### On how I use these tools\n\n"
-        "I use AI systems intensively, which is precisely why I study their "
-        "failure modes. The risk I research is not hypothetical to me; it is the "
-        "risk in my own workflow, managed deliberately. The judgment, synthesis "
-        "and interpretation are mine.\n"
+        "### Where this is pointed\n\n"
+
+        "Audit earned its reputation. Someone arrives, finds what went wrong, "
+        "writes it down, and leaves. The organisation gets better at not being "
+        "caught, which is not the same thing as getting better. I have written "
+        "those findings. I know what they change and what they do not.\n\n"
+
+        "But the skill of an auditor was never catching people. It is the "
+        "ability to ask, without embarrassment and without apology, **how would "
+        "we know?** — and to sit still while the room works out that it would "
+        "not. That question is most of professional ethics, and unlike "
+        "character, it can be taught.\n\n"
+
+        "That matters more now than it did five years ago. The risk in front of "
+        "us is not that somebody sets out to deceive. It is deference: an answer "
+        "arrives fluent, confident and without visible provenance, and a tired "
+        "professional accepts it. You cannot examine your way out of that. "
+        "Nobody documents the moment they stopped thinking, so there is no "
+        "finding to write and nothing for a watchdog to bite.\n\n"
+
+        "So this is the focus. **Use the audit discipline to teach judgment "
+        "rather than to police it.** Governance that produces better thinking, "
+        "not just cleaner files. Ethics as a practice with a method behind it, "
+        "taught by someone who has sat on both sides of the table, rather than a "
+        "poster in the lobby.\n\n"
+
+        "*I use AI systems intensively, which is precisely why I study how they "
+        "fail. The risk I research is not hypothetical to me; it is the risk in "
+        "my own workflow, managed deliberately. The judgment, synthesis and "
+        "interpretation are mine.*\n"
     )
 
     return md + footer(on_profile=True)
