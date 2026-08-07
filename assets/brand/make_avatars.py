@@ -43,6 +43,11 @@ ON_ACCENT = "#1A1109"
 M_FOOT_L, M_FOOT_R = 21.5, 42.5
 M_TOP, M_BOTTOM, M_VALLEY_Y = 20.5, 45.5, 37.0
 
+# P: a stem with a bowl. Positioned so the whole letter, stem edge to bowl
+# edge, centres on the ring rather than the stem centring on it.
+P_STEM_X, P_TOP, P_BOTTOM = 24.0, 20.5, 45.5
+P_BOWL_X, P_BOWL_R = 34.0, 6.25
+
 
 def letter_paths(letter):
     """Return (stroke paths, stroke width) for a letter in mark geometry."""
@@ -51,6 +56,12 @@ def letter_paths(letter):
     if letter == "M":
         return ([f"M{M_FOOT_L} {M_BOTTOM} L{M_FOOT_L} {M_TOP} "
                  f"L32 {M_VALLEY_Y} L{M_FOOT_R} {M_TOP} L{M_FOOT_R} {M_BOTTOM}"], M.AW)
+    if letter == "P":
+        bowl_bottom = P_TOP + 2 * P_BOWL_R
+        return ([f"M{P_STEM_X} {P_TOP} L{P_STEM_X} {P_BOTTOM}",
+                 f"M{P_STEM_X} {P_TOP} H{P_BOWL_X} "
+                 f"A{P_BOWL_R} {P_BOWL_R} 0 0 1 {P_BOWL_X} {bowl_bottom} "
+                 f"H{P_STEM_X}"], M.AW)
     raise ValueError(f"no cut defined for {letter!r}")
 
 
@@ -78,6 +89,10 @@ def check_clearances(letter):
                    + _cap_corners((M_FOOT_R, M_TOP), (M_FOOT_R, M_BOTTOM), half)
                    + _cap_corners((M_FOOT_L, M_BOTTOM), (M_FOOT_L, M_TOP), half)
                    + _cap_corners((M_FOOT_R, M_BOTTOM), (M_FOOT_R, M_TOP), half))
+    elif letter == "P":
+        corners = (_cap_corners((P_STEM_X, P_TOP), (P_STEM_X, P_BOTTOM), half)
+                   + _cap_corners((P_STEM_X, P_BOTTOM), (P_STEM_X, P_TOP), half)
+                   + [(P_BOWL_X + P_BOWL_R + half, P_TOP + P_BOWL_R)])
     else:
         corners = (_cap_corners(M.APEX, (M.FOOT_L, M.FOOT_Y), half)
                    + _cap_corners(M.APEX, (M.FOOT_R, M.FOOT_Y), half))
@@ -123,11 +138,12 @@ STREAMS = [
     ("yasir-a-malik",     "A", EMBER,     "Yasir A. Malik"),
     ("malik-llc",         "M", VERDIGRIS, "Malik LLC"),
     ("malik-marketplace", "M", EMBER,     "Malik Marketplace"),
+    ("proof-over-promise","P", VERDIGRIS, "Proof Over Promise"),
 ]
 
 if __name__ == "__main__":
     print("Letter clearances inside the ring (64px units):")
-    for l in ("A", "M"):
+    for l in ("A", "M", "P"):
         print(f"  {l}: worst corner clearance {check_clearances(l):.2f}px")
     print()
 
