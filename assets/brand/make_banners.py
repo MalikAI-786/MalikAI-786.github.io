@@ -75,6 +75,7 @@ def banner(title, descriptor, theme="dark", byline="Yasir A. Malik",
 SURFACES = [
     ("profile",             "Yasir A. Malik",       "AUDIT · RISK · GOVERNANCE",
      "Regulator · Operator · Researcher"),
+    ("site",                "The Site",             "PRACTICE · RESEARCH · IDENTITY"),
     ("portfolio-website",   "Portfolio",            "SELECTED WORK"),
     ("yasira-malik",        "Yasir A. Malik",       "PERSONAL SITE"),
     ("malikai-786-spx",     "Research Instrument",  "APPLIED AI · GOVERNANCE TESTBED"),
