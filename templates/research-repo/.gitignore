@@ -1,0 +1,38 @@
+# ---------------------------------------------------------------------------
+# Human-subjects data never enters version control. This is an IRB obligation
+# (IRB-25-0462), not a preference. Deny by default, allow nothing back in.
+# ---------------------------------------------------------------------------
+data/
+!data/README.md
+output/
+*.sav
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.dta
+*.omv
+*.rdata
+*.rds
+
+# Qualtrics exports carry response IDs and often IP addresses
+*qualtrics*export*
+*_responses*
+
+# Environments and secrets
+.env
+.env.*
+credentials.json
+token.json
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
