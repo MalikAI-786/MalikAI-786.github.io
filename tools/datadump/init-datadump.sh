@@ -13,9 +13,23 @@ set -euo pipefail
 TARGET="${1:-$HOME/data-dump}"
 MAX_MB="${MAX_MB:-50}"
 
-if [ -e "$TARGET/.git" ]; then
-  echo "refusing to touch $TARGET — a git repo already lives there" >&2
-  exit 1
+# Every file below is written with `>`, which truncates. So the target must be
+# empty or absent — anything else and we would silently destroy a README, a
+# .gitignore, or a repo the caller already had there.
+if [ -e "$TARGET" ]; then
+  if [ ! -d "$TARGET" ]; then
+    echo "refusing: $TARGET exists and is not a directory" >&2
+    exit 1
+  fi
+  if [ -e "$TARGET/.git" ]; then
+    echo "refusing: a git repo already lives at $TARGET" >&2
+    exit 1
+  fi
+  if [ -n "$(ls -A "$TARGET" 2>/dev/null)" ]; then
+    echo "refusing: $TARGET is not empty — this script writes files that would overwrite what is there." >&2
+    echo "Pick an empty or non-existent path instead." >&2
+    exit 1
+  fi
 fi
 
 mkdir -p "$TARGET"
@@ -103,18 +117,25 @@ cat > .githooks/pre-commit <<'HOOK'
 # Blocks two things a data-dump repo tends to swallow by accident:
 # oversized files, and anything that looks like a credential.
 #
+# Everything below is measured against the STAGED BLOB, never the working
+# tree. That distinction is the whole control: `git add secret.csv` then
+# overwriting secret.csv with something harmless leaves the secret in the
+# index, and a hook that stats the working tree would wave it through.
+#
 set -euo pipefail
 
-MAX_MB="${MAX_MB:-50}"
+MAX_MB="${MAX_MB:-__MAX_MB__}"
 MAX_BYTES=$(( MAX_MB * 1024 * 1024 ))
 fail=0
 
 while IFS= read -r -d '' f; do
-  [ -f "$f" ] || continue
+  # Resolve the staged blob for this path. Skip anything not in the index.
+  sha=$(git ls-files -s -- "$f" | awk 'NR==1{print $2}')
+  [ -n "$sha" ] || continue
 
-  size=$(wc -c < "$f" | tr -d ' ')
+  size=$(git cat-file -s "$sha" 2>/dev/null) || continue
   if [ "$size" -gt "$MAX_BYTES" ]; then
-    printf 'BLOCKED  %s is %sMB (limit %sMB)\n' "$f" "$(( size / 1024 / 1024 ))" "$MAX_MB" >&2
+    printf 'BLOCKED  %s is %sMB staged (limit %sMB)\n' "$f" "$(( size / 1024 / 1024 ))" "$MAX_MB" >&2
     fail=1
   fi
 
@@ -122,8 +143,21 @@ while IFS= read -r -d '' f; do
     .env|.env.*|*.pem|*.key|id_rsa|id_dsa|credentials.json|service-account*.json|.netrc)
       printf 'BLOCKED  %s looks like a credential\n' "$f" >&2
       fail=1
+      continue
       ;;
   esac
+
+  # Content scan, also against the staged blob. Only the first 256KB — a key
+  # or token lives near the top of a file, and this keeps large CSVs cheap.
+  if git cat-file -p "$sha" 2>/dev/null | head -c 262144 | LC_ALL=C grep -qE \
+      -e '-----BEGIN [A-Z ]*PRIVATE KEY-----' \
+      -e '\bAKIA[0-9A-Z]{16}\b' \
+      -e '\bgh[pousr]_[A-Za-z0-9]{20,}' \
+      -e '\bsk-[A-Za-z0-9]{20,}' \
+      -e '\bxox[abprs]-[A-Za-z0-9-]{10,}'; then
+    printf 'BLOCKED  %s contains something shaped like a key or token\n' "$f" >&2
+    fail=1
+  fi
 done < <(git diff --cached --name-only --diff-filter=AM -z)
 
 if [ "$fail" -ne 0 ]; then
@@ -135,6 +169,13 @@ MSG
   exit 1
 fi
 HOOK
+
+# Bake the chosen limit into the generated hook so `MAX_MB=200 ./init-datadump.sh`
+# produces a repo whose hook actually defaults to 200 — not to 50 with a limit
+# that only held for the one run. (sed to a temp file: `sed -i` is not portable
+# between GNU and BSD.)
+sed "s/__MAX_MB__/${MAX_MB}/" .githooks/pre-commit > .githooks/pre-commit.tmp
+mv .githooks/pre-commit.tmp .githooks/pre-commit
 chmod +x .githooks/pre-commit
 git config core.hooksPath .githooks
 
