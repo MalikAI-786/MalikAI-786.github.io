@@ -22,3 +22,6 @@ scratch/
 
 # NOTE: generated brand assets (SVG/PNG/PDF under assets/brand/) are committed
 # on purpose. GitHub Pages serves them directly; nothing rebuilds them on deploy.
+
+# Newsletter drafts — local only, never published from this public repo
+tools/newsletter/drafts/
