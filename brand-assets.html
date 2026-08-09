@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Brand assets — Yasir A. Malik</title>
+<meta name="description" content="Every finished brand asset, grouped by where it goes: profile photo, covers, the mark, lockups, avatars, business card." />
+<link rel="stylesheet" href="assets/brand/tokens.css" />
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
+<meta name="theme-color" content="#E0662E" />
+<meta name="robots" content="noindex" />
+</head>
+<body>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--statement);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:var(--accent-ink);text-underline-offset:3px;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+
+  nav.top{position:sticky;top:0;z-index:60;
+    background:color-mix(in srgb, var(--ground) 92%, transparent);
+    backdrop-filter:saturate(150%) blur(9px);
+    border-bottom:1px solid var(--line);border-top:3px solid var(--accent);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;
+    height:56px;max-width:1120px;margin:0 auto;padding:0 24px;}
+  .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);}
+  .brand .name{font-family:var(--record);font-size:1rem;font-weight:700;
+    letter-spacing:var(--track-record);}
+  .back{font-family:var(--instrument);font-size:.7rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--muted);text-decoration:none;}
+  .back:hover{color:var(--ink);}
+  .logo .ring,.logo .node{stroke:var(--accent);fill:none;}
+  .logo .node{fill:var(--accent);stroke:none;}
+  .logo .letter{stroke:currentColor;}
+
+  header.hero{padding:56px 0 34px;}
+  .eyebrow{font-family:var(--instrument);font-size:.68rem;
+    letter-spacing:var(--track-instrument);text-transform:uppercase;
+    color:var(--accent-ink);margin:0 0 14px;}
+  h1{font-family:var(--record);font-size:clamp(2.1rem,5vw,3rem);
+    letter-spacing:var(--track-record);margin:0 0 16px;line-height:1.1;font-weight:700;}
+  .lede{font-family:var(--record);font-size:1.1rem;line-height:1.68;
+    color:var(--muted);max-width:62ch;margin:0;}
+
+  section{padding:40px 0;border-top:1px solid var(--line);}
+  h2{font-family:var(--record);font-size:1.4rem;letter-spacing:var(--track-record);margin:0 0 6px;}
+  .sub{color:var(--muted);margin:0 0 22px;max-width:64ch;font-size:.95rem;}
+
+  .grid{display:grid;gap:16px;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
+  .asset{margin:0;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
+  .thumb{display:flex;align-items:center;justify-content:center;
+    padding:18px;min-height:150px;background:var(--ground);
+    border-bottom:1px solid var(--line);}
+  .asset.on-dark .thumb{background:#0E1114;}
+  .thumb img{max-width:100%;max-height:190px;height:auto;display:block;}
+  figcaption{padding:15px 17px 17px;display:flex;flex-direction:column;flex:1;}
+  figcaption h3{font-family:var(--record);font-size:1rem;margin:0 0 6px;
+    letter-spacing:var(--track-record);}
+  figcaption p{margin:0 0 11px;font-size:.87rem;line-height:1.55;color:var(--muted);}
+  .meta{display:flex;gap:14px;font-family:var(--instrument);font-size:.63rem;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    margin-top:auto;padding-top:4px;}
+  .dl{display:inline-block;margin-top:11px;font-family:var(--instrument);
+    font-size:.72rem;letter-spacing:.03em;font-weight:600;text-decoration:none;
+    padding:8px 15px;border:1px solid var(--line);border-radius:var(--radius);
+    color:var(--ink);align-self:flex-start;}
+  .dl:hover{border-color:var(--accent);color:var(--accent-ink);}
+
+  .note{background:var(--surface);border:1px solid var(--line);
+    border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+    padding:16px 19px;font-size:.9rem;line-height:1.62;color:var(--muted);max-width:70ch;}
+  .note b{color:var(--ink);}
+
+  footer.foot{padding:26px 0 46px;color:var(--muted);font-size:.75rem;
+    font-family:var(--instrument);border-top:1px solid var(--line);}
+  .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+</style>
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <svg class="logo" width="24" height="24" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" class="ring" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="14.38" cy="17.22" r="5.46" class="node"/>
+        <path d="M19.5 46.5 L32 19 L44.5 46.5" class="letter" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+        <path d="M21.6 38.4 H42.4" class="letter" stroke-width="8" stroke-linecap="butt"/>
+      </svg>
+      <span class="name">Yasir A. Malik</span>
+    </a>
+    <a class="back" href="brand.html">The brand system →</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Assets</div>
+    <h1>Everything, ready to use.</h1>
+    <p class="lede">Grouped by where it goes rather than by file type. Tap any
+    image to open it full size, or Download to save it. Every file here is
+    generated from the constants in <code>make_marks.py</code>, so they are all
+    provably the same mark rather than nine drawings that resemble each other.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Profile photo</h2>
+    <p class="sub">The same face everywhere. One upload, five places.</p>
+    <div class="grid">
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/portrait/portrait-square.png" target="_blank" rel="noopener">
+        <img src="assets/brand/portrait/portrait-square.png" alt="Square portrait" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Square portrait</h3>
+        <p><b>Start here.</b> LinkedIn, GitHub, Substack, Gmail, Notion, Zoom. The navy studio backdrop is graded to warm graphite so it sits in the palette; skin and shirt are untouched.</p>
+        <div class="meta"><span>1000×1000</span><span>657 KB</span></div>
+        <a class="dl" href="assets/brand/portrait/portrait-square.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/portrait/portrait-circle.png" target="_blank" rel="noopener">
+        <img src="assets/brand/portrait/portrait-circle.png" alt="Circular cut" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Circular cut</h3>
+        <p>Transparent outside the circle, with the ember hairline. For slides and decks where the portrait sits on a coloured ground.</p>
+        <div class="meta"><span>1000×1000</span><span>732 KB</span></div>
+        <a class="dl" href="assets/brand/portrait/portrait-circle.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset on-dark">
+      <a class="thumb" href="assets/brand/portrait/portrait-duotone.png" target="_blank" rel="noopener">
+        <img src="assets/brand/portrait/portrait-duotone.png" alt="Duotone" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Duotone</h3>
+        <p>Mapped fully into the palette. Editorial use beside the mark — article headers, anywhere the photograph should read as brand rather than as a photograph.</p>
+        <div class="meta"><span>1000×1000</span><span>462 KB</span></div>
+        <a class="dl" href="assets/brand/portrait/portrait-duotone.png" download>Download</a>
+      </figcaption>
+    </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Covers and headers</h2>
+    <p class="sub">The wide ones. Each is cut for a specific crop.</p>
+    <div class="grid">
+    <figure class="asset on-dark">
+      <a class="thumb" href="assets/brand/linkedin/cover-dark.png" target="_blank" rel="noopener">
+        <img src="assets/brand/linkedin/cover-dark.png" alt="LinkedIn cover — dark" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>LinkedIn cover — dark</h3>
+        <p>1584×396. Motto and vision sit upper-centre, clear of the mobile crop and the profile-photo circle. Matches the GitHub profile.</p>
+        <div class="meta"><span>1584×396</span><span>33 KB</span></div>
+        <a class="dl" href="assets/brand/linkedin/cover-dark.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/linkedin/cover-light.png" target="_blank" rel="noopener">
+        <img src="assets/brand/linkedin/cover-light.png" alt="LinkedIn cover — light" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>LinkedIn cover — light</h3>
+        <p>Same geometry, warm ground. Matches the site. Pick one and keep it.</p>
+        <div class="meta"><span>1584×396</span><span>33 KB</span></div>
+        <a class="dl" href="assets/brand/linkedin/cover-light.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset on-dark">
+      <a class="thumb" href="assets/brand/profile-readme/profile-hero-dark.png" target="_blank" rel="noopener">
+        <img src="assets/brand/profile-readme/profile-hero-dark.png" alt="GitHub profile hero — dark" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>GitHub profile hero — dark</h3>
+        <p>Live at the top of github.com/MalikAI-786.</p>
+        <div class="meta"><span>1280×440</span><span>167 KB</span></div>
+        <a class="dl" href="assets/brand/profile-readme/profile-hero-dark.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/profile-readme/profile-hero-light.png" target="_blank" rel="noopener">
+        <img src="assets/brand/profile-readme/profile-hero-light.png" alt="GitHub profile hero — light" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>GitHub profile hero — light</h3>
+        <p>The same hero for readers on a light GitHub theme.</p>
+        <div class="meta"><span>1280×440</span><span>162 KB</span></div>
+        <a class="dl" href="assets/brand/profile-readme/profile-hero-light.png" download>Download</a>
+      </figcaption>
+    </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Speaker and press</h2>
+    <p class="sub">For a bio slide, a panel intro, or a conference form.</p>
+    <div class="grid">
+    <figure class="asset on-dark">
+      <a class="thumb" href="assets/brand/portrait/speaker-dark.png" target="_blank" rel="noopener">
+        <img src="assets/brand/portrait/speaker-dark.png" alt="Speaker card — dark" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Speaker card — dark</h3>
+        <p>1600×900. Photo, mark, name and the vision line in one frame. Drops straight into a deck at 16:9.</p>
+        <div class="meta"><span>1600×900</span><span>459 KB</span></div>
+        <a class="dl" href="assets/brand/portrait/speaker-dark.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/portrait/speaker-light.png" target="_blank" rel="noopener">
+        <img src="assets/brand/portrait/speaker-light.png" alt="Speaker card — light" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Speaker card — light</h3>
+        <p>Same card on warm paper, for printed programmes and light decks.</p>
+        <div class="meta"><span>1600×900</span><span>468 KB</span></div>
+        <a class="dl" href="assets/brand/portrait/speaker-light.png" download>Download</a>
+      </figcaption>
+    </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The mark</h2>
+    <p class="sub">Vector. Scales to a billboard or a favicon without redrawing.</p>
+    <div class="grid">
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/mark.svg" target="_blank" rel="noopener">
+        <img src="assets/brand/mark.svg" alt="The Reference Mark" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>The Reference Mark</h3>
+        <p>The primary mark. Ember ring, warm black letter.</p>
+        <div class="meta"><span>SVG · vector</span><span>553 B</span></div>
+        <a class="dl" href="assets/brand/mark.svg" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/mark-ember.svg" target="_blank" rel="noopener">
+        <img src="assets/brand/mark-ember.svg" alt="Ember cut" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Ember cut</h3>
+        <p>For light grounds.</p>
+        <div class="meta"><span>SVG · vector</span><span>553 B</span></div>
+        <a class="dl" href="assets/brand/mark-ember.svg" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset on-dark">
+      <a class="thumb" href="assets/brand/mark-ember-dark.svg" target="_blank" rel="noopener">
+        <img src="assets/brand/mark-ember-dark.svg" alt="Reversed" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Reversed</h3>
+        <p>For dark grounds.</p>
+        <div class="meta"><span>SVG · vector</span><span>569 B</span></div>
+        <a class="dl" href="assets/brand/mark-ember-dark.svg" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/mark-micro.svg" target="_blank" rel="noopener">
+        <img src="assets/brand/mark-micro.svg" alt="Micro cut" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Micro cut</h3>
+        <p>Below 32px. Thicker strokes and a wider gap, because the full mark fills in at small sizes.</p>
+        <div class="meta"><span>SVG · vector</span><span>577 B</span></div>
+        <a class="dl" href="assets/brand/mark-micro.svg" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/mark-badge.svg" target="_blank" rel="noopener">
+        <img src="assets/brand/mark-badge.svg" alt="Badge" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Badge</h3>
+        <p>Solid ground, for placement over photography.</p>
+        <div class="meta"><span>SVG · vector</span><span>686 B</span></div>
+        <a class="dl" href="assets/brand/mark-badge.svg" download>Download</a>
+      </figcaption>
+    </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Wordmark and lockups</h2>
+    <p class="sub">Name and mark set together, with the spacing fixed.</p>
+    <div class="grid">
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/lockup-horizontal.svg" target="_blank" rel="noopener">
+        <img src="assets/brand/lockup-horizontal.svg" alt="Horizontal lockup" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Horizontal lockup</h3>
+        <p>Email signatures, letterheads, footers.</p>
+        <div class="meta"><span>SVG · vector</span><span>1 KB</span></div>
+        <a class="dl" href="assets/brand/lockup-horizontal.svg" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset on-dark">
+      <a class="thumb" href="assets/brand/lockup-horizontal-dark.svg" target="_blank" rel="noopener">
+        <img src="assets/brand/lockup-horizontal-dark.svg" alt="Horizontal, reversed" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Horizontal, reversed</h3>
+        <p>The same on a dark ground.</p>
+        <div class="meta"><span>SVG · vector</span><span>1 KB</span></div>
+        <a class="dl" href="assets/brand/lockup-horizontal-dark.svg" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/lockup-stacked.svg" target="_blank" rel="noopener">
+        <img src="assets/brand/lockup-stacked.svg" alt="Stacked lockup" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Stacked lockup</h3>
+        <p>Where width is tight — cards, avatars, stamps.</p>
+        <div class="meta"><span>SVG · vector</span><span>1 KB</span></div>
+        <a class="dl" href="assets/brand/lockup-stacked.svg" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/wordmark.svg" target="_blank" rel="noopener">
+        <img src="assets/brand/wordmark.svg" alt="Wordmark" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Wordmark</h3>
+        <p>Name alone, when the mark already appears nearby.</p>
+        <div class="meta"><span>SVG · vector</span><span>670 B</span></div>
+        <a class="dl" href="assets/brand/wordmark.svg" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset on-dark">
+      <a class="thumb" href="assets/brand/wordmark-dark.svg" target="_blank" rel="noopener">
+        <img src="assets/brand/wordmark-dark.svg" alt="Wordmark, reversed" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Wordmark, reversed</h3>
+        
+        <div class="meta"><span>SVG · vector</span><span>670 B</span></div>
+        <a class="dl" href="assets/brand/wordmark-dark.svg" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/signature-mark.svg" target="_blank" rel="noopener">
+        <img src="assets/brand/signature-mark.svg" alt="Signature mark" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Signature mark</h3>
+        <p>Sized for the bottom of an email.</p>
+        <div class="meta"><span>SVG · vector</span><span>453 B</span></div>
+        <a class="dl" href="assets/brand/signature-mark.svg" download>Download</a>
+      </figcaption>
+    </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Account avatars</h2>
+    <p class="sub">One letter per stream, so the accounts read as a family.</p>
+    <div class="grid">
+    <figure class="asset on-dark">
+      <a class="thumb" href="assets/brand/avatars/yasir-a-malik/avatar-dark.png" target="_blank" rel="noopener">
+        <img src="assets/brand/avatars/yasir-a-malik/avatar-dark.png" alt="A — Yasir A. Malik" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>A — Yasir A. Malik</h3>
+        <p>Ember. The personal account.</p>
+        <div class="meta"><span>1000×1000</span><span>37 KB</span></div>
+        <a class="dl" href="assets/brand/avatars/yasir-a-malik/avatar-dark.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset on-dark">
+      <a class="thumb" href="assets/brand/avatars/malik-llc/avatar-dark.png" target="_blank" rel="noopener">
+        <img src="assets/brand/avatars/malik-llc/avatar-dark.png" alt="M — Malik LLC" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>M — Malik LLC</h3>
+        <p>Verdigris, because the company verifies.</p>
+        <div class="meta"><span>1000×1000</span><span>32 KB</span></div>
+        <a class="dl" href="assets/brand/avatars/malik-llc/avatar-dark.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset on-dark">
+      <a class="thumb" href="assets/brand/avatars/malik-marketplace/avatar-dark.png" target="_blank" rel="noopener">
+        <img src="assets/brand/avatars/malik-marketplace/avatar-dark.png" alt="M — Malik Marketplace" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>M — Malik Marketplace</h3>
+        <p>Ember, to separate it from the LLC.</p>
+        <div class="meta"><span>1000×1000</span><span>35 KB</span></div>
+        <a class="dl" href="assets/brand/avatars/malik-marketplace/avatar-dark.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset on-dark">
+      <a class="thumb" href="assets/brand/avatars/proof-over-promise/avatar-dark.png" target="_blank" rel="noopener">
+        <img src="assets/brand/avatars/proof-over-promise/avatar-dark.png" alt="P — Proof Over Promise" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>P — Proof Over Promise</h3>
+        <p>Verdigris. The newsletter.</p>
+        <div class="meta"><span>1000×1000</span><span>28 KB</span></div>
+        <a class="dl" href="assets/brand/avatars/proof-over-promise/avatar-dark.png" download>Download</a>
+      </figcaption>
+    </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Business card</h2>
+    <p class="sub">Print-ready, with bleed and safe area verified.</p>
+    <div class="grid">
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/card/card-front.png" target="_blank" rel="noopener">
+        <img src="assets/brand/card/card-front.png" alt="Front" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Front</h3>
+        <p>Also available as PDF, which is what a printer wants.</p>
+        <div class="meta"><span>1125×675</span><span>42 KB</span></div>
+        <a class="dl" href="assets/brand/card/card-front.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/card/card-back.png" target="_blank" rel="noopener">
+        <img src="assets/brand/card/card-back.png" alt="Back" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Back</h3>
+        
+        <div class="meta"><span>1125×675</span><span>26 KB</span></div>
+        <a class="dl" href="assets/brand/card/card-back.png" download>Download</a>
+      </figcaption>
+    </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Social and favicons</h2>
+    <p class="sub">The small ones that get forgotten.</p>
+    <div class="grid">
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/og-card.png" target="_blank" rel="noopener">
+        <img src="assets/brand/og-card.png" alt="Open Graph card" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Open Graph card</h3>
+        <p>The preview image when the site is shared.</p>
+        <div class="meta"><span>1200×630</span><span>52 KB</span></div>
+        <a class="dl" href="assets/brand/og-card.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/icon-512.png" target="_blank" rel="noopener">
+        <img src="assets/brand/icon-512.png" alt="App icon" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>App icon</h3>
+        <p>512px. Also at 192 and 32.</p>
+        <div class="meta"><span>512×512</span><span>23 KB</span></div>
+        <a class="dl" href="assets/brand/icon-512.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/apple-touch-icon.png" target="_blank" rel="noopener">
+        <img src="assets/brand/apple-touch-icon.png" alt="Apple touch icon" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Apple touch icon</h3>
+        <p>Home-screen icon on iOS.</p>
+        <div class="meta"><span>180×180</span><span>7 KB</span></div>
+        <a class="dl" href="assets/brand/apple-touch-icon.png" download>Download</a>
+      </figcaption>
+    </figure>
+    </div>
+  </div>
+</section>
+<section style="border-bottom:0;">
+  <div class="wrap">
+    <h2>Before you upload</h2>
+    <div class="note">
+      <b>Use the square portrait for every profile.</b> The same face in every
+      place is most of what people mean by a consistent brand, and it costs one
+      upload. <b>Pick dark or light for the LinkedIn cover and do not revisit
+      it.</b> Dark matches the GitHub profile; light matches the site. Either is
+      right; switching between them is the only wrong answer.
+      <br><br>
+      <b>These files are outputs, not sources.</b> Do not retouch a PNG or edit
+      an SVG by hand — the change will be lost the next time a generator runs.
+      Change the generator in <code>assets/brand/</code> and re-run it.
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>Brand assets · Yasir A. Malik</span>
+    <span><a href="brand.html">The brand system</a> · <a href="index.html">malikai-786.github.io</a></span>
+  </div>
+</footer>
+</body>
+</html>
