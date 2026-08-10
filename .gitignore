@@ -1,3 +1,7 @@
 # Newsletter drafts are unreviewed and unchecked. Everything else in this
 # repository is public on purpose; these are not. Publish from Substack.
 build/newsletter/
+
+# Bytecode from the generators under assets/brand/.
+__pycache__/
+*.pyc
