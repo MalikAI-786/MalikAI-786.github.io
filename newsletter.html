@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proof Over Promise — Yasir A. Malik</title>
+<meta name="description" content="Proof Over Promise — Yasir A. Malik on AI governance, model risk, and what happens to professional judgment when the analysis arrives already formed. Written by a bank examiner." />
+<meta name="author" content="Yasir A. Malik" />
+<link rel="stylesheet" href="assets/brand/tokens.css" />
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png" />
+<meta name="theme-color" content="#E0662E" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Proof Over Promise" />
+<meta property="og:description" content="Evidence before claims. AI governance, model risk, and professional judgment, from a former bank examiner." />
+<meta property="og:url" content="https://malikai-786.github.io/newsletter.html" />
+<meta property="og:image" content="https://malikai-786.github.io/assets/brand/banners/proof-over-promise/banner-dark.png" />
+<meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+<style>
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--statement);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:var(--accent-ink);text-underline-offset:3px;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+
+  nav.top{position:sticky;top:0;z-index:60;
+    background:color-mix(in srgb, var(--ground) 90%, transparent);
+    backdrop-filter:saturate(150%) blur(9px);
+    border-bottom:1px solid var(--line);border-top:3px solid var(--accent);}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;
+    height:56px;max-width:760px;margin:0 auto;padding:0 24px;}
+  .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);}
+  .brand .name{font-family:var(--record);font-size:1rem;font-weight:700;
+    letter-spacing:var(--track-record);}
+  .nav-inner > a.back{font-family:var(--instrument);font-size:.7rem;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--muted);text-decoration:none;}
+  .nav-inner > a.back:hover{color:var(--ink);}
+  .logo{display:block;flex:0 0 auto;}
+  .logo .ring,.logo .node{stroke:var(--accent);fill:none;}
+  .logo .node{fill:var(--accent);stroke:none;}
+  .logo .letter{stroke:currentColor;}
+
+  /* the newsletter mark takes verdigris, not ember */
+  .pmark .ring,.pmark .node{stroke:var(--evidence);fill:none;}
+  .pmark .node{fill:var(--evidence);stroke:none;}
+  .pmark .letter{stroke:currentColor;}
+
+  header.hero{padding:58px 0 34px;text-align:center;}
+  .hero .pmark{margin:0 auto 22px;}
+  .eyebrow{font-family:var(--instrument);font-size:.68rem;
+    letter-spacing:var(--track-instrument);text-transform:uppercase;
+    color:var(--evidence);margin:0 0 16px;}
+  h1{font-family:var(--record);font-size:clamp(2.3rem,6vw,3.5rem);
+    letter-spacing:var(--track-record);margin:0 0 18px;line-height:1.08;font-weight:700;}
+  .lede{font-family:var(--record);font-size:1.16rem;line-height:1.68;
+    color:var(--muted);max-width:54ch;margin:0 auto;}
+  .lede strong{color:var(--ink);font-weight:600;}
+
+  .cta-row{display:flex;justify-content:center;flex-wrap:wrap;gap:11px;margin-top:30px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--instrument);
+    font-size:.78rem;letter-spacing:.03em;text-decoration:none;padding:13px 22px;
+    border-radius:var(--radius);font-weight:600;transition:transform .15s;}
+  .btn.primary{background:var(--evidence);color:var(--on-evidence);
+    border:1px solid var(--evidence);}
+  .btn.primary:hover{transform:translateY(-1px);}
+  .btn.ghost{border:1px solid var(--line);color:var(--ink);background:transparent;}
+  .btn.ghost:hover{border-color:var(--evidence);color:var(--evidence);}
+
+  section{padding:44px 0;border-top:1px solid var(--line);}
+  h2{font-family:var(--record);font-size:1.5rem;letter-spacing:var(--track-record);
+    margin:0 0 8px;}
+  .sub{color:var(--muted);margin:0 0 24px;max-width:60ch;}
+
+  .spine{max-width:62ch;padding-left:24px;border-left:1px solid var(--line);
+    position:relative;}
+  .spine .mark{position:absolute;left:-1px;top:0;width:3px;height:44px;
+    background:var(--evidence);}
+  .spine p{font-family:var(--record);font-size:1.04rem;line-height:1.72;margin:0 0 16px;}
+  .spine p:last-child{margin-bottom:0;}
+  .spine strong{font-weight:600;}
+
+  .issues{display:grid;gap:12px;}
+  .issue{border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--surface);padding:18px 20px;}
+  .issue .n{font-family:var(--instrument);font-size:.63rem;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--evidence);margin-bottom:7px;}
+  .issue h3{font-family:var(--record);font-size:1.08rem;margin:0 0 6px;
+    letter-spacing:var(--track-record);}
+  .issue p{margin:0;font-size:.92rem;color:var(--muted);line-height:1.58;}
+
+  .who{list-style:none;margin:0;padding:0;display:grid;gap:11px;max-width:62ch;}
+  .who li{position:relative;padding-left:22px;font-size:.96rem;line-height:1.6;}
+  .who li::before{content:"";position:absolute;left:0;top:.62em;width:11px;height:0;
+    border-top:1.5px solid var(--evidence);}
+
+  .note{background:var(--surface);border:1px solid var(--line);
+    border-left:3px solid var(--evidence);border-radius:0 var(--radius) var(--radius) 0;
+    padding:17px 20px;font-size:.92rem;line-height:1.62;color:var(--muted);max-width:66ch;}
+  .note b{color:var(--ink);}
+
+  footer.foot{padding:28px 0 46px;color:var(--muted);font-size:.75rem;
+    font-family:var(--instrument);border-top:1px solid var(--line);}
+  .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+</style>
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <svg class="logo" width="24" height="24" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" class="ring" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="14.38" cy="17.22" r="5.46" class="node"/>
+        <path d="M19.5 46.5 L32 19 L44.5 46.5" class="letter" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+        <path d="M21.6 38.4 H42.4" class="letter" stroke-width="8" stroke-linecap="butt"/>
+      </svg>
+      <span class="name">Yasir A. Malik</span>
+    </a>
+    <a class="back" href="index.html">← The site</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <svg class="logo pmark" width="76" height="76" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <path d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" class="ring" stroke-width="4.4" stroke-linecap="round"/>
+      <circle cx="12.85" cy="15.93" r="3.9" class="node"/>
+      <path d="M24 20.5 L24 45.5" class="letter" stroke-width="5.2" stroke-linecap="butt"/>
+      <path d="M24 20.5 H34 A6.25 6.25 0 0 1 34 33 H24" class="letter" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+    </svg>
+    <div class="eyebrow">Newsletter · Written by Yasir A. Malik</div>
+    <h1>Proof Over Promise</h1>
+    <p class="lede">Every deck I am handed says the model is governed.
+    <strong>Almost none of them show me the evidence.</strong> I spent years asking for
+    that evidence as a bank examiner. I write this newsletter because I still have to
+    ask.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="https://proofoverpromise.substack.com/subscribe" target="_blank" rel="noopener">Subscribe</a>
+      <a class="btn ghost" href="index.html#research">More about me</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Why I write this</h2>
+    <div class="spine">
+      <span class="mark"></span>
+      <p>I am a bank examiner. Before that I spent fifteen years running internal audits
+      inside Citigroup and JPMorgan Chase, to Vice President. In all of it, the finding I
+      wrote most often was not that a control was missing. It was that the control existed
+      on paper and nobody could produce evidence it had ever operated.</p>
+      <p>AI has made that gap much wider and much easier to hide. I build with these tools,
+      not just review them: I put a retrieval assistant into a live audit function and took
+      about a third off the cycle time. That is exactly why I do not trust the demo. I know
+      what the demo leaves out.</p>
+      <p><strong>So I write down the evidence.</strong> Model inventories that are current
+      rather than aspirational, human oversight that is designed rather than assumed, and
+      documentation that survives contact with somebody who is allowed to disagree with you.
+      Proof, not promise. That is the whole editorial position.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What I write about</h2>
+    <p class="sub">Five threads I keep returning to, drawn from my doctoral research and from
+    work I have actually shipped inside regulated institutions.</p>
+    <div class="issues">
+      <div class="issue">
+        <div class="n">Thread 01 · Governance</div>
+        <h3>Frameworks, and what they quietly leave to you</h3>
+        <p>NIST AI RMF, SR 26-2, ISO/IEC 42001, the EU AI Act. I read these for a living.
+        What each one actually requires, where they overlap, and the judgment calls they
+        hand back to you without admitting it.</p>
+      </div>
+      <div class="issue">
+        <div class="n">Thread 02 · Judgment</div>
+        <h3>What happens when the analysis arrives already formed</h3>
+        <p>My doctoral work at FIU, in plain language. Automation bias, over-reliance, and
+        the uncomfortable part: the machine is most agreeable exactly where a reviewer most
+        needs to be contradicted.</p>
+      </div>
+      <div class="issue">
+        <div class="n">Thread 03 · Evidence</div>
+        <h3>The documentation I would ask you for</h3>
+        <p>Written from the examiner's seat, because that is the seat I sit in. What I ask
+        for, in what order, and why answering "we have a policy" ends the conversation
+        badly.</p>
+      </div>
+      <div class="issue">
+        <div class="n">Thread 04 · Ethics</div>
+        <h3>Teaching it, rather than policing it</h3>
+        <p>The auditor everyone dreads teaches nobody. You cannot examine your way out of
+        deference, because nobody documents the moment they stopped thinking. So the
+        question is how you teach judgment instead, using the same discipline.</p>
+      </div>
+      <div class="issue">
+        <div class="n">Thread 05 · Practice</div>
+        <h3>Things I built, including what broke</h3>
+        <p>What it took to put AI into a live audit function, including the parts of mine
+        that did not work. A record that only contains successes is not a record.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Who I write for</h2>
+    <ul class="who">
+      <li>Internal audit, risk, and compliance leaders being asked to assure AI they did not build</li>
+      <li>Model risk teams extending SR 26-2 practice to systems that do not behave like models</li>
+      <li>Anyone preparing to explain their AI controls to a regulator</li>
+      <li>Researchers working near judgment, automation bias, and professional skepticism</li>
+    </ul>
+    <div class="note" style="margin-top:26px;">
+      <b>How I write it.</b> I use AI tools heavily, which is precisely why I study how they
+      fail. Drafting assistance is used and disclosed. The judgment, the argument, and every
+      claim about what happened inside a real institution are mine, and I would rather be
+      corrected than agreed with. If I get something wrong here,
+      <a href="mailto:YasirAMalik@gmail.com?subject=Proof%20Over%20Promise%20%E2%80%94%20where%20you%27re%20wrong">tell me</a>.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Who I am</h2>
+    <div class="spine">
+      <span class="mark"></span>
+      <p>Yasir A. Malik. I examine banks for a living, currently as a state examiner in
+      Florida and previously for the Office of the Comptroller of the Currency. Before the
+      regulator I spent fifteen years in internal audit at Citigroup and JPMorgan Chase,
+      finishing as a Vice President.</p>
+      <p>I am a doctoral candidate at Florida International University, expected 2028. My
+      research asks a narrow question with wide consequences: what happens to a professional's
+      judgment when the answer arrives already formed, and confident, and usually right.</p>
+      <p>I grew up in Lahore and went to Aitchison College, whose motto I have never managed
+      to put down: <strong>Perseverance Commands Success.</strong> The work since has run
+      through London, Germany, Miami, Dubai, back to Miami, West Palm Beach, Tampa, New York,
+      and now Newark. This newsletter is where I think out loud along the way.</p>
+    </div>
+  </div>
+</section>
+
+<section style="border-bottom:0;">
+  <div class="wrap" style="text-align:center;">
+    <h2>Subscribe</h2>
+    <p class="sub" style="margin:0 auto 22px;">I publish on Substack and syndicate to LinkedIn.
+    Free, and no schedule I would not keep.</p>
+    <div class="cta-row" style="margin-top:0;">
+      <a class="btn primary" href="https://proofoverpromise.substack.com/subscribe" target="_blank" rel="noopener">proofoverpromise.substack.com ↗</a>
+      <a class="btn ghost" href="https://linkedin.com/in/yasiramalik" target="_blank" rel="noopener">Connect on LinkedIn ↗</a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>Proof Over Promise · Yasir A. Malik</span>
+    <span><a href="index.html">malikai-786.github.io</a></span>
+  </div>
+</footer>
+</body>
+</html>

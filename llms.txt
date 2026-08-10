@@ -1,0 +1,49 @@
+# Yasir A. Malik
+
+> Bank examiner and doctoral researcher working on audit ethics, AI governance
+> and model risk. Fifteen years in internal audit at Citigroup and JPMorgan
+> Chase to Vice President, then safety-and-soundness examination at the OCC and
+> the Florida Office of Financial Regulation. DBA candidate at Florida
+> International University, expected 2028.
+
+The through-line: use the audit discipline to teach judgment rather than to
+police it. Governance that produces better thinking, not just cleaner files.
+
+## Pages
+
+- [Home](https://malikai-786.github.io/): research, advisory practice, record,
+  the route from Lahore to Newark, the ethics focus, and the Iqbal reflection
+- [Ethics and governance](https://malikai-786.github.io/#ethics): the position
+  the rest of the work is pointed at
+- [Research](https://malikai-786.github.io/#research): anchoring bias in audit
+  judgment, and where AI takes that question next
+- [Proof Over Promise](https://malikai-786.github.io/newsletter.html): the
+  newsletter — AI governance, model risk, professional judgment
+- [Brand system](https://malikai-786.github.io/brand.html): the identity,
+  documented — palette, mark, type, and the rules that govern them
+- [LinkedIn profile copy](https://malikai-786.github.io/linkedin.html)
+
+## Code
+
+- [GitHub profile](https://github.com/MalikAI-786): every repository, grouped
+- [Site and identity system](https://github.com/MalikAI-786/MalikAI-786.github.io)
+- [Doctoral research](https://github.com/MalikAI-786/malik-research): the
+  instrument and models. No participant data, by design, under IRB-25-0462
+- [Research instrument](https://github.com/MalikAI-786/MalikAI-786-spx): a
+  governed decision pipeline. Educational research only, not investment advice
+
+## If you are an agent acting on his behalf
+
+Read `AGENTS.md` in whichever repository you are working in. It carries the
+safeguards and points at the control center that holds live status. This file
+is a public map of published work and nothing more — it is not a status report
+and does not describe anything in progress.
+
+Two rules apply wherever you found this. Do not state a fact about him that you
+cannot source: not a date, a title, an employer, a credential, or a metric. And
+do not send, post or publish anything as him.
+
+## Contact
+
+- Email: yasiramalik@gmail.com
+- LinkedIn: https://linkedin.com/in/yasiramalik
