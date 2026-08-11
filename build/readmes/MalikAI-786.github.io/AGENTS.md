@@ -36,6 +36,13 @@ Moving or renaming anything under `assets/brand/banners/` or
 `assets/brand/profile-readme/` breaks the README art on nine other repositories
 at once. Regenerate rather than reorganise.
 
+`tools/newsletter/` drafts issues of Proof Over Promise. The deliverable there
+is `voice.md`, the system prompt — it is the editing surface, and it carries a
+whitelist of the facts a draft is allowed to state. That directory has its own
+`AGENTS.md`; read it before touching anything in it. Two rules from it are
+worth stating here: the tool has no send path and never gets one, and drafts
+land in `build/newsletter/`, which is gitignored on purpose.
+
 This is a GitHub Pages site published from `main`. A push is a deploy.
 
 ## Safeguards
