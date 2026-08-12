@@ -1,0 +1,25 @@
+# Text gets normalised line endings; data formats are treated as binary so
+# git never tries to diff or line-ending-convert them.
+* text=auto eol=lf
+
+*.md   text eol=lf
+*.txt  text eol=lf
+*.csv  text eol=lf
+*.tsv  text eol=lf
+*.json text eol=lf
+*.py   text eol=lf
+*.sh   text eol=lf
+
+*.xlsx binary
+*.xls  binary
+*.docx binary
+*.pdf  binary
+*.parquet binary
+*.zip  binary
+*.gz   binary
+*.7z   binary
+*.db   binary
+*.sqlite binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
