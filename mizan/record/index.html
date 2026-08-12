@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Record · Mīzān</title>
+<meta name="description" content="Trend, deviation, self-calibration, settings and data export." />
+<link rel="stylesheet" href="../core.css" />
+</head>
+<body data-page="record" data-root="../">
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="../">Mīzān<em>.</em></a>
+    <div class="nav-links" id="navLinks"></div>
+    <button class="icon-btn" id="themeBtn" title="Toggle theme">◐</button>
+  </div>
+</nav>
+
+<div class="wrap" id="top">
+<section id="trend">
+  <div class="sec-head">
+    <p class="eyebrow">Deviation from the reference line</p>
+    <h2>The record</h2>
+    <p class="lede" style="margin-top:10px">One good day proves nothing — you already have plenty of those. The question this section answers is the only one that matters: <strong>does the line hold?</strong></p>
+  </div>
+
+  <div class="grid g4" style="margin-bottom:18px" id="trendStats"></div>
+
+  <div class="grid g2" style="margin-bottom:18px">
+    <div class="chartbox">
+      <h4>Khudī index — 60 days, with 7-day median</h4>
+      <svg class="chart" id="lineChart" viewBox="0 0 640 220"></svg>
+    </div>
+    <div class="chartbox">
+      <h4>Calendar — index by day</h4>
+      <div class="heat" id="heatGrid"></div>
+      <div class="legend">
+        <span><i style="background:var(--raise)"></i> no entry</span>
+        <span><i style="background:rgba(212,102,79,.85)"></i> &lt;40</span>
+        <span><i style="background:rgba(224,162,68,.85)"></i> 40–64</span>
+        <span><i style="background:rgba(69,170,180,.85)"></i> 65–79</span>
+        <span><i style="background:rgba(79,168,122,.95)"></i> 80+</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="chartbox">
+      <h4>Per-measure deviation from target (14-day mean vs 2.5 / 3.0)</h4>
+      <svg class="chart" id="devChart" viewBox="0 0 640 260"></svg>
+      <div class="tiny" style="margin-top:10px">Bars left of the line are where the system is actually failing. Fix the leftmost one and stop redesigning the whole thing — the temptation to rebuild the instrument instead of doing the thing it measures is itself a symptom, and this note exists because you will do it.</div>
+    </div>
+    <div class="chartbox">
+      <h4>Self-calibration — forecast vs actual</h4>
+      <svg class="chart" id="calChart" viewBox="0 0 640 260"></svg>
+      <div id="calStats" class="tiny" style="margin-top:10px"></div>
+    </div>
+  </div>
+</section>
+<section id="settings">
+  <div class="sec-head">
+    <p class="eyebrow">Configuration</p>
+    <h2>Settings, data, provenance</h2>
+  </div>
+  <div class="grid g3">
+    <div class="card">
+      <p class="eyebrow">Location &amp; method</p>
+      <div class="grid g2" style="gap:10px">
+        <div class="field"><label class="fl" for="setLat">Latitude</label><input type="number" id="setLat" step="0.0001" /></div>
+        <div class="field"><label class="fl" for="setLng">Longitude</label><input type="number" id="setLng" step="0.0001" /></div>
+      </div>
+      <div class="field"><label class="fl" for="setMethod">Calculation method</label>
+        <select id="setMethod">
+          <option value="ISNA">ISNA — North America (15° / 15°)</option>
+          <option value="MWL">Muslim World League (18° / 17°)</option>
+          <option value="EGYPT">Egyptian General Authority (19.5° / 17.5°)</option>
+          <option value="KARACHI">Univ. of Islamic Sciences, Karachi (18° / 18°)</option>
+          <option value="MAKKAH">Umm al-Qurā (18.5° / 90 min)</option>
+        </select>
+      </div>
+      <div class="field"><label class="fl" for="setAsr">ʿAṣr</label>
+        <select id="setAsr"><option value="1">Standard — Shāfiʿī, Mālikī, Ḥanbalī</option><option value="2">Ḥanafī</option></select>
+      </div>
+      <div class="btn-row"><button class="btn" id="geoBtn">Use my location</button></div>
+      <div class="tiny" style="margin-top:10px">Times are computed in-browser from solar geometry. Accurate to a couple of minutes at mid-latitudes; defer to your masjid where they differ.</div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Weights</p>
+      <div id="weightEditor"></div>
+      <div class="btn-row" style="margin-top:12px"><button class="btn" id="resetWeights">Reset to default</button></div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Data</p>
+      <div class="btn-row" style="margin-bottom:12px">
+        <button class="btn primary" id="exportBtn">Export JSON</button>
+        <button class="btn" id="importBtn">Import</button>
+        <input type="file" id="importFile" accept="application/json" class="hide" />
+      </div>
+      <div class="btn-row" style="margin-bottom:12px">
+        <button class="btn" id="sampleBtn">Load sample fortnight</button>
+        <button class="btn danger" id="wipeBtn">Erase everything</button>
+      </div>
+      <div id="dataStats" class="tiny"></div>
+      <div class="notice" style="margin-top:12px;font-size:.78rem">
+        <b>Sample data is synthetic.</b> If you load it, every day it creates is tagged <span class="mono">synthetic:true</span> and excluded from your real streaks and calibration statistics. It exists so the charts have something to draw before you have two weeks of your own.
+      </div>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="grid g2">
+    <div class="card flat">
+      <p class="eyebrow">Provenance</p>
+      <div class="small stack">
+        <div><b>Qur'anic citations</b> are given by sūrah:āyah throughout so that every one can be checked against a muṣḥaf. The Arabic is set for reading, not for recitation reference — verify before quoting publicly. English renderings are working translations aimed at conveying sense; where a rendering carries interpretive weight the reference is there so you can go behind it.</div>
+        <div><b>Iqbal</b> is quoted where the attribution is established — the two couplets under the Khudī ladder are from <em>Bāl-e-Jibrīl</em>. The three-stage structure of the education of khudī (<em>iṭāʿat</em>, <em>ẓabt-e-nafs</em>, <em>niyābat-e-ilāhī</em>) is from <em>Asrār-i-Khudī</em>. Statements about his broader position — the self sharpened by resistant reality, the polemic against quietism — are paraphrase of the argument in <em>The Reconstruction of Religious Thought in Islam</em> (1930), not quotation.</div>
+        <div><b>Scoring rubrics, weights, thresholds and phase design</b> are constructed for this instrument. They are not derived from any classical source and carry no authority beyond their usefulness. They are declared rather than hidden so you can argue with them, which you should.</div>
+        <div><b>Claims about sleep, cannabis and attention</b> reflect the general direction of the research literature as of the model's training, stated without citation. Treat them as prompts to verify, not as evidence. This page is not medical, psychiatric or religious advice.</div>
+      </div>
+    </div>
+    <div class="card flat">
+      <p class="eyebrow">A closing note on the method</p>
+      <p class="small">The reason this is built as an audit instrument rather than a habit tracker is that habit trackers measure compliance, and compliance is not what you are after. An audit asks a harder question: <em>is the control designed correctly, and does it operate effectively?</em> A day where you prayed all five and shipped nothing passed one test and failed the other. The index is built to make that visible instead of letting a high score on the easy measures cover a structural failure on the hard ones.</p>
+      <p class="small">The second reason: you are the population of one that your own research is about. You study how professional judgment degrades when an assistant makes an answer feel more certain than the evidence supports. The forecast field is that same experiment run on yourself, with you as both the model and the reviewer. If your morning forecast is systematically optimistic — and it will be — you have just measured, on your own behaviour, the precise failure mode you are writing a dissertation about.</p>
+      <div class="ayah" style="margin:14px 0 0">
+        <div class="ar">وَأَن لَّيْسَ لِلْإِنسَـٰنِ إِلَّا مَا سَعَىٰ <span style="color:var(--gold);font-family:var(--display);font-size:.55em;vertical-align:.4em">&#9670;</span> وَأَنَّ سَعْيَهُۥ سَوْفَ يُرَىٰ</div>
+        <div class="tr">"And that there is nothing for man except what he strives for, and that his striving is going to be seen."</div>
+        <div class="ref">An-Najm 53:39–40</div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer><div class="wrap"><div class="spread">
+  <div class="tiny">Mīzān · a private instrument · data never leaves this browser</div>
+  <div class="tiny mono" id="footVer">—</div>
+</div></div></footer>
+
+<script src="../core.js"></script>
+</body>
+</html>

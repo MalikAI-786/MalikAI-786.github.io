@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Day · Mīzān</title>
+<meta name="description" content="The daily sheet: seven measures, prayer spine, sprints, nightly muhasaba." />
+<link rel="stylesheet" href="../core.css" />
+</head>
+<body data-page="day" data-root="../">
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="../">Mīzān<em>.</em></a>
+    <div class="nav-links" id="navLinks"></div>
+    <button class="icon-btn" id="themeBtn" title="Toggle theme">◐</button>
+  </div>
+</nav>
+
+<div class="wrap" id="top">
+<section id="today">
+  <div class="sec-head spread">
+    <div>
+      <p class="eyebrow">The instrument</p>
+      <h2 id="todayTitle">Today's sheet</h2>
+      <div class="sub" id="todayMeta">—</div>
+    </div>
+    <div class="row">
+      <button class="btn" id="prevDay">← prev</button>
+      <input type="date" id="dayPicker" style="width:160px" />
+      <button class="btn" id="nextDay">next →</button>
+    </div>
+  </div>
+
+  <div class="grid g-2-1" style="margin-bottom:18px">
+    <div class="card">
+      <div class="spread" style="margin-bottom:14px">
+        <div class="dial">
+          <svg width="86" height="86" viewBox="0 0 86 86" id="dialSvg" aria-hidden="true"></svg>
+          <div>
+            <div class="num" id="idxNum">—</div>
+            <div class="tag">Khudī index · today</div>
+            <div class="tiny" id="idxDelta" style="margin-top:4px"></div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="tag">Computed stage</div>
+          <div style="font-size:1.16rem;font-weight:600;margin-top:3px" id="stageNow">—</div>
+          <div class="tiny" id="stageNote"></div>
+        </div>
+      </div>
+      <div class="stat-row" id="facultyRow"></div>
+      <div class="tiny" style="margin-top:10px">Faculties after Iqbal's line <em>yaqīn-e-muḥkam, ʿamal-e-paiham, moḥabbat</em> — firm conviction, ceaseless action, love. Weighting shown under Measures.</div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow">Calibration</p>
+      <div class="field">
+        <label class="fl" for="fcInput">Morning forecast — where will today land? (0–100)</label>
+        <input type="number" id="fcInput" min="0" max="100" step="1" placeholder="e.g. 72" />
+      </div>
+      <div class="tiny">Set it before noon, never after. The gap between your forecast and the close is the only honest read on whether you know yourself — the same diagnostic you run on a model. Bias and MAE accumulate under <a href="#trend">Trend</a>.</div>
+      <div class="hr" style="margin:16px 0"></div>
+      <div class="kv"><span class="k">Forecast</span><span class="v" id="kvFc">—</span></div>
+      <div class="kv"><span class="k">Actual</span><span class="v" id="kvAc">—</span></div>
+      <div class="kv"><span class="k">Error</span><span class="v" id="kvEr">—</span></div>
+    </div>
+  </div>
+
+  <!-- prayer spine -->
+  <div class="card" style="margin-bottom:18px">
+    <div class="spread" style="margin-bottom:12px">
+      <div>
+        <p class="eyebrow gold" style="margin-bottom:6px">The spine of the day</p>
+        <div class="tiny">Prayer times computed locally from solar position for your coordinates — no network. Verify against your masjid; treat ±2 min as noise. Bars below the line are logged events, placed at the hour they happened.</div>
+      </div>
+      <div class="tag" id="spineMeta">—</div>
+    </div>
+    <div class="spine"><svg class="chart" id="spineSvg" viewBox="0 0 1000 96"></svg></div>
+    <div class="prayer-grid" id="prayerGrid"></div>
+    <div class="legend">
+      <span><i style="background:var(--accent)"></i> prayer window</span>
+      <span><i style="background:var(--gold)"></i> ʿamal sprint</span>
+      <span><i style="background:var(--bad)"></i> intoxicant session</span>
+      <span><i style="background:var(--good)"></i> gym block</span>
+      <span><i style="background:var(--muted)"></i> now</span>
+    </div>
+    <div id="collisionWarn" style="margin-top:12px"></div>
+  </div>
+
+  <!-- the seven measures -->
+  <div class="grid g-2-1">
+    <div class="card">
+      <p class="eyebrow">The seven measures</p>
+      <div id="measureList"></div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <p class="eyebrow">One thing</p>
+        <div class="field">
+          <label class="fl" for="oneThing">The single task that makes today count</label>
+          <input type="text" id="oneThing" placeholder="e.g. Ch.3 methods section — 900 words" />
+        </div>
+        <label class="chk"><input type="checkbox" id="oneThingDone" /><span>It moved today.</span></label>
+        <div class="tiny">A list of twelve is a list of zero. One target, named the night before, is the single highest-yield accommodation for an attention-regulation problem — it removes the decision, which is the part that costs you.</div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow">Nightly close · muḥāsaba</p>
+        <div class="field"><label class="fl" for="mShukr">One thing to be grateful for</label><textarea id="mShukr" placeholder="Specific. Not 'my family.'"></textarea></div>
+        <div class="field"><label class="fl" for="mKhata">One error, named without excuse</label><textarea id="mKhata" placeholder="What you did, not what happened to you."></textarea></div>
+        <div class="field"><label class="fl" for="mKal">One correction for tomorrow</label><textarea id="mKal" placeholder="A single, specific, small change."></textarea></div>
+        <div class="btn-row">
+          <button class="btn gold" id="closeDay">Close the day</button>
+          <span class="pill" id="closedPill">open</span>
+        </div>
+        <div class="tiny" style="margin-top:10px">An unclosed day is an <b>unaudited</b> day — it shows as an exception in the trend, not as a zero. Missing evidence and bad evidence are different findings.</div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="attention">
+  <div class="sec-head">
+    <p class="eyebrow gold">Attention is an amānah</p>
+    <h2>Working with the wiring, not against it</h2>
+    <p class="lede" style="margin-top:10px">An attention-regulation difference is not a character defect and this instrument does not treat it as one. What it does assume: your working memory is unreliable as a storage device, your motivation is interest-driven rather than importance-driven, and transitions cost you more than the tasks do. Every mechanic below is built around those three facts.</p>
+  </div>
+
+  <div class="grid g-1-2" style="margin-bottom:18px">
+    <div class="card">
+      <p class="eyebrow">ʿAmal sprint</p>
+      <div class="timer" id="sprintTimer">25:00</div>
+      <div class="tiny" id="sprintState" style="margin:6px 0 12px">idle</div>
+      <div class="field">
+        <label class="fl" for="niyyah">Niyyah — for what, and for whom</label>
+        <input type="text" id="niyyah" placeholder="One line. Written before you start." />
+      </div>
+      <div class="btn-row">
+        <button class="btn primary" id="sprintStart">Start</button>
+        <button class="btn" id="sprintStop">Stop</button>
+        <select id="sprintLen" style="width:auto"><option value="15">15 min</option><option value="25" selected>25 min</option><option value="45">45 min</option><option value="90">90 min</option></select>
+      </div>
+      <div class="kv" style="margin-top:14px"><span class="k">Sprints today</span><span class="v" id="sprintCount">0</span></div>
+      <div class="kv"><span class="k">7-day mean</span><span class="v" id="sprint7">—</span></div>
+      <div class="tiny" style="margin-top:10px">Completed sprints feed the ʿAmal measure directly — that score is not a self-assessment, it is a count.</div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <p class="eyebrow">The transition ritual</p>
+        <p class="small" style="margin-top:0">The expensive moment is not the work. It is the eleven minutes between deciding to work and starting. You already own a state-change ritual with a fixed sequence, a physical component, cold water and a defined endpoint, and you perform it five times a day. Chain onto it:</p>
+        <div class="grid g4" style="margin-top:12px;gap:10px">
+          <div class="card flat" style="padding:12px"><div class="tag">01</div><div style="font-weight:600;font-size:.9rem;margin-top:4px">Wuḍūʾ</div><div class="tiny">Cold water, fixed sequence. The body registers a boundary.</div></div>
+          <div class="card flat" style="padding:12px"><div class="tag">02</div><div style="font-weight:600;font-size:.9rem;margin-top:4px">Ṣalāh</div><div class="tiny">Eight minutes of externally-timed, embodied attention.</div></div>
+          <div class="card flat" style="padding:12px"><div class="tag">03</div><div style="font-weight:600;font-size:.9rem;margin-top:4px">Niyyah</div><div class="tiny">Write the line above. Decision made on paper, not in the head.</div></div>
+          <div class="card flat" style="padding:12px"><div class="tag">04</div><div style="font-weight:600;font-size:.9rem;margin-top:4px">Sprint</div><div class="tiny">Timer starts within 90 seconds. No inbox in between.</div></div>
+        </div>
+        <div class="tiny" style="margin-top:11px">Ẓuhr and ʿAṣr are the two that fall inside the working day. Those are your two guaranteed cold starts — the highest-leverage real estate you have, and they arrive whether or not you feel like it.</div>
+      </div>
+
+      <div class="card">
+        <p class="eyebrow gold">The laghw filter</p>
+        <div class="ayah" style="margin-bottom:12px">
+          <div class="ar">قَدْ أَفْلَحَ ٱلْمُؤْمِنُونَ <span style="color:var(--gold);font-family:var(--display);font-size:.55em;vertical-align:.4em">&#9670;</span> ٱلَّذِينَ هُمْ فِى صَلَاتِهِمْ خَـٰشِعُونَ <span style="color:var(--gold);font-family:var(--display);font-size:.55em;vertical-align:.4em">&#9670;</span> وَٱلَّذِينَ هُمْ عَنِ ٱللَّغْوِ مُعْرِضُونَ</div>
+          <div class="tr">"Successful are the believers — those who are humbly submissive in their prayer, and those who turn away from what is vain."</div>
+          <div class="ref">Al-Mu'minūn 23:1–3 · laghw: the empty, the idle, the noise</div>
+        </div>
+        <p class="small" style="margin-top:0">Note the ordering: focus in prayer, then turning from noise. Attention is treated as one faculty with one budget. The feed is not competing with your leisure — it is competing with your khushūʿ, and it is winning because it was engineered to.</p>
+        <div id="frictionList" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="card">
+      <p class="eyebrow">Hyperfocus harvest</p>
+      <div class="field">
+        <label class="fl" for="hyper">Where did the intensity go today?</label>
+        <input type="text" id="hyper" placeholder="e.g. 3 hrs on the calibration chart — unplanned, but shippable" />
+      </div>
+      <p class="small">The same wiring that will not produce twenty minutes on a form will produce five unbroken hours on something that has hooked it. That is not a deficit, it is an unaimed asset — and it is very close to what Iqbal means by <em>ʿishq</em>: intensity with a direction. The discipline is not manufacturing focus. It is <b>pointing it at the doctorate on Sunday rather than at a rabbit hole on Sunday</b>, and logging where it actually landed so the pattern becomes visible.</p>
+      <div id="hyperLog" class="tiny" style="margin-top:12px"></div>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Design rules this page follows</p>
+      <table class="t">
+        <tr><td><b>Externalised state</b></td><td class="small">Nothing here asks you to remember. The page is the working memory.</td></tr>
+        <tr><td><b>One decision</b></td><td class="small">One target per day, one score per measure, one button to close.</td></tr>
+        <tr><td><b>Immediate feedback</b></td><td class="small">The index moves the instant you score. Delayed reward does not work on this wiring; the loop has to close now.</td></tr>
+        <tr><td><b>No streak shame</b></td><td class="small">Streaks are shown but never gate the ladder. A broken streak that gets logged honestly is worth more than a clean one that is fiction.</td></tr>
+        <tr><td><b>Body first</b></td><td class="small">Sleep window and movement are scored measures, not wellness garnish. Sleep debt reproduces every symptom you are trying to manage.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer><div class="wrap"><div class="spread">
+  <div class="tiny">Mīzān · a private instrument · data never leaves this browser</div>
+  <div class="tiny mono" id="footVer">—</div>
+</div></div></footer>
+
+<script src="../core.js"></script>
+</body>
+</html>
