@@ -43,6 +43,16 @@ to it. Neither tool sends anything anywhere: the drafting script writes a
 markdown file and stops, and no real data belongs in this repository, because
 every branch of it is public.
 
+The rules above are also executable. `tools/audit/invariants.py` checks them —
+that the generated files still match the generator, that nothing
+credential- or cache-shaped is tracked in a public repository, that
+`.nojekyll` exists, and that colour has not leaked out of `tokens.css` into a
+component. CI runs it on every push and it cannot be bypassed; the same script
+runs as a pre-commit hook once you point git at it with
+`git config core.hooksPath .githooks`. `--fix` repairs what is safely
+repairable. If a rule here is wrong, change it in both places at once: the
+prose and the check are meant to be the same statement.
+
 This is a GitHub Pages site published from `main`. A push is a deploy.
 
 ## Safeguards
