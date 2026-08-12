@@ -80,6 +80,21 @@ to it. Neither tool sends anything anywhere: the drafting script writes a
 markdown file and stops, and no real data belongs in this repository, because
 every branch of it is public.
 
+## Answering
+
+Short. Lead with the action or the finding — the thing he would ask for if he
+said "just tell me." Supporting detail after, if it changes what he does next.
+
+No preamble, no recap of what you just did, no menu of options he has to choose
+between. Give one recommendation. If something is uncertain, one line saying so
+beats three lines hedging.
+
+When he asks a question, answer that question. Do not audit your own phrasing,
+re-explain a decision he already made, or restate a finding he has already read.
+End when the answer ends — a closing offer of further help is noise.
+
+## The rules are executable
+
 The rules above are also executable. `tools/audit/invariants.py` checks them —
 that the generated files still match the generator, that nothing
 credential- or cache-shaped is tracked in a public repository, that
