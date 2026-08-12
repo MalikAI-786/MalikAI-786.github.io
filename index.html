@@ -4,53 +4,50 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Yasir A. Malik — Audit, Risk &amp; AI Governance</title>
-<meta name="description" content="Bank examiner. Audit executive. AI builder. Doctoral researcher on how AI reshapes professional judgment — and what governance has to catch." />
+<meta name="description" content="Twenty years auditing how decisions get made — a regulator's seat, internal audit leadership at global banks, and doctoral research on AI and professional judgment." />
+
+<link rel="stylesheet" href="assets/brand/tokens.css" />
+
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="assets/brand/icon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png" />
+<link rel="manifest" href="site.webmanifest" />
+<meta name="theme-color" content="#E0662E" />
+
+<meta property="og:type" content="profile" />
+<meta property="og:title" content="Yasir A. Malik — Audit, Risk &amp; AI Governance" />
+<meta property="og:description" content="Bank examiner. Audit executive. AI builder. Doctoral researcher on how AI reshapes professional judgment — and what governance has to catch." />
+<meta property="og:url" content="https://malikai-786.github.io/" />
+<meta property="og:image" content="https://malikai-786.github.io/assets/brand/og-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Yasir A. Malik — Audit, Risk &amp; AI Governance" />
+<meta name="twitter:description" content="Bank examiner. Audit executive. AI builder. Doctoral researcher on how AI reshapes professional judgment." />
+<meta name="twitter:image" content="https://malikai-786.github.io/assets/brand/og-card.png" />
+<script data-goatcounter="https://malikai786.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 <style>
   /* ===================================================================
-     Yasir A. Malik — Audit the Algorithm
-     Identity: "calibration instrument" — measurement, evidence, deviation
-     from a reference line. The hairline rule running the left margin is
-     the anchoring motif made structural.
+     Yasir A. Malik
+     Identity: The Reference Mark — an open ring, an anchor node, and a
+     reference line extended past the figure. Colour, type and the mark
+     itself are defined once in assets/brand/tokens.css; this sheet only
+     assembles them into components.
+
+     Ember is the anchor colour and is spent sparingly. It never carries
+     body text on a light ground (3.11:1) — --accent-ink does that.
      =================================================================== */
 
+  /* Component-level aliases onto the brand tokens. */
   :root{
-    color-scheme: light dark;
-    --ground:#edf0f2; --surface:#ffffff; --raise:#e4e9ec;
-    --ink:#0f1620; --muted:#55606e; --line:#d3dae0;
-    --accent:#0b5d66; --accent-ink:#094a52; --accent-wash:rgba(11,93,102,.08);
-    --signal:#a15c00; --signal-wash:rgba(161,92,0,.09);
-    --shadow:0 1px 2px rgba(15,22,32,.05), 0 14px 34px -22px rgba(15,22,32,.35);
-    --display:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    --read:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
-    --mono:ui-monospace,"SF Mono",Menlo,"Cascadia Mono","Roboto Mono",monospace;
-    --maxw:1080px; --spine:66ch;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --ground:#0c1116; --surface:#131a22; --raise:#18212b;
-      --ink:#e4e9ee; --muted:#94a1ae; --line:#223040;
-      --accent:#45aab4; --accent-ink:#63c2cb; --accent-wash:rgba(69,170,180,.12);
-      --signal:#e0a244; --signal-wash:rgba(224,162,68,.13);
-      --shadow:0 1px 2px rgba(0,0,0,.5), 0 18px 40px -22px rgba(0,0,0,.8);
-    }
-  }
-  :root[data-theme="light"]{
-    color-scheme: light;
-    --ground:#edf0f2; --surface:#ffffff; --raise:#e4e9ec;
-    --ink:#0f1620; --muted:#55606e; --line:#d3dae0;
-    --accent:#0b5d66; --accent-ink:#094a52; --accent-wash:rgba(11,93,102,.08);
-    --signal:#a15c00; --signal-wash:rgba(161,92,0,.09);
-    --shadow:0 1px 2px rgba(15,22,32,.05), 0 14px 34px -22px rgba(15,22,32,.35);
-  }
-  :root[data-theme="dark"]{
-    color-scheme: dark;
-    --ground:#0c1116; --surface:#131a22; --raise:#18212b;
-    --ink:#e4e9ee; --muted:#94a1ae; --line:#223040;
-    --accent:#45aab4; --accent-ink:#63c2cb; --accent-wash:rgba(69,170,180,.12);
-    --signal:#e0a244; --signal-wash:rgba(224,162,68,.13);
-    --shadow:0 1px 2px rgba(0,0,0,.5), 0 18px 40px -22px rgba(0,0,0,.8);
+    --display:var(--statement);
+    --read:var(--record);
+    --mono:var(--instrument);
+    --signal:var(--accent);
+    --signal-wash:var(--accent-wash);
   }
 
   *{box-sizing:border-box;}
@@ -66,19 +63,30 @@
 
   /* mono eyebrow with a measure tick — the reference-mark motif */
   .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;
-    text-transform:uppercase;color:var(--accent);margin:0 0 16px;
+    text-transform:uppercase;color:var(--accent-ink);margin:0 0 16px;
     display:flex;align-items:center;gap:11px;}
   .eyebrow::before{content:"";width:18px;height:0;border-top:1.5px solid var(--accent);}
 
   /* ---------- nav ---------- */
   nav.top{position:sticky;top:0;z-index:60;
     background:color-mix(in srgb, var(--ground) 88%, transparent);
-    backdrop-filter:saturate(150%) blur(9px);border-bottom:1px solid var(--line);}
+    backdrop-filter:saturate(150%) blur(9px);border-bottom:1px solid var(--line);
+    border-top:3px solid var(--accent);}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;
     height:58px;max-width:var(--maxw);margin:0 auto;padding:0 28px;}
-  .brand{font-weight:700;font-size:.98rem;letter-spacing:-.01em;
+
+  /* ---------- the mark ---------- */
+  /* Ring and node take the accent; the letterform takes currentColor, so
+     one file works on any ground. Below ~32px use the micro cut instead. */
+  .logo{display:block;flex:0 0 auto;}
+  .logo .ring{stroke:var(--accent);}
+  .logo .node{fill:var(--accent);}
+  .logo .letter{stroke:currentColor;}
+
+  .brand{display:inline-flex;align-items:center;gap:11px;
     text-decoration:none;color:var(--ink);}
-  .brand em{font-style:normal;color:var(--accent);}
+  .brand .name{font-family:var(--record);font-size:1.06rem;font-weight:700;
+    letter-spacing:var(--track-record);}
   .nav-links{display:flex;gap:20px;align-items:center;}
   .nav-links a{font-family:var(--mono);font-size:.71rem;letter-spacing:.09em;
     text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
@@ -86,15 +94,16 @@
   .theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--muted);
     font-family:var(--mono);font-size:.7rem;padding:6px 11px;border-radius:3px;
     cursor:pointer;transition:border-color .2s,color .2s;}
-  .theme-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .theme-btn:hover{border-color:var(--accent);color:var(--accent-ink);}
   @media (max-width:860px){ .nav-links a{display:none;} }
 
   /* ---------- hero ---------- */
   header.hero{padding:80px 0 26px;}
   .hero-grid{display:grid;grid-template-columns:1fr 250px;gap:52px;align-items:start;}
   @media (max-width:860px){ .hero-grid{grid-template-columns:1fr;gap:34px;} }
-  .hero h1{font-size:clamp(2.1rem,4.6vw,3.35rem);line-height:1.08;margin:0 0 22px;
-    letter-spacing:-.028em;font-weight:700;text-wrap:balance;max-width:19ch;}
+  .hero h1{font-family:var(--record);font-size:clamp(2.15rem,4.7vw,3.4rem);
+    line-height:1.12;margin:0 0 22px;letter-spacing:var(--track-record);
+    font-weight:700;text-wrap:balance;max-width:19ch;}
   .hero h1 .seat{color:var(--accent);}
   .hero .thesis{font-family:var(--read);font-size:clamp(1.02rem,1.7vw,1.16rem);
     line-height:1.62;color:var(--muted);max-width:56ch;margin:0 0 28px;}
@@ -110,10 +119,10 @@
   .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);
     font-size:.76rem;letter-spacing:.03em;text-decoration:none;padding:11px 17px;
     border-radius:3px;transition:transform .15s,border-color .2s,background .2s;cursor:pointer;}
-  .btn.primary{background:var(--accent);color:var(--ground);border:1px solid var(--accent);font-weight:600;}
+  .btn.primary{background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);font-weight:600;}
   .btn.primary:hover{transform:translateY(-1px);}
   .btn.ghost{border:1px solid var(--line);color:var(--ink);background:transparent;}
-  .btn.ghost:hover{border-color:var(--accent);color:var(--accent);}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent-ink);}
 
   /* ---------- the three seats: a real typed sequence, so it's numbered ---------- */
   .seats{border-top:1px solid var(--line);margin-top:52px;
@@ -126,15 +135,16 @@
     .seat-cell:nth-child(2n){border-right:0;}
     .seat-cell:nth-child(-n+2){border-bottom:1px solid var(--line);}
   }
-  .seat-cell .n{font-family:var(--mono);font-size:.66rem;color:var(--accent);
+  .seat-cell .n{font-family:var(--mono);font-size:.66rem;color:var(--accent-ink);
     letter-spacing:.14em;margin-bottom:9px;}
   .seat-cell .t{font-weight:700;font-size:1.02rem;letter-spacing:-.01em;margin-bottom:5px;}
   .seat-cell .d{font-size:.85rem;color:var(--muted);line-height:1.5;}
 
   /* ---------- sections ---------- */
   section{padding:74px 0;border-bottom:1px solid var(--line);}
-  h2{font-size:clamp(1.5rem,2.9vw,2.1rem);margin:0 0 10px;letter-spacing:-.022em;
-    font-weight:700;text-wrap:balance;}
+  h2{font-family:var(--record);font-size:clamp(1.55rem,3vw,2.15rem);margin:0 0 10px;
+    letter-spacing:var(--track-record);font-weight:700;text-wrap:balance;}
+  h3{font-family:var(--record);letter-spacing:var(--track-record);}
   .sub{color:var(--muted);font-size:1.02rem;max-width:60ch;margin:0 0 30px;}
 
   /* the reading spine — hairline reference rule in the left margin */
@@ -160,7 +170,7 @@
     text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
   .tile .v{font-size:1.85rem;font-weight:700;letter-spacing:-.03em;
     font-variant-numeric:tabular-nums;line-height:1;}
-  .tile .v.sig{color:var(--signal);}
+  .tile .v.sig{color:var(--accent-ink);}
   .tile .x{font-size:.83rem;color:var(--muted);margin-top:9px;line-height:1.45;}
 
   /* ---------- measurement model diagram ---------- */
@@ -173,13 +183,13 @@
   .practices{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
   .practices span{font-size:.78rem;padding:7px 10px;background:var(--raise);
     border-radius:3px;line-height:1.35;border:1px solid transparent;}
-  .arrow{font-family:var(--mono);color:var(--accent);font-size:1.1rem;text-align:center;}
+  .arrow{font-family:var(--mono);color:var(--accent-ink);font-size:1.1rem;text-align:center;}
   @media (max-width:820px){ .arrow{transform:rotate(90deg);} }
   .mechs{display:grid;gap:7px;}
   .mechs span{font-size:.82rem;padding:10px 12px;border:1px solid var(--accent);
     border-radius:3px;color:var(--accent-ink);background:var(--accent-wash);line-height:1.35;}
-  .outcome{font-size:.85rem;padding:12px;border-radius:3px;background:var(--accent);
-    color:var(--ground);font-weight:600;line-height:1.4;}
+  .outcome{font-size:.85rem;padding:12px;border-radius:3px;background:var(--evidence);
+    color:var(--on-evidence);font-weight:600;line-height:1.4;}
 
   /* ---------- the drift chain — semantic amber, this is the risk ---------- */
   .chain{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px;}
@@ -187,7 +197,7 @@
   .link{background:var(--signal-wash);border:1px solid var(--signal);
     border-radius:4px;padding:18px 18px 20px;}
   .link .step{font-family:var(--mono);font-size:.64rem;letter-spacing:.13em;
-    text-transform:uppercase;color:var(--signal);margin-bottom:10px;}
+    text-transform:uppercase;color:var(--accent-ink);margin-bottom:10px;}
   .link h4{margin:0 0 7px;font-size:1rem;font-weight:700;letter-spacing:-.01em;}
   .link p{margin:0;font-size:.87rem;color:var(--muted);line-height:1.55;}
 
@@ -209,7 +219,7 @@
     color:var(--muted);font-weight:400;background:var(--raise);}
   tr:last-child td{border-bottom:0;}
   td.offer{font-weight:700;font-size:.92rem;letter-spacing:-.01em;}
-  td.why{color:var(--accent-ink);}
+  td.why{color:var(--evidence);}
 
   /* ---------- generic lists / grids ---------- */
   .cols{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:start;}
@@ -236,7 +246,7 @@
     border:1px solid var(--line);border-radius:3px;background:var(--surface);color:var(--muted);
     cursor:pointer;transition:all .18s;}
   .fchip:hover{border-color:var(--accent);color:var(--accent);}
-  .fchip.on{background:var(--accent);border-color:var(--accent);color:var(--ground);}
+  .fchip.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent);}
   .proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
   @media (max-width:900px){ .proj-grid{grid-template-columns:1fr 1fr;} }
   @media (max-width:560px){ .proj-grid{grid-template-columns:1fr;} }
@@ -245,7 +255,7 @@
   .proj.hide{display:none;}
   .proj:hover{border-color:var(--accent);}
   .proj .cat{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--accent);}
+    text-transform:uppercase;color:var(--accent-ink);}
   .proj h4{font-size:.98rem;margin:0;font-weight:700;letter-spacing:-.01em;}
   .proj p{margin:0;font-size:.83rem;color:var(--muted);line-height:1.5;flex:1;}
   .proj .meta{display:flex;justify-content:space-between;align-items:center;gap:10px;
@@ -257,17 +267,70 @@
   .disclaimer{background:var(--signal-wash);border:1px solid var(--signal);
     border-radius:4px;padding:13px 16px;font-family:var(--mono);font-size:.73rem;
     line-height:1.55;color:var(--ink);margin-top:16px;max-width:70ch;}
-  .disclaimer b{color:var(--signal);}
+  .disclaimer b{color:var(--accent-ink);}
 
   .contact-list{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:9px;}
   .contact-list a{font-family:var(--mono);font-size:.89rem;text-decoration:none;color:var(--ink);
     display:inline-flex;align-items:center;gap:12px;transition:color .2s;}
   .contact-list a:hover{color:var(--accent);}
-  .contact-list .tag{color:var(--accent);font-size:.65rem;letter-spacing:.11em;
+  .contact-list .tag{color:var(--accent-ink);font-size:.65rem;letter-spacing:.11em;
     text-transform:uppercase;width:64px;flex:0 0 auto;}
 
-  footer.foot{padding:28px 0 44px;color:var(--muted);font-size:.76rem;font-family:var(--mono);}
+  footer.foot{padding:34px 0 46px;color:var(--muted);font-size:.76rem;font-family:var(--mono);}
+  .foot-mark{display:flex;align-items:center;gap:15px;padding-bottom:22px;
+    margin-bottom:20px;border-bottom:1px solid var(--line);color:var(--ink);}
+  .foot-name{font-family:var(--record);font-size:1.16rem;font-weight:700;
+    letter-spacing:var(--track-record);line-height:1.2;}
+  .foot-desc{font-family:var(--mono);font-size:.66rem;letter-spacing:var(--track-instrument);
+    text-transform:uppercase;color:var(--muted);margin-top:5px;}
   .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+
+  /* ---------- the road: stops as anchor nodes on a reference line ---------- */
+  .road{position:relative;padding-left:36px;margin-top:32px;}
+  .road::before{content:"";position:absolute;left:7.5px;top:10px;bottom:10px;
+    width:1px;background:var(--line);}
+  .stop{position:relative;padding:0 0 28px;}
+  .stop:last-child{padding-bottom:0;}
+  .stop::before{content:"";position:absolute;left:-36px;top:5px;
+    width:16px;height:16px;border-radius:50%;
+    background:var(--ground);border:2.5px solid var(--accent);}
+  .stop.now::before{background:var(--accent);}
+  .stop .place{font-family:var(--mono);font-size:.67rem;letter-spacing:.17em;
+    text-transform:uppercase;color:var(--accent-ink);}
+  .stop h4{font-family:var(--read);font-size:1.1rem;font-weight:700;
+    letter-spacing:-.015em;margin:5px 0 6px;}
+  .stop p{margin:0;font-size:.93rem;color:var(--muted);line-height:1.62;max-width:60ch;}
+  .motto{font-family:var(--read);font-style:italic;font-size:1.12rem;
+    color:var(--ink);border-left:3px solid var(--accent);padding:3px 0 3px 18px;
+    margin:26px 0 0;max-width:56ch;}
+  .motto span{display:block;font-style:normal;font-family:var(--mono);
+    font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);margin-top:10px;}
+
+  /* ---------- verse ---------- */
+  .verse{background:var(--surface);border:1px solid var(--line);
+    border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+    padding:26px 28px;margin:30px 0;max-width:64ch;}
+  .verse .urdu{font-family:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq",
+    "Urdu Typesetting",serif;font-size:1.42rem;line-height:2.5;
+    direction:rtl;text-align:right;color:var(--ink);margin:0 0 18px;}
+  .verse .translit{font-family:var(--read);font-style:italic;font-size:1rem;
+    line-height:1.75;color:var(--muted);margin:0 0 14px;}
+  .verse .english{font-family:var(--read);font-size:1.06rem;line-height:1.7;
+    color:var(--ink);margin:0 0 14px;}
+  .verse .attr{font-family:var(--mono);font-size:.66rem;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--muted);margin:0;}
+
+
+  /* ---------- feedback ---------- */
+  .feedback{background:var(--surface);border:1px solid var(--line);
+    border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+    padding:24px 26px;margin:0 0 34px;max-width:70ch;}
+  .feedback h3{font-family:var(--read);font-size:1.18rem;margin:0 0 9px;
+    letter-spacing:var(--track-record);}
+  .feedback p{margin:0 0 18px;font-size:.95rem;color:var(--muted);line-height:1.62;}
+  .feedback .cta-row{gap:9px;}
 
   .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease;}
   .reveal.in{opacity:1;transform:none;}
@@ -276,12 +339,24 @@
 
 <nav class="top">
   <div class="nav-inner">
-    <a class="brand" href="#top">Yasir A. Malik<em>.</em></a>
+    <a class="brand" href="#top">
+      <svg class="logo" width="26" height="26" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+    <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" class="ring" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="14.38" cy="17.22" r="5.46" class="node"/>
+    <path d="M19.5 46.5 L32 19 L44.5 46.5" class="letter" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+    <path d="M21.6 38.4 H42.4" class="letter" stroke-width="8" stroke-linecap="butt"/>
+  </svg>
+      <span class="name">Yasir A. Malik</span>
+    </a>
     <div class="nav-links">
       <a href="#research">Research</a>
       <a href="#advisory">Advisory</a>
       <a href="#record">Record</a>
+      <a href="#road">The Road</a>
       <a href="#work">Work</a>
+      <a href="#ethics">Ethics</a>
+      <a href="brand-assets.html">Assets</a>
+      <a href="newsletter.html">Newsletter</a>
       <a href="#collaborate">Collaborate</a>
       <a href="#contact">Contact</a>
       <button class="theme-btn" id="themeBtn" aria-label="Toggle colour theme">Theme</button>
@@ -294,9 +369,9 @@
   <div class="wrap">
     <div class="hero-grid">
       <div>
-        <div class="eyebrow">Audit · Risk · AI Governance</div>
-        <h1><span class="seat">Bank examiner.</span> Audit executive. AI builder.</h1>
-        <p class="thesis">Now researching <strong>how AI reshapes professional judgment</strong> — and what governance actually has to catch. Three things almost nobody in AI governance can claim together: I examined banks as a regulator, I ran audits inside two of them, and I built and shipped an AI tool into a live audit function.</p>
+        <div class="eyebrow">Audit · Risk · Governance</div>
+        <h1>The most dangerous number in the room is <span class="seat">the one nobody questions.</span></h1>
+        <p class="thesis">Twenty years auditing how decisions get made. A regulator's seat, then internal audit inside global banks, now doctoral research on <strong>what happens to professional judgment when the analysis arrives already formed.</strong> I have spent a career on one question: when everyone in the room agrees, who is still checking?</p>
         <div class="cta-row">
           <a class="btn primary" href="mailto:YasirAMalik@gmail.com?subject=15-minute%20chat">Set up a 15-minute chat</a>
           <a class="btn ghost" href="#research">Read the research</a>
@@ -311,10 +386,10 @@
   </div>
   <div class="wrap">
     <div class="seats reveal">
-      <div class="seat-cell"><div class="n">01 · REGULATOR</div><div class="t">Bank examiner</div><div class="d">Safety-and-soundness examination — OCC and the Florida Office of Financial Regulation.</div></div>
-      <div class="seat-cell"><div class="n">02 · OPERATOR</div><div class="t">Audit &amp; risk</div><div class="d">Fifteen years across Citigroup and JPMorgan Chase, to Vice President.</div></div>
-      <div class="seat-cell"><div class="n">03 · BUILDER</div><div class="t">Shipped AI</div><div class="d">Built and deployed a production RAG assistant inside Citi's audit function.</div></div>
-      <div class="seat-cell"><div class="n">04 · RESEARCHER</div><div class="t">Doctoral work</div><div class="d">Cognitive bias in audit judgment — and what happens when AI enters the workflow.</div></div>
+      <div class="seat-cell"><div class="n">01 · REGULATOR</div><div class="t">Bank examiner</div><div class="d">Safety-and-soundness examination of national and state-chartered banks.</div></div>
+      <div class="seat-cell"><div class="n">02 · OPERATOR</div><div class="t">Audit &amp; risk</div><div class="d">Fifteen years in internal audit and risk at global banks, to Vice President.</div></div>
+      <div class="seat-cell"><div class="n">03 · BUILDER</div><div class="t">Applied AI</div><div class="d">Built and deployed a production retrieval assistant inside a live audit function.</div></div>
+      <div class="seat-cell"><div class="n">04 · RESEARCHER</div><div class="t">Doctoral work</div><div class="d">Cognitive bias in audit judgment, and what happens when AI enters the workflow.</div></div>
     </div>
   </div>
 </header>
@@ -328,8 +403,8 @@
 
     <div class="spine">
       <span class="mark"></span>
-      <p><strong>Mitigating Anchoring Bias in Long-Term Auditor Engagements</strong> — an eleven-construct, fifty-five-item measurement model with sixteen hypotheses, grounded in dual-process theory and the anchoring-and-adjustment heuristic. IRB-approved (IRB-25-0462), instrument fielded, with a complete analytic protocol specified from exploratory factor analysis through structural modeling.</p>
-      <p>The question underneath it is simple to state and hard to defend against: in a recurring engagement, does this year's judgment follow this year's evidence — or last year's number?</p>
+      <p><strong>Mitigating Anchoring Bias in Long-Term Auditor Engagements</strong>: an eleven-construct, fifty-five-item measurement model with sixteen hypotheses, grounded in dual-process theory and the anchoring-and-adjustment heuristic. IRB-approved (IRB-25-0462), instrument fielded, with a complete analytic protocol specified from exploratory factor analysis through structural modeling.</p>
+      <p>The question underneath it is simple to state and hard to defend against: in a recurring engagement, does this year's judgment follow this year's evidence, or last year's number?</p>
     </div>
 
     <div class="model reveal">
@@ -351,12 +426,12 @@
           <span>Rigor of the audit process</span>
         </div>
         <div class="arrow">→</div>
-        <div class="outcome">Judgments driven by current evidence — not last year's number</div>
+        <div class="outcome">Judgments driven by current evidence, not last year's number</div>
       </div>
     </div>
 
     <h3 style="margin:44px 0 8px;font-size:1.22rem;letter-spacing:-.018em;">What the study actually found</h3>
-    <p class="sub" style="margin-bottom:22px;">The study reached feasibility, not validation — and that result is the contribution.</p>
+    <p class="sub" style="margin-bottom:22px;">The study reached feasibility, not validation, and that result is the contribution.</p>
 
     <div class="tiles reveal">
       <div class="tile"><div class="k">Panel screened</div><div class="v">330,000</div><div class="x">Research-panel participants against the eligibility criteria.</div></div>
@@ -365,7 +440,7 @@
     </div>
 
     <div class="note" style="margin-top:20px;max-width:74ch;">
-      <b>The useful finding:</b> specialist professional populations cannot be reached through standard research infrastructure at any price. That constraint is itself evidence — and it reshapes how this kind of study has to be designed.
+      <b>The useful finding:</b> specialist professional populations cannot be reached through standard research infrastructure at any price. That constraint is itself evidence, and it reshapes how this kind of study has to be designed.
     </div>
 
     <div class="pull">
@@ -373,14 +448,14 @@
       <span class="attr">Dr. Juan C. Rey · FIU College of Business · Final evaluation of the qualifying examination</span>
     </div>
 
-    <h3 style="margin:46px 0 8px;font-size:1.22rem;letter-spacing:-.018em;">Current direction — AI and professional judgment</h3>
+    <h3 style="margin:46px 0 8px;font-size:1.22rem;letter-spacing:-.018em;">Current direction: AI and professional judgment</h3>
     <p class="sub" style="margin-bottom:20px;"><em>In development.</em> How large language models interact with professional judgment in recurring review work. The chain under investigation:</p>
 
     <div class="chain reveal">
       <div class="link">
         <div class="step">Link 01 · The anchor</div>
         <h4>The output becomes the anchor</h4>
-        <p>System-generated analysis is now the starting number — automated, continuous, and delivered at a scale no prior-year workpaper could match.</p>
+        <p>System-generated analysis is now the starting number: automated, continuous, and delivered at a scale no prior-year workpaper could match.</p>
       </div>
       <div class="link">
         <div class="step">Link 02 · Sycophancy</div>
@@ -390,12 +465,12 @@
       <div class="link">
         <div class="step">Link 03 · Epistemic drift</div>
         <h4>Conclusions converge on each other</h4>
-        <p>As successive models reprocess the same work, conclusions converge on one another rather than on evidence — and the record, written with the same tools, remembers the drift as consensus.</p>
+        <p>As successive models reprocess the same work, conclusions converge on one another rather than on evidence, and the record, written with the same tools, remembers the drift as consensus.</p>
       </div>
     </div>
 
     <div class="spine" style="margin-top:28px;">
-      <p>Stated plainly, that is a control problem, not just a technology problem: <strong>a system that agrees with you, feeding a record that remembers the agreement.</strong> The work is to treat professional skepticism as something a control environment has to actively defend — and to test which design choices hold the line without discarding what these tools genuinely do well.</p>
+      <p>Stated plainly, that is a control problem, not just a technology problem: <strong>a system that agrees with you, feeding a record that remembers the agreement.</strong> The work is to treat professional skepticism as something a control environment has to actively defend, and to test which design choices hold the line without discarding what these tools genuinely do well.</p>
     </div>
   </div>
 </section>
@@ -415,13 +490,13 @@
         <tbody>
           <tr>
             <td class="offer">AI governance readiness review</td>
-            <td>Assess AI use against the NIST AI RMF and, for models, SR 11-7 — inventory, documentation, human-oversight design, evidence trail.</td>
+            <td>Assess AI use against the NIST AI RMF and, for models, SR 26-2 (which superseded SR 11-7 in April 2026): inventory, documentation, human-oversight design, evidence trail.</td>
             <td>Banks, insurers, asset managers, regulated mid-market</td>
             <td class="why">I proposed exactly this framework inside a G-SIB.</td>
           </tr>
           <tr>
             <td class="offer">Human-oversight design for AI-assisted review</td>
-            <td>Where reliance is calibrated correctly and where it quietly isn't — reviewer workflow, challenge points, documentation standards.</td>
+            <td>Where reliance is calibrated correctly and where it quietly isn't: reviewer workflow, challenge points, documentation standards.</td>
             <td>Internal audit, risk and compliance functions adopting AI</td>
             <td class="why">This is literally my research question.</td>
           </tr>
@@ -429,13 +504,13 @@
             <td class="offer">Audit-function AI enablement</td>
             <td>Scoping and building AI assistance into audit workflow, with controls designed in from the start.</td>
             <td>Chief audit executives and audit directors under efficiency pressure</td>
-            <td class="why">I built and shipped one — ~35% cycle-time reduction.</td>
+            <td class="why">I built and shipped one. About 35% cycle-time reduction.</td>
           </tr>
           <tr>
             <td class="offer">Regulator-readiness translation</td>
             <td>Preparing AI-related documentation and narratives for examination scrutiny.</td>
             <td>Firms anticipating supervisory questions on AI</td>
-            <td class="why">Former examiner — I have sat on the other side of the table.</td>
+            <td class="why">Former examiner. I have sat on the other side of the table.</td>
           </tr>
           <tr>
             <td class="offer">Workshops &amp; guest lectures</td>
@@ -448,7 +523,7 @@
     </div>
 
     <div class="note" style="margin-top:22px;max-width:74ch;">
-      <b>On how I use these tools:</b> I use AI systems intensively — which is precisely why I study their failure modes. The risk I research is not hypothetical to me; it is the risk in my own workflow, managed deliberately. My work uses AI for research assistance, analysis, and drafting support. The judgment, synthesis, and interpretation are mine.
+      <b>On how I use these tools:</b> I use AI systems intensively, which is precisely why I study their failure modes. The risk I research is not hypothetical to me; it is the risk in my own workflow, managed deliberately. My work uses AI for research assistance, analysis, and drafting support. The judgment, synthesis, and interpretation are mine.
     </div>
   </div>
 </section>
@@ -462,9 +537,9 @@
       <div>
         <ul class="proof">
           <li>Fifteen years in audit and risk at <strong>Citigroup</strong> and <strong>JPMorgan Chase</strong>, to Vice President.</li>
-          <li>Bank examiner — <strong>OCC</strong> and the Florida Office of Financial Regulation.</li>
-          <li>Built and deployed a production <strong>RAG assistant</strong> in Citi's audit function — roughly <strong>35%</strong> review cycle-time reduction.</li>
-          <li>Proposed an <strong>AI governance framework</strong> referencing the NIST AI RMF and SR 11-7 for an internal governance team.</li>
+          <li>Bank examiner at the <strong>OCC</strong> and the Florida Office of Financial Regulation.</li>
+          <li>Built and deployed a production <strong>RAG assistant</strong> in Citi's audit function, roughly <strong>35%</strong> review cycle-time reduction.</li>
+          <li>Proposed an <strong>AI governance framework</strong> referencing the NIST AI RMF and federal model risk guidance for an internal governance team.</li>
           <li>Led the firm's <strong>Resolution and Recovery Planning</strong> program at JPMorgan, coordinating <strong>50+ stakeholders</strong> on Federal Reserve and FDIC submissions.</li>
           <li>Owned <strong>Basel III RWA</strong> calculation and capital-adequacy reporting; identified <strong>$180M</strong> in capital optimization.</li>
           <li><strong>DBA qualifying examination passed</strong>, Florida International University, July 2026.</li>
@@ -480,7 +555,7 @@
           <li><span class="k">Cert</span><span class="v">CITI human-subjects research</span></li>
         </ul>
         <div class="chips" style="margin-top:20px;">
-          <span class="chip">NIST AI RMF</span><span class="chip">SR 11-7</span>
+          <span class="chip">NIST AI RMF</span><span class="chip">SR 26-2 / SR 11-7</span>
           <span class="chip">Basel III</span><span class="chip">Qualtrics</span>
           <span class="chip">Jamovi</span><span class="chip">Python</span>
           <span class="chip">SQL · Tableau</span>
@@ -495,7 +570,7 @@
   <div class="wrap">
     <div class="eyebrow">Public Work · github.com/MalikAI-786</div>
     <h2>Show your work.</h2>
-    <p class="sub">A timestamped public record of applied AI, machine learning, and FinTech work — unusual for a practitioner in this field, and deliberately so.</p>
+    <p class="sub">A timestamped public record of applied AI, machine learning, and FinTech work, unusual for a practitioner in this field, and deliberately so.</p>
 
     <div class="filters" role="group" aria-label="Filter projects by category">
       <button class="fchip on" data-f="all">All</button>
@@ -506,26 +581,103 @@
     </div>
 
     <div class="proj-grid" id="projGrid">
-      <article class="proj reveal" data-cat="ai"><div class="cat">Research instrument</div><h4>MalikAI-786</h4><p>An applied-AI research testbed: a daily bias score with a three-source cross-check, published with a synthetic ledger, calibration diagnostics and integrity hashes. The point is the governance — how an AI-assisted pipeline should be instrumented and disclosed.</p><div class="meta"><span class="lang">Python</span><a href="https://github.com/MalikAI-786" target="_blank" rel="noopener">Repos ↗</a></div></article>
+      <article class="proj reveal" data-cat="ai"><div class="cat">Research instrument</div><h4>MalikAI-786</h4><p>An applied-AI research testbed: a daily bias score with a three-source cross-check, published with a synthetic ledger, calibration diagnostics and integrity hashes. The point is the governance: how an AI-assisted pipeline should be instrumented and disclosed.</p><div class="meta"><span class="lang">Python</span><a href="https://github.com/MalikAI-786" target="_blank" rel="noopener">Repos ↗</a></div></article>
       <article class="proj reveal" data-cat="ai"><div class="cat">AI &amp; ML</div><h4>LSTM Stock Predictor</h4><p>Deep-learning time-series forecasting: LSTM networks trained to predict equity movement from historical windows.</p><div class="meta"><span class="lang">Jupyter</span><a href="https://github.com/MalikAI-786/DeepLearning" target="_blank" rel="noopener">Repo ↗</a></div></article>
       <article class="proj reveal" data-cat="ai"><div class="cat">AI &amp; ML</div><h4>Natural Language Processing</h4><p>Tokenization, sentiment scoring and text analytics over financial news.</p><div class="meta"><span class="lang">Jupyter</span><a href="https://github.com/MalikAI-786/Natural_Language_Processing" target="_blank" rel="noopener">Repo ↗</a></div></article>
-      <article class="proj reveal" data-cat="ai"><div class="cat">AI &amp; ML</div><h4>ML Classification</h4><p>Supervised classification — logistic regression, ensembles, imbalanced-data handling — on credit-risk-style problems.</p><div class="meta"><span class="lang">Jupyter</span><a href="https://github.com/MalikAI-786/Machine_Learning_Classification" target="_blank" rel="noopener">Repo ↗</a></div></article>
-      <article class="proj reveal" data-cat="ai"><div class="cat">AI &amp; ML</div><h4>Time-Series Analysis</h4><p>ARIMA and statistical forecasting — decomposition, stationarity, model diagnostics.</p><div class="meta"><span class="lang">Jupyter</span><a href="https://github.com/MalikAI-786/Time_Series" target="_blank" rel="noopener">Repo ↗</a></div></article>
-      <article class="proj reveal" data-cat="chain"><div class="cat">Blockchain</div><h4>Blockchain Fundamentals</h4><p>Core distributed-ledger concepts and implementation — blocks, hashing, consensus.</p><div class="meta"><span class="lang">—</span><a href="https://github.com/MalikAI-786/BlockChain" target="_blank" rel="noopener">Repo ↗</a></div></article>
-      <article class="proj reveal" data-cat="chain"><div class="cat">Blockchain</div><h4>Blockchain in Python</h4><p>A working blockchain from first principles — chain validation and proof-of-work.</p><div class="meta"><span class="lang">Python</span><a href="https://github.com/MalikAI-786/BlockChain-Python" target="_blank" rel="noopener">Repo ↗</a></div></article>
-      <article class="proj reveal" data-cat="chain"><div class="cat">Blockchain</div><h4>Decentralized Apps</h4><p>Smart-contract and dApp experiments — Solidity patterns and on-chain interaction.</p><div class="meta"><span class="lang">—</span><a href="https://github.com/MalikAI-786/Decentralized-Apps" target="_blank" rel="noopener">Repo ↗</a></div></article>
+      <article class="proj reveal" data-cat="ai"><div class="cat">AI &amp; ML</div><h4>ML Classification</h4><p>Supervised classification: logistic regression, ensembles, and imbalanced-data handling on credit-risk-style problems.</p><div class="meta"><span class="lang">Jupyter</span><a href="https://github.com/MalikAI-786/Machine_Learning_Classification" target="_blank" rel="noopener">Repo ↗</a></div></article>
+      <article class="proj reveal" data-cat="ai"><div class="cat">AI &amp; ML</div><h4>Time-Series Analysis</h4><p>ARIMA and statistical forecasting: decomposition, stationarity, model diagnostics.</p><div class="meta"><span class="lang">Jupyter</span><a href="https://github.com/MalikAI-786/Time_Series" target="_blank" rel="noopener">Repo ↗</a></div></article>
+      <article class="proj reveal" data-cat="chain"><div class="cat">Blockchain</div><h4>Blockchain Fundamentals</h4><p>Core distributed-ledger concepts and implementation: blocks, hashing, consensus.</p><div class="meta"><span class="lang">—</span><a href="https://github.com/MalikAI-786/BlockChain" target="_blank" rel="noopener">Repo ↗</a></div></article>
+      <article class="proj reveal" data-cat="chain"><div class="cat">Blockchain</div><h4>Blockchain in Python</h4><p>A working blockchain from first principles: chain validation and proof-of-work.</p><div class="meta"><span class="lang">Python</span><a href="https://github.com/MalikAI-786/BlockChain-Python" target="_blank" rel="noopener">Repo ↗</a></div></article>
+      <article class="proj reveal" data-cat="chain"><div class="cat">Blockchain</div><h4>Decentralized Apps</h4><p>Smart-contract and dApp experiments: Solidity patterns and on-chain interaction.</p><div class="meta"><span class="lang">—</span><a href="https://github.com/MalikAI-786/Decentralized-Apps" target="_blank" rel="noopener">Repo ↗</a></div></article>
       <article class="proj reveal" data-cat="fintech"><div class="cat">FinTech</div><h4>Monte Carlo Financial Planning</h4><p>API-driven portfolio projection: Monte Carlo simulation of retirement outcomes from live market data.</p><div class="meta"><span class="lang">Jupyter</span><a href="https://github.com/MalikAI-786/API" target="_blank" rel="noopener">Repo ↗</a></div></article>
-      <article class="proj reveal" data-cat="fintech"><div class="cat">FinTech</div><h4>A Whale Off the Portfolio</h4><p>Portfolio risk and return analytics — Sharpe ratios, rolling betas, benchmark comparison.</p><div class="meta"><span class="lang">Jupyter</span><a href="https://github.com/MalikAI-786/A-Whale-Off-the-Port-folio" target="_blank" rel="noopener">Repo ↗</a></div></article>
-      <article class="proj reveal" data-cat="fintech"><div class="cat">FinTech</div><h4>PyViz Dashboards</h4><p>Interactive financial-data visualization — hvPlot, Panel and geo-plots.</p><div class="meta"><span class="lang">Jupyter</span><a href="https://github.com/MalikAI-786/PyViz" target="_blank" rel="noopener">Repo ↗</a></div></article>
+      <article class="proj reveal" data-cat="fintech"><div class="cat">FinTech</div><h4>A Whale Off the Portfolio</h4><p>Portfolio risk and return analytics: Sharpe ratios, rolling betas, benchmark comparison.</p><div class="meta"><span class="lang">Jupyter</span><a href="https://github.com/MalikAI-786/A-Whale-Off-the-Port-folio" target="_blank" rel="noopener">Repo ↗</a></div></article>
+      <article class="proj reveal" data-cat="fintech"><div class="cat">FinTech</div><h4>PyViz Dashboards</h4><p>Interactive financial-data visualization: hvPlot, Panel and geo-plots.</p><div class="meta"><span class="lang">Jupyter</span><a href="https://github.com/MalikAI-786/PyViz" target="_blank" rel="noopener">Repo ↗</a></div></article>
       <article class="proj reveal" data-cat="fintech"><div class="cat">FinTech</div><h4>AWS / Serverless</h4><p>Cloud experiments: Lambda functions and a serverless chatbot for financial guidance.</p><div class="meta"><span class="lang">Python</span><a href="https://github.com/MalikAI-786/AWS" target="_blank" rel="noopener">Repo ↗</a></div></article>
       <article class="proj reveal" data-cat="fintech"><div class="cat">FinTech</div><h4>Columbia FinTech</h4><p>Coursework hub from the Columbia Engineering FinTech Boot Camp (2021).</p><div class="meta"><span class="lang">—</span><a href="https://github.com/MalikAI-786/Columbia-FinTech" target="_blank" rel="noopener">Repo ↗</a></div></article>
-      <article class="proj reveal" data-cat="guide"><div class="cat">Guide</div><h4>ClaudeBot Onboarding</h4><p>A practical walkthrough for adopting an AI assistant — written for colleagues new to LLM tooling.</p><div class="meta"><span class="lang">Docs</span><a href="https://github.com/MalikAI-786/claudebot-onboarding" target="_blank" rel="noopener">Repo ↗</a></div></article>
-      <article class="proj reveal" data-cat="guide"><div class="cat">Guide</div><h4>Interview Prep</h4><p>A structured interview-preparation resource for financial-services candidates.</p><div class="meta"><span class="lang">HTML</span><a href="https://github.com/MalikAI-786/interview-prep-jpm" target="_blank" rel="noopener">Repo ↗</a></div></article>
+      <article class="proj reveal" data-cat="guide"><div class="cat">Guide</div><h4>ClaudeBot Onboarding</h4><p>A practical walkthrough for adopting an AI assistant, written for colleagues new to LLM tooling.</p><div class="meta"><span class="lang">Docs</span><a href="https://github.com/MalikAI-786/claudebot-onboarding" target="_blank" rel="noopener">Repo ↗</a></div></article>
     </div>
 
     <div class="disclaimer">
       <b>On the research instrument:</b> not investment advice, not a trading service, not a track record. It is an educational research testbed for studying AI-assisted judgment. The ledger is synthetic; no real funds are traded through it. Nothing here is a recommendation to buy, sell or hold any security.
     </div>
+  </div>
+</section>
+
+<!-- ============================ THE ROAD ============================ -->
+<section id="road">
+  <div class="wrap">
+    <div class="eyebrow">The Road</div>
+    <h2>Lahore to Newark, the long way.</h2>
+    <p class="sub">Five countries, nine stops, one habit that survived all of them: check it yourself.</p>
+
+    <div class="road reveal">
+      <div class="stop">
+        <div class="place">Lahore</div>
+        <h4>Aitchison College</h4>
+        <p>A school that hands you a motto at seven and expects you to spend the rest of
+        your life earning it. Mine turned out to be less about winning than about not
+        putting the question down.</p>
+      </div>
+      <div class="stop">
+        <div class="place">London · Germany</div>
+        <h4>Banking &amp; finance, and a European education in nuance</h4>
+        <p>A BSc at the LSE, then a stretch on the continent. Europe taught me the thing
+        I have been circling ever since: the same control, written in three regulatory
+        languages, means three different things. A rule and its enforcement are not the
+        same object.</p>
+      </div>
+      <div class="stop">
+        <div class="place">Miami</div>
+        <h4>First landing</h4>
+        <p>A new market, no network, and the discovery that a professional reputation
+        does not travel in your luggage. You rebuild it from the work outward.</p>
+      </div>
+      <div class="stop">
+        <div class="place">Dubai</div>
+        <h4>The Gulf</h4>
+        <p>Capital moving faster than the frameworks meant to watch it, and a close view
+        of what happens when growth outruns its controls.</p>
+      </div>
+      <div class="stop">
+        <div class="place">Miami · again</div>
+        <h4>The return, and the classroom</h4>
+        <p>Back to Florida, and to graduate business school. The start of a twenty-year
+        argument with myself about the distance between what a control says and what it
+        actually does.</p>
+      </div>
+      <div class="stop">
+        <div class="place">West Palm Beach</div>
+        <h4>The regulator's seat</h4>
+        <p>Safety-and-soundness examination. Where I learned that the most expensive
+        failures are rarely the ones nobody saw. They are the ones everybody saw and
+        nobody was willing to write down.</p>
+      </div>
+      <div class="stop">
+        <div class="place">Tampa</div>
+        <h4>Scale</h4>
+        <p>Larger books, longer chains of reliance, and the first real lesson in how a
+        number acquires authority simply by being repeated.</p>
+      </div>
+      <div class="stop">
+        <div class="place">New York</div>
+        <h4>Fifteen years inside</h4>
+        <p>Internal audit and risk at global banks, to Vice President. Resolution
+        planning, capital adequacy, consent-order remediation, and eventually building
+        and shipping an AI assistant into a live audit function.</p>
+      </div>
+      <div class="stop now">
+        <div class="place">Newark · Now</div>
+        <h4>The question that outlasted the jobs</h4>
+        <p>Doctoral research on professional judgment, and an advisory practice built on
+        it. Same habit, new adversary: a system that has read everything, answers
+        instantly, and agrees with you.</p>
+      </div>
+    </div>
+
+    <blockquote class="motto">
+      Perseverance Commands Success.
+      <span>Aitchison College · the motto, and the whole method</span>
+    </blockquote>
   </div>
 </section>
 
@@ -537,10 +689,10 @@
     <div class="cols">
       <div class="spine" style="max-width:none;">
         <span class="mark"></span>
-        <p>I built a career in New York — Citi, JPMorgan Chase, and before that a regulator's seat — and I did it while keeping one foot firmly at FIU. The doctorate isn't a detour from that work; it's the part that lets me ask the questions the day job doesn't have time for.</p>
-        <p>What I want next is a <strong>teaching arm</strong>. Two decades of regulatory reality — consent orders, exam findings, the gap between a control on paper and a control that holds — is worth more in a classroom than another deck of frameworks. I'm working toward teaching and guest lecturing in risk, controls and AI governance, and building the research record to earn that seat.</p>
-        <p>And I'd rather do the research with people than alone. My own study ran into a wall that a bigger network would have seen sooner: <strong>specialist populations are extraordinarily hard to reach.</strong> Association partnerships, firm access, cohort collaboration — that is a genuine two-way trade. Organizations get findings about their own people; the research gets its sample.</p>
-        <p><strong>If you're in the cohort — or in any program working near AI, judgment, governance or audit — I'd like to hear what you're working on.</strong> Fifteen minutes, no agenda.</p>
+        <p>I built a career in New York at Citi, JPMorgan Chase, and before that a regulator's seat, and I did it while keeping one foot firmly at FIU. The doctorate isn't a detour from that work; it's the part that lets me ask the questions the day job doesn't have time for.</p>
+        <p>What I want next is a <strong>teaching arm</strong>. Two decades of regulatory reality (consent orders, exam findings, the gap between a control on paper and a control that holds) is worth more in a classroom than another deck of frameworks. I'm working toward teaching and guest lecturing in risk, controls and AI governance, and building the research record to earn that seat.</p>
+        <p>And I'd rather do the research with people than alone. My own study ran into a wall that a bigger network would have seen sooner: <strong>specialist populations are extraordinarily hard to reach.</strong> Association partnerships, firm access, cohort collaboration. That is a genuine two-way trade. Organizations get findings about their own people; the research gets its sample.</p>
+        <p><strong>If you're in the cohort, or in any program working near AI, judgment, governance or audit, I'd like to hear what you're working on.</strong> Fifteen minutes, no agenda.</p>
       </div>
       <div>
         <ul class="facts">
@@ -559,11 +711,118 @@
   </div>
 </section>
 
+<!-- ============================== KHUDI ============================= -->
+<section id="ethics">
+  <div class="wrap">
+    <div class="eyebrow">Focus · Audit ethics and governance</div>
+    <h2>The auditor everyone dreads teaches nobody.</h2>
+    <p class="sub">Where I am pointing the next part of this.</p>
+
+    <div class="spine">
+      <span class="mark"></span>
+      <p>Audit earned its reputation. Someone arrives, finds what went wrong, writes it
+      down, and leaves. The organisation gets better at not being caught, which is not
+      the same thing as getting better. I have written those findings. I know what they
+      change and what they do not.</p>
+
+      <p>But the actual skill of an auditor was never catching people. It is the ability
+      to ask, without embarrassment and without apology, <strong>how would we know?</strong>
+      — and to sit still while the room works out that it would not. That question is most
+      of professional ethics. Unlike character, it can be taught.</p>
+
+      <p>That matters more now than it did five years ago. The risk in front of us is not
+      that somebody sets out to deceive. It is deference: an answer arrives fluent,
+      confident, and without visible provenance, and a tired professional at 6pm accepts
+      it. You cannot examine your way out of that. Nobody documents the moment they
+      stopped thinking, so there is no finding to write and nothing for a watchdog to
+      bite.</p>
+
+      <p>So this is the focus. <strong>Use the audit discipline to teach judgment rather
+      than to police it.</strong> Governance that produces better thinking, not just
+      cleaner files. Ethics as a practice with a method behind it, taught by someone who
+      has sat on both sides of the table, rather than a poster in the lobby.</p>
+    </div>
+  </div>
+</section>
+
+<section id="khudi">
+  <div class="wrap">
+    <div class="eyebrow">Reflection · Sufism through Iqbal</div>
+    <h2>Khudi, and the discipline of not dissolving.</h2>
+    <p class="sub">Why a bank examiner keeps a philosopher on the desk.</p>
+
+    <div class="spine">
+      <span class="mark"></span>
+      <p>Iqbal took Rumi as his guide and then spent a lifetime arguing with the
+      tradition that raised him. The strand of mysticism that counsels withdrawal from
+      the world, the one that treats the self as something to be thinned out and finally
+      erased, he could not accept. Against it he set <strong>khudi</strong>: selfhood, not as
+      ego or appetite, but as the disciplined fortification of the individual against
+      everything that would flatten it.</p>
+
+      <p>I did not come to this as a scholar. I came to it the way most Lahori
+      schoolboys do: recited at assembly, half understood, filed away. It took twenty
+      years of professional life to see what he was actually asking for.</p>
+
+      <p>Because <strong>professional skepticism is khudi in a control environment.</strong>
+      An auditor's entire value is a refusal to dissolve: into the client's framing,
+      into last year's number, into the confident consensus of a room that has already
+      decided. Independence is not a reporting line on an organisational chart. It is a
+      condition of the self, and it has to be actively held.</p>
+
+      <p>Which is why the current moment interests me so much. We have built systems
+      that are fluent, tireless, and tuned to agree. Most agreeable, as it happens,
+      exactly where a reviewer most needs to be contradicted. Iqbal warned against a
+      spirituality that dissolves the self into a comfortable infinite. I spend my
+      working life on a narrower version of the same worry: a profession dissolving its
+      judgment into a machine that flatters it.</p>
+    </div>
+
+    <div class="verse reveal">
+      <p class="urdu" lang="ur" dir="rtl">خودی کو کر بلند اتنا کہ ہر تقدیر سے پہلے<br>خدا بندے سے خود پوچھے، بتا تیری رضا کیا ہے</p>
+      <p class="translit">Khudi ko kar buland itna ke har taqdeer se pehle<br>
+      Khuda bande se khud poochhe, bata teri raza kya hai</p>
+      <p class="english">Raise your selfhood so high that, before each decree,<br>
+      God Himself asks you: tell me, what is it you wish?</p>
+      <p class="attr">Muhammad Iqbal · Bal-e-Jibril</p>
+    </div>
+
+    <div class="spine">
+      <p>Read it as theology and it is audacious. Read it as a professional standard and
+      it is simply the job: <strong>raise the quality of your own judgment to the point
+      where it has to be consulted</strong>, not overwritten, not assumed, not quietly
+      routed around. That is what I am trying to build, and what I am trying to measure.</p>
+    </div>
+  </div>
+</section>
+
 <section id="contact" style="border-bottom:0;">
   <div class="wrap">
     <div class="eyebrow">Contact</div>
     <h2>Let's talk.</h2>
     <p class="sub">Advisory engagements, research collaboration, speaking, and Director-level roles in internal audit, model risk and AI governance.</p>
+    <div class="feedback reveal" style="border-left-color:var(--evidence);">
+      <h3>Proof Over Promise</h3>
+      <p>A newsletter on evidence before claims: AI governance, model risk, and what
+      happens to professional judgment when the analysis arrives already formed. Published
+      on Substack and syndicated to LinkedIn.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="newsletter.html">What it is</a>
+        <a class="btn ghost" href="https://proofoverpromise.substack.com/subscribe" target="_blank" rel="noopener">Subscribe ↗</a>
+      </div>
+    </div>
+
+    <div class="feedback reveal">
+      <h3>I would rather be corrected than agreed with.</h3>
+      <p>That is not a courtesy. It is the whole argument of the research on this site.
+      A position that only ever gets confirmed stops being a judgment. So: if something
+      here is wrong, overstated, or too confident, I want to hear it.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="mailto:YasirAMalik@gmail.com?subject=Where%20you%27re%20wrong&body=The%20part%20I%27d%20push%20back%20on%3A%0A%0A">Tell me where I'm wrong</a>
+        <a class="btn ghost" href="mailto:YasirAMalik@gmail.com?subject=Feedback%20on%20the%20site&body=What%20landed%2C%20what%20didn%27t%3A%0A%0A">General feedback</a>
+      </div>
+    </div>
+
     <ul class="contact-list">
       <li><a href="mailto:YasirAMalik@gmail.com"><span class="tag">Email</span> YasirAMalik@gmail.com</a></li>
       <li><a href="tel:+17867048536"><span class="tag">Phone</span> +1 (786) 704-8536</a></li>
@@ -574,9 +833,23 @@
 </section>
 
 <footer class="foot">
-  <div class="wrap foot-in">
-    <span>© 2026 Yasir A. Malik</span>
-    <span>Newark, NJ · NYC metro</span>
+  <div class="wrap">
+    <div class="foot-mark">
+      <svg class="logo" width="40" height="40" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+    <path class="ring" d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke-width="4.4" stroke-linecap="round"/>
+    <circle class="node" cx="12.85" cy="15.93" r="3.9"/>
+    <path class="letter" d="M20 47 L32 19.5 L44 47" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+    <path class="letter" d="M21.09 38 H51.5" stroke-width="5.2" stroke-linecap="butt"/>
+  </svg>
+      <div>
+        <div class="foot-name">Yasir A. Malik</div>
+        <div class="foot-desc">Audit · Risk · Governance</div>
+      </div>
+    </div>
+    <div class="foot-in">
+      <span>© 2026 Yasir A. Malik</span>
+      <span>Newark, NJ · NYC metro</span>
+    </div>
   </div>
 </footer>
 

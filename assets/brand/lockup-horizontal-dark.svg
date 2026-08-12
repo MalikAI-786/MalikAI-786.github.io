@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 372 72" fill="none" role="img" aria-label="Yasir A. Malik — Audit, Risk, Governance">
+  <title>Yasir A. Malik — Audit, Risk, Governance</title>
+  <g transform="translate(4 4) scale(1.0)">
+    <path d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke="#E0662E" stroke-width="4.4" stroke-linecap="round"/>
+    <circle cx="12.85" cy="15.93" r="3.9" fill="#E0662E"/>
+    <path d="M20 47 L32 19.5 L44 47" stroke="#EDEFF1" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+    <path d="M21.09 38 H51.5" stroke="#EDEFF1" stroke-width="5.2" stroke-linecap="butt"/>
+  </g>
+  <path d="M84 18 V54" stroke="#A6B0BA" stroke-width="1" opacity=".34"/>
+  <text x="104" y="35" font-family="&#39;Bitstream Charter&#39;,Charter,&#39;Iowan Old Style&#39;,&#39;Palatino Linotype&#39;,Palatino,&#39;Book Antiqua&#39;,Georgia,serif" font-size="24" letter-spacing=".2" fill="#EDEFF1">Yasir A. Malik</text>
+  <text x="105" y="53" font-family="ui-monospace,&#39;SF Mono&#39;,Menlo,&#39;Cascadia Mono&#39;,&#39;Roboto Mono&#39;,monospace" font-size="9.5" letter-spacing="2.9" fill="#A6B0BA">AUDIT · RISK · GOVERNANCE</text>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="The Reference Mark, micro cut">
+  <title>The Reference Mark, micro cut</title>
+  <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="14.38" cy="17.22" r="5.46" fill="currentColor"/>
+  <path d="M19.5 46.5 L32 19 L44.5 46.5" stroke="currentColor" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+  <path d="M21.6 38.4 H42.4" stroke="currentColor" stroke-width="8" stroke-linecap="butt"/>
+</svg>
