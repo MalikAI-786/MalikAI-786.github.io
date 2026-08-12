@@ -1,34 +1,34 @@
 ---
 name: mizan
 description: >-
-  Extend, audit, or debug Mīzān — the private self-audit instrument at
-  mizan/index.html in this repo, which scores seven Qur'anic measures against
+  Extend, audit, or debug Mīzān — the private self-audit instrument under
+  mizan/ in this repo (a dashboard plus day/, khudi/, badan/, ledger/ and
+  record/ pages over a shared core.js), which scores seven Qur'anic measures against
   Iqbal's Khudī ladder and carries a prayer-time engine, an intoxicant ledger,
   an attention module, the Badan training/food module, the Best-50 standards
-  and the self-calibration charts. Use this skill whenever work touches
-  mizan/index.html, and whenever a request mentions Mīzān, khudī, the seven
+  and the self-calibration charts. Use this skill whenever work touches any
+  file under mizan/, and whenever a request mentions Mīzān, khudī, the seven
   measures, the Khudī index or ladder, muḥāsaba, the arbaʿīn / 40-day path,
   prayer-time or qibla calculation, the Badan or Best-50 module, the intoxicant
   or urge ledger, forecast-vs-actual calibration, or adding or changing a
-  measure, rubric, weight, phase, chart, module or citation on that page —
+  measure, rubric, weight, phase, chart, page, module or citation there —
   including when it is phrased loosely as "add a section", "track X too",
   "make the dashboard show Y", "score my Z" or "enhance this" without naming
-  the file. The page has a versioned local-storage contract, computed scores
-  that phase-gating silently depends on, and a citation-provenance rule; all
-  three are easy to break without any visible error.
+  a file. It has a versioned local-storage contract, guarded renderers shared
+  across six pages, computed scores that phase-gating silently depends on, and
+  a citation-provenance rule — all of which break without any visible error.
 ---
 
 # Mīzān — extending the instrument
 
 ## What this is, and why it is built the way it is
 
-`mizan/index.html` is a single self-contained page that turns the owner's
-professional method — audit, measurement, deviation from a reference line —
-inward. It is not a habit tracker. A habit tracker measures compliance; this
+Mīzān turns the owner's professional method — audit, measurement, deviation
+from a reference line — inward. It is not a habit tracker. A habit tracker measures compliance; this
 measures whether a control is **designed** correctly and **operates**
 effectively, which is a harder and more useful question.
 
-Everything below exists because the page has three properties that are easy to
+Everything below exists because it has three properties that are easy to
 destroy by accident: it holds real personal data, it makes religious claims
 that must be verifiable, and its scores are partly computed rather than
 entered. Read the invariants before writing code.
