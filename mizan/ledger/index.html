@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Ledger · Mīzān</title>
+<meta name="description" content="The intoxicant ledger: taper or guardrails, tested as a control environment." />
+<link rel="stylesheet" href="../core.css" />
+</head>
+<body data-page="ledger" data-root="../">
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="../">Mīzān<em>.</em></a>
+    <div class="nav-links" id="navLinks"></div>
+    <button class="icon-btn" id="themeBtn" title="Toggle theme">◐</button>
+  </div>
+</nav>
+
+<div class="wrap" id="top">
+<section id="ledger">
+  <div class="sec-head">
+    <p class="eyebrow gold">The intoxicant ledger</p>
+    <h2>The staged approach, applied to the thing itself</h2>
+    <p class="lede" style="margin-top:10px">You asked for both roads — how to be rid of it, and how to use it in a way you actually enjoy. Both are built here. But start with the thing that should be pointed out to an auditor before anything else: <strong>the Qur'an does not address intoxicants in one move.</strong> It addresses them in three, over years, in a defined sequence. The method is already in the text.</p>
+  </div>
+
+  <div class="spread" id="dayBar" style="margin:-6px 0 22px"></div>
+
+  <div class="grid g3" style="margin-bottom:22px">
+    <div class="card">
+      <div class="tag">Stage one · acknowledge the benefit</div>
+      <div class="ayah" style="margin-top:10px">
+        <div class="ar">يَسْـَٔلُونَكَ عَنِ ٱلْخَمْرِ وَٱلْمَيْسِرِ ۖ قُلْ فِيهِمَآ إِثْمٌ كَبِيرٌ وَمَنَـٰفِعُ لِلنَّاسِ وَإِثْمُهُمَآ أَكْبَرُ مِن نَّفْعِهِمَا</div>
+        <div class="tr">"They ask you about intoxicants and gambling. Say: in them is great harm, and benefits for people — but their harm is greater than their benefit."</div>
+        <div class="ref">Al-Baqarah 2:219</div>
+      </div>
+      <div class="small">It concedes the benefit. It does not pretend there is nothing in it for you — it says the ledger nets out against you. Anyone who tells you it does nothing for you has already lost your trust, and they should.</div>
+    </div>
+    <div class="card">
+      <div class="tag">Stage two · protect the spine first</div>
+      <div class="ayah" style="margin-top:10px">
+        <div class="ar">يَـٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُوا۟ لَا تَقْرَبُوا۟ ٱلصَّلَوٰةَ وَأَنتُمْ سُكَـٰرَىٰ حَتَّىٰ تَعْلَمُوا۟ مَا تَقُولُونَ</div>
+        <div class="tr">"Do not approach prayer while intoxicated, until you know what you are saying."</div>
+        <div class="ref">An-Nisāʾ 4:43</div>
+      </div>
+      <div class="small">Not "stop" — <em>ring-fence it</em>. Carve out the hours the spine occupies. In practice that is a large and awkward share of the waking day, which is exactly the point: the constraint does the arguing for you. This instrument computes those windows and flags collisions automatically.</div>
+    </div>
+    <div class="card">
+      <div class="tag">Stage three · the clean break</div>
+      <div class="ayah" style="margin-top:10px">
+        <div class="ar">إِنَّمَا ٱلْخَمْرُ وَٱلْمَيْسِرُ ... رِجْسٌ مِّنْ عَمَلِ ٱلشَّيْطَـٰنِ فَٱجْتَنِبُوهُ لَعَلَّكُمْ تُفْلِحُونَ</div>
+        <div class="tr">"Intoxicants and gambling … are defilement from the work of Satan, so avoid it, that you may be successful."</div>
+        <div class="ref">Al-Māʾidah 5:90</div>
+      </div>
+      <div class="small">Only at the end, after the ground had been prepared for years, does the instruction become total. <b>A staged taper is not a compromise with the text. It is the text's own method.</b></div>
+    </div>
+  </div>
+
+  <div class="notice gold" style="margin-bottom:22px">
+    <b>Two things stated plainly, so nothing here is smuggled past you.</b> On the fiqh: the majority position treats anything that intoxicates or clouds the mind — cannabis explicitly included in the classical discussions from Ibn Taymiyyah onward — under the same ruling as khamr. This page does not have standing to issue a ruling and does not attempt one; take that question to a scholar you trust. On the medicine: I am not a clinician and none of this is medical advice. If ADD is undiagnosed or untreated, an actual evaluation will outperform every mechanic on this page combined, and it is the single highest-return action available to you. If use is daily and heavy, stopping abruptly can produce a genuinely rough week — irritability, sleep disruption, appetite loss — which is a reason to taper with support, not a reason to keep going.
+  </div>
+
+  <div class="grid g-2-1" style="margin-bottom:18px">
+    <div class="card">
+      <div class="spread" style="margin-bottom:14px">
+        <p class="eyebrow" style="margin-bottom:0">Today's entry</p>
+        <div class="row" id="pathPills"></div>
+      </div>
+      <div class="row" style="margin-bottom:14px">
+        <button class="btn" id="freeDayBtn">Log a clean day</button>
+        <button class="btn danger" id="addSession">Log a session</button>
+      </div>
+      <div id="sessionList"></div>
+      <div class="field" style="margin-top:14px">
+        <label class="fl">Next-morning cost — how much fog did yesterday buy you?</label>
+        <div class="seg sm" id="fogSeg"></div>
+      </div>
+      <div id="pathPanel" style="margin-top:18px"></div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <p class="eyebrow">Delay &amp; decide</p>
+        <div class="timer" id="urgeTimer">20:00</div>
+        <div class="tiny" id="urgeState" style="margin:6px 0 12px">The urge is a wave, not a command. Twenty minutes is longer than almost any of them last.</div>
+        <div class="field">
+          <label class="fl" for="urgeTask">What are you avoiding right now?</label>
+          <input type="text" id="urgeTask" placeholder="Name the task. Be exact." />
+        </div>
+        <div class="btn-row">
+          <button class="btn primary" id="urgeStart">Start 20 min</button>
+          <button class="btn" id="urgePassed">I passed</button>
+          <button class="btn danger" id="urgeUsed">I used</button>
+        </div>
+        <div class="hr" style="margin:16px 0"></div>
+        <div class="kv"><span class="k">Urges delayed</span><span class="v" id="urgeN">0</span></div>
+        <div class="kv"><span class="k">Passed after delay</span><span class="v" id="urgePct">—</span></div>
+        <div class="tiny" style="margin-top:10px">This number is the entire argument. Once you have thirty of these logged, "I can't not" stops being a belief and becomes a testable claim with your own data against it.</div>
+      </div>
+      <div class="card">
+        <p class="eyebrow">Ledger metrics · 30 days</p>
+        <div id="weedStats"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g2">
+    <div class="chartbox">
+      <h4>Trigger distribution — what is actually being medicated</h4>
+      <div id="triggerChart"></div>
+      <div class="tiny" style="margin-top:12px">The one to watch is <b>avoidance</b>. Reaching for it when bored is a habit problem and habits are tractable. Reaching for it at the exact moment a hard, unstructured, high-stakes task comes into view — the chapter, the exam prep, the difficult email — is an <em>escape from an aversive state</em>, and that is the mechanism that costs you the doctorate rather than the evening. If avoidance dominates this chart, the intervention is not willpower; it is making the task smaller until it stops triggering the escape.</div>
+    </div>
+    <div class="chartbox">
+      <h4>Displacement — what it took, priced honestly</h4>
+      <div id="displaceChart"></div>
+      <div class="tiny" style="margin-top:12px">Sleep is the compounding one. Cannabis reliably shortens the time to fall asleep and reliably suppresses REM; you wake with the subjective sense of having slept and the cognitive profile of someone who has not. For a brain already short on executive fuel, that is a tax levied the next morning, on the exact faculty you need most — which then makes the next evening's urge stronger. That is a loop, and loops are what you get paid to find.</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer><div class="wrap"><div class="spread">
+  <div class="tiny">Mīzān · a private instrument · data never leaves this browser</div>
+  <div class="tiny mono" id="footVer">—</div>
+</div></div></footer>
+
+<script src="../core.js"></script>
+</body>
+</html>
