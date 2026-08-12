@@ -2,7 +2,7 @@
 /**
  * Mīzān smoke test.
  *
- * Drives mizan/index.html in headless Chromium, exercises the interactions
+ * Drives all six Mīzān pages in headless Chromium, exercises the interactions
  * that have broken before, and exits non-zero on any console error, page
  * error, failed assertion, or horizontal overflow at 390px.
  *
@@ -29,7 +29,11 @@ function loadPlaywright() {
 }
 
 const { chromium } = loadPlaywright();
-const PAGE = 'file://' + path.resolve(__dirname, '../../../../mizan/index.html');
+const ROOT = path.resolve(__dirname, '../../../../mizan');
+const url = p => 'file://' + path.join(ROOT, p);
+const PAGES = ['index.html', 'day/index.html', 'khudi/index.html',
+               'badan/index.html', 'ledger/index.html', 'record/index.html'];
+const PAGE = url('day/index.html');   // the page that carries the daily sheet
 
 const problems = [];
 const checks = [];
@@ -45,15 +49,47 @@ function check(name, cond, detail) {
   page.on('console', m => { if (m.type() === 'error') problems.push('CONSOLE: ' + m.text()); });
   page.on('dialog', d => d.accept());
 
+  // --- every page loads clean, nav resolves, shared engine boots ---
+  for (const rel of PAGES) {
+    await page.goto(url(rel));
+    await page.waitForTimeout(350);
+    const nav = await page.evaluate(() => ({
+      links: [...document.querySelectorAll('#navLinks a')].map(a => a.getAttribute('href')),
+      foot: (document.querySelector('#footVer') || {}).textContent || '',
+    }));
+    check(`${rel} builds its nav`, nav.links.length === 6, nav.links.join(','));
+    check(`${rel} boots the shared engine`, /^mizan\.v1/.test(nav.foot), nav.foot);
+  }
+  // nav targets exist on disk
+  for (const rel of ['day', 'khudi', 'badan', 'ledger', 'record']) {
+    check(`${rel}/index.html exists`, require('fs').existsSync(path.join(ROOT, rel, 'index.html')));
+  }
+
+  await page.goto(url('index.html'));
+  await page.waitForTimeout(400);
+  check('dashboard renders six kicker tiles',
+    (await page.locator('#dashGrid .tile').count()) === 6);
+  check('dashboard names a leftmost failing control or says why not',
+    (await page.locator('#dashWorst').innerText()).length > 40);
+
+  await page.goto(url('khudi/index.html'));
+  await page.waitForTimeout(400);
+  check('khudi force diagram draws', (await page.locator('#forceDiagram rect').count()) >= 4);
+  check('khudi diagram marks the current stage',
+    (await page.locator('#forceDiagram').innerHTML()).includes('YOU ARE HERE'));
+  check('khudi page carries ladder, measures and path',
+    (await page.locator('#ladderGrid .rung').count()) === 4 &&
+    (await page.locator('#measureRef .card').count()) === 7 &&
+    (await page.locator('#phaseGrid .phase').count()) === 4);
+
   await page.goto(PAGE);
   await page.waitForTimeout(400);
 
   // --- boot ---
   check('page renders seven measures',
     (await page.locator('#measureList .measure').count()) === 7);
-  check('nav links resolve to real sections', await page.evaluate(() =>
-    [...document.querySelectorAll('#navLinks a')]
-      .every(a => document.querySelector(a.getAttribute('href')))));
+  check('exactly one nav link is marked current', await page.evaluate(() =>
+    document.querySelectorAll('#navLinks a.on').length === 1));
 
   const times = await page.evaluate(() =>
     [...document.querySelectorAll('.pcell')].map(
@@ -62,7 +98,8 @@ function check(name, cond, detail) {
     times.join(' | '));
   console.log('  prayer times (TZ=' + (process.env.TZ || 'container default') + '): ' + times.join(' | '));
 
-  // --- sample data + charts ---
+  // --- sample data + charts (Record page owns the data controls) ---
+  await page.goto(url('record/index.html')); await page.waitForTimeout(350);
   await page.click('#sampleBtn'); await page.waitForTimeout(400);
   check('heatmap draws 60 cells', (await page.locator('#heatGrid i').count()) === 60);
   check('deviation chart draws a bar per measure',
@@ -72,6 +109,7 @@ function check(name, cond, detail) {
     await page.locator('#dataStats').innerText().then(t => t.split('\n')[0]));
 
   // --- scoring ---
+  await page.goto(PAGE); await page.waitForTimeout(400);
   for (const p of ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']) {
     await page.click(`[data-prayer="${p}"] button[data-v="in"]`);
   }
@@ -93,6 +131,7 @@ function check(name, cond, detail) {
   check('index computes to a number', /^\d+$/.test(idx), idx);
 
   // --- ledger ---
+  await page.goto(url('ledger/index.html')); await page.waitForTimeout(400);
   await page.click('#addSession'); await page.waitForTimeout(200);
   await page.selectOption('#sTrig', 'avoidance');
   await page.click('#sSave'); await page.waitForTimeout(300);
@@ -113,7 +152,7 @@ function check(name, cond, detail) {
                   { date: '2026-01-01', weight: 171, shoulders: 49.5, lwaist: 34 }];
     localStorage.setItem('mizan.v1', JSON.stringify(s));
   });
-  await page.reload(); await page.waitForTimeout(500);
+  await page.goto(url('badan/index.html')); await page.waitForTimeout(500);
   const ratio = await page.locator('#swRatio').innerText();
   check('shoulder-to-waist ratio computes', Math.abs(parseFloat(ratio) - 49.5 / 34) < 0.002, ratio);
   check('measurement trend draws', (await page.locator('#wtChart polyline').count()) >= 1);
@@ -136,12 +175,12 @@ function check(name, cond, detail) {
   check('gym log persists', await page.evaluate(d =>
     JSON.parse(localStorage.getItem('mizan.v1')).days[d].gym.status === 'done', sat));
 
-  // --- persistence + theme ---
+  // --- cross-page day continuity, persistence, theme ---
+  await page.goto(url('day/index.html')); await page.waitForTimeout(500);
+  check('viewed day carries from Badan to Day', (await page.inputValue('#dayPicker')) === sat, sat);
   const before = await page.locator('#idxNum').innerText();
   await page.reload(); await page.waitForTimeout(500);
-  await page.fill('#dayPicker', sat); await page.dispatchEvent('#dayPicker', 'change');
-  await page.waitForTimeout(300);
-  check('state survives reload', (await page.locator('#idxNum').innerText()) === before);
+  check('state survives reload', (await page.locator('#idxNum').innerText()) === before, before);
 
   await page.click('#themeBtn'); await page.waitForTimeout(250);
   check('theme toggles to light',
@@ -151,9 +190,10 @@ function check(name, cond, detail) {
     (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'dark');
 
   // --- no network ---
-  const html = require('fs').readFileSync(
-    path.resolve(__dirname, '../../../../mizan/index.html'), 'utf8');
-  check('no external references in the page',
+  const fs = require('fs');
+  const html = [...PAGES, 'core.js', 'core.css']
+    .map(f => fs.readFileSync(path.join(ROOT, f), 'utf8')).join('\n');
+  check('no external references in any file',
     !/(https?:)?\/\/(?!127\.0\.0\.1)[\w.-]+\.[a-z]{2,}/i.test(
       html.replace(/https:\/\/(www\.)?(claude\.ai|anthropic\.com)[^\s"'<]*/g, '')),
     'found: ' + (html.match(/(https?:)?\/\/[\w.-]+\.[a-z]{2,}/i) || [''])[0]);
@@ -163,10 +203,12 @@ function check(name, cond, detail) {
   // --- mobile ---
   const m = await browser.newPage({ viewport: { width: 390, height: 844 } });
   m.on('pageerror', e => problems.push('MOBILE PAGE ERROR: ' + e.message));
-  await m.goto(PAGE); await m.waitForTimeout(500);
-  const overflow = await m.evaluate(() =>
-    document.documentElement.scrollWidth - document.documentElement.clientWidth);
-  check('no horizontal overflow at 390px', overflow <= 0, overflow + 'px');
+  for (const rel of PAGES) {
+    await m.goto(url(rel)); await m.waitForTimeout(400);
+    const overflow = await m.evaluate(() =>
+      document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    check(`no horizontal overflow at 390px — ${rel}`, overflow <= 0, overflow + 'px');
+  }
 
   await browser.close();
 

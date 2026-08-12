@@ -61,6 +61,10 @@ Hand-rolled SVG against a fixed `viewBox`, no library. Conventions:
   series, green for a surplus.
 - Time-scaled x-axes where the data is irregular (the measurement index has
   multi-year gaps and they should stay visible).
+- Diagrams that carry an argument (the khudī force diagram) are drawn in JS
+  rather than written as static markup, so they can read live state — that one
+  marks the owner's currently computed stage. Use `var(--…)` tokens for every
+  fill and stroke so the diagram follows the theme.
 
 ## Copy
 
@@ -76,5 +80,9 @@ page's whole claim is that declared reasoning beats hidden judgment.
 
 ## Responsive
 
-Test at 390 px. The page must never scroll horizontally — wide tables and
-charts scroll inside their own container. The smoke test asserts this.
+Test at 390 px, on **every** page. Nothing may scroll horizontally — wide
+tables and charts scroll inside their own container. Below 760 px a `table.t`
+directly inside a card becomes `display:block; overflow-x:auto`. Do not add
+`white-space:nowrap` to table headers: it was added once for tidiness and
+pushed the khudī page 188 px wide on a phone. The smoke test asserts all of
+this per page.

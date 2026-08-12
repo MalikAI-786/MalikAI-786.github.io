@@ -58,25 +58,57 @@ the owner* (exclude synthetic) or a *demonstration of the display* (include).
 **`<meta name="robots" content="noindex, nofollow">` stays**, and the page
 stays unlinked from the site's `index.html` unless the owner asks otherwise.
 
-**Single file.** All CSS and JS are inline, in one `<script>` IIFE. Do not
-split it into modules or add a build step. Portability is the point — the
-owner can save the file and it still works.
+**No build step.** `mizan/core.css` and `mizan/core.js` are shared verbatim by
+every page — plain CSS, plain ES5-flavoured JS in one IIFE, loaded with a
+relative `<link>` and `<script src>`. No bundler, no transpiler, no module
+system. The page must run from `file://` exactly as it runs from Pages.
 
 ## Architecture
 
-One IIFE, in this order: helpers → measure/constant tables → state
+Six pages over one shared engine:
+
+| Page | Sections it carries |
+|---|---|
+| `mizan/index.html` | dashboard — kicker tiles, leftmost failing control |
+| `mizan/day/` | `#today`, `#attention` |
+| `mizan/khudi/` | Iqbal theory, `#ladder`, `#measures`, `#path` |
+| `mizan/badan/` | `#badan` |
+| `mizan/ledger/` | `#ledger` |
+| `mizan/record/` | `#trend`, `#settings` |
+
+Every page is the same shell: `<body data-page="…" data-root="…">`, an empty
+`#navLinks` that `renderNav()` fills, and `core.js` at the end. `data-root` is
+`''` on the dashboard and `'../'` on every subpage — nav hrefs and dashboard
+tile links are built from it, so **a new page at a different depth needs its
+`data-root` set correctly or every link silently points at nothing.**
+
+`core.js` is one IIFE, in this order: helpers → constant tables → state
 (`load`/`save`/`day`) → prayer-time astronomy → scoring → ladder → ledger
 analytics → `render*` functions → event delegation → Badan module → boot.
 
-`renderAll()` is the single entry point; every mutation calls `touch()`, which
-is `save()` + `renderAll()`. There is no diffing and no framework — full
-re-render on every change is correct here because the page is small and the
-immediacy is a deliberate accommodation (see "Immediate feedback" in the
-Attention section: a delayed loop does not work on this wiring).
+`renderAll()` is the single entry point and calls **every** renderer; each one
+opens with a guard on the element it owns (`if(!$('#anchor')) return;`) and
+no-ops on pages that lack it. That is what lets one script serve six pages.
+**A new renderer must have that guard**, and `renderAll()` must call it
+directly rather than being invoked from inside a sibling renderer — chaining
+renderers was how sections went blank when they moved to their own page.
 
-Function declarations are hoisted within the IIFE, so `renderPrayers` may call
-`isGymDay` even though the Badan block is defined lower. Keep it that way
-rather than reordering — but do not rely on hoisting for `var` values.
+Every mutation calls `touch()` = `save()` + `renderAll()`. No diffing, no
+framework: full re-render is correct here because the pages are small and the
+immediacy is a deliberate accommodation (see "Immediate feedback" on the
+Attention section — a delayed loop does not work on this wiring).
+
+`CUR` (the day being viewed) persists in `sessionStorage` so navigating from
+Day to Badan keeps you on the same date. Any day-scoped page should include
+`<div id="dayBar"></div>`; `renderDayBar()` builds the stepper into it.
+
+Function declarations hoist within the IIFE, so `renderPrayers` may call
+`isGymDay` even though the Badan block is defined lower. Keep that rather than
+reordering — but do not rely on hoisting for `var` values.
+
+There is no scroll-spy. Nav links are page URLs; `renderNav()` owns the `.on`
+class. The old `IntersectionObserver` that toggled `.on` by href match stripped
+the marker off every link once the links stopped being anchors, and it is gone.
 
 ## Before changing state, read the contract
 
@@ -116,10 +148,16 @@ commit message.
 ## Adding a module (a new section)
 
 Follow the Badan module as the worked example — it is the most recent and the
-best-shaped. A module is: a `<section id="...">` with a `sec-head`, a nav
-link, a `render<Name>()` called from `renderAll()`, its own state under
-`S.<name>` or per-day fields, and event handling via the existing delegated
-`click`/`change` listeners rather than new per-element bindings.
+best-shaped. A module is: a `<section id="...">` inside a page shell, a
+`render<Name>()` that opens with its anchor guard and is called from
+`renderAll()`, its own state under `S.<name>` or per-day fields, and event
+handling through the existing delegated `click`/`change` listeners rather than
+new per-element bindings.
+
+Whether it earns a **page** or a **section on an existing page** is a real
+decision. A page needs its own entry in `NAV`, a `data-root`, and a reason a
+reader would go there deliberately. If it is something glanced at rather than
+worked in, it belongs as a dashboard tile in `renderDash()` instead.
 
 A module earns its place if it answers a question the owner cannot answer
 today, from data they will actually log. The Badan "Effect on output" panel is
@@ -189,6 +227,9 @@ overflow at 390 px. Run it after any change:
 ```bash
 node .claude/skills/mizan/scripts/smoke.js
 ```
+
+It loads all six pages, asserts each boots the shared engine and marks exactly
+one nav link current, and checks mobile overflow on every one of them.
 
 It also prints the computed prayer times. **Sanity-check them against the
 container's timezone**, which is usually UTC while the owner is in America/
