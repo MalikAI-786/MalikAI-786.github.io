@@ -55,8 +55,19 @@ ladder, so the page looks alive before real history exists. Preserve that
 split when adding any new statistic: ask whether the number is a *claim about
 the owner* (exclude synthetic) or a *demonstration of the display* (include).
 
-**`<meta name="robots" content="noindex, nofollow">` stays**, and the page
-stays unlinked from the site's `index.html` unless the owner asks otherwise.
+**Unlinked is not private.** Safeguard 1 in the control center (the rank-1
+authority named by `AGENTS.md`) is explicit: *everything in these repos is
+public — no private directory, nothing protected by being unlinked.* The
+`noindex` tag stays, but treat it as courtesy to crawlers, never as
+protection. Anything committed here is published, including on a branch.
+
+**No personal records in the prose either.** Safeguard 3 bars medical history,
+family and personal records. That covers more than the data files: a real
+person's name in a default, the owner's own measurements or bodyweight quoted
+in an explanatory paragraph, or home-level coordinates in `defaults()` are all
+records. Keep every such specific in `localStorage` via import, and write the
+static copy so it makes its argument from a *pattern* while the runtime panels
+supply the numbers. This rule was written after exactly that leak.
 
 **No build step.** `mizan/core.css` and `mizan/core.js` are shared verbatim by
 every page — plain CSS, plain ES5-flavoured JS in one IIFE, loaded with a

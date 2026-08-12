@@ -105,9 +105,9 @@ function blankDay(k){return {date:k,forecast:null,prayers:{},dhikrMin:0,sprints:
   gym:{},food:{},weight:null,sleepHrs:null,moved:false,
   friction:[false,false,false,false,false],hyper:'',
   muhasaba:{shukr:'',khata:'',kal:''},closed:false,synthetic:false}}
-function defaults(){return {v:1,settings:{lat:40.7357,lng:-74.1724,method:'ISNA',asr:1,
+function defaults(){return {v:1,settings:{lat:40.7128,lng:-74.0060,method:'ISNA',asr:1,
   path:'taper',start:iso(new Date()),cap:2,floorHour:20,weights:Object.assign({},DEFW),
-  gymDays:[0,2,4,6],gymHour:17,partner:'Shahzaib',proteinTarget:150,sleepTarget:7},
+  gymDays:[0,2,4,6],gymHour:17,partner:'your training partner',proteinTarget:150,sleepTarget:7},
   days:{},urges:[],ships:{},measures:[],best50:{}}}
 function load(){
   try{var raw=localStorage.getItem(KEY); S=raw?JSON.parse(raw):defaults();}
