@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1584 396" fill="none">
+  <rect width="1584" height="396" fill="#F6F3F0"/>
+  <rect x="0" y="0" width="1584" height="6" fill="#E0662E"/>
+
+  <g transform="translate(1334 -110) scale(8.6)" opacity=".05">
+    <path d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke="#E0662E" stroke-width="4.4" stroke-linecap="round"/>
+    <circle cx="12.85" cy="15.93" r="3.9" fill="#E0662E"/>
+    <path d="M20 47 L32 19.5 L44 47" stroke="#171A1D" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+    <path d="M21.09 38 H51.5" stroke="#171A1D" stroke-width="5.2" stroke-linecap="butt"/>
+  </g>
+
+  <g transform="translate(340 96) scale(1.15)">
+    <path d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke="#E0662E" stroke-width="4.4" stroke-linecap="round"/>
+    <circle cx="12.85" cy="15.93" r="3.9" fill="#E0662E"/>
+    <path d="M20 47 L32 19.5 L44 47" stroke="#171A1D" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+    <path d="M21.09 38 H51.5" stroke="#171A1D" stroke-width="5.2" stroke-linecap="butt"/>
+  </g>
+
+  <path d="M440 100 V174" stroke="#E2DAD3" stroke-width="1.5"/>
+
+  <text x="468" y="140" font-family="&#39;Bitstream Charter&#39;,Charter,&#39;Iowan Old Style&#39;,&#39;Palatino Linotype&#39;,Palatino,&#39;Book Antiqua&#39;,Georgia,serif" font-size="40" fill="#171A1D">Perseverance Commands Success.</text>
+  <text x="470" y="176" font-family="ui-monospace,&#39;SF Mono&#39;,Menlo,&#39;Cascadia Mono&#39;,&#39;Roboto Mono&#39;,monospace" font-size="15" letter-spacing="5.5" fill="#E0662E">AUDIT · RISK · GOVERNANCE</text>
+
+  <path d="M340 232 H430" stroke="#E0662E" stroke-width="3"/>
+  <text x="340" y="284" font-family="&#39;Bitstream Charter&#39;,Charter,&#39;Iowan Old Style&#39;,&#39;Palatino Linotype&#39;,Palatino,&#39;Book Antiqua&#39;,Georgia,serif" font-size="29" fill="#5A646E">Judgment that holds when the machine agrees with you.</text>
+</svg>

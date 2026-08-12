@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LinkedIn Kit — Yasir A. Malik</title>
+<meta name="description" content="Copy-paste LinkedIn profile kit: cover, headline, about, experience, skills." />
+<link rel="stylesheet" href="assets/brand/tokens.css" />
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
+<meta name="theme-color" content="#E0662E" />
+<meta name="robots" content="noindex" />
+</head>
+<body>
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--statement);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:var(--accent-ink);text-underline-offset:3px;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
+  .wrap{max-width:820px;margin:0 auto;padding:0 22px;}
+
+  nav.top{position:sticky;top:0;z-index:60;
+    background:color-mix(in srgb, var(--ground) 90%, transparent);
+    backdrop-filter:saturate(150%) blur(9px);
+    border-bottom:1px solid var(--line);border-top:3px solid var(--accent);}
+  .nav-inner{display:flex;align-items:center;gap:11px;height:56px;
+    max-width:820px;margin:0 auto;padding:0 22px;}
+  .nav-inner .name{font-family:var(--record);font-size:1.02rem;font-weight:700;
+    letter-spacing:var(--track-record);}
+  .logo{display:block;flex:0 0 auto;}
+  .logo .ring,.logo .node{stroke:var(--accent);fill:none;}
+  .logo .node{fill:var(--accent);stroke:none;}
+  .logo .letter{stroke:currentColor;}
+
+  header.hero{padding:44px 0 26px;}
+  .eyebrow{font-family:var(--instrument);font-size:.68rem;
+    letter-spacing:var(--track-instrument);text-transform:uppercase;
+    color:var(--accent-ink);margin:0 0 14px;display:flex;align-items:center;gap:11px;}
+  .eyebrow::before{content:"";width:18px;height:0;border-top:1.5px solid var(--accent);}
+  h1{font-family:var(--record);font-size:clamp(1.9rem,4.4vw,2.6rem);
+    letter-spacing:var(--track-record);margin:0 0 14px;line-height:1.14;}
+  .lede{color:var(--muted);font-family:var(--record);font-size:1.04rem;
+    max-width:62ch;margin:0;}
+
+  section{padding:30px 0;border-top:1px solid var(--line);}
+  h2{font-family:var(--record);font-size:1.32rem;letter-spacing:var(--track-record);
+    margin:0 0 4px;}
+  .hint{color:var(--muted);font-size:.87rem;margin:0 0 16px;max-width:64ch;}
+
+  .block{border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--surface);overflow:hidden;margin-bottom:14px;}
+  .block-head{display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:10px 14px;background:var(--raise);border-bottom:1px solid var(--line);}
+  .block-label{font-family:var(--instrument);font-size:.64rem;
+    letter-spacing:.13em;text-transform:uppercase;color:var(--muted);}
+  .count{font-family:var(--instrument);font-size:.64rem;color:var(--muted);}
+  .count.over{color:#B4271A;font-weight:700;}
+  .copy{font-family:var(--instrument);font-size:.68rem;letter-spacing:.06em;
+    text-transform:uppercase;padding:7px 13px;border-radius:var(--radius);
+    border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);
+    cursor:pointer;font-weight:600;white-space:nowrap;}
+  .copy:hover{background:var(--accent-ink);border-color:var(--accent-ink);color:#fff;}
+  .copy.done{background:var(--evidence);border-color:var(--evidence);color:var(--on-evidence);}
+  pre.body{margin:0;padding:15px 16px;white-space:pre-wrap;word-wrap:break-word;
+    font-family:var(--statement);font-size:.92rem;line-height:1.62;color:var(--ink);}
+
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px;}
+  .chip{font-family:var(--instrument);font-size:.68rem;padding:5px 10px;
+    border:1px solid var(--line);border-radius:var(--radius);
+    color:var(--muted);background:var(--surface);}
+  .chip.pin{border-color:var(--accent);color:var(--accent-ink);
+    background:var(--accent-wash);font-weight:700;}
+
+  .cover-shot{width:100%;height:auto;display:block;border-radius:var(--radius);
+    border:1px solid var(--line);}
+  .dl{display:inline-flex;align-items:center;gap:8px;font-family:var(--instrument);
+    font-size:.72rem;letter-spacing:.04em;text-decoration:none;padding:10px 15px;
+    border-radius:var(--radius);border:1px solid var(--line);color:var(--ink);
+    margin:12px 8px 0 0;}
+  .dl:hover{border-color:var(--accent);color:var(--accent-ink);}
+
+  .note{background:var(--surface);border:1px solid var(--line);
+    border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+    padding:15px 18px;font-size:.9rem;line-height:1.6;color:var(--muted);}
+  .note b{color:var(--ink);}
+
+  footer.foot{padding:26px 0 44px;color:var(--muted);font-size:.74rem;
+    font-family:var(--instrument);border-top:1px solid var(--line);margin-top:24px;}
+</style>
+
+<nav class="top">
+  <div class="nav-inner">
+    <svg class="logo" width="24" height="24" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" class="ring" stroke-width="7" stroke-linecap="round"/>
+      <circle cx="14.38" cy="17.22" r="5.46" class="node"/>
+      <path d="M19.5 46.5 L32 19 L44.5 46.5" class="letter" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+      <path d="M21.6 38.4 H42.4" class="letter" stroke-width="8" stroke-linecap="butt"/>
+    </svg>
+    <span class="name">LinkedIn Kit</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Copy · Paste · Done</div>
+    <h1>Your LinkedIn, in the same voice as everything else.</h1>
+    <p class="lede">Every field below is one tap to copy. The vocabulary matches the
+    resume, the site and GitHub on purpose, so all four reinforce each other when a
+    recruiter searches.</p>
+  </div>
+</header>
+
+<!-- ============================== COVER ============================== -->
+<section>
+  <div class="wrap">
+    <h2>1. Cover image</h2>
+    <p class="hint">1584 × 396. Laid out so nothing important sits under your profile
+    photo or inside the crop LinkedIn takes on mobile.</p>
+    <img class="cover-shot" src="assets/brand/linkedin/cover-dark.png" alt="LinkedIn cover: Perseverance Commands Success. Audit, Risk, Governance. Judgment that holds when the machine agrees with you." />
+    <a class="dl" href="assets/brand/linkedin/cover-dark.png" download>Download dark ↓</a>
+    <a class="dl" href="assets/brand/linkedin/cover-light.png" download>Download light ↓</a>
+  </div>
+</section>
+
+<!-- ============================= HEADLINE ============================ -->
+<section>
+  <div class="wrap">
+    <h2>2. Headline</h2>
+    <p class="hint">The single highest-weighted field in recruiter search. Titles first,
+    not a slogan, because recruiters search job titles.</p>
+    <div class="block">
+      <div class="block-head">
+        <span class="block-label">Headline</span>
+        <span><span class="count" data-limit="220"></span>
+        <button class="copy">Copy</button></span>
+      </div>
+      <pre class="body">AI Governance &amp; Model Risk | Internal Audit Executive | Ex-OCC Bank Examiner | Citi, JPMorgan Chase | NIST AI RMF, SR 26-2, ISO 42001 | DBA researcher on AI and professional judgment</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== ABOUT ============================== -->
+<section>
+  <div class="wrap">
+    <h2>3. About</h2>
+    <p class="hint">Only the first two lines show before "see more", so the hook goes
+    there. Everything after that is for the recruiter who already clicked.</p>
+    <div class="block">
+      <div class="block-head">
+        <span class="block-label">About</span>
+        <span><span class="count" data-limit="2600"></span>
+        <button class="copy">Copy</button></span>
+      </div>
+      <pre class="body">The most dangerous number in the room is the one nobody questions.
+
+I have spent twenty years on that problem from three seats: as a national bank examiner at the OCC, as an internal audit leader inside Citi and JPMorgan Chase, and now as a doctoral researcher studying what happens to professional judgment when the analysis arrives already formed.
+
+WHAT I DO
+I help regulated organizations adopt AI without losing the ability to challenge it. In practice that means AI governance frameworks mapped to the NIST AI RMF and federal model risk guidance (SR 26-2, which superseded SR 11-7 in April 2026), model inventory and validation, human-in-the-loop control design, third-party AI risk, and the documentation trail an examiner will actually ask for.
+
+WHAT I HAVE ACTUALLY DONE
+- Built and shipped a retrieval-augmented generation (RAG) assistant into a live audit function at Citi, cutting review cycle time roughly 35%
+- Authored an AI governance framework for an internal governance team covering model risk, explainability, and human oversight
+- Led consent-order remediation and issue-closure packages submitted to quality assurance review and external regulators
+- Ran the Resolution and Recovery Planning program at JPMorgan Chase, coordinating 50+ stakeholders on Federal Reserve and FDIC submissions
+- Owned Basel III RWA and capital adequacy reporting, identifying $180M in capital optimization
+- Examined banks for safety and soundness at the OCC and the Florida Office of Financial Regulation
+
+THE RESEARCH
+My doctoral work at Florida International University asks a narrow and uncomfortable question: when an AI system produces the analysis, does the reviewer still review it? Systems tuned on human approval tend to affirm the position you already hold, and they are most agreeable exactly where a reviewer most needs pushback. That is a control problem before it is a technology problem.
+
+WHY IT MATTERS TO ME
+The auditor everyone dreads teaches nobody. You cannot examine your way out of deference, because nobody documents the moment they stopped thinking. So I use the audit discipline to teach judgment rather than police it: governance that produces better thinking, not just cleaner files.
+
+WHAT I AM LOOKING FOR
+Director and Head-of level roles in AI governance, model risk, and internal audit. Also open to advisory engagements, guest lecturing, and research collaboration.
+
+Perseverance Commands Success.
+
+malikai-786.github.io</pre>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== EXPERIENCE =========================== -->
+<section>
+  <div class="wrap">
+    <h2>4. Experience</h2>
+    <p class="hint">This text is indexed by recruiter search, so it carries the same
+    keywords as the resume. Paste into the description box for each role.</p>
+
+    <div class="block">
+      <div class="block-head">
+        <span class="block-label">Citi · VP, Audit Manager</span>
+        <button class="copy">Copy</button>
+      </div>
+      <pre class="body">Led global, risk-based thematic audits across 15+ business units, assessing operational resilience, change management, and regulatory alignment against OCC and Federal Reserve expectations.
+
+Drove consent-order remediation: prepared issue-closure packages and audited remediation items submitted to quality assurance review and external regulators, including work tied to legal-entity divestitures.
+
+Built and deployed a prompt-engineered RAG document assistant for audit and workpaper inquiry, reducing review cycle time an estimated 35%. Applied AI shipped into a regulated control environment.
+
+Authored an AI governance framework for the internal governance team referencing the NIST AI RMF and federal model risk guidance, addressing model risk, explainability, documentation standards, and human-in-the-loop oversight.
+
+Delivered executive risk reporting to senior leadership and the Board Audit Committee. Mentored 8+ auditors on responsible AI adoption and automation-bias awareness.</pre>
+    </div>
+
+    <div class="block">
+      <div class="block-head">
+        <span class="block-label">JPMorgan Chase · Risk Control Manager</span>
+        <button class="copy">Copy</button>
+      </div>
+      <pre class="body">Led the firm's Resolution and Recovery Planning (RRP) program, coordinating 50+ stakeholders across Legal, Treasury, and Operations on regulatory submissions to the Federal Reserve and FDIC.
+
+Supported Treasury and CIO capital controls and reconciliation reporting. Built automated reconciliation dashboards that cut manual review time approximately 40%.</pre>
+    </div>
+
+    <div class="block">
+      <div class="block-head">
+        <span class="block-label">JPMorgan Chase · Capital Controller</span>
+        <button class="copy">Copy</button>
+      </div>
+      <pre class="body">Owned Basel III RWA calculation and capital adequacy reporting. Identified $180M in capital optimization opportunities and modeled capital impacts for CFO decision support.</pre>
+    </div>
+
+    <div class="block">
+      <div class="block-head">
+        <span class="block-label">OCC / Florida OFR · Bank Examiner</span>
+        <button class="copy">Copy</button>
+      </div>
+      <pre class="body">Conducted safety-and-soundness examinations evaluating credit, liquidity, and operational risk. Contributed to enforcement actions and remediation monitoring.</pre>
+    </div>
+
+    <div class="block">
+      <div class="block-head">
+        <span class="block-label">Malik LLC · Founder &amp; Principal</span>
+        <button class="copy">Copy</button>
+      </div>
+      <pre class="body">Owner-operator of a multi-property residential portfolio. Direct accountability for P&amp;L, capital allocation, leasing, vendor management, and reporting.</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== SKILLS ============================= -->
+<section>
+  <div class="wrap">
+    <h2>5. Skills</h2>
+    <p class="hint">LinkedIn allows 50. The top three pinned carry disproportionate
+    weight in search, so pin the three in ember first, then add the rest in this order.</p>
+    <div class="chips">
+      <span class="chip pin">AI Governance</span>
+      <span class="chip pin">Model Risk Management</span>
+      <span class="chip pin">Internal Audit</span>
+      <span class="chip">Responsible AI</span>
+      <span class="chip">NIST AI Risk Management Framework</span>
+      <span class="chip">AI Risk Management</span>
+      <span class="chip">Regulatory Compliance</span>
+      <span class="chip">Risk Assessment</span>
+      <span class="chip">ISO/IEC 42001</span>
+      <span class="chip">EU AI Act</span>
+      <span class="chip">Model Validation</span>
+      <span class="chip">Model Governance</span>
+      <span class="chip">Bank Regulation</span>
+      <span class="chip">Regulatory Examination</span>
+      <span class="chip">Consent Order Remediation</span>
+      <span class="chip">Issue Management</span>
+      <span class="chip">Operational Risk</span>
+      <span class="chip">Operational Resilience</span>
+      <span class="chip">Internal Controls</span>
+      <span class="chip">Audit Planning</span>
+      <span class="chip">SOX Compliance</span>
+      <span class="chip">Enterprise Risk Management</span>
+      <span class="chip">Governance, Risk &amp; Compliance (GRC)</span>
+      <span class="chip">Basel III</span>
+      <span class="chip">Capital Adequacy</span>
+      <span class="chip">Resolution &amp; Recovery Planning</span>
+      <span class="chip">Financial Services</span>
+      <span class="chip">Banking</span>
+      <span class="chip">Third-Party Risk Management</span>
+      <span class="chip">Data Governance</span>
+      <span class="chip">Artificial Intelligence (AI)</span>
+      <span class="chip">Machine Learning</span>
+      <span class="chip">Large Language Models (LLM)</span>
+      <span class="chip">Retrieval-Augmented Generation (RAG)</span>
+      <span class="chip">Prompt Engineering</span>
+      <span class="chip">AI Ethics</span>
+      <span class="chip">Explainable AI</span>
+      <span class="chip">Automation Bias</span>
+      <span class="chip">Behavioral Science</span>
+      <span class="chip">Research Design</span>
+      <span class="chip">Quantitative Research</span>
+      <span class="chip">SQL</span>
+      <span class="chip">Python</span>
+      <span class="chip">Tableau</span>
+      <span class="chip">Data Analysis</span>
+      <span class="chip">Executive Reporting</span>
+      <span class="chip">Stakeholder Management</span>
+      <span class="chip">Team Leadership</span>
+      <span class="chip">Public Speaking</span>
+      <span class="chip">Real Estate Investment</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= FEATURED ============================ -->
+<section>
+  <div class="wrap">
+    <h2>6. Featured &amp; Open to work</h2>
+    <p class="hint">Featured sits high on the profile and is the only place a recruiter
+    can see proof rather than claims. Add these four links.</p>
+    <div class="block">
+      <div class="block-head">
+        <span class="block-label">Featured links</span>
+        <button class="copy">Copy</button>
+      </div>
+      <pre class="body">https://malikai-786.github.io/  (Research, advisory practice, and the story)
+https://proofoverpromise.substack.com/subscribe  (Proof Over Promise, the newsletter)
+https://malikai-786.github.io/#ethics  (Why the audit discipline should teach, not police)
+https://github.com/MalikAI-786  (Public work)
+Resume PDF  (upload the file directly)</pre>
+    </div>
+
+    <div class="block">
+      <div class="block-head">
+        <span class="block-label">Open to work · job titles (recruiters only)</span>
+        <button class="copy">Copy</button>
+      </div>
+      <pre class="body">Director of AI Governance
+Head of Model Risk
+Chief Audit Executive
+AI Risk Director
+Responsible AI Lead
+Director, Internal Audit
+Model Risk Management Director
+AI Governance Lead</pre>
+    </div>
+
+    <div class="note">
+      <b>One setting worth checking.</b> Set "Open to work" to recruiters only rather
+      than the public green banner. It reaches the people searching without announcing
+      anything to your network, and at Director level that discretion reads better.
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">Yasir A. Malik · Audit · Risk · Governance · <a href="index.html">back to the site</a></div>
+</footer>
+
+<script>
+  (function(){
+    document.querySelectorAll('.block').forEach(function(block){
+      var pre = block.querySelector('pre.body');
+      var btn = block.querySelector('.copy');
+      var count = block.querySelector('.count');
+
+      if (count) {
+        var limit = parseInt(count.getAttribute('data-limit'), 10);
+        var n = pre.textContent.length;
+        count.textContent = n + ' / ' + limit;
+        if (n > limit) count.classList.add('over');
+      }
+
+      btn.addEventListener('click', function(){
+        var text = pre.textContent;
+        var done = function(){
+          btn.textContent = 'Copied';
+          btn.classList.add('done');
+          setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1600);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, fallback);
+        } else { fallback(); }
+
+        function fallback(){
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly','');
+          ta.style.position = 'absolute';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); done(); } catch(e) {}
+          document.body.removeChild(ta);
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>
