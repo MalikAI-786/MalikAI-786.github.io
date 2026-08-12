@@ -73,6 +73,38 @@ Moving or renaming anything under `assets/brand/banners/` or
 `assets/brand/profile-readme/` breaks the README art on nine other repositories
 at once. Regenerate rather than reorganise.
 
+`tools/` is not part of the site. It holds local-only utilities — a bootstrap
+for a private data-dump repository, and the Proof Over Promise drafting script.
+Pages serves the directory because everything here is served, but nothing links
+to it. Neither tool sends anything anywhere: the drafting script writes a
+markdown file and stops, and no real data belongs in this repository, because
+every branch of it is public.
+
+## Answering
+
+Short. Lead with the action or the finding — the thing he would ask for if he
+said "just tell me." Supporting detail after, if it changes what he does next.
+
+No preamble, no recap of what you just did, no menu of options he has to choose
+between. Give one recommendation. If something is uncertain, one line saying so
+beats three lines hedging.
+
+When he asks a question, answer that question. Do not audit your own phrasing,
+re-explain a decision he already made, or restate a finding he has already read.
+End when the answer ends — a closing offer of further help is noise.
+
+## The rules are executable
+
+The rules above are also executable. `tools/audit/invariants.py` checks them —
+that the generated files still match the generator, that nothing
+credential- or cache-shaped is tracked in a public repository, that
+`.nojekyll` exists, and that colour has not leaked out of `tokens.css` into a
+component. CI runs it on every push and it cannot be bypassed; the same script
+runs as a pre-commit hook once you point git at it with
+`git config core.hooksPath .githooks`. `--fix` repairs what is safely
+repairable. If a rule here is wrong, change it in both places at once: the
+prose and the check are meant to be the same statement.
+
 This is a GitHub Pages site published from `main`. A push is a deploy.""",
     banner="site", alt="The Site — Yasir A. Malik", body="""\
 # The site, and the identity system behind it
