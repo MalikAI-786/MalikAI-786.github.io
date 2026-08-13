@@ -19,6 +19,11 @@ police it. Governance that produces better thinking, not just cleaner files.
   judgment, and where AI takes that question next
 - [Proof Over Promise](https://malikai-786.github.io/newsletter.html): the
   newsletter — AI governance, model risk, professional judgment
+- [An instrument for what resists measurement](https://malikai-786.github.io/instrument.html):
+  a case study in measurement design — five decisions from building a
+  self-audit instrument, and what each asks of a function that scores itself.
+  The instrument itself is private and stays that way; only the design is
+  published
 - [Brand system](https://malikai-786.github.io/brand.html): the identity,
   documented — palette, mark, type, and the rules that govern them
 - [LinkedIn profile copy](https://malikai-786.github.io/linkedin.html)
