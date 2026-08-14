@@ -29,7 +29,7 @@ I examined banks as a regulator, ran audits inside two of them, and built and sh
 
 | | |
 | --- | --- |
-| [**malik-research**](https://github.com/MalikAI-786/malik-research) | Instrument, models and analysis for the DBA. No participant data, by design |
+| [**malik-research**](https://github.com/MalikAI-786) | Instrument, models and analysis for the DBA. No participant data, by design |
 
 #### Applied
 

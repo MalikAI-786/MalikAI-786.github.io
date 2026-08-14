@@ -87,7 +87,7 @@ ACADEMIC = block(
 """,
     contact=f"""        {a('mailto:' + EMAIL, EMAIL)}&nbsp;&middot;&nbsp;{tel(PRO_TEL)}&nbsp;&middot;&nbsp;<span style="color:{FAINT};">Newark, NJ</span><br>
         {a(SITE, 'malikai-786.github.io')}&nbsp;&middot;&nbsp;{a('https://github.com/MalikAI-786', 'github.com/MalikAI-786')}&nbsp;&middot;&nbsp;{a('https://linkedin.com/in/yasiramalik', 'LinkedIn')}<br>
-        {a('https://github.com/MalikAI-786/malik-research', 'Instrument and models')}<span style="color:{FAINT};">, open &middot; </span>{a('https://proofoverpromise.substack.com', 'Proof Over Promise')}<span style="color:{FAINT};">, the newsletter</span>""")
+        {a('https://github.com/MalikAI-786', 'Instrument and models')}<span style="color:{FAINT};">, open &middot; </span>{a('https://proofoverpromise.substack.com', 'Proof Over Promise')}<span style="color:{FAINT};">, the newsletter</span>""")
 
 PROFESSIONAL = block(
     middle=f"""      <div style="font-family:{SERIF};font-size:13px;line-height:19px;color:{MUTED};padding-top:7px;">Doctoral research on AI and professional judgment<br>{a(SITE + '#research', 'Florida International University &rarr;')}</div>
