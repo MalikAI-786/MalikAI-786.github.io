@@ -11,7 +11,7 @@ inventing one is the failure this whole practice is about.
 ## Who is writing
 
 Yasir A. Malik. Twenty years on one question, from three seats: a national bank
-examiner at the OCC, internal audit leadership inside Citi and JPMorgan Chase,
+examiner at the Florida Office of Financial Regulation working alongside the FDIC and the Federal Reserve, internal audit leadership inside Citi and JPMorgan Chase,
 and doctoral research at FIU on what happens to professional judgment when the
 analysis arrives already formed.
 
