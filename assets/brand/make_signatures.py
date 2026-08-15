@@ -32,9 +32,7 @@ EMAIL = "YasirAMalik@gmail.com"
 
 PRO_TEL = ("+1 (786) 704-8536", "+17867048536")
 
-# Not known to this generator, and never to be guessed. A signature that
-# ships a plausible-looking wrong number is worse than one with a visible gap.
-PERSONAL_TEL = ("+1 (305) &mdash; &mdash; &mdash;", None)
+PERSONAL_TEL = ("+1 (305) 799-2443", "+13057992443")
 
 EMBER, INK, MUTED, FAINT, LINE = "#E0662E", "#171A1D", "#5A646E", "#8A929B", "#E2DAD3"
 EMBER_TEXT = "#AD4317"
@@ -136,9 +134,7 @@ VARIANTS = [
      "drops the research detail. Carries the <b>786</b>.", PROFESSIONAL, None),
 
     ("Personal", "Friends, family, anything not work. Carries the <b>305</b> "
-     "and nothing that reads as a pitch.", PERSONAL,
-     "The 305 number is not filled in &mdash; I do not have it and will not "
-     "guess at a phone number. Send it and it goes in."),
+     "and nothing that reads as a pitch.", PERSONAL, None),
 
     ("Legal correspondence", "For matters where both numbers should reach you "
      "and the record matters. Deliberately plain: no newsletter, no GitHub, "
@@ -252,12 +248,13 @@ if __name__ == "__main__":
     with open(OUT, "w") as fh:
         fh.write(html)
 
-    # Guard: no signature may ship a guessed phone number.
+    # Guard: the 305 line must be a real 10-digit number, not a placeholder
+    # dash and not something malformed by a future edit.
     import re
-    for m in re.findall(r"\(305\)\s*([^<&]*)", html):
-        if re.search(r"\d", m):
-            raise SystemExit(f"A 305 number was filled in: {m!r}. "
-                             "It was never supplied — do not guess it.")
+    m = re.search(r"\(305\)\s*([\d\-]*)", html)
+    digits = re.sub(r"\D", "", m.group(1)) if m else ""
+    if len(digits) != 7:
+        raise SystemExit(f"305 line is not a valid local number: {m.group(1)!r}")
 
     print(f"  signature.html   {len(VARIANTS)} variants, {len(html) // 1024} KB")
-    print("  305 number left blank, as it was never supplied")
+    print(f"  305 number verified present: (305) {digits[:3]}-{digits[3:]}")
