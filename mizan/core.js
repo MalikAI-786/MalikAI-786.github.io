@@ -820,8 +820,10 @@ function renderSettings(){
 }
 
 /* ---------------- render all ---------------- */
+/* No Ledger entry: that page is not published. This repo is public, so the
+   intoxicant ledger lives only on a working branch and is never deployed. */
 var NAV=[['','Dashboard'],['day/','Day'],['khudi/','Khudī'],['badan/','Badan'],
-         ['ledger/','Ledger'],['record/','Record']];
+         ['record/','Record']];
 /* ---- khudi force diagram ---- */
 function renderForceDiagram(){
   var el=$('#forceDiagram'); if(!el) return;
@@ -922,7 +924,7 @@ function leftmostFailing(){
   });
   return worst;
 }
-var PAGEOF={salah:'day/',dhikr:'day/',amal:'day/',attn:'day/',zabt:'ledger/',
+var PAGEOF={salah:'day/',dhikr:'day/',amal:'day/',attn:'day/',zabt:'day/',
             body:'badan/',ihsan:'day/'};
 function renderDash(){
   if(!$('#dashGrid')) return;
@@ -947,8 +949,8 @@ function renderDash(){
   var closed14=recentKeys(14).filter(function(k){return S.days[k]&&S.days[k].closed}).length;
 
   var tiles=[
-   {k:'Clean streak',v:l.streak,u:'d',href:'ledger/',
-    note:l.best?'best '+l.best+' d':'no history yet'},
+   {k:'Days logged',v:realDays().length,u:'',href:'day/',
+    note:'entries on record'},
    {k:'Days closed',v:closed14,u:'/14',href:'day/',
     note:closed14>=12?'audit trail complete':closed14>=7?'holding':'the record has gaps'},
    {k:'Next session',v:ng?(ng===todayK()?'today':DOW[parseISO(ng).getDay()]):'—',u:'',href:'badan/',
