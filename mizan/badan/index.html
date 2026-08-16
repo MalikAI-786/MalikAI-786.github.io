@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Badan · Mīzān</title>
+<meta name="description" content="Training, food, measurement index and the Best-50 standards." />
+<link rel="stylesheet" href="../core.css" />
+</head>
+<body data-page="badan" data-root="../">
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="../">Mīzān<em>.</em></a>
+    <div class="nav-links" id="navLinks"></div>
+    <button class="icon-btn" id="themeBtn" title="Toggle theme">◐</button>
+  </div>
+</nav>
+
+<div class="wrap" id="top">
+<section id="badan">
+  <div class="sec-head">
+    <p class="eyebrow gold">Badan · the mount</p>
+    <h2>The body is the instrument of the self, not its opponent</h2>
+    <p class="lede" style="margin-top:10px">Iqbal will not let you split these. In the <em>Reconstruction</em> the ego is a unity — the body is not a cage the soul is serving time in, it is the self's means of acting in the world. A weak instrument is a ceiling on khudī, not a separate department of life. Which is why this module is wired directly into the ʿAmal measure: it will show you, from <strong>your own logged days</strong>, what training and sleep are actually worth in output.</p>
+  </div>
+
+  <div class="spread" id="dayBar" style="margin:-6px 0 22px"></div>
+
+  <div class="grid g3" style="margin-bottom:22px">
+    <div class="card">
+      <div class="ayah" style="margin-bottom:10px">
+        <div class="ar">وَزَادَهُۥ بَسْطَةً فِى ٱلْعِلْمِ وَٱلْجِسْمِ</div>
+        <div class="tr">"And He increased him abundantly in knowledge and physical stature."</div>
+        <div class="ref">Al-Baqarah 2:247 · why Ṭālūt was chosen to lead</div>
+      </div>
+      <div class="small">When the criterion for command is given explicitly in the Qur'an, it is <b>ʿilm and jism together</b> — the learning and the frame. Not one standing in for the other. You are already spending years on the first half.</div>
+    </div>
+    <div class="card">
+      <div class="notice teal" style="margin:0 0 10px">
+        <b>"The strong believer is more beloved to Allah than the weak believer — though there is good in both."</b><br/>
+        <span class="tag" style="display:block;margin-top:6px">ṢAḤĪḤ MUSLIM</span>
+      </div>
+      <div class="small">Note the second clause. The tradition refuses to write off the weak believer, and it still states a preference. That is the exact register this module is written in: <b>no contempt, and no pretending the two are equivalent.</b></div>
+    </div>
+    <div class="card">
+      <div class="ayah" style="margin-bottom:10px">
+        <div class="ar">وَكُلُوا۟ وَٱشْرَبُوا۟ وَلَا تُسْرِفُوٓا۟ ۚ إِنَّهُۥ لَا يُحِبُّ ٱلْمُسْرِفِينَ</div>
+        <div class="tr">"Eat and drink, and be not excessive. Indeed He does not love the excessive."</div>
+        <div class="ref">Al-Aʿrāf 7:31</div>
+      </div>
+      <div class="small">And the prophetic gloss that makes it operational: <em>no vessel is filled worse than a stomach — a third for food, a third for drink, a third for breath</em> (Tirmidhī). A ratio, not a calorie count. That distinction is the whole design of the food panel below.</div>
+    </div>
+  </div>
+
+  <!-- training -->
+  <div class="grid g-2-1" style="margin-bottom:18px">
+    <div class="card">
+      <div class="spread" style="margin-bottom:14px">
+        <div><p class="eyebrow" style="margin-bottom:4px">Training · with <span id="partnerName">your partner</span></p>
+          <div class="tiny" id="gymSched">—</div></div>
+        <div style="text-align:right"><div class="tag">Next session</div>
+          <div class="mono" style="font-size:1.05rem;font-weight:600" id="nextGym">—</div></div>
+      </div>
+      <div id="gymToday"></div>
+      <div id="gymPrayerNote" style="margin-top:14px"></div>
+      <div class="hr" style="margin:18px 0"></div>
+      <p class="eyebrow">The rotation</p>
+      <div class="tiny" style="margin-bottom:10px">Built from six years of your own session log — and corrected for what that log shows you have been avoiding.</div>
+      <div id="rotationGrid" class="grid g4" style="gap:10px"></div>
+      <div class="notice" style="margin-top:14px">
+        <b>Why legs land twice.</b> In most long-running training logs the split that gets skipped is legs — it is the one that hurts, the one with no mirror payoff, and the one easiest to swap for another push day. It is also where <b>four of the five Best-50 standards live</b>: the pistol squat, the front split, the burpee test, and the hip compression the flag needs. When the gap and the goal are the same body part, the schedule has to force the issue rather than leave it to preference. So legs sit on the two days with the most room, and every leg day carries one skill progression instead of being general work. The <em>Balance</em> line in the coach's read below computes your actual split from your logged sessions — that is the number to argue with, not this paragraph.
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="card">
+        <p class="eyebrow">Package</p>
+        <div class="dial"><div><div class="num" id="pkgN">—</div><div class="tag">of 20 sessions</div></div></div>
+        <div class="tiny" style="margin-top:10px">Same counter your trainer's sheet runs. A no-show is logged against whoever caused it — yours and his are counted separately, because a package burned by someone else's cancellation is a different fact than one you slept through.</div>
+        <div class="hr" style="margin:14px 0"></div>
+        <div id="gymStats"></div>
+      </div>
+      <div class="card">
+        <p class="eyebrow gold">Effect on output</p>
+        <div id="gymEffect"></div>
+        <div class="tiny" style="margin-top:10px">Computed from your own closed days. This is the panel that settles the argument you have with yourself at 4:45pm — not with a claim about discipline, but with the measured difference in your Khudī index on days you trained versus days you did not.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- food -->
+  <div class="grid g-1-2" style="margin-bottom:18px">
+    <div class="card">
+      <p class="eyebrow">Food · today</p>
+      <div id="foodList"></div>
+      <div class="grid g2" style="gap:10px;margin-top:12px">
+        <div class="field" style="margin:0"><label class="fl" for="wtToday">Weight (lb)</label><input type="number" step="0.1" id="wtToday" placeholder="171.0" /></div>
+        <div class="field" style="margin:0"><label class="fl" for="sleepHrs">Sleep (hrs)</label><input type="number" step="0.25" id="sleepHrs" placeholder="7.5" /></div>
+      </div>
+      <div class="tiny" style="margin-top:12px">Weigh in the same conditions or do not bother — the 7-day average is the signal and any single morning is noise. The chart below plots the average, not the reading.</div>
+    </div>
+
+    <div class="card">
+      <p class="eyebrow gold">Why this is four rules and not a calorie tracker</p>
+      <p class="small" style="margin-top:0">Calorie logging asks for a sustained, low-reward, high-precision data-entry habit — which is close to the worst possible ask for the wiring described two sections up. It works for about eleven days and then the app goes unopened, and the failure gets filed under willpower. <b>Four binary rules survive because each one is a single decision made once, not a running tally.</b></p>
+      <div class="grid g2" style="gap:10px;margin-top:12px">
+        <div class="card flat" style="padding:12px"><div class="tag">Rule 01</div><div style="font-weight:600;font-size:.9rem;margin-top:3px">Protein floor</div><div class="tiny">Roughly a gram per pound of goal bodyweight — set the figure in the settings card below. Hit the floor and the rest largely takes care of itself — it is the one macro that is genuinely hard to overshoot and easy to undershoot.</div></div>
+        <div class="card flat" style="padding:12px"><div class="tag">Rule 02</div><div style="font-weight:600;font-size:.9rem;margin-top:3px">Eating window</div><div class="tiny">A start and an end. The end matters more: it protects sleep, and sleep is the input to everything else on this page.</div></div>
+        <div class="card flat" style="padding:12px"><div class="tag">Rule 03</div><div style="font-weight:600;font-size:.9rem;margin-top:3px">The thirds</div><div class="tiny">Stop at two-thirds. The tradition gave you a ratio precisely because it does not require a scale, a label, or arithmetic at the table.</div></div>
+        <div class="card flat" style="padding:12px"><div class="tag">Rule 04</div><div style="font-weight:600;font-size:.9rem;margin-top:3px">Nothing after ʿIshāʾ</div><div class="tiny">The window closes with the last prayer. A rule with an existing external clock is a rule you will actually keep — same logic as ṣalāh carrying the heaviest weight.</div></div>
+      </div>
+      <div class="notice teal" style="margin-top:14px">
+        <b>The sunnah fast, scheduled around your actual week.</b> Monday and Thursday are the traditional voluntary fasts — but <b>Thursday is now a training day</b>, and a 5pm session at the end of a fast is a bad trade in summer when Maghrib sits near 8pm. Take <b>Monday</b> as the standing fast: it is a non-training day, it follows the weekend's eating, and it costs you nothing in the gym. Add Thursday only in the winter months, when Maghrib arrives before the session ends and you are breaking the fast mid-workout rather than after it.
+      </div>
+    </div>
+  </div>
+
+  <!-- measurement index -->
+  <div class="grid g2" style="margin-bottom:18px">
+    <div class="chartbox">
+      <h4>Measurement index — weight and lower waist</h4>
+      <svg class="chart" id="wtChart" viewBox="0 0 640 240"></svg>
+      <div class="tiny" style="margin-top:10px" id="wtNote">—</div>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Shoulder-to-waist</p>
+      <div class="spread" style="align-items:flex-end">
+        <div><div class="num mono" id="swRatio" style="font-size:2.6rem">—</div>
+          <div class="tag">shoulders ÷ lower waist</div></div>
+        <div style="text-align:right"><div class="tag">Reference</div><div class="mono" style="font-size:1.1rem">1.618</div></div>
+      </div>
+      <svg class="chart" id="swBar" viewBox="0 0 400 46" style="margin-top:14px"></svg>
+      <div class="small" style="margin-top:12px" id="swNote">—</div>
+      <div class="hr" style="margin:14px 0"></div>
+      <div class="btn-row"><button class="btn" id="addMeas">Log a measurement</button></div>
+      <div id="measForm"></div>
+      <div id="measTable" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- best 50 -->
+  <div class="card">
+    <div class="spread" style="margin-bottom:6px">
+      <div><p class="eyebrow gold" style="margin-bottom:4px">Best 50</p>
+        <h3 style="font-size:1.2rem">The five standards</h3></div>
+      <div style="text-align:right"><div class="tag">Composite</div><div class="mono" style="font-size:1.5rem;font-weight:600" id="b50Score">—</div></div>
+    </div>
+    <p class="small" style="max-width:70ch">These are the five you wrote down yourself. What was missing was a ladder — a skill you cannot currently do is not a goal, it is a wish, until it is broken into levels with a pass condition at each one. Set your honest level; the next drill appears. <b>Test on the first Saturday of the month and only then</b> — testing constantly is how you convert training days into ego days.</p>
+    <div id="b50List" style="margin-top:16px"></div>
+    <div class="notice gold" style="margin-top:16px">
+      <b>Why these five and not a barbell number.</b> Every one of them is bodyweight, joint-forgiving, and unfakeable — you can rationalise a squat number by shortening the range, but you cannot slightly do a pistol squat. They also skew toward the qualities that decline first and matter most later: unilateral strength, hip and hamstring range, wrist and shoulder integrity, and the ability to hold a position under tension. That is the difference between being <em>strong at fifty</em> and being <em>strong for fifty</em>.
+    </div>
+  </div>
+
+  <div class="grid g-2-1" style="margin-top:18px">
+    <div class="card">
+      <p class="eyebrow">Coach's read · computed from your data</p>
+      <div id="coachRead"></div>
+    </div>
+    <div class="card flat">
+      <p class="eyebrow">Training &amp; food settings</p>
+      <div class="grid g2" style="gap:10px">
+        <div class="field" style="margin:0"><label class="fl" for="setPartner">Training partner</label><input type="text" id="setPartner" /></div>
+        <div class="field" style="margin:0"><label class="fl" for="setGymHour">Session start (24h)</label><input type="number" id="setGymHour" min="4" max="23" step="1" /></div>
+        <div class="field" style="margin:0"><label class="fl" for="setProtein">Protein floor (g)</label><input type="number" id="setProtein" min="60" max="300" step="5" /></div>
+        <div class="field" style="margin:0"><label class="fl" for="setSleep">Sleep target (hrs)</label><input type="number" id="setSleep" min="4" max="10" step="0.25" /></div>
+      </div>
+      <div class="field" style="margin-top:12px"><label class="fl">Training days</label>
+        <div id="gymDayPick" class="seg sm"></div></div>
+      <div class="tiny" style="margin-top:10px">Session start drives the prayer-collision note and where the gym block is drawn on the day spine. It is a genuine scheduling constraint in both directions — in June a 5pm start sits inside ʿAṣr, in December it sits inside Maghrib, and the page works out which one applies today rather than making you remember.</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer><div class="wrap"><div class="spread">
+  <div class="tiny">Mīzān · a private instrument · data never leaves this browser</div>
+  <div class="tiny mono" id="footVer">—</div>
+</div></div></footer>
+
+<script src="../core.js"></script>
+</body>
+</html>

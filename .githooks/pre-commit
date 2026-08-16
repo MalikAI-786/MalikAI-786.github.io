@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#
+# Runs the repository's invariants before a commit is created.
+#
+# Versioned here rather than in .git/hooks so it survives a clone. It is not
+# active until someone points git at this directory once:
+#
+#     git config core.hooksPath .githooks
+#
+# This is the fast, local gate and it checks the working tree. The authoritative
+# gate is CI, which checks what was actually pushed and cannot be bypassed with
+# --no-verify.
+#
+set -euo pipefail
+
+if ! python3 tools/audit/invariants.py; then
+  cat >&2 <<'MSG'
+
+Commit stopped: a repository invariant does not hold.
+
+Repair what is repairable and re-stage:
+    python3 tools/audit/invariants.py --fix && git add -A
+
+If you are certain this is a false positive:
+    git commit --no-verify
+
+If the rule itself is wrong, change it in tools/audit/invariants.py and in
+AGENTS.md together — they are meant to say the same thing.
+MSG
+  exit 1
+fi
