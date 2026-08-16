@@ -1,0 +1,33 @@
+# Credentials and secrets — the pre-commit hook also blocks these, but
+# ignoring them means they never reach the staging area in the first place.
+.env
+.env.*
+*.pem
+*.key
+*_secret*
+*_secrets*
+credentials.json
+service-account*.json
+.netrc
+
+# Working files that should not become history
+*.tmp
+*.part
+*.download
+~$*
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS and editor cruft
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
