@@ -139,6 +139,11 @@ textarea{resize:vertical;line-height:1.5;}
   background:var(--surface);border:1px solid var(--hairline);border-radius:3px;padding:12px 14px;
   margin:12px 0 0;color:var(--muted);display:none;overflow-x:auto;}
 #fbOut.show{display:block;}
+.scopebar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:14px;
+  font-family:var(--instrument);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;}
+.scopebar .chip{padding:4px 9px;border:1px solid var(--rule);border-radius:2px;color:var(--muted);}
+.scopebar .chip.live{border-color:var(--verd-text);color:var(--verd-text);}
+.scopebar .chip.soon{border-color:var(--c1);color:var(--ember-text);font-weight:600;}
 .empty{text-align:center;padding:70px 20px;color:var(--muted);}
 .empty h2{margin-bottom:10px;}
 .hide{display:none !important;}
@@ -178,6 +183,12 @@ footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
   <p>This page renders a snapshot carried in the link itself. Ask for a fresh link — the one you have is missing its data fragment, or it was truncated by an email client.</p>
 </div>
 
+<div id="expired" class="empty hide">
+  <h2>This link has expired</h2>
+  <p id="expiredWhen"></p>
+  <p style="margin-top:14px">Snapshots are deliberately short-lived: the data travels inside the link, so a link that lives forever is a health record that lives forever in every inbox it reaches. Ask for a fresh one.</p>
+</div>
+
 <div id="app" class="hide">
 
 <header>
@@ -185,6 +196,7 @@ footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
   <h1 id="headline">Training record</h1>
   <p id="standfirst"></p>
   <div class="tiles" id="tiles"></div>
+  <div class="scopebar" id="scopeBar"></div>
 </header>
 
 <section id="secTraining">
@@ -201,6 +213,24 @@ footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
   <details>
     <summary>Table view — sessions per month</summary>
     <div class="tblwrap"><table id="cadenceTbl"></table></div>
+  </details>
+
+  <div class="chart" style="margin-top:14px" id="shareWrap">
+    <h3>Share of sessions per month — is the mix actually moving?</h3>
+    <svg id="shareChart" viewBox="0 0 640 230" role="img"
+      aria-label="Legs and mobility as a percentage of sessions, by month"></svg>
+    <div class="legend">
+      <span><i style="background:var(--c1)"></i>Legs</span>
+      <span><i style="background:var(--c2)"></i>Mobility</span>
+      <span><i style="background:var(--rule)"></i>10-month average</span>
+    </div>
+    <p style="font-size:.84rem;color:var(--muted);margin:12px 0 0;max-width:62ch">
+      The overall split mix answers <em>where did the time go</em>. It cannot answer
+      <em>is that changing</em>, because it has no month dimension. This does.</p>
+  </div>
+  <details>
+    <summary>Table view — share per month</summary>
+    <div class="tblwrap"><table id="shareTbl"></table></div>
   </details>
 </section>
 
@@ -305,6 +335,26 @@ function readFragment(){
 
 var D=readFragment();
 if(!D){ $('#empty').classList.remove('hide'); return }
+
+/* ---- Expiry. The snapshot IS the link, so an immortal link is an immortal
+   copy of a health record in every inbox it ever reaches. D.generated has
+   existed since the first version and nothing read it; now it gates render. ---- */
+var TTL=+(D.ttl||7);
+(function(){
+  if(!D.generated) return;
+  var made=Date.parse(D.generated+'T00:00:00');
+  if(isNaN(made)) return;
+  var age=Math.floor((Date.now()-made)/864e5);
+  D._age=age; D._left=Math.max(0,Math.min(TTL,TTL-age)); /* clamp: clock skew must not read as a longer life */
+  if(age>TTL){
+    $('#expiredWhen').textContent='Generated '+D.generated+' — '+age+
+      ' days ago. These expire after '+TTL+' days.';
+    $('#expired').classList.remove('hide');
+    $('#empty').classList.add('hide');
+    D=null;
+  }
+})();
+if(!D) return;
 $('#empty').classList.add('hide'); $('#app').classList.remove('hide');
 
 /* ---- view switching ---- */
@@ -339,6 +389,15 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') $('#viewMe
 /* ---- header ---- */
 $('#scopeLine').textContent=(D.scope||'Coaching snapshot')+' · generated '+(D.generated||'—');
 $('#standfirst').textContent=D.standfirst||'';
+(function(){
+  var c=[];
+  c.push('<span class="chip">Scope: '+(D.scopeKey||'training')+'</span>');
+  if(D.generated) c.push('<span class="chip">Generated '+D.generated+'</span>');
+  if(D._left!=null) c.push('<span class="chip '+(D._left<=2?'soon':'live')+'">'+
+    (D._left<=0?'expires today':'expires in '+D._left+' day'+(D._left===1?'':'s'))+'</span>');
+  if(!D.clinical||!D.clinical.length) c.push('<span class="chip">Clinical not shared by link</span>');
+  $('#scopeBar').innerHTML=c.join('');
+})();
 $('#tiles').innerHTML=(D.tiles||[]).map(function(t){
   return '<div class="tile"><div class="k">'+t.k+'</div><div class="v">'+t.v+
     (t.u?'<span style="font-size:.68rem">'+t.u+'</span>':'')+'</div>'+
@@ -379,6 +438,49 @@ $('#splitBars').innerHTML=sp.map(function(s){
   $('#cadence').innerHTML=g;
   $('#cadenceTbl').innerHTML='<tr><th>Month</th><th>Sessions</th></tr>'+
     m.map(function(x){return '<tr><td>'+x.m+'</td><td>'+x.n+'</td></tr>'}).join('');
+})();
+
+/* ---- share per month: two series on the validated pair, direct-labelled ---- */
+(function(){
+  var S=D.share||[];
+  if(S.length<2){ var w=$('#shareWrap'); if(w) w.classList.add('hide'); return }
+  var W=640,H=230,PL=38,PR=52,PT=16,PB=32;
+  var mx=Math.max(30,Math.ceil(Math.max.apply(null,S.map(function(x){
+    return Math.max(x.legs,x.mob)}))/10)*10);
+  var X=function(i){return PL+i/(S.length-1)*(W-PL-PR)};
+  var Y=function(v){return PT+(1-v/mx)*(H-PT-PB)};
+  var g='';
+  [0,mx/2,mx].forEach(function(v){
+    g+='<line x1="'+PL+'" y1="'+Y(v)+'" x2="'+(W-PR)+'" y2="'+Y(v)+'" stroke="var(--hairline)"/>'+
+       '<text x="'+(PL-7)+'" y="'+(Y(v)+3.5)+'" text-anchor="end" fill="var(--faint)" font-size="9.5" '+
+       'font-family="ui-monospace,monospace">'+v+'%</text>';
+  });
+  /* reference lines: the 10-month averages the overall chart reports */
+  [['legsAvg','var(--rule)'],['mobAvg','var(--rule)']].forEach(function(r){
+    var v=D[r[0]]; if(v==null) return;
+    g+='<line x1="'+PL+'" y1="'+Y(v)+'" x2="'+(W-PR)+'" y2="'+Y(v)+
+       '" stroke="'+r[1]+'" stroke-width="1.5" stroke-dasharray="4 4"/>';
+  });
+  [['legs','var(--c1)','Legs'],['mob','var(--c2)','Mobility']].forEach(function(k){
+    g+='<polyline points="'+S.map(function(x,i){return X(i).toFixed(1)+','+Y(x[k[0]]).toFixed(1)}).join(' ')+
+      '" fill="none" stroke="'+k[1]+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    S.forEach(function(x,i){
+      var last=i===S.length-1;
+      g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(x[k[0]]).toFixed(1)+'" r="'+(last?4.5:3)+
+        '" fill="'+k[1]+'" stroke="var(--sunk)" stroke-width="2"/>';
+      if(last) g+='<text x="'+(W-PR+7)+'" y="'+(Y(x[k[0]])+4)+'" fill="'+k[1]+'" font-size="11" '+
+        'font-weight="600" font-family="ui-monospace,monospace">'+Math.round(x[k[0]])+'%</text>';
+    });
+  });
+  S.forEach(function(x,i){
+    if(i%2===0||i===S.length-1)
+      g+='<text x="'+X(i)+'" y="'+(H-10)+'" text-anchor="middle" fill="var(--faint)" font-size="9" '+
+        'font-family="ui-monospace,monospace">'+x.m.slice(2)+'</text>';
+  });
+  $('#shareChart').innerHTML=g;
+  $('#shareTbl').innerHTML='<tr><th>Month</th><th>Sessions</th><th>Legs</th><th>Mobility</th></tr>'+
+    S.map(function(x){return '<tr><td>'+x.m+'</td><td>'+x.n+'</td><td>'+Math.round(x.legs)+
+      '%</td><td>'+Math.round(x.mob)+'%</td></tr>'}).join('');
 })();
 
 /* ---- body: two series, two validated hues, both direct-labelled ---- */
@@ -423,8 +525,10 @@ $('#clinicalBody').innerHTML = (D.clinical&&D.clinical.length)
   ? '<div class="tblwrap"><table><tr><th>Marker</th><th>Latest</th><th>Logged</th><th>Cadence</th></tr>'+
     D.clinical.map(function(c){return '<tr><td>'+c.k+'</td><td>'+c.v+'</td><td>'+(c.d||'—')+
       '</td><td>'+(c.c||'—')+'</td></tr>'}).join('')+'</table></div>'
-  : '<p style="color:var(--muted)">No clinical values logged yet. The fields exist and are empty — '+
-    'that is a true statement about the record, not a gap in the page.</p>';
+  : '<p style="color:var(--muted)"><b>Clinical values are never encoded into a shared link.</b> '+
+    'The snapshot travels inside the URL, so anything put here would be readable by anyone the '+
+    'link reaches or is forwarded to, and would persist in chat logs and browser history. '+
+    'Bring these to the session, or share them through a channel meant for medical data.</p>';
 
 /* ---- the ask ---- */
 $('#askTbl').innerHTML='<tr><th>Who</th><th>Owns</th><th>Sees</th><th>Cadence</th></tr>'+
