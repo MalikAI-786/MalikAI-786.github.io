@@ -31,8 +31,11 @@ function loadPlaywright() {
 const { chromium } = loadPlaywright();
 const ROOT = path.resolve(__dirname, '../../../../mizan');
 const url = p => 'file://' + path.join(ROOT, p);
+// The published set. mizan/ledger/ is deliberately NOT here: the repo is
+// public, so the intoxicant ledger stays on a working branch and is never
+// deployed. If it reappears in this list, something republished it.
 const PAGES = ['index.html', 'day/index.html', 'khudi/index.html',
-               'badan/index.html', 'ledger/index.html', 'record/index.html'];
+               'badan/index.html', 'record/index.html', 'coach/index.html'];
 const PAGE = url('day/index.html');   // the page that carries the daily sheet
 
 const problems = [];
@@ -57,11 +60,14 @@ function check(name, cond, detail) {
       links: [...document.querySelectorAll('#navLinks a')].map(a => a.getAttribute('href')),
       foot: (document.querySelector('#footVer') || {}).textContent || '',
     }));
-    check(`${rel} builds its nav`, nav.links.length === 6, nav.links.join(','));
-    check(`${rel} boots the shared engine`, /^mizan\.v1/.test(nav.foot), nav.foot);
+    // coach/ is standalone and builds no nav of its own
+    if (rel !== 'coach/index.html')
+      check(`${rel} builds its nav`, nav.links.length === 5, nav.links.join(','));
+    if (rel !== 'coach/index.html')
+      check(`${rel} boots the shared engine`, /^mizan\.v1/.test(nav.foot), nav.foot);
   }
   // nav targets exist on disk
-  for (const rel of ['day', 'khudi', 'badan', 'ledger', 'record']) {
+  for (const rel of ['day', 'khudi', 'badan', 'record', 'coach']) {
     check(`${rel}/index.html exists`, require('fs').existsSync(path.join(ROOT, rel, 'index.html')));
   }
 
@@ -90,6 +96,8 @@ function check(name, cond, detail) {
     (await page.locator('#measureList .measure').count()) === 7);
   check('exactly one nav link is marked current', await page.evaluate(() =>
     document.querySelectorAll('#navLinks a.on').length === 1));
+  check('no published page links to the unpublished ledger', await page.evaluate(() =>
+    !document.body.innerHTML.includes('ledger/')));
 
   const times = await page.evaluate(() =>
     [...document.querySelectorAll('.pcell')].map(
@@ -129,21 +137,6 @@ function check(name, cond, detail) {
 
   const idx = await page.locator('#idxNum').innerText();
   check('index computes to a number', /^\d+$/.test(idx), idx);
-
-  // --- ledger ---
-  await page.goto(url('ledger/index.html')); await page.waitForTimeout(400);
-  await page.click('#addSession'); await page.waitForTimeout(200);
-  await page.selectOption('#sTrig', 'avoidance');
-  await page.click('#sSave'); await page.waitForTimeout(300);
-  check('session form closes after save', !(await page.locator('#sessForm').count()));
-  check('session appears in the ledger table',
-    (await page.locator('#sessionList table tr').count()) >= 2);
-  await page.click('[data-path="guard"]'); await page.waitForTimeout(200);
-  check('Path B renders a control-exception table',
-    (await page.locator('#pathPanel table tr').count()) >= 6);
-  await page.click('[data-path="taper"]'); await page.waitForTimeout(200);
-  check('Path A renders a taper schedule',
-    (await page.locator('#pathPanel table').count()) >= 1);
 
   // --- badan ---
   await page.evaluate(() => {

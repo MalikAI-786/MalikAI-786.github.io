@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Coach View · Mīzān</title>
+<meta name="description" content="Read-only coaching view. Data travels in the link fragment and is never stored or transmitted." />
+<link rel="manifest" href="../manifest.webmanifest" />
+<meta name="theme-color" content="#E0662E" />
+<link rel="apple-touch-icon" href="../../assets/brand/apple-touch-icon.png" />
+<style>
+:root{
+  --paper:#F6F3F0; --surface:#FFFFFF; --sunk:#EFEBE5; --hairline:#E2DAD3; --rule:#CFC6BC;
+  --ink:#14181C; --muted:#5A646E; --faint:#8B939B;
+  /* categorical: Ember 500 + Verdigris 300 — validated, all six checks pass */
+  --c1:#E0662E; --c2:#4FC0B2;
+  --ember-text:#AD4317; --verd-text:#0F5F5A;
+  --good:#0F5F5A; --warn:#AD4317;
+  --record:Charter,"Bitstream Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --statement:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --instrument:ui-monospace,"SF Mono",Menlo,"Cascadia Mono","Roboto Mono",monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0E1114; --surface:#14181C; --sunk:#171C21; --hairline:#242A31; --rule:#333B44;
+  --ink:#ECE7E1; --muted:#A6B0BA; --faint:#727C86;
+  --c1:#F58E5C; --c2:#4FC0B2; --ember-text:#F58E5C; --verd-text:#4FC0B2;
+  --good:#4FC0B2; --warn:#F58E5C;
+}}
+:root[data-theme="dark"]{
+  --paper:#0E1114; --surface:#14181C; --sunk:#171C21; --hairline:#242A31; --rule:#333B44;
+  --ink:#ECE7E1; --muted:#A6B0BA; --faint:#727C86;
+  --c1:#F58E5C; --c2:#4FC0B2; --ember-text:#F58E5C; --verd-text:#4FC0B2;
+  --good:#4FC0B2; --warn:#F58E5C;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--statement);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+h1,h2,h3{font-family:var(--record);font-weight:700;letter-spacing:-.015em;margin:0;text-wrap:balance;}
+.wrap{max-width:940px;margin:0 auto;padding:0 22px 80px;}
+
+/* ---------- top bar with the dropdown ---------- */
+.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--paper) 92%,transparent);
+  backdrop-filter:saturate(150%) blur(9px);border-bottom:1px solid var(--hairline);}
+.top-in{max-width:940px;margin:0 auto;padding:0 22px;height:60px;display:flex;
+  align-items:center;gap:14px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;}
+.brand img{width:26px;height:26px;border-radius:4px;display:block;}
+.brand b{font-size:.98rem;letter-spacing:-.01em;}
+.brand span{font-family:var(--instrument);font-size:.58rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--faint);display:block;margin-top:1px;}
+.spacer{flex:1;}
+.picker{position:relative;}
+.picker>button{font-family:var(--instrument);font-size:.7rem;letter-spacing:.08em;
+  text-transform:uppercase;padding:9px 13px;border:1px solid var(--rule);border-radius:3px;
+  background:var(--surface);color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:9px;}
+.picker>button:hover{border-color:var(--c1);color:var(--ember-text);}
+.picker>button .caret{font-size:.6rem;color:var(--faint);}
+.menu{position:absolute;right:0;top:calc(100% + 6px);min-width:230px;background:var(--surface);
+  border:1px solid var(--rule);border-radius:4px;box-shadow:0 12px 34px -14px rgba(20,25,30,.4);
+  padding:5px;display:none;}
+.menu.open{display:block;}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;
+  padding:9px 11px;border-radius:3px;cursor:pointer;color:var(--ink);font-size:.9rem;
+  font-family:var(--statement);}
+.menu button:hover{background:var(--sunk);}
+.menu button .d{display:block;font-size:.76rem;color:var(--muted);margin-top:1px;}
+.menu button.on{color:var(--ember-text);font-weight:600;}
+.menu .sep{height:1px;background:var(--hairline);margin:5px 0;}
+
+/* ---------- header ---------- */
+header{padding:38px 0 22px;border-bottom:2px solid var(--ink);}
+.eyebrow{font-family:var(--instrument);font-size:.62rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ember-text);margin:0 0 12px;}
+header h1{font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.1;margin-bottom:12px;max-width:20ch;}
+header p{color:var(--muted);max-width:60ch;margin:0;}
+
+/* ---------- tiles ---------- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;
+  background:var(--hairline);border:1px solid var(--hairline);margin:24px 0 0;}
+.tile{background:var(--surface);padding:13px 14px;}
+.tile .k{font-family:var(--instrument);font-size:.57rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:4px;}
+.tile .v{font-family:var(--instrument);font-size:1.44rem;font-weight:600;line-height:1;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
+.tile .n{font-size:.74rem;color:var(--muted);margin-top:4px;line-height:1.35;}
+
+section{padding:34px 0;border-bottom:1px solid var(--hairline);}
+section>h2{font-size:1.32rem;margin-bottom:6px;}
+section>.sub{color:var(--muted);max-width:62ch;margin:0 0 20px;}
+
+/* ---------- charts ---------- */
+.chart{background:var(--sunk);border:1px solid var(--hairline);border-radius:4px;padding:16px;}
+.chart h3{font-family:var(--instrument);font-size:.63rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:14px;}
+svg{display:block;width:100%;height:auto;overflow:visible;}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;color:var(--muted);margin-top:12px;}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:6px;
+  vertical-align:-1px;}
+.bars{display:grid;gap:8px;}
+.brow{display:grid;grid-template-columns:118px 1fr 78px;gap:11px;align-items:center;}
+.brow .l{font-family:var(--instrument);font-size:.66rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);text-align:right;}
+/* both must be block: a bare <span> is inline, so width/height silently do
+   nothing and the fill renders as a zero-size box on a full-width track. */
+.brow .t{display:block;height:14px;background:var(--surface);border-radius:2px;overflow:hidden;}
+.brow .f{display:block;height:100%;min-width:3px;background:var(--c1);border-radius:0 4px 4px 0;}
+.brow .n{font-family:var(--instrument);font-size:.72rem;color:var(--muted);
+  font-variant-numeric:tabular-nums;white-space:nowrap;}
+
+.tblwrap{overflow-x:auto;}
+table{border-collapse:collapse;width:100%;font-size:.87rem;min-width:420px;}
+th{font-family:var(--instrument);font-size:.57rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--faint);text-align:left;font-weight:500;padding:8px 13px 8px 0;
+  border-bottom:1px solid var(--rule);}
+td{padding:9px 13px 9px 0;border-bottom:1px solid var(--hairline);
+  font-variant-numeric:tabular-nums;vertical-align:top;}
+details{margin-top:14px;}
+summary{font-family:var(--instrument);font-size:.64rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;padding:6px 0;}
+
+.note{background:var(--sunk);border-left:2px solid var(--c1);padding:12px 15px;
+  font-size:.9rem;max-width:64ch;margin-top:16px;}
+.note b{font-family:var(--instrument);font-size:.6rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ember-text);display:block;margin-bottom:4px;}
+.fbrow{display:grid;grid-template-columns:74px 1fr;gap:11px;align-items:center;margin-bottom:9px;}
+.fbrow label{font-family:var(--instrument);font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);}
+select,textarea{font-family:var(--statement);font-size:.9rem;background:var(--surface);
+  color:var(--ink);border:1px solid var(--rule);border-radius:3px;padding:8px 10px;width:100%;}
+textarea{resize:vertical;line-height:1.5;}
+.fbbtns{display:flex;gap:9px;align-items:center;margin-top:12px;flex-wrap:wrap;}
+.fbbtns button{font-family:var(--instrument);font-size:.7rem;letter-spacing:.05em;padding:9px 14px;
+  border-radius:3px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);cursor:pointer;}
+.fbbtns button.primary{background:var(--c1);border-color:var(--c1);color:#fff;font-weight:600;}
+.fbbtns button:hover{border-color:var(--c1);}
+.fbbtns #fbMsg{font-family:var(--instrument);font-size:.68rem;color:var(--verd-text);}
+#fbOut{white-space:pre-wrap;font-family:var(--instrument);font-size:.74rem;line-height:1.6;
+  background:var(--surface);border:1px solid var(--hairline);border-radius:3px;padding:12px 14px;
+  margin:12px 0 0;color:var(--muted);display:none;overflow-x:auto;}
+#fbOut.show{display:block;}
+.scopebar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:14px;
+  font-family:var(--instrument);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;}
+.scopebar .chip{padding:4px 9px;border:1px solid var(--rule);border-radius:2px;color:var(--muted);}
+.scopebar .chip.live{border-color:var(--verd-text);color:var(--verd-text);}
+.scopebar .chip.soon{border-color:var(--c1);color:var(--ember-text);font-weight:600;}
+.empty{text-align:center;padding:70px 20px;color:var(--muted);}
+.empty h2{margin-bottom:10px;}
+.hide{display:none !important;}
+footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
+@media (max-width:640px){.brow{grid-template-columns:84px 1fr 70px;gap:8px;}
+  .brow .l{font-size:.6rem;}}
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="top-in">
+    <a class="brand" href="./">
+      <img src="../../assets/brand/avatars/yasir-a-malik/avatar-solid.svg" alt="" />
+      <span style="display:block"><b>Mīzān</b><span>Coach view</span></span>
+    </a>
+    <div class="spacer"></div>
+    <div class="picker">
+      <button id="viewBtn" aria-haspopup="true" aria-expanded="false">
+        <span id="viewLabel">Training</span><span class="caret">▾</span>
+      </button>
+      <div class="menu" id="viewMenu" role="menu">
+        <button data-view="training" role="menuitem">Training<span class="d">Sessions, split mix, adherence</span></button>
+        <button data-view="body" role="menuitem">Body<span class="d">Weight, measurements, ratio</span></button>
+        <button data-view="clinical" role="menuitem">Clinical<span class="d">Glucose, meds, sleep</span></button>
+        <div class="sep"></div>
+        <button data-view="all" role="menuitem">Everything<span class="d">All three panels</span></button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<div id="empty" class="empty">
+  <h2>No data in this link</h2>
+  <p>This page renders a snapshot carried in the link itself. Ask for a fresh link — the one you have is missing its data fragment, or it was truncated by an email client.</p>
+</div>
+
+<div id="expired" class="empty hide">
+  <h2>This link has expired</h2>
+  <p id="expiredWhen"></p>
+  <p style="margin-top:14px">Snapshots are deliberately short-lived: the data travels inside the link, so a link that lives forever is a health record that lives forever in every inbox it reaches. Ask for a fresh one.</p>
+</div>
+
+<div id="app" class="hide">
+
+<header>
+  <p class="eyebrow" id="scopeLine">Coaching snapshot</p>
+  <h1 id="headline">Training record</h1>
+  <p id="standfirst"></p>
+  <div class="tiles" id="tiles"></div>
+  <div class="scopebar" id="scopeBar"></div>
+</header>
+
+<section id="secTraining">
+  <h2>Where the time goes</h2>
+  <p class="sub">Every logged session, grouped into canonical splits. Percentages are of trained sessions and exclude no-shows.</p>
+  <div class="chart">
+    <h3>Split mix</h3>
+    <div class="bars" id="splitBars"></div>
+  </div>
+  <div class="chart" style="margin-top:14px">
+    <h3>Sessions per month</h3>
+    <svg id="cadence" viewBox="0 0 640 200" role="img" aria-label="Sessions logged per month"></svg>
+  </div>
+  <details>
+    <summary>Table view — sessions per month</summary>
+    <div class="tblwrap"><table id="cadenceTbl"></table></div>
+  </details>
+
+  <div class="chart" style="margin-top:14px" id="shareWrap">
+    <h3>Share of sessions per month — is the mix actually moving?</h3>
+    <svg id="shareChart" viewBox="0 0 640 230" role="img"
+      aria-label="Legs and mobility as a percentage of sessions, by month"></svg>
+    <div class="legend">
+      <span><i style="background:var(--c1)"></i>Legs</span>
+      <span><i style="background:var(--c2)"></i>Mobility</span>
+      <span><i style="background:var(--rule)"></i>10-month average</span>
+    </div>
+    <p style="font-size:.84rem;color:var(--muted);margin:12px 0 0;max-width:62ch">
+      The overall split mix answers <em>where did the time go</em>. It cannot answer
+      <em>is that changing</em>, because it has no month dimension. This does.</p>
+  </div>
+  <details>
+    <summary>Table view — share per month</summary>
+    <div class="tblwrap"><table id="shareTbl"></table></div>
+  </details>
+</section>
+
+<section id="secBody">
+  <h2>Body</h2>
+  <p class="sub">Measurement index. Irregular intervals are plotted on a real time axis, so gaps stay visible rather than being smoothed away.</p>
+  <div class="chart">
+    <h3>Weight and lower waist</h3>
+    <svg id="bodyChart" viewBox="0 0 640 240" role="img" aria-label="Weight and lower waist over time"></svg>
+    <div class="legend">
+      <span><i style="background:var(--c1)"></i>Weight (lb)</span>
+      <span><i style="background:var(--c2)"></i>Lower waist (in)</span>
+    </div>
+  </div>
+  <details>
+    <summary>Table view — measurement index</summary>
+    <div class="tblwrap"><table id="bodyTbl"></table></div>
+  </details>
+</section>
+
+<section id="secClinical">
+  <h2>Clinical</h2>
+  <p class="sub">Logged values only. No targets, no interpretation, and nothing here is a clinical recommendation — this panel exists so the person qualified to read it is looking at the same numbers.</p>
+  <div id="clinicalBody"></div>
+  <div class="note">
+    <b>Standing constraint</b>
+    Type-2 diabetes is on the record. Any change to fasting, training in a fasted state, or session timing relative to medication is a question for the prescribing clinician before it is a question for a coach. Voluntary fasting is switched off in the plan by default for this reason.
+  </div>
+</section>
+
+<section id="secAsk">
+  <h2>What is being asked of each of you</h2>
+  <div class="tblwrap"><table id="askTbl"></table></div>
+</section>
+
+<section id="secFeedback">
+  <h2>Ask for a change</h2>
+  <p class="sub">Anything on this page can be changed. Pick what it is about, write it plainly, and copy — it produces a structured instruction you can paste straight back into the chat that builds this.</p>
+  <div class="chart">
+    <div class="fbrow">
+      <label for="fbWhat">About</label>
+      <select id="fbWhat">
+        <option>The tiles at the top</option>
+        <option>Split mix chart</option>
+        <option>Sessions per month chart</option>
+        <option>Body / measurement chart</option>
+        <option>Clinical panel</option>
+        <option>Who-does-what table</option>
+        <option>The dropdown and views</option>
+        <option>Colours, type or layout</option>
+        <option>Something else</option>
+      </select>
+    </div>
+    <div class="fbrow">
+      <label for="fbKind">Kind</label>
+      <select id="fbKind">
+        <option>Change what it shows</option>
+        <option>Add something missing</option>
+        <option>Remove it</option>
+        <option>It is wrong</option>
+        <option>It is unclear</option>
+      </select>
+    </div>
+    <div class="fbrow">
+      <label for="fbWho">From</label>
+      <select id="fbWho"><option>Yasir</option><option>Tanveer</option><option>Second coach</option></select>
+    </div>
+    <label for="fbText" style="display:block;font-family:var(--instrument);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:14px 0 6px">In your words</label>
+    <textarea id="fbText" rows="3" placeholder="e.g. show legs share per month, not just overall — I want to see whether it is actually changing"></textarea>
+    <div class="fbbtns">
+      <button id="fbCopy" class="primary">Copy instruction</button>
+      <button id="fbClear">Clear</button>
+      <span id="fbMsg"></span>
+    </div>
+    <pre id="fbOut" aria-live="polite"></pre>
+  </div>
+</section>
+
+<footer id="prov"></footer>
+</div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var C1='var(--c1)', C2='var(--c2)';
+var pad=function(n){return String(n).padStart(2,'0')};
+
+/* ---- the snapshot travels in the fragment. It is never sent to a server:
+       browsers do not transmit the part after '#'. Nothing is stored here. ---- */
+function readFragment(){
+  var h=location.hash||'';
+  var m=h.match(/[#&]d=([^&]+)/);
+  if(!m) return null;
+  try{
+    var b=m[1].replace(/-/g,'+').replace(/_/g,'/');
+    var json=decodeURIComponent(escape(atob(b)));
+    return JSON.parse(json);
+  }catch(e){ console.warn('fragment decode failed',e); return null }
+}
+
+var D=readFragment();
+if(!D){ $('#empty').classList.remove('hide'); return }
+
+/* ---- Expiry. The snapshot IS the link, so an immortal link is an immortal
+   copy of a health record in every inbox it ever reaches. D.generated has
+   existed since the first version and nothing read it; now it gates render. ---- */
+var TTL=+(D.ttl||7);
+(function(){
+  if(!D.generated) return;
+  var made=Date.parse(D.generated+'T00:00:00');
+  if(isNaN(made)) return;
+  var age=Math.floor((Date.now()-made)/864e5);
+  D._age=age; D._left=Math.max(0,Math.min(TTL,TTL-age)); /* clamp: clock skew must not read as a longer life */
+  if(age>TTL){
+    $('#expiredWhen').textContent='Generated '+D.generated+' — '+age+
+      ' days ago. These expire after '+TTL+' days.';
+    $('#expired').classList.remove('hide');
+    $('#empty').classList.add('hide');
+    D=null;
+  }
+})();
+if(!D) return;
+$('#empty').classList.add('hide'); $('#app').classList.remove('hide');
+
+/* ---- view switching ---- */
+var VIEWS={training:['secTraining'],body:['secBody'],clinical:['secClinical'],
+           all:['secTraining','secBody','secClinical']};
+var LABEL={training:'Training',body:'Body',clinical:'Clinical',all:'Everything'};
+function setView(v){
+  var show=VIEWS[v]||VIEWS.training;
+  ['secTraining','secBody','secClinical'].forEach(function(id){
+    $('#'+id).classList.toggle('hide', show.indexOf(id)<0);
+  });
+  $('#viewLabel').textContent=LABEL[v]||'Training';
+  Array.prototype.forEach.call(document.querySelectorAll('#viewMenu button'),function(b){
+    b.classList.toggle('on', b.getAttribute('data-view')===v);
+  });
+  $('#headline').textContent={training:'Training record',body:'Body composition',
+    clinical:'Clinical log',all:'Full snapshot'}[v]||'Training record';
+  try{ localStorage.setItem('mizan.coachview',v) }catch(e){}
+}
+$('#viewBtn').addEventListener('click',function(e){
+  e.stopPropagation();
+  var m=$('#viewMenu'), open=m.classList.toggle('open');
+  $('#viewBtn').setAttribute('aria-expanded',open?'true':'false');
+});
+document.addEventListener('click',function(e){
+  var b=e.target.closest('#viewMenu button');
+  if(b){ setView(b.getAttribute('data-view')); $('#viewMenu').classList.remove('open'); return }
+  $('#viewMenu').classList.remove('open');
+});
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') $('#viewMenu').classList.remove('open') });
+
+/* ---- header ---- */
+$('#scopeLine').textContent=(D.scope||'Coaching snapshot')+' · generated '+(D.generated||'—');
+$('#standfirst').textContent=D.standfirst||'';
+(function(){
+  var c=[];
+  c.push('<span class="chip">Scope: '+(D.scopeKey||'training')+'</span>');
+  if(D.generated) c.push('<span class="chip">Generated '+D.generated+'</span>');
+  if(D._left!=null) c.push('<span class="chip '+(D._left<=2?'soon':'live')+'">'+
+    (D._left<=0?'expires today':'expires in '+D._left+' day'+(D._left===1?'':'s'))+'</span>');
+  if(!D.clinical||!D.clinical.length) c.push('<span class="chip">Clinical not shared by link</span>');
+  $('#scopeBar').innerHTML=c.join('');
+})();
+$('#tiles').innerHTML=(D.tiles||[]).map(function(t){
+  return '<div class="tile"><div class="k">'+t.k+'</div><div class="v">'+t.v+
+    (t.u?'<span style="font-size:.68rem">'+t.u+'</span>':'')+'</div>'+
+    (t.n?'<div class="n">'+t.n+'</div>':'')+'</div>'}).join('');
+
+/* ---- split mix: magnitude per category, so ONE hue, direct-labelled ---- */
+var sp=D.splits||[];
+var mx=sp.reduce(function(a,s){return Math.max(a,s.n)},1);
+$('#splitBars').innerHTML=sp.map(function(s){
+  return '<div class="brow"><span class="l">'+s.k+'</span>'+
+    '<span class="t"><span class="f" style="width:'+(s.n/mx*100).toFixed(1)+'%"></span></span>'+
+    '<span class="n">'+s.n+' · '+s.p+'%</span></div>'}).join('');
+
+/* ---- cadence: single series, 2px line, emphasised endpoint, no legend ---- */
+(function(){
+  var m=D.months||[]; if(!m.length) return;
+  var W=640,H=200,PL=34,PR=16,PT=14,PB=30;
+  var mx=Math.max.apply(null,m.map(function(x){return x.n}))||1;
+  var X=function(i){return PL+(m.length<2?0:i/(m.length-1)*(W-PL-PR))};
+  var Y=function(v){return PT+(1-v/mx)*(H-PT-PB)};
+  var g='';
+  [0,Math.round(mx/2),mx].forEach(function(v){
+    g+='<line x1="'+PL+'" y1="'+Y(v)+'" x2="'+(W-PR)+'" y2="'+Y(v)+'" stroke="var(--hairline)"/>'+
+       '<text x="'+(PL-7)+'" y="'+(Y(v)+3.5)+'" text-anchor="end" fill="var(--faint)" font-size="9.5" '+
+       'font-family="ui-monospace,monospace">'+v+'</text>';
+  });
+  g+='<polyline points="'+m.map(function(x,i){return X(i).toFixed(1)+','+Y(x.n).toFixed(1)}).join(' ')+
+     '" fill="none" stroke="'+C1+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+  m.forEach(function(x,i){
+    var last=i===m.length-1;
+    g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(x.n).toFixed(1)+'" r="'+(last?5:3.2)+'" fill="'+C1+
+       '" stroke="var(--sunk)" stroke-width="2"/>';
+    if(last) g+='<text x="'+(X(i)-8)+'" y="'+(Y(x.n)-11)+'" text-anchor="end" fill="var(--ember-text)" '+
+       'font-size="11" font-weight="600" font-family="ui-monospace,monospace">'+x.n+'</text>';
+    if(i%2===0||last) g+='<text x="'+X(i)+'" y="'+(H-9)+'" text-anchor="middle" fill="var(--faint)" '+
+       'font-size="9" font-family="ui-monospace,monospace">'+x.m.slice(2)+'</text>';
+  });
+  $('#cadence').innerHTML=g;
+  $('#cadenceTbl').innerHTML='<tr><th>Month</th><th>Sessions</th></tr>'+
+    m.map(function(x){return '<tr><td>'+x.m+'</td><td>'+x.n+'</td></tr>'}).join('');
+})();
+
+/* ---- share per month: two series on the validated pair, direct-labelled ---- */
+(function(){
+  var S=D.share||[];
+  if(S.length<2){ var w=$('#shareWrap'); if(w) w.classList.add('hide'); return }
+  var W=640,H=230,PL=38,PR=52,PT=16,PB=32;
+  var mx=Math.max(30,Math.ceil(Math.max.apply(null,S.map(function(x){
+    return Math.max(x.legs,x.mob)}))/10)*10);
+  var X=function(i){return PL+i/(S.length-1)*(W-PL-PR)};
+  var Y=function(v){return PT+(1-v/mx)*(H-PT-PB)};
+  var g='';
+  [0,mx/2,mx].forEach(function(v){
+    g+='<line x1="'+PL+'" y1="'+Y(v)+'" x2="'+(W-PR)+'" y2="'+Y(v)+'" stroke="var(--hairline)"/>'+
+       '<text x="'+(PL-7)+'" y="'+(Y(v)+3.5)+'" text-anchor="end" fill="var(--faint)" font-size="9.5" '+
+       'font-family="ui-monospace,monospace">'+v+'%</text>';
+  });
+  /* reference lines: the 10-month averages the overall chart reports */
+  [['legsAvg','var(--rule)'],['mobAvg','var(--rule)']].forEach(function(r){
+    var v=D[r[0]]; if(v==null) return;
+    g+='<line x1="'+PL+'" y1="'+Y(v)+'" x2="'+(W-PR)+'" y2="'+Y(v)+
+       '" stroke="'+r[1]+'" stroke-width="1.5" stroke-dasharray="4 4"/>';
+  });
+  [['legs','var(--c1)','Legs'],['mob','var(--c2)','Mobility']].forEach(function(k){
+    g+='<polyline points="'+S.map(function(x,i){return X(i).toFixed(1)+','+Y(x[k[0]]).toFixed(1)}).join(' ')+
+      '" fill="none" stroke="'+k[1]+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    S.forEach(function(x,i){
+      var last=i===S.length-1;
+      g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(x[k[0]]).toFixed(1)+'" r="'+(last?4.5:3)+
+        '" fill="'+k[1]+'" stroke="var(--sunk)" stroke-width="2"/>';
+      if(last) g+='<text x="'+(W-PR+7)+'" y="'+(Y(x[k[0]])+4)+'" fill="'+k[1]+'" font-size="11" '+
+        'font-weight="600" font-family="ui-monospace,monospace">'+Math.round(x[k[0]])+'%</text>';
+    });
+  });
+  S.forEach(function(x,i){
+    if(i%2===0||i===S.length-1)
+      g+='<text x="'+X(i)+'" y="'+(H-10)+'" text-anchor="middle" fill="var(--faint)" font-size="9" '+
+        'font-family="ui-monospace,monospace">'+x.m.slice(2)+'</text>';
+  });
+  $('#shareChart').innerHTML=g;
+  $('#shareTbl').innerHTML='<tr><th>Month</th><th>Sessions</th><th>Legs</th><th>Mobility</th></tr>'+
+    S.map(function(x){return '<tr><td>'+x.m+'</td><td>'+x.n+'</td><td>'+Math.round(x.legs)+
+      '%</td><td>'+Math.round(x.mob)+'%</td></tr>'}).join('');
+})();
+
+/* ---- body: two series, two validated hues, both direct-labelled ---- */
+(function(){
+  var M=(D.measures||[]).filter(function(x){return x.d});
+  if(M.length<2){ $('#bodyChart').innerHTML='<text x="14" y="110" fill="var(--faint)" font-size="12" '+
+    'font-family="ui-monospace,monospace">Not enough measurements to draw a trend.</text>'; }
+  else{
+    var W=640,H=240,PL=40,PR=48,PT=16,PB=30;
+    var t0=Date.parse(M[0].d), t1=Date.parse(M[M.length-1].d), span=Math.max(1,t1-t0);
+    var X=function(d){return PL+(Date.parse(d)-t0)/span*(W-PL-PR)};
+    var g='<line x1="'+PL+'" y1="'+(H-PB)+'" x2="'+(W-PR)+'" y2="'+(H-PB)+'" stroke="var(--hairline)"/>';
+    function series(key,col,side){
+      var p=M.filter(function(x){return x[key]!=null});
+      if(p.length<2) return '';
+      var vs=p.map(function(x){return +x[key]}),lo=Math.min.apply(null,vs),hi=Math.max.apply(null,vs);
+      if(hi-lo<1) hi=lo+1;
+      var padv=(hi-lo)*0.2; lo-=padv; hi+=padv;
+      var Y=function(v){return PT+(1-(v-lo)/(hi-lo))*(H-PT-PB)};
+      var s='<polyline points="'+p.map(function(x){return X(x.d).toFixed(1)+','+Y(+x[key]).toFixed(1)}).join(' ')+
+        '" fill="none" stroke="'+col+'" stroke-width="2" stroke-linejoin="round"/>';
+      p.forEach(function(x){s+='<circle cx="'+X(x.d).toFixed(1)+'" cy="'+Y(+x[key]).toFixed(1)+
+        '" r="4" fill="'+col+'" stroke="var(--sunk)" stroke-width="2"/>'});
+      var l=p[p.length-1];
+      s+='<text x="'+(W-PR+7)+'" y="'+(Y(+l[key])+4)+'" fill="'+col+'" font-size="11" font-weight="600" '+
+        'font-family="ui-monospace,monospace">'+l[key]+'</text>';
+      return s;
+    }
+    g+=series('w',C1)+series('lw',C2);
+    g+='<text x="'+PL+'" y="'+(H-9)+'" fill="var(--faint)" font-size="9" font-family="ui-monospace,monospace">'+M[0].d+'</text>'+
+       '<text x="'+(W-PR)+'" y="'+(H-9)+'" text-anchor="end" fill="var(--faint)" font-size="9" '+
+       'font-family="ui-monospace,monospace">'+M[M.length-1].d+'</text>';
+    $('#bodyChart').innerHTML=g;
+  }
+  $('#bodyTbl').innerHTML='<tr><th>Date</th><th>Weight</th><th>Lower waist</th><th>Shoulders</th><th>Thigh</th></tr>'+
+    M.map(function(x){return '<tr><td>'+x.d+'</td><td>'+(x.w||'—')+'</td><td>'+(x.lw||'—')+
+      '</td><td>'+(x.sh||'—')+'</td><td>'+(x.th||'—')+'</td></tr>'}).join('');
+})();
+
+/* ---- clinical ---- */
+$('#clinicalBody').innerHTML = (D.clinical&&D.clinical.length)
+  ? '<div class="tblwrap"><table><tr><th>Marker</th><th>Latest</th><th>Logged</th><th>Cadence</th></tr>'+
+    D.clinical.map(function(c){return '<tr><td>'+c.k+'</td><td>'+c.v+'</td><td>'+(c.d||'—')+
+      '</td><td>'+(c.c||'—')+'</td></tr>'}).join('')+'</table></div>'
+  : '<p style="color:var(--muted)"><b>Clinical values are never encoded into a shared link.</b> '+
+    'The snapshot travels inside the URL, so anything put here would be readable by anyone the '+
+    'link reaches or is forwarded to, and would persist in chat logs and browser history. '+
+    'Bring these to the session, or share them through a channel meant for medical data.</p>';
+
+/* ---- the ask ---- */
+$('#askTbl').innerHTML='<tr><th>Who</th><th>Owns</th><th>Sees</th><th>Cadence</th></tr>'+
+  (D.asks||[]).map(function(a){return '<tr><td><b>'+a.who+'</b></td><td>'+a.owns+'</td><td>'+
+    a.sees+'</td><td>'+a.cad+'</td></tr>'}).join('');
+
+$('#prov').innerHTML=D.prov||'';
+
+/* Change requests: compose a structured, paste-ready instruction. Deliberately
+   no network — the page has no backend and is not going to grow one. */
+function compose(){
+  var t=$('#fbText').value.trim();
+  return ['CHANGE REQUEST — Mizan coach view',
+    'From: '+$('#fbWho').value,
+    'About: '+$('#fbWhat').value,
+    'Kind: '+$('#fbKind').value,
+    'View when raised: '+($('#viewLabel').textContent||'—'),
+    'Snapshot generated: '+(D.generated||'—'),
+    '',
+    t||'(no detail written)'].join('\n');
+}
+$('#fbCopy').addEventListener('click',function(){
+  var out=compose();
+  $('#fbOut').textContent=out; $('#fbOut').classList.add('show');
+  function ok(){ $('#fbMsg').textContent='Copied — paste it into the chat.';
+    setTimeout(function(){$('#fbMsg').textContent=''},4000) }
+  function fallback(){
+    var ta=document.createElement('textarea'); ta.value=out;
+    ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta);
+    ta.select(); try{ document.execCommand('copy'); ok() }
+    catch(e){ $('#fbMsg').textContent='Select the text below and copy.' }
+    document.body.removeChild(ta);
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(out).then(ok,fallback);
+  } else fallback();
+});
+$('#fbClear').addEventListener('click',function(){
+  $('#fbText').value=''; $('#fbOut').classList.remove('show'); $('#fbMsg').textContent='';
+});
+
+var saved=null; try{ saved=localStorage.getItem('mizan.coachview') }catch(e){}
+setView(D.view||saved||'training');
+})();
+</script>
+</body>
+</html>
