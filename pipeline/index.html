@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Pipeline — roles, content, and what each converts</title>
+<meta name="description" content="Private instrument: the outward pipeline. Roles found, applied, rejected; posts shipped and what they returned. All data stays in this browser." />
+<link rel="icon" href="../assets/brand/favicon.svg" type="image/svg+xml" />
+<style>
+/* ===================================================================
+   PIPELINE — the outward instrument
+   Mīzān audits the self. This audits the work leaving the building.
+   Same contract: no network, no data in the repo, localStorage only.
+   Self-contained on purpose — it must work from file://, offline.
+   =================================================================== */
+:root{
+  color-scheme: dark light;
+  --ground:#0b1015; --surface:#121a21; --raise:#18222c; --sunk:#0d141a;
+  --ink:#e6ecf1; --muted:#93a1ae; --faint:#65727f; --line:#1f2c39; --line2:#2b3a49;
+  --accent:#45aab4; --accent2:#63c2cb; --accent-wash:rgba(69,170,180,.11);
+  --ember:#E0662E; --ember-tint:#F58E5C; --ember-wash:rgba(224,102,46,.10);
+  --signal:#e0a244; --bad:#d4664f; --good:#4fa87a;
+  --mono:ui-monospace,"SF Mono",Menlo,"Cascadia Mono","Roboto Mono",monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --radius:5px; --maxw:1180px;
+}
+:root[data-theme="light"]{
+  color-scheme: light;
+  --ground:#f2f0ea; --surface:#fffefb; --raise:#eae7de; --sunk:#e6e2d8;
+  --ink:#161d22; --muted:#57626d; --faint:#818c97; --line:#dcd7cb; --line2:#c9c3b4;
+  --accent:#0b5d66; --accent2:#094a52; --accent-wash:rgba(11,93,102,.08);
+  --ember:#AD4317; --ember-tint:#AD4317; --ember-wash:rgba(173,67,23,.09);
+  --signal:#a15c00; --bad:#a63a22; --good:#2f7550;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+  line-height:1.6;-webkit-font-smoothing:antialiased;}
+h1,h2,h3{letter-spacing:-.02em;margin:0;}
+a{color:var(--accent2);}
+button,input,select,textarea{font-family:inherit;font-size:inherit;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px;}
+.mono{font-family:var(--mono);}
+.tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);}
+.eyebrow{font-family:var(--mono);font-size:.65rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 12px;
+  display:flex;align-items:center;gap:10px;}
+.eyebrow::before{content:"";width:16px;border-top:1.5px solid var(--accent);}
+.small{font-size:.83rem;color:var(--muted);}
+.tiny{font-size:.72rem;color:var(--faint);line-height:1.5;}
+
+nav.top{position:sticky;top:0;z-index:80;border-bottom:1px solid var(--line);
+  background:color-mix(in srgb, var(--ground) 92%, transparent);
+  backdrop-filter:saturate(150%) blur(10px);border-top:3px solid var(--ember);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  height:56px;max-width:var(--maxw);margin:0 auto;padding:0 22px;}
+.brand{font-family:var(--mono);font-size:.9rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink);text-decoration:none;font-weight:600;}
+.brand em{color:var(--ember);font-style:normal;}
+.icon-btn{background:var(--surface);border:1px solid var(--line);color:var(--muted);
+  border-radius:var(--radius);padding:7px 12px;cursor:pointer;font-size:.8rem;}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent2);}
+
+header.hero{padding:34px 0 22px;}
+h1{font-size:clamp(1.6rem,3.6vw,2.2rem);margin:0 0 12px;}
+.lede{font-family:var(--serif);font-size:1rem;line-height:1.66;color:var(--muted);
+  max-width:70ch;margin:0;}
+.lede strong{color:var(--ink);font-weight:600;}
+
+section{padding:26px 0;border-top:1px solid var(--line);}
+h2{font-size:1.15rem;margin:0 0 4px;}
+.sub{color:var(--muted);font-size:.88rem;margin:0 0 18px;max-width:70ch;}
+
+/* headline figures */
+.figures{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));}
+.fig{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+  padding:15px 17px;}
+.fig .num{font-family:var(--mono);font-size:2rem;font-weight:600;line-height:1.1;
+  color:var(--ink);}
+.fig .num.dim{color:var(--faint);}
+.fig .lbl{margin-top:5px;}
+.fig .foot{margin-top:7px;font-size:.72rem;color:var(--faint);line-height:1.45;}
+
+/* board */
+.board{display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  align-items:start;}
+.col{background:var(--sunk);border:1px solid var(--line);border-radius:var(--radius);
+  padding:11px;min-height:96px;}
+.col-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+  margin-bottom:10px;}
+.col-head .n{font-family:var(--mono);font-size:1rem;font-weight:600;color:var(--accent2);}
+.col[data-stage="rejected"] .col-head .n{color:var(--bad);}
+.col[data-stage="offer"] .col-head .n{color:var(--good);}
+.card{background:var(--surface);border:1px solid var(--line2);border-radius:4px;
+  padding:9px 10px;margin-bottom:7px;}
+.card:last-child{margin-bottom:0;}
+.card .t{font-size:.85rem;font-weight:600;line-height:1.35;}
+.card .o{font-size:.75rem;color:var(--muted);margin-top:2px;}
+.card .m{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;align-items:center;}
+.card.syn{border-style:dashed;opacity:.72;}
+.pill{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:2px 6px;border-radius:3px;border:1px solid var(--line2);color:var(--faint);}
+.pill.syn{border-color:var(--signal);color:var(--signal);}
+.empty{color:var(--faint);font-size:.78rem;font-style:italic;padding:6px 2px;}
+
+/* funnel */
+.funnel{display:grid;gap:9px;max-width:640px;}
+.step{display:grid;grid-template-columns:150px 1fr 96px;gap:12px;align-items:center;}
+.step .name{font-size:.85rem;color:var(--muted);}
+.bar{height:22px;background:var(--sunk);border:1px solid var(--line);border-radius:3px;
+  overflow:hidden;}
+.bar i{display:block;height:100%;background:var(--accent);opacity:.75;}
+.step .val{font-family:var(--mono);font-size:.82rem;text-align:right;color:var(--ink);}
+.step .val span{color:var(--faint);font-size:.72rem;}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:.84rem;}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);
+  vertical-align:top;}
+th{font-family:var(--mono);font-size:.61rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--faint);font-weight:500;}
+td.num,th.num{text-align:right;font-family:var(--mono);}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+
+/* forms */
+.panel{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+  padding:16px 17px;}
+.grid-f{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));}
+label{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:4px;}
+input,select,textarea{width:100%;background:var(--sunk);border:1px solid var(--line2);
+  color:var(--ink);border-radius:4px;padding:8px 10px;font-size:.86rem;}
+textarea{min-height:64px;resize:vertical;}
+.btn{background:var(--accent);color:#04191c;border:1px solid var(--accent);
+  border-radius:var(--radius);padding:9px 16px;font-family:var(--mono);font-size:.72rem;
+  letter-spacing:.08em;text-transform:uppercase;font-weight:700;cursor:pointer;}
+.btn:hover{background:var(--accent2);border-color:var(--accent2);}
+.btn.ghost{background:transparent;color:var(--muted);border-color:var(--line2);}
+.btn.ghost:hover{color:var(--accent2);border-color:var(--accent);background:transparent;}
+.btn.danger{background:transparent;color:var(--bad);border-color:var(--bad);}
+.btn-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px;align-items:center;}
+
+.note{border:1px solid var(--line);border-left:3px solid var(--ember);
+  background:var(--surface);border-radius:0 var(--radius) var(--radius) 0;
+  padding:14px 17px;font-size:.86rem;color:var(--muted);line-height:1.6;max-width:74ch;}
+.note b{color:var(--ink);}
+.note.warn{border-left-color:var(--signal);}
+
+footer.foot{padding:24px 0 40px;border-top:1px solid var(--line);margin-top:8px;}
+@media (max-width:620px){
+  .step{grid-template-columns:104px 1fr 74px;gap:8px;}
+  .step .name{font-size:.78rem;}
+}
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="./">Pipeline<em>.</em></a>
+    <div style="display:flex;gap:8px">
+      <button class="icon-btn" id="themeBtn" title="Toggle theme">◐</button>
+      <button class="icon-btn" id="demoBtn">Load demo</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Private instrument · outward</p>
+  <h1>Roles, content, and what each one converts.</h1>
+  <p class="lede">Mīzān audits the self. This audits the work that leaves the building —
+  what was applied for, what came back, what was published and what it returned.
+  <strong>Every figure here is a claim about a real person, so none of it is stored
+  anywhere but this browser.</strong> No network request is made by this page.</p>
+</header>
+
+<!-- ===================== HEADLINE FIGURES ===================== -->
+<section>
+  <h2>Where things stand</h2>
+  <p class="sub">Counts exclude demonstration data. A number that would be a claim about
+  you is never computed from synthetic rows.</p>
+  <div class="figures" id="figures"></div>
+</section>
+
+<!-- ===================== THE BOARD ===================== -->
+<section>
+  <h2>The board</h2>
+  <p class="sub">Stage is where a role actually is, not where it was left. Anything not
+  touched in 30 days is flagged — a stalled application is a rejection that has not been
+  written down yet.</p>
+  <div class="board" id="board"></div>
+</section>
+
+<!-- ===================== FUNNEL ===================== -->
+<section>
+  <h2>What converts</h2>
+  <p class="sub">The only honest way to read a rejection is against the base rate. Below
+  about 20 applications these ratios are noise, and the panel says so rather than
+  drawing a conclusion for you.</p>
+  <div class="funnel" id="funnel"></div>
+  <div id="funnelNote" style="margin-top:16px"></div>
+</section>
+
+<!-- ===================== REJECTIONS ===================== -->
+<section>
+  <h2>Where it ends, and why</h2>
+  <p class="sub">Recorded reasons only. An unrecorded reason is left blank rather than
+  guessed at — the point of the panel is to show you what you actually know.</p>
+  <div class="scroll"><table id="reasons"></table></div>
+</section>
+
+<!-- ===================== CONTENT LEDGER ===================== -->
+<section>
+  <h2>Content ledger</h2>
+  <p class="sub">Mirrors <span class="mono">tools/linkedin/posted.md</span>. Two per week,
+  Tuesday and Thursday. Subscribers and enquiries are what this feed is for; impressions
+  are the vanity column and are shown last on purpose.</p>
+  <div class="scroll"><table id="ledger"></table></div>
+  <div id="ledgerNote" style="margin-top:16px"></div>
+</section>
+
+<!-- ===================== ENTRY ===================== -->
+<section>
+  <h2>Add</h2>
+  <div class="grid-f" style="grid-template-columns:1fr;gap:16px">
+
+    <div class="panel">
+      <div class="tag" style="margin-bottom:12px">Role</div>
+      <div class="grid-f">
+        <div><label for="rTitle">Title</label><input id="rTitle" placeholder="Director, AI Governance" /></div>
+        <div><label for="rOrg">Organisation</label><input id="rOrg" placeholder="Optional" /></div>
+        <div><label for="rSource">Source</label><input id="rSource" placeholder="Indeed, referral, direct" /></div>
+        <div><label for="rStage">Stage</label><select id="rStage"></select></div>
+        <div><label for="rDate">Date of this stage</label><input id="rDate" type="date" /></div>
+        <div><label for="rReason">Reason, if closed</label><input id="rReason" placeholder="Left blank if not known" /></div>
+      </div>
+      <div class="btn-row"><button class="btn" id="addRole">Add role</button></div>
+    </div>
+
+    <div class="panel">
+      <div class="tag" style="margin-bottom:12px">Post</div>
+      <div class="grid-f">
+        <div><label for="pDate">Date</label><input id="pDate" type="date" /></div>
+        <div><label for="pItem">Item</label><input id="pItem" placeholder="M1, record, live" /></div>
+        <div><label for="pFormat">Format</label><select id="pFormat"></select></div>
+        <div><label for="pLink">Link placement</label><select id="pLink"></select></div>
+        <div><label for="pImpr">Impressions</label><input id="pImpr" type="number" min="0" placeholder="" /></div>
+        <div><label for="pSubs">Subscribers</label><input id="pSubs" type="number" min="0" placeholder="" /></div>
+        <div><label for="pEnq">Speaking enquiries</label><input id="pEnq" type="number" min="0" placeholder="" /></div>
+      </div>
+      <div class="btn-row"><button class="btn" id="addPost">Add post</button></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== DATA ===================== -->
+<section>
+  <h2>Data</h2>
+  <p class="sub">Everything lives in this browser's local storage under one key. Export
+  writes a file to your machine. Nothing is transmitted, and there is no server to
+  transmit to.</p>
+  <div class="btn-row">
+    <button class="btn ghost" id="exportBtn">Export JSON</button>
+    <label for="importFile" style="margin:0"><span class="btn ghost" id="importLabel" role="button" tabindex="0">Import JSON</span></label>
+    <input id="importFile" type="file" accept="application/json,.json" style="display:none;width:auto" />
+    <button class="btn ghost" id="clearDemo">Remove demo rows</button>
+    <button class="btn danger" id="resetBtn">Erase everything</button>
+  </div>
+  <p class="tiny" id="dataStatus" style="margin-top:12px"></p>
+
+  <div class="note warn" style="margin-top:20px">
+    <b>This page is unlinked and carries a noindex tag. That is courtesy to crawlers, not
+    protection.</b> The file itself is public, because every branch of this repository is
+    public. The protection is architectural instead: no application, rejection, employer or
+    figure you enter here is ever written to a file that git can see. If you want a record
+    off this device, use Export and put the file somewhere private.
+  </div>
+</section>
+
+<footer class="foot">
+  <p class="tiny">Private instrument · no network · data in this browser only.
+  <a href="../index.html">The site</a></p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var KEY = "pipeline.v1";
+  var STAGES = [
+    {id:"found",     label:"Found"},
+    {id:"applied",   label:"Applied"},
+    {id:"screening", label:"Screening"},
+    {id:"interview", label:"Interview"},
+    {id:"offer",     label:"Offer"},
+    {id:"rejected",  label:"Rejected"},
+    {id:"withdrawn", label:"Withdrawn"}
+  ];
+  var BOARD_STAGES = ["found","applied","screening","interview","offer","rejected"];
+  var FORMATS = ["text","image","document","video"];
+  var LINKS = ["comment","body"];
+  var STALE_DAYS = 30;
+  var MIN_N = 20; // below this, conversion ratios are not reported as findings
+
+  // ---------- storage ----------
+  function blank(){ return {v:1, roles:[], posts:[]}; }
+
+  function load(){
+    try{
+      var raw = localStorage.getItem(KEY);
+      if(!raw) return blank();
+      var d = JSON.parse(raw);
+      if(!d || typeof d !== "object") return blank();
+      if(!Array.isArray(d.roles)) d.roles = [];
+      if(!Array.isArray(d.posts)) d.posts = [];
+      return d;
+    }catch(e){ return blank(); }
+  }
+
+  function save(){
+    try{
+      localStorage.setItem(KEY, JSON.stringify(state));
+      status("Saved locally · " + state.roles.length + " roles, " + state.posts.length + " posts.");
+    }catch(e){
+      status("Could not save — local storage unavailable or full. Export before reloading.");
+    }
+  }
+
+  var state = load();
+
+  function status(msg){
+    var el = document.getElementById("dataStatus");
+    if(el) el.textContent = msg;
+  }
+
+  // ---------- helpers ----------
+  function el(tag, cls, text){
+    var n = document.createElement(tag);
+    if(cls) n.className = cls;
+    if(text !== undefined && text !== null) n.textContent = String(text);
+    return n;
+  }
+  function real(list){ return list.filter(function(r){ return !r.synthetic; }); }
+  function today(){ return new Date().toISOString().slice(0,10); }
+  function daysBetween(a, b){
+    var t1 = Date.parse(a), t2 = Date.parse(b);
+    if(isNaN(t1) || isNaN(t2)) return null;
+    return Math.round((t2 - t1) / 86400000);
+  }
+  function pct(n, d){
+    if(!d) return null;
+    return Math.round((n / d) * 100);
+  }
+  function median(nums){
+    var a = nums.filter(function(x){ return typeof x === "number" && !isNaN(x); })
+                .sort(function(x,y){ return x - y; });
+    if(!a.length) return null;
+    var m = Math.floor(a.length / 2);
+    return a.length % 2 ? a[m] : Math.round((a[m-1] + a[m]) / 2);
+  }
+  function sum(list, k){
+    return list.reduce(function(t,r){
+      var v = Number(r[k]);
+      return t + (isNaN(v) ? 0 : v);
+    }, 0);
+  }
+  // A role has "reached" a stage if it is there now or has moved past it.
+  // `rejected` and `withdrawn` are outcomes, not positions — they carry no rank.
+  // A closed role's rank therefore has to come from `peak`, the furthest live
+  // stage it actually got to. Without this, a role entered straight as rejected
+  // would never count as applied, and every ratio below would be computed
+  // against a base that silently excludes exactly the cases that closed.
+  var ORDER = {found:0, applied:1, screening:2, interview:3, offer:4};
+  var CLOSED = {rejected:1, withdrawn:1};
+
+  function rank(role){
+    if(ORDER[role.peak] !== undefined) return ORDER[role.peak];
+    if(ORDER[role.stage] !== undefined) return ORDER[role.stage];
+    // Closed with no usable peak. You cannot be rejected from something you did
+    // not apply for, so applied is the floor — but only claim it if there is a
+    // date to support it, otherwise the row stays uncounted rather than assumed.
+    if(CLOSED[role.stage] && role.applied) return ORDER.applied;
+    return -1;
+  }
+
+  function reached(role, stageId){
+    var target = ORDER[stageId];
+    if(target === undefined) return false;
+    return rank(role) >= target;
+  }
+
+  // ---------- figures ----------
+  function renderFigures(){
+    var host = document.getElementById("figures");
+    if(!host) return;
+    host.innerHTML = "";
+
+    var roles = real(state.roles);
+    var posts = real(state.posts);
+    var live = roles.filter(function(r){
+      return ["applied","screening","interview","offer"].indexOf(r.stage) > -1;
+    });
+    var stale = live.filter(function(r){
+      var d = daysBetween(r.date, today());
+      return d !== null && d > STALE_DAYS;
+    });
+
+    var figs = [
+      {n: live.length, l:"Live applications",
+       f: stale.length ? (stale.length + " untouched for " + STALE_DAYS + "+ days") : "None stalled"},
+      {n: roles.filter(function(r){return r.stage==="rejected";}).length, l:"Closed — rejected",
+       f:"Recorded outcomes only"},
+      {n: posts.length, l:"Posts shipped",
+       f:"Two per week is the committed rate"},
+      {n: sum(posts,"subs"), l:"Subscribers attributed",
+       f:"The asset that compounds"},
+      {n: sum(posts,"enquiries"), l:"Speaking enquiries",
+       f:"Rare, and worth more than reach"}
+    ];
+
+    figs.forEach(function(f){
+      var box = el("div","fig");
+      var num = el("div","num" + (f.n ? "" : " dim"), f.n);
+      box.appendChild(num);
+      box.appendChild(el("div","tag lbl", f.l));
+      box.appendChild(el("div","foot", f.f));
+      host.appendChild(box);
+    });
+  }
+
+  // ---------- board ----------
+  function renderBoard(){
+    var host = document.getElementById("board");
+    if(!host) return;
+    host.innerHTML = "";
+
+    BOARD_STAGES.forEach(function(sid){
+      var meta = STAGES.filter(function(s){ return s.id === sid; })[0];
+      var items = state.roles.filter(function(r){ return r.stage === sid; });
+      var col = el("div","col");
+      col.setAttribute("data-stage", sid);
+
+      var head = el("div","col-head");
+      head.appendChild(el("span","tag", meta ? meta.label : sid));
+      head.appendChild(el("span","n", real(items).length));
+      col.appendChild(head);
+
+      if(!items.length){
+        col.appendChild(el("div","empty","—"));
+      } else {
+        items.forEach(function(r){
+          var card = el("div","card" + (r.synthetic ? " syn" : ""));
+          card.appendChild(el("div","t", r.title || "Untitled role"));
+          if(r.org) card.appendChild(el("div","o", r.org));
+          var m = el("div","m");
+          if(r.source) m.appendChild(el("span","pill", r.source));
+          var d = daysBetween(r.date, today());
+          if(d !== null && d > STALE_DAYS &&
+             ["applied","screening","interview"].indexOf(sid) > -1){
+            var p = el("span","pill", d + "d quiet");
+            p.style.borderColor = "var(--signal)";
+            p.style.color = "var(--signal)";
+            m.appendChild(p);
+          }
+          if(r.synthetic) m.appendChild(el("span","pill syn","demo"));
+          if(m.childNodes.length) card.appendChild(m);
+          if(r.reason) card.appendChild(el("div","tiny", r.reason));
+          col.appendChild(card);
+        });
+      }
+      host.appendChild(col);
+    });
+  }
+
+  // ---------- funnel ----------
+  function renderFunnel(){
+    var host = document.getElementById("funnel");
+    var note = document.getElementById("funnelNote");
+    if(!host || !note) return;
+    host.innerHTML = "";
+    note.innerHTML = "";
+
+    var roles = real(state.roles);
+    var steps = [
+      {id:"applied",   name:"Applied"},
+      {id:"screening", name:"Reached screening"},
+      {id:"interview", name:"Reached interview"},
+      {id:"offer",     name:"Reached offer"}
+    ];
+
+    var base = roles.filter(function(r){ return reached(r,"applied"); }).length;
+
+    steps.forEach(function(s){
+      var n = roles.filter(function(r){ return reached(r, s.id); }).length;
+      var row = el("div","step");
+      row.appendChild(el("div","name", s.name));
+      var bar = el("div","bar");
+      var fill = el("i");
+      fill.style.width = (base ? Math.round((n / base) * 100) : 0) + "%";
+      bar.appendChild(fill);
+      row.appendChild(bar);
+      var val = el("div","val", String(n));
+      if(s.id !== "applied" && base){
+        var p = pct(n, base);
+        var span = el("span", null, "  " + (p === null ? "—" : p + "%"));
+        val.appendChild(span);
+      }
+      row.appendChild(val);
+      host.appendChild(row);
+    });
+
+    var box = el("div","note");
+    if(base < MIN_N){
+      box.innerHTML = "<b>" + base + " applications recorded. Too few to read.</b> " +
+        "Conversion ratios below roughly " + MIN_N + " are noise, and the temptation to " +
+        "conclude early is exactly the failure this whole practice argues against. " +
+        "The bars are shown so the shape is visible. They are not yet a finding.";
+    } else {
+      var med = median(roles.filter(function(r){ return r.stage === "rejected" && r.applied; })
+                            .map(function(r){ return daysBetween(r.applied, r.date); }));
+      box.innerHTML = "<b>" + base + " applications recorded.</b> Ratios are now readable, " +
+        "with the usual caution that they describe what happened, not what will. " +
+        (med !== null ? "Median time from application to a recorded rejection: " +
+          med + " days." : "No rejection carries both an application and a close date, " +
+          "so time-to-close cannot be computed.");
+    }
+    note.appendChild(box);
+  }
+
+  // ---------- rejections ----------
+  function renderReasons(){
+    var t = document.getElementById("reasons");
+    if(!t) return;
+    t.innerHTML = "";
+
+    var closed = real(state.roles).filter(function(r){
+      return r.stage === "rejected" || r.stage === "withdrawn";
+    });
+
+    var head = el("tr");
+    ["Reason","Stage reached","Count"].forEach(function(h,i){
+      var th = el("th", i === 2 ? "num" : null, h);
+      head.appendChild(th);
+    });
+    var thead = el("thead"); thead.appendChild(head); t.appendChild(thead);
+
+    var tbody = el("tbody");
+    if(!closed.length){
+      var tr = el("tr");
+      var td = el("td", null, "Nothing closed yet. This table fills itself in as outcomes are recorded.");
+      td.colSpan = 3; td.style.color = "var(--faint)"; td.style.fontStyle = "italic";
+      tr.appendChild(td); tbody.appendChild(tr);
+    } else {
+      var groups = {};
+      closed.forEach(function(r){
+        var reason = (r.reason || "").trim() || "Not recorded";
+        var peak = r.peak || r.stage;
+        var k = reason + "||" + peak;
+        groups[k] = (groups[k] || 0) + 1;
+      });
+      Object.keys(groups).sort(function(a,b){ return groups[b]-groups[a]; }).forEach(function(k){
+        var parts = k.split("||");
+        var tr = el("tr");
+        var td0 = el("td", null, parts[0]);
+        if(parts[0] === "Not recorded"){ td0.style.color = "var(--faint)"; td0.style.fontStyle = "italic"; }
+        tr.appendChild(td0);
+        tr.appendChild(el("td", null, parts[1]));
+        tr.appendChild(el("td","num", groups[k]));
+        tbody.appendChild(tr);
+      });
+    }
+    t.appendChild(tbody);
+  }
+
+  // ---------- ledger ----------
+  function renderLedger(){
+    var t = document.getElementById("ledger");
+    var note = document.getElementById("ledgerNote");
+    if(!t || !note) return;
+    t.innerHTML = ""; note.innerHTML = "";
+
+    var cols = ["Date","Item","Format","Link","Subs","Enq.","Impr."];
+    var head = el("tr");
+    cols.forEach(function(h,i){
+      head.appendChild(el("th", i >= 4 ? "num" : null, h));
+    });
+    var thead = el("thead"); thead.appendChild(head); t.appendChild(thead);
+
+    var tbody = el("tbody");
+    var posts = state.posts.slice().sort(function(a,b){
+      return String(b.date).localeCompare(String(a.date));
+    });
+
+    if(!posts.length){
+      var tr = el("tr");
+      var td = el("td", null, "Nothing posted yet. queue/001 is drafted and waiting.");
+      td.colSpan = cols.length; td.style.color = "var(--faint)"; td.style.fontStyle = "italic";
+      tr.appendChild(td); tbody.appendChild(tr);
+    } else {
+      posts.forEach(function(p){
+        var tr = el("tr");
+        if(p.synthetic) tr.style.opacity = ".68";
+        var d = el("td", null, p.date || "—");
+        if(p.synthetic){
+          var s = el("span","pill syn","demo");
+          s.style.marginLeft = "7px";
+          d.appendChild(s);
+        }
+        tr.appendChild(d);
+        tr.appendChild(el("td", null, p.item || "—"));
+        tr.appendChild(el("td", null, p.format || "—"));
+        tr.appendChild(el("td", null, p.link || "—"));
+        tr.appendChild(el("td","num", p.subs != null ? p.subs : "—"));
+        tr.appendChild(el("td","num", p.enquiries != null ? p.enquiries : "—"));
+        tr.appendChild(el("td","num", p.impressions != null ? p.impressions : "—"));
+        tbody.appendChild(tr);
+      });
+    }
+    t.appendChild(tbody);
+
+    var n = real(state.posts).length;
+    var box = el("div","note");
+    if(n < MIN_N){
+      box.innerHTML = "<b>" + n + " posts recorded of the ~" + MIN_N + " needed.</b> " +
+        "Until then this table is a record, not evidence. The open question it is built " +
+        "to answer is whether a link in the first comment actually outperforms one in the " +
+        "body — do not start alternating placement until there is a baseline to alternate " +
+        "against.";
+    } else {
+      var c = real(state.posts).filter(function(p){ return p.link === "comment"; });
+      var b = real(state.posts).filter(function(p){ return p.link === "body"; });
+      var cm = median(c.map(function(p){ return Number(p.impressions); }));
+      var bm = median(b.map(function(p){ return Number(p.impressions); }));
+      box.innerHTML = "<b>" + n + " posts recorded.</b> Median impressions — " +
+        "link in comment: " + (cm === null ? "no data" : cm) + " (n=" + c.length + "); " +
+        "link in body: " + (bm === null ? "no data" : bm) + " (n=" + b.length + "). " +
+        "Medians, not means, because one post that travels would otherwise decide the answer.";
+    }
+    note.appendChild(box);
+  }
+
+  function renderAll(){
+    renderFigures(); renderBoard(); renderFunnel(); renderReasons(); renderLedger();
+  }
+
+  // ---------- entry ----------
+  function fillSelect(id, values, labels){
+    var s = document.getElementById(id);
+    if(!s) return;
+    s.innerHTML = "";
+    values.forEach(function(v,i){
+      var o = document.createElement("option");
+      o.value = v; o.textContent = labels ? labels[i] : v;
+      s.appendChild(o);
+    });
+  }
+  fillSelect("rStage", STAGES.map(function(s){return s.id;}), STAGES.map(function(s){return s.label;}));
+  fillSelect("pFormat", FORMATS);
+  fillSelect("pLink", LINKS, ["First comment","In body"]);
+
+  var rDate = document.getElementById("rDate");
+  var pDate = document.getElementById("pDate");
+  if(rDate) rDate.value = today();
+  if(pDate) pDate.value = today();
+
+  function val(id){
+    var e = document.getElementById(id);
+    return e ? e.value.trim() : "";
+  }
+  function numVal(id){
+    var e = document.getElementById(id);
+    if(!e || e.value === "") return null;
+    var n = Number(e.value);
+    return isNaN(n) ? null : n;
+  }
+
+  var addRole = document.getElementById("addRole");
+  if(addRole) addRole.addEventListener("click", function(){
+    var title = val("rTitle");
+    if(!title){ status("A role needs a title."); return; }
+    var stage = val("rStage");
+    var when = val("rDate") || today();
+    // An outcome is not a position. A role closed on entry still got as far as
+    // `applied`, and recording that is what keeps the funnel base honest.
+    var peak = CLOSED[stage] ? "applied" : stage;
+    var appliedOn = (stage === "found") ? null : when;
+    state.roles.push({
+      id: "r" + Date.now(),
+      title: title,
+      org: val("rOrg"),
+      source: val("rSource"),
+      stage: stage,
+      peak: peak,
+      date: when,
+      applied: appliedOn,
+      reason: val("rReason")
+    });
+    ["rTitle","rOrg","rReason"].forEach(function(id){
+      var e = document.getElementById(id); if(e) e.value = "";
+    });
+    save(); renderAll();
+  });
+
+  var addPost = document.getElementById("addPost");
+  if(addPost) addPost.addEventListener("click", function(){
+    state.posts.push({
+      id: "p" + Date.now(),
+      date: val("pDate") || today(),
+      item: val("pItem"),
+      format: val("pFormat"),
+      link: val("pLink"),
+      impressions: numVal("pImpr"),
+      subs: numVal("pSubs"),
+      enquiries: numVal("pEnq")
+    });
+    ["pItem","pImpr","pSubs","pEnq"].forEach(function(id){
+      var e = document.getElementById(id); if(e) e.value = "";
+    });
+    save(); renderAll();
+  });
+
+  // ---------- demo data ----------
+  // Generated at runtime, never hard-coded as a claim, always tagged, and
+  // excluded from every figure that asserts something about the owner.
+  var demoBtn = document.getElementById("demoBtn");
+  if(demoBtn) demoBtn.addEventListener("click", function(){
+    var titles = ["Director, AI Governance","Head of Model Risk","VP Internal Audit",
+                  "AI Risk Lead","Director, Model Validation","Chief Audit Executive"];
+    var srcs = ["Indeed","Referral","Direct","Recruiter"];
+    var stages = ["found","applied","applied","screening","interview","rejected","rejected"];
+    var reasons = ["Position filled internally","No response","Withdrew — scope",
+                   "Not recorded",""];
+    var now = Date.now();
+    for(var i=0;i<9;i++){
+      var st = stages[i % stages.length];
+      state.roles.push({
+        id:"demo-r"+now+"-"+i, synthetic:true,
+        title: titles[i % titles.length],
+        org:"", source: srcs[i % srcs.length],
+        stage: st, peak: (st === "rejected" ? "interview" : st),
+        date: new Date(now - (i*6+3)*86400000).toISOString().slice(0,10),
+        applied: new Date(now - (i*6+20)*86400000).toISOString().slice(0,10),
+        reason: st === "rejected" ? reasons[i % reasons.length] : ""
+      });
+    }
+    for(var j=0;j<4;j++){
+      state.posts.push({
+        id:"demo-p"+now+"-"+j, synthetic:true,
+        date: new Date(now - (j*3+2)*86400000).toISOString().slice(0,10),
+        item: ["M1","record","M2","M5"][j],
+        format:"text", link: j % 2 ? "body" : "comment",
+        impressions: 1200 + j*430, subs: null, enquiries: null
+      });
+    }
+    save(); renderAll();
+    status("Demo rows added. They are tagged, drawn dashed, and excluded from every count.");
+  });
+
+  var clearDemo = document.getElementById("clearDemo");
+  if(clearDemo) clearDemo.addEventListener("click", function(){
+    state.roles = real(state.roles);
+    state.posts = real(state.posts);
+    save(); renderAll();
+  });
+
+  // ---------- data ----------
+  var exportBtn = document.getElementById("exportBtn");
+  if(exportBtn) exportBtn.addEventListener("click", function(){
+    var blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "pipeline-" + today() + ".json";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    status("Exported. That file is now your responsibility — keep it somewhere private.");
+  });
+
+  var importLabel = document.getElementById("importLabel");
+  var importFile = document.getElementById("importFile");
+  if(importLabel && importFile){
+    importLabel.addEventListener("click", function(){ importFile.click(); });
+    importLabel.addEventListener("keydown", function(e){
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); importFile.click(); }
+    });
+    importFile.addEventListener("change", function(){
+      var f = importFile.files && importFile.files[0];
+      if(!f) return;
+      var reader = new FileReader();
+      reader.onload = function(){
+        try{
+          var d = JSON.parse(String(reader.result));
+          if(!d || typeof d !== "object") throw new Error("not an object");
+          state = {
+            v: 1,
+            roles: Array.isArray(d.roles) ? d.roles : [],
+            posts: Array.isArray(d.posts) ? d.posts : []
+          };
+          save(); renderAll();
+          status("Imported " + state.roles.length + " roles and " + state.posts.length + " posts.");
+        }catch(err){
+          status("That file could not be read as pipeline JSON. Nothing was changed.");
+        }
+      };
+      reader.readAsText(f);
+      importFile.value = "";
+    });
+  }
+
+  var resetBtn = document.getElementById("resetBtn");
+  if(resetBtn) resetBtn.addEventListener("click", function(){
+    if(!window.confirm("Erase every role and post stored in this browser? Export first if you want a copy.")) return;
+    state = blank();
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    renderAll();
+    status("Erased.");
+  });
+
+  // ---------- theme ----------
+  var themeBtn = document.getElementById("themeBtn");
+  try{
+    var saved = localStorage.getItem("pipeline.theme");
+    if(saved) document.documentElement.setAttribute("data-theme", saved);
+  }catch(e){}
+  if(themeBtn) themeBtn.addEventListener("click", function(){
+    var cur = document.documentElement.getAttribute("data-theme");
+    var next = cur === "light" ? "" : "light";
+    if(next) document.documentElement.setAttribute("data-theme", next);
+    else document.documentElement.removeAttribute("data-theme");
+    try{ localStorage.setItem("pipeline.theme", next); }catch(e){}
+  });
+
+  renderAll();
+  status(state.roles.length || state.posts.length
+    ? "Loaded from this browser · " + state.roles.length + " roles, " + state.posts.length + " posts."
+    : "Nothing stored yet. Add a role, or load demo rows to see the shape.");
+})();
+</script>
+</body>
+</html>
