@@ -1,0 +1,14 @@
+{
+  "name": "Mīzān — Coach View",
+  "short_name": "Mīzān",
+  "description": "Read-only coaching snapshot. Data travels in the link, never on a server.",
+  "start_url": "./coach/",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F6F3F0",
+  "theme_color": "#E0662E",
+  "icons": [
+    { "src": "../assets/brand/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "../assets/brand/avatars/yasir-a-malik/avatar-solid.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
