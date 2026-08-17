@@ -12,6 +12,7 @@ import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import make_marks as M
+from palette import EMBER, INK, PAPER, NIGHT, MUTED, LIGHT, DIM, RULE_L
 import cairosvg
 
 OUT = os.path.join(HERE, "card")
@@ -21,15 +22,6 @@ DPI = 300
 BLEED_W, BLEED_H = int(3.75 * DPI), int(2.25 * DPI)   # 1125 x 675
 TRIM = int(0.125 * DPI)                                # 37.5 -> 37
 SAFE = TRIM * 2                                        # content inset from bleed edge
-
-EMBER = "#E0662E"
-INK = "#171A1D"
-PAPER = "#F6F3F0"
-NIGHT = "#0E1114"
-MUTED = "#5A646E"
-LIGHT = "#EDEFF1"
-DIM = "#A6B0BA"
-RULE_L = "#E2DAD3"
 
 
 def mark(x, y, scale, ring=EMBER, letter=INK, opacity=None):
