@@ -16,13 +16,13 @@ import os, sys, io
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import make_marks as M
+from palette import EMBER, INK, PAPER
 import cairosvg
 from PIL import Image
 
 OUT = os.path.join(HERE, "signature-options")
 os.makedirs(OUT, exist_ok=True)
 
-EMBER, INK, PAPER = "#E0662E", "#171A1D", "#F6F3F0"
 TRUE = 56          # the size in a signature
 ZOOM = 4
 

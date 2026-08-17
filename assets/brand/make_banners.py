@@ -12,13 +12,13 @@ import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import make_marks as M
+from palette import EMBER
 import cairosvg
 
 OUT = os.path.join(HERE, "banners")
 os.makedirs(OUT, exist_ok=True)
 
 W, H = 1280, 300
-EMBER = "#E0662E"
 
 THEMES = {
     # `meta` was #5A646E / #8A929B, which measured 3.14:1 and 2.85:1 against

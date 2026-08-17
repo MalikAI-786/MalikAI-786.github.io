@@ -22,6 +22,7 @@ sys.path.insert(0, HERE)
 import make_marks as M
 import make_portrait as P
 from make_banners import contrast
+from palette import EMBER, INK, PAPER, MUTED, NIGHT
 import cairosvg
 import numpy as np
 from PIL import Image
@@ -29,10 +30,9 @@ from PIL import Image
 OUT = os.path.join(HERE, "platforms")
 os.makedirs(OUT, exist_ok=True)
 
-EMBER = "#E0662E"
-INK, PAPER, MUTED = "#171A1D", "#F6F3F0", "#5A646E"
-NIGHT = "#0E1114"
-
+# The FIU family is a deliberate exception, kept local rather than in
+# palette.py: it is the university's colour, not this identity's, and used
+# only where he represents the program. See the module docstring above.
 FIU_BLUE = "#081E3F"
 FIU_GOLD = "#B6862C"
 # FIU Blue is nearly black; on a dark ground the mark would vanish. This is the

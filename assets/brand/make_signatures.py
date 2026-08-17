@@ -21,9 +21,12 @@ Two rules the generator enforces rather than trusts:
   disclosure that overstates is worse to hand an opposing party than no
   disclosure at all.
 """
-import os
+import os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from palette import EMBER, INK, MUTED, LINE, EMBER_TEXT, FAINT_ON_LIGHT as FAINT
+
 OUT = os.path.join(HERE, "signature.html")
 
 MARK = "https://malikai-786.github.io/assets/brand/signature-mark.png"
@@ -33,9 +36,6 @@ EMAIL = "YasirAMalik@gmail.com"
 PRO_TEL = ("+1 (786) 704-8536", "+17867048536")
 
 PERSONAL_TEL = ("+1 (305) 799-2443", "+13057992443")
-
-EMBER, INK, MUTED, FAINT, LINE = "#E0662E", "#171A1D", "#5A646E", "#8A929B", "#E2DAD3"
-EMBER_TEXT = "#AD4317"
 
 SERIF = "Georgia,'Times New Roman',serif"
 SANS = "Arial,Helvetica,sans-serif"

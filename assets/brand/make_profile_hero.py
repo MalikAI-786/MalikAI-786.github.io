@@ -18,6 +18,7 @@ import os, sys, io
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import make_marks as M
+from palette import EMBER
 import cairosvg
 import numpy as np
 from PIL import Image
@@ -31,7 +32,6 @@ if not os.path.exists(SRC):
     SRC = os.path.join(HERE, "..", "img", "yasir-headshot.jpg")
 
 W, H = 1280, 440
-EMBER = "#E0662E"
 
 # Photograph column. Sits hard against the right edge, bleeds top and bottom.
 PHOTO_W = 470

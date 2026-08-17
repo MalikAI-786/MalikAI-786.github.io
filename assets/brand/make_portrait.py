@@ -27,6 +27,7 @@ import os, sys, io
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import make_marks as M
+from palette import EMBER
 import cairosvg
 import numpy as np
 from PIL import Image, ImageDraw
@@ -35,7 +36,6 @@ SRC = os.path.join(HERE, "..", "img", "yasir-headshot.jpg")
 OUT = os.path.join(HERE, "portrait")
 os.makedirs(OUT, exist_ok=True)
 
-EMBER = "#E0662E"
 SIZE = 1000
 
 # Head-and-shoulders crop from the 900x1349 source. Sized so the head fills

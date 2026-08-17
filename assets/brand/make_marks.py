@@ -229,11 +229,7 @@ def wordmark(name_col, sub_col, accent):
 """
 
 
-EMBER = "#E0662E"
-INK = "#171A1D"
-PAPER = "#F6F3F0"
-MUTED = "#5A646E"
-EMBER_TEXT = "#C4511F"
+from palette import EMBER, INK, PAPER, MUTED, EMBER_TEXT
 
 FILES = {
     "mark.svg":            mark(),

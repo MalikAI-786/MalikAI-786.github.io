@@ -96,6 +96,16 @@ Do not redesign it, and do not re-litigate the palette. It is documented at
   tracking for labels.
 - The descriptor is **Audit · Risk · Governance**. Not AI-forward, on purpose.
 
+**What "settled" does and does not cover.** The values above — the hex codes,
+the descriptor, the type choices — are not open for redesign by anyone,
+agent or otherwise. The *engineering* is a different matter: `palette.py`,
+the generators, `tools/audit/invariants.py`, and every place a duplicated
+constant or a WCAG failure can hide are fair game, and improving them is
+welcome from outside contributors too. `palette.py` exists because
+consolidating thirteen hand-typed copies of `#E0662E` surfaced one, in
+`make_marks.py`, that had quietly drifted to the wrong shade. Fixing that
+kind of thing is not re-litigating the palette; it is enforcing it.
+
 ## Generated files
 
 `README.md` in every repository on this account is generated from

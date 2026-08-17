@@ -22,19 +22,13 @@ import os, sys, math
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import make_marks as M
+from palette import EMBER, VERDIGRIS, INK, PAPER, NIGHT, LIGHT, ON_ACCENT
 import cairosvg
 
 OUT = os.path.join(HERE, "avatars")
 os.makedirs(OUT, exist_ok=True)
 
 SIZE = 1000
-EMBER = "#E0662E"
-VERDIGRIS = "#0F5F5A"
-INK = "#171A1D"
-PAPER = "#F6F3F0"
-NIGHT = "#0E1114"
-LIGHT = "#EDEFF1"
-ON_ACCENT = "#1A1109"
 
 # ---------------------------------------------------------------- letters
 # The A is the parent mark and keeps its overshooting crossbar.

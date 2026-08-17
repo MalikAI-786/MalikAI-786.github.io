@@ -18,6 +18,7 @@ import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import make_marks as M
+from palette import EMBER
 import cairosvg
 
 OUT = os.path.join(HERE, "linkedin")
@@ -27,8 +28,6 @@ W, H = 1584, 396
 SAFE_W, SAFE_H = 1350, 220           # centred band that survives desktop crop
 SAFE_X, SAFE_Y = (W - SAFE_W) // 2, (H - SAFE_H) // 2
 PHOTO_CX, PHOTO_CY, PHOTO_R = 200, H - 150, 96   # profile photo footprint
-
-EMBER = "#E0662E"
 
 THEMES = {
     "dark":  dict(bg="#0E1114", ink="#EDEFF1", sub="#A6B0BA",

@@ -118,6 +118,114 @@ def check_nojekyll(fix: bool) -> None:
                  "touch .nojekyll — Pages otherwise runs the site through Jekyll")
 
 
+TOKENS_CSS = Path("assets/brand/tokens.css")
+PALETTE_PY = Path("assets/brand/palette.py")
+
+# CSS custom property -> the attribute name it must equal in palette.py.
+# Everything on this list mirrors tokens.css by design (see palette.py's
+# module docstring); anything not on it is a derived value with no CSS
+# equivalent and is deliberately outside this check.
+CSS_TO_PALETTE = {
+    **{f"--ember-{n}": f"EMBER_{n}" for n in
+       (50, 100, 200, 300, 400, 500, 600, 650, 700, 800, 900)},
+    "--ember-tint": "EMBER_TINT",
+    **{f"--ink-{n}": f"INK_{n}" for n in
+       (950, 900, 800, 700, 600, 500, 300, 200, 100, 50)},
+    "--paper": "PAPER",
+    "--white": "WHITE",
+    **{f"--verd-{n}": f"VERD_{n}" for n in (600, 500, 300)},
+}
+
+
+def check_palette_matches_css(_fix: bool) -> None:
+    """palette.py exists so the generators stop typing hex by hand. It is
+    only trustworthy if it cannot silently drift from the CSS it mirrors."""
+    css_path, py_path = ROOT / TOKENS_CSS, ROOT / PALETTE_PY
+    if not css_path.exists() or not py_path.exists():
+        return   # nothing to compare yet; other checks cover missing files
+
+    css_text = css_path.read_text()
+    seen: dict[str, set[str]] = {}
+    for name, value in re.findall(r"(--[a-z0-9-]+)\s*:\s*(#[0-9A-Fa-f]{6})\s*;",
+                                   css_text):
+        seen.setdefault(name, set()).add(value.upper())
+
+    ns: dict[str, str] = {}
+    exec(py_path.read_text(), ns)   # nosec — trusted, repo-local generator
+
+    for css_var, attr in CSS_TO_PALETTE.items():
+        if css_var not in seen:
+            fail("palette drift", f"tokens.css no longer defines {css_var}",
+                 f"either restore it in tokens.css or remove {attr} from "
+                 f"{PALETTE_PY.name} and every generator that imports it")
+            continue
+        py_value = ns.get(attr)
+        if py_value is None:
+            fail("palette drift", f"{PALETTE_PY.name} has no {attr}",
+                 f"add {attr} = \"{next(iter(seen[css_var]))}\" to "
+                 f"{PALETTE_PY.name}")
+        elif py_value.upper() not in seen[css_var]:
+            fail("palette drift",
+                 f"{css_var} is {sorted(seen[css_var])} in tokens.css but "
+                 f"{attr} is {py_value!r} in {PALETTE_PY.name}",
+                 f"one of them was edited without the other — make them agree")
+
+    # --ink carries two literal values by design: light-mode text and
+    # dark-mode text, set in different theme blocks rather than the ramp.
+    ink_values = seen.get("--ink", set())
+    for attr, label in (("INK_TEXT_LIGHT", "light"), ("INK_TEXT_DARK", "dark")):
+        py_value = ns.get(attr, "").upper()
+        if py_value and py_value not in ink_values:
+            fail("palette drift",
+                 f"{attr} ({py_value}) does not match any --ink value in "
+                 f"tokens.css's {label} block ({sorted(ink_values)})",
+                 "one of them was edited without the other — make them agree")
+
+
+def check_tokens_json_fresh(fix: bool) -> None:
+    """tokens.json is the portable export other tools read. Same rule as the
+    READMEs: compare against what the generator produces right now, never
+    trust a hand edit.
+
+    Computed in-process rather than by running the script and diffing the
+    file it writes — that would overwrite tokens.json on every plain check,
+    even without --fix, masking exactly the drift this exists to catch."""
+    import json as _json
+    brand_dir = ROOT / "assets/brand"
+    generator = brand_dir / "make_tokens_json.py"
+    tokens_json = brand_dir / "tokens.json"
+    if not generator.exists():
+        return
+
+    ns: dict[str, str] = {"__file__": str(generator)}
+    old_path = sys.path[:]
+    sys.path.insert(0, str(brand_dir))
+    try:
+        exec(compile(generator.read_text(), str(generator), "exec"), ns)
+        fresh = _json.dumps(ns["build"](), indent=2, ensure_ascii=False) + "\n"
+    except Exception as e:                      # generator itself is broken
+        fail("tokens.json", f"generator raised {e!r}", f"fix {generator.name}")
+        return
+    finally:
+        sys.path[:] = old_path
+
+    if not tokens_json.exists():
+        current = None
+    else:
+        current = tokens_json.read_text()
+
+    if current != fresh:
+        if fix:
+            tokens_json.write_text(fresh)
+            print("  fixed: tokens.json regenerated")
+        else:
+            fail("tokens.json",
+                 "tokens.json does not match what make_tokens_json.py "
+                 "produces from the current palette.py",
+                 "run assets/brand/make_tokens_json.py, then commit the "
+                 "result")
+
+
 def check_hex_budget(_fix: bool) -> None:
     """New colour goes into tokens.css, not into a component rule."""
     for name, (budget, reason) in HEX_BUDGET.items():
@@ -139,8 +247,9 @@ def main() -> int:
                     help="Repair what is safely repairable, then re-check.")
     args = ap.parse_args()
 
-    checks = [check_generated_files, check_tracked_junk,
-              check_nojekyll, check_hex_budget]
+    checks = [check_generated_files, check_tracked_junk, check_nojekyll,
+              check_hex_budget, check_palette_matches_css,
+              check_tokens_json_fresh]
 
     if args.fix:
         print("Repairing…")
