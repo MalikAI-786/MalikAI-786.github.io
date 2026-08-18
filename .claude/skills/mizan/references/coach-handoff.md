@@ -26,6 +26,19 @@ Two controls follow from that, and both are mandatory:
 | `body` | yes | yes | **never** |
 | `full` | yes | yes | **never** |
 
+The page always offers all three view tabs; scope decides what is *behind*
+them. Under `training`, the Body tab renders "Not enough measurements to draw
+a trend" — an honest empty state, not a broken panel. Under `body`, it draws
+the time-scaled index. The Clinical tab is empty at every scope and says why.
+
+Verify scope by opening the minted link and switching tabs, not by reading the
+minter. Both halves have to agree, and only the render proves it.
+
+Names never travel either. The `asks` role table and the change-request `From`
+dropdown carry roles — *training coach*, *nutrition / clinical*, *me* — not
+people. A coach's name attached to a training record is a personal record
+about a third party, and both this file and the page are public.
+
 There is no scope that encodes clinical data. Diagnoses, medication, blood
 work and anything a clinician would recognise as a record stay out of the
 payload at every scope, and out of this repo entirely — they live only in the
