@@ -271,3 +271,6 @@ product, it does not belong on this page.
   provenance class.
 - `references/design-system.md` — tokens, component classes, chart and SVG
   conventions.
+- `references/coach-handoff.md` — how a coach gets a read-only view: link
+  scopes, the expiry clamp, why the coach page is standalone, install paths,
+  and the email templates. Read before minting any shareable link.

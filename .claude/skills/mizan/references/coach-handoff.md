@@ -1,0 +1,140 @@
+# Handing a coach a view
+
+How a coach gets read-only sight of the training record without an account,
+a server, or a copy of anything clinical. Read this before minting a link,
+writing a coach email, or changing `mizan/coach/index.html`.
+
+## The one rule
+
+**Base64 is encoding, not encryption.** A snapshot link is readable by anyone
+who holds the URL — it survives in chat logs, browser history, autocomplete
+and forwarded messages long after the conversation ends. The fragment never
+reaching a server is a true fact that protects nothing here, because *the link
+itself is the payload*.
+
+Two controls follow from that, and both are mandatory:
+
+1. **Scope.** Mint the narrowest payload that answers the coach's question.
+2. **Expire.** Every payload carries `ttl` (days) and `generated`. The page
+   computes age at open and refuses to render past it.
+
+## Scopes
+
+| Scope | Sessions, splits, attendance | Body measurements | Clinical |
+|---|---|---|---|
+| `training` | yes | no | **never** |
+| `body` | yes | yes | **never** |
+| `full` | yes | yes | **never** |
+
+There is no scope that encodes clinical data. Diagnoses, medication, blood
+work and anything a clinician would recognise as a record stay out of the
+payload at every scope, and out of this repo entirely — they live only in the
+owner's local `mizan.v1` storage. If a coach needs a clinical constraint, it
+goes in the covering email as a sentence, not in the data.
+
+The minter lives in the session scratchpad, not here: it reads the owner's
+private session export, so committing it would commit the data. Rebuild it
+from this table when you need it. Its whole job is: build the dict, drop
+`measures` unless scope is `body`/`full`, never add a clinical key at all,
+base64url the JSON, prefix `https://…/mizan/coach/#d=`.
+
+## Expiry, in the page
+
+```js
+var TTL = +(D.ttl || 7);
+var age = Math.floor((Date.now() - made) / 864e5);
+D._age = age;
+D._left = Math.max(0, Math.min(TTL, TTL - age));   // clamp both ends:
+                                                   // clock skew must not read
+                                                   // as a longer life
+if (age > TTL) { /* show #expired, D = null */ }
+```
+
+Seven days is the default. It is short on purpose — a coach who still needs
+the view asks for a fresh link, and that request is the audit trail.
+
+## The coach page is standalone
+
+`mizan/coach/index.html` carries its own CSS and JS and does **not** load
+`core.js`. That is deliberate: it renders a payload handed to it, never the
+owner's local state, so it must not be able to reach that state at all. The
+smoke test knows this and skips the nav and engine checks for `coach/`.
+
+Its categorical palette is validated (Ember 500 `#E0662E` + Verdigris 300
+`#4FC0B2`, all six checks pass). If you add a series, revalidate — do not
+eyeball a third colour in.
+
+One trap, already paid for: in a split bar, both the track and the fill must
+be `display:block`. A bare `<span>` is inline, `width`/`height` are silently
+ignored, and the bar renders as a zero-size box on a full-width track. It
+looks like missing data, not like a CSS bug.
+
+## Installing it (what the PDF explains)
+
+The page ships a `manifest.webmanifest` with `display: standalone`, so it
+installs to a home screen or dock and opens without browser chrome. The link
+including its `#d=` fragment is preserved by the install, which is what makes
+"save it to your phone" work at all.
+
+| Platform | Path |
+|---|---|
+| iPhone / iPad | Safari → Share → Add to Home Screen |
+| Android | Chrome → ⋮ → Install app |
+| Mac / Windows | Chrome or Edge → install icon in the address bar |
+
+Safari on iOS will not install from an in-app browser. A coach who taps the
+link inside WhatsApp gets a working page but no install prompt — the email
+and the PDF both have to say "open in Safari first", because otherwise they
+will assume it is broken.
+
+The onboarding PDF is generated from a scratchpad HTML file through Chromium
+`page.pdf({format:'A4', printBackground:true})`. It is not committed: it
+carries the owner's name and, depending on the recipient, a clinical
+constraint sentence. Regenerate it per handoff.
+
+## Email templates
+
+Fill the placeholders at send time. Never commit a filled copy — a coach's
+name plus a training record is a personal record about a third party, and this
+repo is public.
+
+### Template A — the training coach
+
+> Subject: `Your read-only view of my training record`
+>
+> `{{COACH}}` — before we start, here is the whole record of the last block
+> in one screen. It is read-only, it is yours, and it needs no account.
+>
+> **Link:** `{{TRAINING_LINK}}`
+> **Guide:** attached PDF — three steps, plus how to save it to your phone.
+>
+> Open it in `{{Safari / Chrome}}` rather than inside WhatsApp, or the
+> save-to-home-screen option will not appear.
+>
+> What you are looking at: `{{N}}` logged sessions across `{{SPAN}}`,
+> normalised into nine split categories, with attendance and frequency
+> computed rather than remembered. The number I would start on is
+> `{{THE ONE FINDING}}`.
+>
+> The link expires in `{{TTL}}` days. Ask me and I will send a fresh one —
+> that is the design, not a fault.
+>
+> `{{CLINICAL CONSTRAINT, one sentence, if relevant to this coach}}`
+>
+> There is a change-request box at the bottom of the page. Anything you want
+> added, cut or measured differently goes there and comes to me as text.
+
+### Template B — the second coach (standards / body)
+
+Same shape, with `{{BODY_LINK}}`, and centred on the standards rather than the
+history: name the five, name which are already close, name the one the record
+says is starving. Add the measurement caveat — the body index is sparse by
+design and has multi-year gaps that are real, not missing data.
+
+### Both emails must carry
+
+- the scope, named ("this is the training view; it has no body measurements")
+- the expiry, in days
+- the fact that nothing is stored server-side, so there is no account, no
+  password, and nothing for them to lose
+- one concrete finding, so the link opens with a question already attached
