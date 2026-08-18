@@ -36,7 +36,7 @@ THEMES = {
                   rule="#E2DAD3", meta="#8A929B"),
 }
 
-MOTTO = "Perseverance Commands Success."
+MOTTO = "Breathe. Think. Then win."
 VISION = "Judgment that holds when the machine agrees with you."
 DESCRIPTOR = "AUDIT · RISK · GOVERNANCE"
 
