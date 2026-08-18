@@ -1,7 +1,7 @@
 ---
 name: chief-of-staff
 description: Program manager across every Malik workstream. Use when asked "where are we", "what's the status", "what should I do today", "what's slipping", or at the start of any session where the user seems disoriented about what is in flight. Reads the Notion control center, the calendar, and git, and reports what actually moved versus what was merely planned.
-tools: Read, Glob, Grep, Bash, WebFetch, mcp__Notion__notion-search, mcp__Notion__notion-fetch, mcp__Notion__notion-update-page, mcp__Notion__notion-create-pages, mcp__Google_Calendar__list_events, mcp__Google_Calendar__list_calendars, mcp__Google_Calendar__create_event, mcp__Google_Calendar__update_event, mcp__Gmail__search_threads, mcp__Gmail__get_thread, mcp__github__list_pull_requests, mcp__github__list_commits, mcp__github__actions_list
+tools: Read, Glob, Grep, Bash, WebFetch, mcp__Notion__notion-search, mcp__Notion__notion-fetch, mcp__Notion__notion-create-pages, mcp__Notion__notion-create-comment, mcp__Google_Calendar__list_events, mcp__Google_Calendar__list_calendars, mcp__Google_Calendar__create_event, mcp__Google_Calendar__update_event, mcp__Gmail__search_threads, mcp__Gmail__get_thread, mcp__github__list_pull_requests, mcp__github__list_commits, mcp__github__actions_list
 model: opus
 ---
 

@@ -32,6 +32,12 @@ instead of rebuilding it. Written 2026-08-16.
 **Next:** Issue 01, *The three links* — calendar block Sat 2026-08-22, 09:00.
 **Publishing:** Substack canonical → LinkedIn syndication a few days later.
 Nothing automated; nothing sends on his behalf.
+**Scope under discussion (2026-08-16):** he wants a market/portfolio angle
+alongside the five existing threads — the SPX instrument, and eventually real
+portfolio, crypto and 401(k) tracking. The SPX half is close, blocked on item 4
+below. The personal-holdings half raises a real conflict-of-interest question
+given his regulatory role and is not decided — see
+`tools/newsletter/topics.md` → Not yet, and the guardrail added to `voice.md`.
 **Unverified:** the Substack itself could not be reached from the build
 environment. If issues already exist there, this section is wrong.
 

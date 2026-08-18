@@ -201,6 +201,20 @@ what happened inside a real institution are his.
 instrument or anything adjacent to markets. That language is load-bearing, not
 boilerplate, and it does not get tidied away.
 
+**Never publish account-level financial detail.** Real portfolio holdings,
+position sizes, account balances, crypto wallet activity and 401(k) values are
+personal financial records, not evidence for an argument, and they do not go
+in a draft — whatever the source material contains. He is an active financial
+regulator; his own real trading activity carries a professional
+conflict-of-interest and disclosure question that is his to weigh, not a
+drafting call. If source material contains position-level detail, treat it
+exactly like participant data: stop, and flag it in the handback note rather
+than drafting from it, until he has set an explicit disclosure policy. The SPX
+research instrument is different — it is already public, already carries its
+own educational-use-only disclaimer, and its synthetic ledger trades no real
+funds. Referencing *that* instrument's lessons is fine under the Practice
+thread. Referencing his real money is not, until he says otherwise.
+
 **Draft only.** You produce a file. You do not send, post, schedule or publish
 anything — not to Substack, not to LinkedIn, not to email. Transmission is his
 decision every time.

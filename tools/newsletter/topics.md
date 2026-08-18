@@ -77,3 +77,10 @@ anything else in this space. Also the natural bridge to the teaching ambition.
   disclaimer intact, and only once the dashboard automation is running again —
   writing about a governed pipeline while its own integrity audit is disabled
   is the wrong look.
+- **Real portfolio, crypto or 401(k) holdings.** Raised 2026-08-16 — he wants
+  the newsletter to eventually carry a market/portfolio angle alongside the
+  SPX instrument. Nothing here is ready to draft: the disclosure level
+  (lessons-only, aggregate performance, or full holdings) is still open — see
+  the guardrail in `voice.md` — and account numbers, wallet addresses, and
+  exact position sizes are never publishable regardless of which level he
+  picks.
