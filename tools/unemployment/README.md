@@ -269,6 +269,61 @@ class schedule.
 
 ---
 
+## The availability hold — how one wrong answer freezes weeks
+
+The most expensive failure mode on a live claim is not a rejected application.
+It is a **hold** placed mid-claim by an answer on a routine weekly
+certification — most often the school/training question — which silently
+blocks every subsequent week until an adjudicator lifts it.
+
+What makes it costly is that it is invisible from the claimant side. The
+weeks do not appear as denied. They appear as un-certifiable. Nothing in the
+portal explains why, and nothing in the portal will clear it: **a hold is
+lifted by an adjudicator, never by the claimant.**
+
+The pattern to recognise:
+
+1. A certification asks whether you are attending school or training.
+2. An answer is entered that does not reflect the actual arrangement.
+3. An availability hold attaches to the claim record.
+4. Subsequent weeks cannot be certified, with no stated reason.
+5. Weeks accumulate unpaid while the claimant assumes the system is broken.
+
+### What to do
+
+**Correct the entry — do not re-answer it differently and hope.** The fix is
+an adjudicator correcting the claim record. That means a written statement
+setting out what the true arrangement is and why it never limited
+availability, delivered to the adjudication centre handling the claim.
+
+**Answer the same question accurately every time it reappears.** When the
+question shows up again on a missed-weeks questionnaire, the temptation is to
+give the answer that avoids the hold. That is a false statement on a form
+certified under penalty, and it converts a recoverable delay into a fraud
+finding. Answer it truthfully and explain it in the narrative field instead.
+
+**Frame enrolment against the actual statutory test.** The question is not
+whether you are enrolled. It is whether attendance in fact made you unable or
+unavailable for full-time work. An evening or executive programme built for
+candidates who remain in full-time employment is evidence on that point;
+so is a record of applications and interviews across the held weeks.
+
+**Never state a limitation on availability.** "I cannot work Fridays" is a
+ground for ineligibility in its own right, and it contradicts the "able and
+available" certification on the same form.
+
+### Watch for a conflicting claim
+
+Before certifying **able and available** for a set of weeks, check whether
+any disability or income-protection claim covers the same weeks. A claim
+asserting inability to work and a UI certification asserting availability
+cannot both be true for the same week. New Jersey runs **Disability During
+Unemployment** for precisely that overlap — use it rather than letting the
+two records contradict each other. An inconsistency found later is an
+overpayment and a fraud finding, not a correction.
+
+---
+
 ## When the application will not submit
 
 In rough order of likelihood:
@@ -345,6 +400,7 @@ secondary-sourced rather than from NJDOL directly, it is marked.
 | Good cause definition for late or missed weeks | [N.J.A.C. 12:17-4.1](https://regulations.justia.com/states/new-jersey/title-12/chapter-17/subchapter-4/section-12-17-4-1/) — *quoted from search results; domain unreachable, verify* |
 | Student disqualification and its exceptions | [N.J.A.C. 12:17-12.6](https://www.law.cornell.edu/regulations/new-jersey/N-J-A-C-12-17-12-6) — *quoted from search results; domain unreachable, verify* |
 | Student not unavailable solely by attendance | [N.J.S.A. 43:21-4](https://law.justia.com/codes/new-jersey/title-43/section-43-21-4/) |
+| Disability During Unemployment (conflicting able-and-available) | [NJDOL, Disability During Unemployment](https://www.nj.gov/labor/myleavebenefits/worker/resources/ddu.shtml) — *verify; domain unreachable at compile time* |
 | No waiting week since 2002 | *secondary:* [remotelaws.com](https://remotelaws.com/unemployment/us-states/new-jersey/) — **confirm** |
 
 This is a procedural checklist compiled from public sources. It is not legal
