@@ -960,8 +960,8 @@ function renderDash(){
    {k:'Calibration',v:pairs.length>=3?(mean(pairs)>0?'+':'')+mean(pairs).toFixed(1):'—',u:'',href:'record/',
     note:pairs.length>=3?(mean(pairs)<-4?'over-forecasting yourself':mean(pairs)>4?'under-forecasting':'well calibrated')
       :'needs '+(3-pairs.length)+' more forecast days'},
-   {k:'Best 50',v:Math.round(B50.reduce(function(a,x){return a+(+(S.best50||{})[x.id]||0)},0)/25*100),u:'%',href:'badan/',
-    note:'composite of five standards'}
+   {k:'Best 50',v:Math.round(B50.reduce(function(a,x){return a+(+(S.best50||{})[x.id]||0)},0)/(B50.length*5)*100),u:'%',href:'badan/',
+    note:'composite of '+B50.length+' standards'}
   ];
   $('#dashGrid').innerHTML=tiles.map(function(t){
     var root=document.body.getAttribute('data-root')||'';
@@ -1209,7 +1209,9 @@ var B50=[
  {id:'pistol',n:'Pistol squat',lv:['not started','box pistol to a high box','to a low box','assisted full — band or TRX','one clean rep each leg','three clean reps each leg'],
   drill:['Ankle range first — knee-to-wall test. Then heel-elevated split squats.','Box pistols, 3×5 a side, controlled descent.','Lower the box an inch a week. Counterweight a plate at the chest.','TRX-assisted full range; take the hands off progressively.','One rep, then stand up straight before celebrating.','Three, clean, no hand touch, both sides.']},
  {id:'burpees',n:'50 burpees in 2:00',lv:['under 20 in 2:00','20–29','30–37','38–44','45–49','50 or more'],
-  drill:['Build the engine: 8×20s hard / 40s easy, twice a week.','Practise the step-back version to save the shoulders. Cadence over speed.','Intervals at target pace: 5×20 burpees, 60s rest.','Two sets of 25 with 45s rest. Close the gap.','One set of 40 at pace, then finish.','Test it, then keep it — this one decays fastest.']}
+  drill:['Build the engine: 8×20s hard / 40s easy, twice a week.','Practise the step-back version to save the shoulders. Cadence over speed.','Intervals at target pace: 5×20 burpees, 60s rest.','Two sets of 25 with 45s rest. Close the gap.','One set of 40 at pace, then finish.','Test it, then keep it — this one decays fastest.']},
+ {id:'pullup',n:'Strict pull-up',lv:['not started','dead hang, 20s','1–2 strict reps','5 strict reps','10 strict reps','15 strict reps, dead hang to chin'],
+  drill:['Dead hangs, 3×max, plus scapular pulls — build the hang before the pull.','Negatives, 5×5s descent, then band-assisted reps.','Reduce the band each week; grease the groove with 3 singles across the day.','5×5 at a moderate band, cluster sets, 90s rest.','Weighted holds at the top; add a rep every two weeks.','Add load. This is the one where progress means the next 5lb, not the next rep.']}
 ];
 
 function gymRotFor(k){ return ROT[parseISO(k).getDay()]||null }
@@ -1431,7 +1433,7 @@ function renderB50(){
       '</div><div class="seg" data-b50="'+s.id+'">'+[0,1,2,3,4,5].map(function(v){
         return '<button data-v="'+v+'" class="'+(lv===v?('on '+(v===0?'s0':v<=1?'s1':'')):'')+'">'+v+'</button>'}).join('')+
       '</div></div>'}).join('');
-  $('#b50Score').textContent=Math.round(tot/25*100)+'%';
+  $('#b50Score').textContent=Math.round(tot/(B50.length*5)*100)+'%';
 }
 
 function renderCoach(){

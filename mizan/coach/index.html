@@ -147,6 +147,19 @@ textarea{resize:vertical;line-height:1.5;}
 .empty{text-align:center;padding:70px 20px;color:var(--muted);}
 .empty h2{margin-bottom:10px;}
 .hide{display:none !important;}
+.skill{background:var(--surface);border:1px solid var(--hairline);border-radius:4px;
+  padding:14px 16px;margin-bottom:10px;}
+.skill h4{font-size:1rem;margin-bottom:4px;font-family:var(--record);}
+.skill .lv{font-family:var(--instrument);font-size:.6rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:8px;}
+.skill .now,.skill .next{font-size:.87rem;margin-bottom:4px;}
+.skill .now b,.skill .next b{font-family:var(--instrument);font-size:.6rem;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:600;margin-right:5px;}
+.skill .next{color:var(--ember-text);}
+.skill .next.met{color:var(--verd-text);}
+.skill .drill{font-size:.84rem;color:var(--muted);margin-top:4px;}
+.skill .drill b{font-family:var(--instrument);font-size:.6rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--faint);margin-right:5px;}
 footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
 @media (max-width:640px){.brow{grid-template-columns:84px 1fr 70px;gap:8px;}
   .brow .l{font-size:.6rem;}}
@@ -167,10 +180,12 @@ footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
       </button>
       <div class="menu" id="viewMenu" role="menu">
         <button data-view="training" role="menuitem">Training<span class="d">Sessions, split mix, adherence</span></button>
+        <button data-view="upper" role="menuitem">Upper body<span class="d">Push, pull, shoulder, arms only</span></button>
+        <button data-view="skills" role="menuitem">Skills<span class="d">Split, planche, pull-up levels</span></button>
         <button data-view="body" role="menuitem">Body<span class="d">Weight, measurements, ratio</span></button>
         <button data-view="clinical" role="menuitem">Clinical<span class="d">Glucose, meds, sleep</span></button>
         <div class="sep"></div>
-        <button data-view="all" role="menuitem">Everything<span class="d">All three panels</span></button>
+        <button data-view="all" role="menuitem">Everything<span class="d">Every panel in this link</span></button>
       </div>
     </div>
   </div>
@@ -234,6 +249,21 @@ footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
   </details>
 </section>
 
+<section id="secUpper">
+  <h2>Upper-body training</h2>
+  <p class="sub">Scoped to push, pull, shoulder and arm sessions only. Legs and mobility are out of this view's scope — they belong to a different brief.</p>
+  <div class="chart">
+    <h3>Split mix — upper only</h3>
+    <div class="bars" id="upperBars"></div>
+  </div>
+</section>
+
+<section id="secSkills">
+  <h2>Flexibility &amp; skill standards</h2>
+  <p class="sub">Self-tested bodyweight standards, each broken into six levels with a pass condition at every one. Tested on the first Saturday of the month, not constantly — testing constantly turns training days into ego days.</p>
+  <div id="skillList"></div>
+</section>
+
 <section id="secBody">
   <h2>Body</h2>
   <p class="sub">Measurement index. Irregular intervals are plotted on a real time axis, so gaps stay visible rather than being smoothed away.</p>
@@ -276,6 +306,8 @@ footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
         <option>The tiles at the top</option>
         <option>Split mix chart</option>
         <option>Sessions per month chart</option>
+        <option>Upper-body view</option>
+        <option>Skill standards view</option>
         <option>Body / measurement chart</option>
         <option>Clinical panel</option>
         <option>Who-does-what table</option>
@@ -360,19 +392,22 @@ if(!D) return;
 $('#empty').classList.add('hide'); $('#app').classList.remove('hide');
 
 /* ---- view switching ---- */
-var VIEWS={training:['secTraining'],body:['secBody'],clinical:['secClinical'],
-           all:['secTraining','secBody','secClinical']};
-var LABEL={training:'Training',body:'Body',clinical:'Clinical',all:'Everything'};
+var ALL_SECS=['secTraining','secUpper','secSkills','secBody','secClinical'];
+var VIEWS={training:['secTraining'],upper:['secUpper'],skills:['secSkills'],
+           body:['secBody'],clinical:['secClinical'],all:ALL_SECS};
+var LABEL={training:'Training',upper:'Upper body',skills:'Skills',body:'Body',
+           clinical:'Clinical',all:'Everything'};
 function setView(v){
   var show=VIEWS[v]||VIEWS.training;
-  ['secTraining','secBody','secClinical'].forEach(function(id){
+  ALL_SECS.forEach(function(id){
     $('#'+id).classList.toggle('hide', show.indexOf(id)<0);
   });
   $('#viewLabel').textContent=LABEL[v]||'Training';
   Array.prototype.forEach.call(document.querySelectorAll('#viewMenu button'),function(b){
     b.classList.toggle('on', b.getAttribute('data-view')===v);
   });
-  $('#headline').textContent={training:'Training record',body:'Body composition',
+  $('#headline').textContent={training:'Training record',upper:'Upper-body training',
+    skills:'Flexibility & skill standards',body:'Body composition',
     clinical:'Clinical log',all:'Full snapshot'}[v]||'Training record';
   try{ localStorage.setItem('mizan.coachview',v) }catch(e){}
 }
@@ -412,6 +447,28 @@ $('#splitBars').innerHTML=sp.map(function(s){
   return '<div class="brow"><span class="l">'+s.k+'</span>'+
     '<span class="t"><span class="f" style="width:'+(s.n/mx*100).toFixed(1)+'%"></span></span>'+
     '<span class="n">'+s.n+' · '+s.p+'%</span></div>'}).join('');
+
+/* ---- upper-body split mix: same shape as splitBars, separate id and data
+   so an upper-scoped link never silently reuses the full split set ---- */
+(function(){
+  var up=D.upperSplits||[];
+  var umx=up.reduce(function(a,s){return Math.max(a,s.n)},1);
+  $('#upperBars').innerHTML=up.map(function(s){
+    return '<div class="brow"><span class="l">'+s.k+'</span>'+
+      '<span class="t"><span class="f" style="width:'+(s.n/umx*100).toFixed(1)+'%"></span></span>'+
+      '<span class="n">'+s.n+' · '+s.p+'%</span></div>'}).join('')
+    || '<p style="color:var(--muted)">No upper-body sessions in this snapshot.</p>';
+})();
+
+/* ---- skill standards: Best-50 items relevant to this link's scope ---- */
+$('#skillList').innerHTML=(D.skills||[]).map(function(s){
+  return '<div class="skill"><h4>'+s.n+'</h4>'+
+    '<div class="lv">Level '+s.lv+' / 5</div>'+
+    '<div class="now"><b>Now</b>'+s.now+'</div>'+
+    (s.next ? '<div class="next"><b>Next</b>'+s.next+'</div>'
+             : '<div class="next met"><b>Standard met</b></div>')+
+    '<div class="drill"><b>Drill</b>'+s.drill+'</div></div>'
+}).join('') || '<p style="color:var(--muted)">No skill data in this snapshot.</p>';
 
 /* ---- cadence: single series, 2px line, emphasised endpoint, no legend ---- */
 (function(){

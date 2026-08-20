@@ -149,7 +149,7 @@ function check(name, cond, detail) {
   const ratio = await page.locator('#swRatio').innerText();
   check('shoulder-to-waist ratio computes', Math.abs(parseFloat(ratio) - 49.5 / 34) < 0.002, ratio);
   check('measurement trend draws', (await page.locator('#wtChart polyline').count()) >= 1);
-  check('Best-50 renders five standards', (await page.locator('[data-b50]').count()) === 5);
+  check('Best-50 renders six standards', (await page.locator('[data-b50]').count()) === 6);
   await page.click('[data-b50="pistol"] button[data-v="3"]'); await page.waitForTimeout(200);
   check('Best-50 composite responds to a level change',
     (await page.locator('#b50Score').innerText()) !== '0%');

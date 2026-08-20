@@ -20,19 +20,37 @@ Two controls follow from that, and both are mandatory:
 
 ## Scopes
 
-| Scope | Sessions, splits, attendance | Body measurements | Clinical |
-|---|---|---|---|
-| `training` | yes | no | **never** |
-| `body` | yes | yes | **never** |
-| `full` | yes | yes | **never** |
+| Scope | Sessions/splits | Upper-only splits | Skill levels | Body measurements | Clinical |
+|---|---|---|---|---|---|
+| `training` | yes, all | no | no | no | **never** |
+| `upper` | no | yes — push/pull/shoulder/arms only | no | no | **never** |
+| `skills` | no | no | yes — split, planche line, pull-up | no | **never** |
+| `body` | yes, all | no | no | yes | **never** |
 
-The page always offers all three view tabs; scope decides what is *behind*
-them. Under `training`, the Body tab renders "Not enough measurements to draw
-a trend" — an honest empty state, not a broken panel. Under `body`, it draws
-the time-scaled index. The Clinical tab is empty at every scope and says why.
+Each scope has a *default* view (set in the payload's `view` field so the
+page opens on the right tab), but the menu still offers every tab the payload
+has data for — an empty tab renders its honest empty state rather than
+disappearing, so a coach who clicks around never mistakes "not sent" for
+"not asked."
 
-Verify scope by opening the minted link and switching tabs, not by reading the
-minter. Both halves have to agree, and only the render proves it.
+`upper` and `skills` exist because Shahzaib and Tanveer coach different
+things: Shahzaib owns spine and upper-body programming (push, pull, shoulder,
+arms), Tanveer owns flexibility and the skill line (front split, the planche
+progression, the pull-up standard). Sending either coach the full session log
+or the full skill ladder would show them a brief that isn't theirs — scope
+the link to the actual handoff, not to "everything, why not."
+
+**`skills` levels are minted at 0 (not started) by design**, not by mistake:
+the minter script has no access to the owner's local `mizan.v1` state, where
+the real Best-50 levels live only in the owner's browser. A `skills` link is
+honest about carrying no current-level data until the owner tests and reports
+levels for a re-mint — the payload's `standfirst` says so on the page itself,
+so a coach reading level 0 does not mistake it for a tested result.
+
+Verify every scope by opening the minted link and switching to its default
+tab, not by reading the minter. Both halves have to agree, and only the
+render proves it — this is how the "clinical never travels" and "body-scope
+link had no measures panel" gaps were both caught in this repo's history.
 
 Names never travel either. The `asks` role table and the change-request `From`
 dropdown carry roles — *training coach*, *nutrition / clinical*, *me* — not
