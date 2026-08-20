@@ -207,6 +207,68 @@ in-person at one of the **38 UPS locations in NJ** that partner with ID.me.
 
 ---
 
+## If weeks were missed: the good-cause adjudication
+
+Missed weeks are not simply certified late. The Division sends a questionnaire —
+a claimant statement listing up to **12 week-ending Saturday dates** — and pays
+or denies those weeks on the answers. It is an adjudication, not paperwork, and
+it is decided against one sentence:
+
+> **"Good cause" means any situation which was substantial and prevented the
+> claimant from reporting as required by the Division.** — N.J.A.C. 12:17-4.1(b)
+
+Every narrative answer therefore has to establish three things: that you
+**tried**, that the obstacle was **substantial**, and that it **prevented** you.
+With dates. An answer describing how the delay felt fails the test; an answer
+listing dated attempts and a concrete obstacle meets it.
+
+**How to write the attempts field.** The form asks for all dates and means it.
+Chronological rows beat prose:
+
+    06-12-2026 — Online, portal — attempted to certify, error [verbatim]. No confirmation number.
+    06-15-2026 — Phone, 201-601-4100, 7:04am — hold 48 min, call dropped. Log attached.
+
+A row with a date, a method and an outcome supports good cause. A row missing
+any of the three is filler.
+
+**Two mechanics that make this irreversible.** The form is due on the date given
+in the covering email, and **submitting closes access permanently.** Save a
+complete copy — print to PDF or screenshot every page — before certifying, or
+there is no record of what you said if it goes to appeal. If no confirmation
+email arrives, it did not submit.
+
+**List every week.** Weeks omitted cannot be added afterwards. Under-listing is
+the expensive and permanent mistake; the only ceiling is that no week can
+precede the claim's effective date.
+
+**Evidence is the differentiator**, because most people attach none. Screenshots
+of failed attempts with visible timestamps, a phone log showing calls and
+durations, confirmation numbers from internet attempts, dated application and
+rejection emails. Use a job-search tracker as an *index* of what to pull, not as
+the exhibit — a tracker whose rows were all created on one recent date reads as
+reconstructed. Upload the contemporaneous primary documents it points to.
+
+### The student question is a trap worth knowing about
+
+"Were you attending school or job training?" answered falsely is a false
+statement on a certified form. Answered "yes" with no explanation, it invites a
+student disqualification. The answer is yes plus the exception.
+
+Under **N.J.A.C. 12:17-12.6** a student in full-time attendance is disqualified
+**unless** the programme is Division-approved training, **or** — the exception
+that catches most working professionals — **during the base year the individual
+earned sufficient wages while in full- or part-time attendance at an educational
+institution to establish a claim.** Wages earned while enrolled put you inside
+it as a matter of record rather than argument.
+
+Separately, a claimant is **not** deemed unavailable *solely* for being a
+student, provided attendance does not in fact make them unable or unavailable
+for work and they can demonstrate actively seeking work. Note the limit: if
+suitable work is offered, it must be accepted even where it collides with the
+class schedule.
+
+---
+
 ## When the application will not submit
 
 In rough order of likelihood:
@@ -280,6 +342,9 @@ secondary-sourced rather than from NJDOL directly, it is marked.
 | Partial benefits: 20% threshold, dollar-for-dollar above | [NJDOL, factors that reduce your rate](https://myunemployment.nj.gov/help/faqs/reducebenefits.shtml) |
 | Identity verification timing and in-person options | [NJDOL, verifying your identity](https://myunemployment.nj.gov/before/about/identity/) · [ID.me help](https://help.id.me/hc/en-us/articles/1500005127662-New-Jersey-and-ID-me) |
 | Call centre numbers and hours | [NJDOL, call a Reemployment Call Center](https://myunemployment.nj.gov/before/about/howtoapply/callrcc.shtml) |
+| Good cause definition for late or missed weeks | [N.J.A.C. 12:17-4.1](https://regulations.justia.com/states/new-jersey/title-12/chapter-17/subchapter-4/section-12-17-4-1/) — *quoted from search results; domain unreachable, verify* |
+| Student disqualification and its exceptions | [N.J.A.C. 12:17-12.6](https://www.law.cornell.edu/regulations/new-jersey/N-J-A-C-12-17-12-6) — *quoted from search results; domain unreachable, verify* |
+| Student not unavailable solely by attendance | [N.J.S.A. 43:21-4](https://law.justia.com/codes/new-jersey/title-43/section-43-21-4/) |
 | No waiting week since 2002 | *secondary:* [remotelaws.com](https://remotelaws.com/unemployment/us-states/new-jersey/) — **confirm** |
 
 This is a procedural checklist compiled from public sources. It is not legal
