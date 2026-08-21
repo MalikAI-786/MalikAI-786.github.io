@@ -182,6 +182,7 @@ footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
         <button data-view="training" role="menuitem">Training<span class="d">Sessions, split mix, adherence</span></button>
         <button data-view="upper" role="menuitem">Upper body<span class="d">Push, pull, shoulder, arms only</span></button>
         <button data-view="skills" role="menuitem">Skills<span class="d">Split, planche, pull-up levels</span></button>
+        <button data-view="sync" role="menuitem">Handoff<span class="d">Where the two briefs collide</span></button>
         <button data-view="body" role="menuitem">Body<span class="d">Weight, measurements, ratio</span></button>
         <button data-view="clinical" role="menuitem">Clinical<span class="d">Glucose, meds, sleep</span></button>
         <div class="sep"></div>
@@ -264,6 +265,13 @@ footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
   <div id="skillList"></div>
 </section>
 
+<section id="secSync">
+  <h2>Where the two briefs collide</h2>
+  <p class="sub">Two coaches, one body. These are the places where what one of you programmes lands on tissue the other is already loading. The point is not to merge the plans — it is that neither of you can see this from your own half alone.</p>
+  <div class="tblwrap"><table id="syncTbl"></table></div>
+  <div class="note" id="syncNote"></div>
+</section>
+
 <section id="secBody">
   <h2>Body</h2>
   <p class="sub">Measurement index. Irregular intervals are plotted on a real time axis, so gaps stay visible rather than being smoothed away.</p>
@@ -308,6 +316,7 @@ footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
         <option>Sessions per month chart</option>
         <option>Upper-body view</option>
         <option>Skill standards view</option>
+        <option>Handoff / collision table</option>
         <option>Body / measurement chart</option>
         <option>Clinical panel</option>
         <option>Who-does-what table</option>
@@ -392,11 +401,14 @@ if(!D) return;
 $('#empty').classList.add('hide'); $('#app').classList.remove('hide');
 
 /* ---- view switching ---- */
-var ALL_SECS=['secTraining','secUpper','secSkills','secBody','secClinical'];
-var VIEWS={training:['secTraining'],upper:['secUpper'],skills:['secSkills'],
+var ALL_SECS=['secTraining','secUpper','secSkills','secSync','secBody','secClinical'];
+/* secSync rides along with BOTH coaching views on purpose. A handoff note
+   behind a tab nobody clicks is a handoff that does not happen. */
+var VIEWS={training:['secTraining'],upper:['secUpper','secSync'],
+           skills:['secSkills','secSync'],sync:['secSync'],
            body:['secBody'],clinical:['secClinical'],all:ALL_SECS};
-var LABEL={training:'Training',upper:'Upper body',skills:'Skills',body:'Body',
-           clinical:'Clinical',all:'Everything'};
+var LABEL={training:'Training',upper:'Upper body',skills:'Skills',sync:'Handoff',
+           body:'Body',clinical:'Clinical',all:'Everything'};
 function setView(v){
   var show=VIEWS[v]||VIEWS.training;
   ALL_SECS.forEach(function(id){
@@ -407,7 +419,7 @@ function setView(v){
     b.classList.toggle('on', b.getAttribute('data-view')===v);
   });
   $('#headline').textContent={training:'Training record',upper:'Upper-body training',
-    skills:'Flexibility & skill standards',body:'Body composition',
+    skills:'Flexibility & skill standards',sync:'The handoff',body:'Body composition',
     clinical:'Clinical log',all:'Full snapshot'}[v]||'Training record';
   try{ localStorage.setItem('mizan.coachview',v) }catch(e){}
 }
@@ -577,6 +589,23 @@ $('#skillList').innerHTML=(D.skills||[]).map(function(s){
   $('#bodyTbl').innerHTML='<tr><th>Date</th><th>Weight</th><th>Lower waist</th><th>Shoulders</th><th>Thigh</th></tr>'+
     M.map(function(x){return '<tr><td>'+x.d+'</td><td>'+(x.w||'—')+'</td><td>'+(x.lw||'—')+
       '</td><td>'+(x.sh||'—')+'</td><td>'+(x.th||'—')+'</td></tr>'}).join('');
+})();
+
+/* ---- the handoff: same tissue, two coaches ---- */
+(function(){
+  var H=D.handoff||[];
+  if(!H.length){
+    /* honest empty state, same as every other panel — never a hidden section,
+       because a coach who cannot find a tab assumes the page is broken */
+    $('#syncTbl').innerHTML='';
+    $('#syncNote').innerHTML='<b>Not shared by this link</b>No handoff table in this snapshot.';
+    return;
+  }
+  $('#syncTbl').innerHTML='<tr><th>Skill standard</th><th>Lands on</th><th>Shared tissue</th><th>Rule we agreed</th></tr>'+
+    H.map(function(h){
+      return '<tr><td><b>'+h.skill+'</b></td><td>'+h.lands+'</td><td>'+h.tissue+
+        '</td><td>'+h.rule+'</td></tr>'}).join('');
+  $('#syncNote').innerHTML=D.handoffNote||'';
 })();
 
 /* ---- clinical ---- */

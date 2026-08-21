@@ -68,6 +68,7 @@ render function rather than at the point of the mistake.
 | `weight` | number\|null | Badan | reserved for daily-weight trend |
 | `sleepHrs` | number\|null | Badan | `badanScore()`, sleep-effect panel |
 | `moved` | bool | Badan (non-gym days) | `badanScore()` |
+| `rhr` | number\|null | Health import | reserved — recovery trend |
 
 `weed.sessions[]` entries: `{time:'HH:MM', trigger, setting, displaced}`.
 Trigger and displaced values come from the `TRIGGERS` / `DISPLACED` tables —
@@ -78,6 +79,34 @@ silently.
 two miss values are deliberately distinct: a package burned by the trainer's
 cancellation is a different fact from one the owner slept through, and
 collapsing them destroys that.
+
+`gym.src` is `'health'` when the entry came from a watch import rather than
+the owner. It exists so the import can tell its own previous writes (safe to
+replace) from a human judgment (never replace). A watch can see that movement
+happened; it cannot see *why* a session did not, which is exactly the
+distinction `missed-me` / `missed-partner` carries.
+
+## Health import
+
+`measures[].src` and `gym.src` both carry `'health'` for imported rows. The
+import is governed by one rule: **fill gaps, never overwrite a human entry.**
+`planHealthMerge()` builds a staged plan and counts what it is leaving alone;
+nothing reaches state until the owner presses Apply.
+
+| Apple Health type | Lands in | Guard |
+|---|---|---|
+| `BodyMass` | `days[k].weight`, thinned into `measures[]` | median per day; measurement-index rows thinned to one a fortnight and skipped within ±3 days of a manual entry |
+| `SleepAnalysis` | `days[k].sleepHrs` | **`Asleep*` only — never `InBed`**, which overstates badly. Attributed to the day sleep *ends*. A single stretch over `SLEEP_MAX_BLOCK` (16h) is discarded as a broken record and reported; a day total is capped at `SLEEP_MAX_DAY` (18h). |
+| `Workout` | `days[k].gym` | strength/HIIT and mobility count as a session; everything else counts only as movement. One headline session per day, strength outranking mobility. |
+| `StepCount` | `days[k].moved` | `≥ STEP_MOVED` (6000) and only on a day with no logged session |
+| `RestingHeartRate` | `days[k].rhr` | mean of the day's readings |
+
+The file is streamed in 4 MB slices and scanned with regexes rather than
+parsed into a DOM: a real `export.xml` runs to hundreds of megabytes and
+`DOMParser` on it takes the tab down. `tail` carries the trailing partial
+record across each slice boundary. Slicing at byte offsets can split a
+multi-byte UTF-8 character, which is acceptable only because every field read
+is ASCII — if you ever read a free-text field here, that stops being true.
 
 ## `measures[]` (body measurement index)
 
