@@ -237,6 +237,34 @@ function check(name, cond, detail) {
       after.kept.sleepHrs + '/' + after.kept.weight);
   }
 
+  // --- coach install + feedback path ------------------------------------
+  {
+    const coachSrc = require('fs').readFileSync(path.join(ROOT, 'coach/index.html'), 'utf8');
+    const mani = JSON.parse(require('fs').readFileSync(path.join(ROOT, 'manifest.webmanifest'), 'utf8'));
+    // Chrome refuses to offer installation without a 192 and a 512 icon, and
+    // the manifest shipped without either — an install button that can never
+    // fire is worse than no button.
+    const sizes = mani.icons.map(i => i.sizes);
+    check('manifest carries the icon sizes Chrome requires to install',
+      sizes.includes('192x192') && sizes.includes('512x512'), sizes.join(' '));
+    for (const ic of mani.icons) {
+      check(`manifest icon exists on disk — ${ic.src.split('/').pop()}`,
+        require('fs').existsSync(path.join(ROOT, ic.src)));
+    }
+    // A start_url cannot carry a fragment, so an installed app opens without
+    // one. The snapshot must survive in storage or the icon opens an empty page.
+    check('coach page restores its snapshot when launched without a fragment',
+      /mizan\.coachsnap/.test(coachSrc) && /fromStore/.test(coachSrc));
+    check('an expired snapshot is cleared from storage, not left to resurrect',
+      /removeItem\(SNAP\)/.test(coachSrc));
+    // The owner's address must ride in the payload, never in this public file.
+    check('no email address hard-coded into the public coach page',
+      !/[\w.+-]+@[\w-]+\.[a-z]{2,}/i.test(coachSrc.replace(/mailto:'\+encodeURIComponent\(to\)/g, '')),
+      (coachSrc.match(/[\w.+-]+@[\w-]+\.[a-z]{2,}/i) || [''])[0]);
+    check('feedback offers a send path driven by the payload',
+      /D\.feedbackTo/.test(coachSrc) && /fbSend/.test(coachSrc));
+  }
+
   // --- coach handoff ----------------------------------------------------
   // NB: read from disk, never fetch() — these pages run from file:// in this
   // harness and the Fetch API refuses that scheme, which reads as a failure.

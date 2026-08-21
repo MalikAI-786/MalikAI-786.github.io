@@ -147,6 +147,18 @@ textarea{resize:vertical;line-height:1.5;}
 .empty{text-align:center;padding:70px 20px;color:var(--muted);}
 .empty h2{margin-bottom:10px;}
 .hide{display:none !important;}
+.install{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--sunk);
+  border:1px solid var(--rule);border-left:2px solid var(--c1);border-radius:4px;
+  padding:12px 15px;margin:18px 0 0;font-size:.9rem;}
+.install .txt{flex:1;min-width:210px;}
+.install b{display:block;font-family:var(--instrument);font-size:.6rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ember-text);margin-bottom:3px;}
+.install button{font-family:var(--instrument);font-size:.7rem;letter-spacing:.05em;
+  padding:9px 15px;border-radius:3px;border:1px solid var(--c1);background:var(--c1);
+  color:#fff;font-weight:600;cursor:pointer;}
+.install button:hover{filter:brightness(1.07);}
+.stale{background:var(--sunk);border-left:2px solid var(--c2);padding:10px 14px;
+  font-size:.84rem;color:var(--muted);margin-top:14px;}
 .skill{background:var(--surface);border:1px solid var(--hairline);border-radius:4px;
   padding:14px 16px;margin-bottom:10px;}
 .skill h4{font-size:1rem;margin-bottom:4px;font-family:var(--record);}
@@ -213,6 +225,12 @@ footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
   <p id="standfirst"></p>
   <div class="tiles" id="tiles"></div>
   <div class="scopebar" id="scopeBar"></div>
+  <div class="install hide" id="installBar">
+    <div class="txt"><b id="installKick">Keep it one tap away</b>
+      <span id="installMsg"></span></div>
+    <button id="installBtn" class="hide">Install</button>
+  </div>
+  <div id="staleNote"></div>
 </header>
 
 <section id="secTraining">
@@ -306,7 +324,7 @@ footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
 
 <section id="secFeedback">
   <h2>Ask for a change</h2>
-  <p class="sub">Anything on this page can be changed. Pick what it is about, write it plainly, and copy — it produces a structured instruction you can paste straight back into the chat that builds this.</p>
+  <p class="sub">Anything on this page can be changed, and it is meant to be — this is the second version, not the last one. Pick what it is about, write it plainly, and send. It arrives already tagged with which panel, which view and which snapshot you were looking at, so nothing is lost in translation.</p>
   <div class="chart">
     <div class="fbrow">
       <label for="fbWhat">About</label>
@@ -344,7 +362,8 @@ footer{padding:28px 0 0;font-size:.79rem;color:var(--faint);max-width:64ch;}
     <label for="fbText" style="display:block;font-family:var(--instrument);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:14px 0 6px">In your words</label>
     <textarea id="fbText" rows="3" placeholder="e.g. show legs share per month, not just overall — I want to see whether it is actually changing"></textarea>
     <div class="fbbtns">
-      <button id="fbCopy" class="primary">Copy instruction</button>
+      <button id="fbSend" class="primary hide">Send it to me</button>
+      <button id="fbCopy">Copy instruction</button>
       <button id="fbClear">Clear</button>
       <span id="fbMsg"></span>
     </div>
@@ -376,7 +395,19 @@ function readFragment(){
   }catch(e){ console.warn('fragment decode failed',e); return null }
 }
 
-var D=readFragment();
+/* An installed app launches from the manifest's start_url, and a start_url
+   cannot carry a '#d=' fragment — so without this, "Add to Home Screen"
+   produces an icon that opens an empty page. The snapshot is therefore kept
+   in this browser the first time the link is opened, and restored when the
+   page is launched without one. It is the coach's own copy of data they were
+   already sent; it never leaves the device, and the expiry below is applied
+   to the restored copy exactly as it is to a fresh one. */
+var SNAP='mizan.coachsnap';
+var D=readFragment(), fromStore=false;
+if(D){ try{ localStorage.setItem(SNAP,JSON.stringify(D)) }catch(e){} }
+else {
+  try{ var raw=localStorage.getItem(SNAP); if(raw){ D=JSON.parse(raw); fromStore=true } }catch(e){}
+}
 if(!D){ $('#empty').classList.remove('hide'); return }
 
 /* ---- Expiry. The snapshot IS the link, so an immortal link is an immortal
@@ -394,6 +425,9 @@ var TTL=+(D.ttl||7);
       ' days ago. These expire after '+TTL+' days.';
     $('#expired').classList.remove('hide');
     $('#empty').classList.add('hide');
+    /* drop the stored copy too, or an installed app keeps resurrecting a
+       snapshot that has already passed its life */
+    try{ localStorage.removeItem(SNAP) }catch(e){}
     D=null;
   }
 })();
@@ -435,6 +469,51 @@ document.addEventListener('click',function(e){
 });
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') $('#viewMenu').classList.remove('open') });
 
+/* ---- install: make "keep it on my phone" a button, not a paragraph ----
+   Chrome/Edge fire beforeinstallprompt and give us a real prompt to call.
+   iOS Safari fires nothing and exposes no API, so it gets the two-tap
+   instruction instead — the one that is genuinely different per platform. */
+(function(){
+  var bar=$('#installBar'), btn=$('#installBtn'), msg=$('#installMsg'), kick=$('#installKick');
+  var standalone = window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone===true;
+  if(standalone){
+    kick.textContent='Installed'; msg.textContent='You are running this as an app. It will keep working offline — the data is already on the device.';
+    bar.classList.remove('hide'); return;
+  }
+  var ua=navigator.userAgent||'';
+  var iOS=/iPad|iPhone|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);
+  /* NB: written Line[/] rather than Line\/ on purpose. The no-network guard in
+     smoke.js is a blunt text match for '//', and an escaped slash beside the
+     regex terminator reads to it as an external URL. */
+  var inApp=/FBAN|FBAV|Instagram|WhatsApp|Line[/]/i.test(ua);
+
+  if(inApp){
+    kick.textContent='Open this in your browser first';
+    msg.textContent='You have opened this inside another app\u2019s built-in browser, which cannot save it to your home screen. Tap the menu and choose Open in Safari or Open in Chrome, then come back to this bar.';
+    bar.classList.remove('hide'); return;
+  }
+  if(iOS){
+    kick.textContent='Keep it one tap away';
+    msg.innerHTML='In Safari: tap the <b style="display:inline;font-family:inherit;font-size:inherit;letter-spacing:0;text-transform:none;color:inherit">Share</b> icon, scroll down, tap <b style="display:inline;font-family:inherit;font-size:inherit;letter-spacing:0;text-transform:none;color:inherit">Add to Home Screen</b>. It then opens full screen, with this snapshot already in it.';
+    bar.classList.remove('hide'); return;
+  }
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault();
+    kick.textContent='Keep it one tap away';
+    msg.textContent='Install it and it opens from your home screen or dock, full screen, with this snapshot already in it.';
+    btn.classList.remove('hide'); bar.classList.remove('hide');
+    btn.onclick=function(){
+      btn.disabled=true;
+      e.prompt();
+      e.userChoice.then(function(c){
+        if(c&&c.outcome==='accepted'){ bar.classList.add('hide') }
+        else { btn.disabled=false; msg.textContent='No problem — the link works in the browser exactly the same.' }
+      });
+    };
+  });
+})();
+
 /* ---- header ---- */
 $('#scopeLine').textContent=(D.scope||'Coaching snapshot')+' · generated '+(D.generated||'—');
 $('#standfirst').textContent=D.standfirst||'';
@@ -447,6 +526,10 @@ $('#standfirst').textContent=D.standfirst||'';
   if(!D.clinical||!D.clinical.length) c.push('<span class="chip">Clinical not shared by link</span>');
   $('#scopeBar').innerHTML=c.join('');
 })();
+if(fromStore) $('#staleNote').innerHTML='<div class="stale">Opened from the copy '+
+  'saved on this device, because it was launched without a link. It is the same '+
+  'snapshot, generated '+(D.generated||'—')+'. Open the original link again for a newer one.</div>';
+
 $('#tiles').innerHTML=(D.tiles||[]).map(function(t){
   return '<div class="tile"><div class="k">'+t.k+'</div><div class="v">'+t.v+
     (t.u?'<span style="font-size:.68rem">'+t.u+'</span>':'')+'</div>'+
@@ -638,6 +721,25 @@ function compose(){
     '',
     t||'(no detail written)'].join('\n');
 }
+/* A change request that has to be copied, pasted into another app and sent by
+   hand is a change request that does not get made. If the snapshot carries an
+   address, offer a one-tap send. mailto: hands off to the OS mail client — it
+   is not a network call, and the address lives in the payload rather than in
+   this file, because this file is public and that address is not. */
+(function(){
+  var to=D.feedbackTo; if(!to) return;
+  var send=$('#fbSend'); send.classList.remove('hide');
+  send.addEventListener('click',function(){
+    var body=compose();
+    var subj='Mizan change request \u2014 '+$('#fbWhat').value;
+    location.href='mailto:'+encodeURIComponent(to)+
+      '?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+    $('#fbOut').textContent=body; $('#fbOut').classList.add('show');
+    $('#fbMsg').textContent='Opening your mail app\u2026 if nothing happens, press Copy instruction instead.';
+    setTimeout(function(){$('#fbMsg').textContent=''},7000);
+  });
+})();
+
 $('#fbCopy').addEventListener('click',function(){
   var out=compose();
   $('#fbOut').textContent=out; $('#fbOut').classList.add('show');

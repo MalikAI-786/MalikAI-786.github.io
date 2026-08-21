@@ -5,10 +5,13 @@
   "start_url": "./coach/",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#F6F3F0",
   "theme_color": "#E0662E",
   "icons": [
-    { "src": "../assets/brand/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
-    { "src": "../assets/brand/avatars/yasir-a-malik/avatar-solid.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+    { "src": "../assets/brand/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "../assets/brand/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "../assets/brand/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "../assets/brand/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
   ]
 }

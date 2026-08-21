@@ -100,12 +100,46 @@ be `display:block`. A bare `<span>` is inline, `width`/`height` are silently
 ignored, and the bar renders as a zero-size box on a full-width track. It
 looks like missing data, not like a CSS bug.
 
+## The return path
+
+A change request that must be copied, pasted into another app and sent by hand
+is a change request that does not get made. The feedback box therefore offers
+**Send it to me**, which builds a `mailto:` and hands off to the OS mail
+client. That is not a network call — nothing is fetched — so it does not
+breach the no-network invariant.
+
+The destination address rides in the payload as `feedbackTo`, **never in
+`mizan/coach/index.html`**. That file is served from a public Pages site, and
+an address committed there is an address that gets scraped. The smoke test
+asserts no address is hard-coded. If `feedbackTo` is absent the button stays
+hidden and the copy-to-clipboard path remains, so an older link still works.
+
 ## Installing it (what the PDF explains)
 
 The page ships a `manifest.webmanifest` with `display: standalone`, so it
-installs to a home screen or dock and opens without browser chrome. The link
-including its `#d=` fragment is preserved by the install, which is what makes
-"save it to your phone" work at all.
+installs to a home screen or dock and opens without browser chrome.
+
+Two things had to be fixed before that actually worked, and both fail
+silently:
+
+1. **Chrome will not offer installation without a 192px and a 512px icon.**
+   The manifest originally listed neither, so the install path simply never
+   appeared on Android or desktop. The smoke test now asserts both sizes are
+   declared *and* present on disk.
+2. **A `start_url` cannot carry a fragment.** iOS keeps the current URL when
+   you Add to Home Screen, but an Android or desktop install launches
+   `start_url` — with no `#d=`, and therefore no data. The page now stores the
+   decoded snapshot under `mizan.coachsnap` on first open and restores it when
+   launched without a fragment, saying on screen that it has done so. Expiry
+   is applied to the restored copy exactly as to a fresh one, and an expired
+   snapshot is **removed** from storage rather than left to resurrect itself.
+
+The install bar itself branches three ways, because only one of them can be a
+button: Chrome and Edge fire `beforeinstallprompt` and hand over a real prompt;
+iOS Safari fires nothing and exposes no API, so it gets the Share → Add to
+Home Screen instruction; and an in-app browser (WhatsApp, Instagram, Facebook)
+gets told to reopen in a real browser first, because that is the single most
+common reason a coach reports the save option "missing".
 
 | Platform | Path |
 |---|---|
