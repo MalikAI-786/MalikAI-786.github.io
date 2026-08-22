@@ -1,0 +1,15 @@
+{
+  "name": "Mīzān Coach Portal — Test",
+  "short_name": "Mīzān Coach",
+  "description": "Installable test workspace for Mīzān coaches.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F6F3F0",
+  "theme_color": "#E0662E",
+  "icons": [
+    {"src":"../../assets/brand/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"../../assets/brand/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"},
+    {"src":"../../assets/brand/apple-touch-icon.png","sizes":"180x180","type":"image/png","purpose":"any"}
+  ]
+}
