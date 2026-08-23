@@ -1,50 +1,58 @@
-# Malik OS — Skill Map
+**Malik OS Skill Map**
 
-This is the one-page routing map for work in this repository. It is not a substitute for the skills themselves. Its job is to make the correct specialist behavior obvious before work begins.
+This page routes substantive work to the right specialist skill. It is intentionally short. Detailed procedures belong in the individual skill files.
 
-## Operating rule
+**How to use it**
 
-For every substantive task:
+1. Identify the work domain before drafting, coding, publishing, or changing anything.
+2. Load the matching `.claude/skills/<name>/SKILL.md` file.
+3. When the user provides a source, also load `source-ingestion`.
+4. For a professional email, letter, memo, outreach message, or follow-up, also load `professional-communications`.
+5. When work crosses domains, load every relevant skill and follow the strictest privacy and provenance rule.
+6. Keep private evidence in private systems. Public GitHub contains only sanitized reusable instructions and public-safe outputs.
+7. Apply the Reference Mark brand system to public-facing artifacts unless a domain rule explicitly overrides it.
 
-1. Identify the work domain.
-2. Load the matching `.claude/skills/<name>/SKILL.md` skill before drafting, coding, publishing, or changing anything.
-3. If the user supplied an external source, also load `source-ingestion`.
-4. If the task is a professional email, letter, memo or follow-up, also load `professional-communications`.
-5. If two domains overlap, load all relevant skills and obey the strictest privacy/provenance rule.
-6. Keep private evidence in private systems; public Git contains only sanitized reusable instructions and public-safe outputs.
-7. Apply the Reference Mark brand system to public-facing artifacts unless a domain-specific rule explicitly overrides it.
+**Routing**
 
-## Auto-consult routing
+`dba-research`
+Use for DBA research, capstone and dissertation work, literature review, theory, hypotheses, research methods, participant recruitment, sampling, Qualtrics, IRB boundaries, data analysis, faculty feedback, and research writing. This skill governs lead-researcher behavior, evidence discipline, recruitment learning, methods integrity, and the distinction between planned and completed analysis.
 
-| User intent / trigger | Required skill | What it governs |
-|---|---|---|
-| Reel, video, article, PDF, screenshot, transcript, external link; “learn from this”, “extract the skills”, “remember this method” | `source-ingestion` | Source capture, provenance, durable skill extraction, no invented content |
-| Email, memo, professional letter, follow-up, outreach, reply, signature | `professional-communications` | Purpose-first writing, domain-aware tone, next-action clarity, branded signature routing |
-| Mīzān, workout, coach, training, health import, body/skills dashboard | `mizan` | Mīzān data model, coach boundaries, privacy, training UI and invariants |
-| Iqbal, khudī, Roohe Iqbal, reel/caption/merch involving Iqbal | `roohe-iqbal` | Iqbal provenance, reel grammar, series, caption system, merch gates |
-| Court filing, affirmation, motion, discovery, legal letter, opposing counsel, legal chronology or exhibit | `legal-work` | Legal tone, factual discipline, record citations, no invented authority or facts, litigation-ready structure |
-| Website, dashboard, PDF, slide, resume visual, social creative, email signature, logo, palette, typography or layout | `brand-design` | Reference Mark identity, polished visual hierarchy, accessibility, consistent logo/palette/type |
-| Resume, bio, cover letter, interview packet, professional profile | `career-docs` | Evidence-led positioning, quantified achievements, ATS clarity, executive presentation |
-| GitHub architecture, Pages, workflows, agents, skills, automation, repository governance | `repo-governance` | Safe branching, public/private boundary, invariants, PR discipline, skill discoverability |
+`source-ingestion`
+Use for reels, videos, articles, PDFs, screenshots, transcripts, emails, documents, external links, and requests such as “learn from this,” “extract the skills,” or “remember this method.” This skill governs source capture, provenance, durable skill extraction, and the rule against inventing inaccessible content.
 
-## Combination examples
+`professional-communications`
+Use for email, memos, professional letters, follow-ups, outreach, replies, and signatures. This skill governs purpose-first writing, appropriate tone, next-action clarity, and signature routing.
 
-- “Draft a letter to the court about discovery” → `professional-communications` + `legal-work`; add `brand-design` if a polished PDF/letterhead is requested.
-- “Turn this Instagram reel into a reusable system” → `source-ingestion`; add `roohe-iqbal` if the reel concerns Iqbal/khudī.
-- “Build a coach dashboard” → `mizan` + `brand-design` + `repo-governance`.
-- “Improve my resume and publish it on GitHub” → `career-docs` + `brand-design` + `repo-governance`.
-- “Email a recruiter using my branding” → `professional-communications` + `career-docs` + `brand-design`.
-- “Write opposing counsel about discovery” → `professional-communications` + `legal-work`.
+`mizan`
+Use for Mīzān, workouts, coaching, training, health imports, and the body or skills dashboard. This skill governs the Mīzān data model, coach boundaries, privacy, training interfaces, and invariants.
 
-## Global quality gate
+`roohe-iqbal`
+Use for Iqbal, khudī, Roohe Iqbal, and related reels, captions, series, or merchandise. This skill governs provenance, reel grammar, the content system, and merchandise gates.
 
-Before calling work complete, verify:
+`legal-work`
+Use for court filings, affirmations, motions, discovery, legal letters, opposing counsel, legal chronology, and exhibits. This skill governs factual discipline, record citations, litigation-ready structure, and the rule against invented authority or facts.
 
-- Correct specialist skill(s) were consulted.
-- Source claims are traceable to evidence.
-- Sensitive/private information did not cross into public Git.
-- Branding is consistent rather than reinvented per artifact.
-- A future session can discover the governing skill without chat memory.
-- Existing invariants/tests still pass or any unverified test is explicitly reported.
+`brand-design`
+Use for websites, dashboards, PDFs, slides, resume visuals, social creative, email signatures, logos, palette, typography, and layout. This skill governs the Reference Mark identity, visual hierarchy, accessibility, and consistency.
 
-This map should stay short. Detailed operating procedures belong in the individual skills.
+`career-docs`
+Use for resumes, bios, cover letters, interview packets, and professional profiles. This skill governs evidence-led positioning, quantified achievements, ATS clarity, and executive presentation.
+
+`repo-governance`
+Use for GitHub architecture, Pages, branches, pull requests, workflows, agents, skills, automation, repository cleanup, and publishing. This skill governs safe branching, public and private boundaries, invariants, review discipline, and skill discoverability.
+
+**Common combinations**
+
+A DBA paper or faculty-feedback review uses `dba-research`. Add `source-ingestion` when papers, meeting notes, files, or emails are supplied as evidence.
+
+A DBA message to faculty uses `dba-research` with `professional-communications`.
+
+A court letter uses `legal-work` with `professional-communications`. Add `brand-design` only when a polished visual artifact is requested.
+
+A source that should become a reusable operating method uses `source-ingestion`. Add the relevant domain skill when the method belongs to a specific area.
+
+A resume that will be published uses `career-docs`, `brand-design`, and `repo-governance`.
+
+**Completion check**
+
+Before calling work complete, confirm that the correct specialist skills were consulted, source claims are traceable, sensitive information did not cross into public GitHub, branding was not reinvented, the governing skill is discoverable by a fresh session, and relevant tests or invariants passed or were explicitly reported as unverified.
