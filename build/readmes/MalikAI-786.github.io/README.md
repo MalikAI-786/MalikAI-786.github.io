@@ -11,6 +11,11 @@
 My research, advisory practice, and the brand that every other surface on this
 account inherits from.
 
+> **Agent operating map:** [`.claude/SKILL-MAP.md`](.claude/SKILL-MAP.md) — the
+> one-page router that tells future agents which specialist skill to auto-consult
+> for legal work, design, career documents, Mīzān, Roohe Iqbal, source ingestion
+> and repository governance.
+
 This is the canonical surface. Everything else on my GitHub either feeds it or
 points back at it.
 
