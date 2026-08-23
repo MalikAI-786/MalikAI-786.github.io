@@ -1,0 +1,47 @@
+name: Skill discovery invariant
+
+on:
+  pull_request:
+    paths:
+      - '.claude/**'
+      - 'CLAUDE.md'
+      - 'skills/**'
+      - '.github/workflows/skill-discovery.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.claude/**'
+      - 'CLAUDE.md'
+      - 'skills/**'
+      - '.github/workflows/skill-discovery.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Claude skill discovery contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f .claude/SKILL-MAP.md
+          grep -q '.claude/SKILL-MAP.md' CLAUDE.md
+          test -f .claude/skills/source-ingestion/SKILL.md
+          test -f .claude/skills/roohe-iqbal/SKILL.md
+
+          if find skills -maxdepth 1 -type f -name 'SKILL*.md' 2>/dev/null | grep -q .; then
+            echo 'Flat skill file found under public skills/; move it to .claude/skills/<name>/SKILL.md' >&2
+            exit 1
+          fi
+
+          count=0
+          while IFS= read -r f; do
+            count=$((count+1))
+            first=$(sed -n '1p' "$f")
+            test "$first" = '---' || { echo "$f missing YAML frontmatter" >&2; exit 1; }
+            sed -n '1,30p' "$f" | grep -Eq '^name:[[:space:]]*.+' || { echo "$f missing name" >&2; exit 1; }
+            sed -n '1,40p' "$f" | grep -Eq '^description:[[:space:]]*(>|\|-|.+)' || { echo "$f missing description" >&2; exit 1; }
+          done < <(find .claude/skills -mindepth 2 -maxdepth 2 -type f -name SKILL.md | sort)
+
+          test "$count" -gt 0
+          echo "skill discovery invariant: PASS ($count skills)"
