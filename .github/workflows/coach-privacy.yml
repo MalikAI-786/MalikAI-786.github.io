@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - 'mizan/coach/**'
+      - 'mizan/coach-test/**'
       - '.github/workflows/coach-privacy.yml'
   push:
     branches: [main]
     paths:
       - 'mizan/coach/**'
+      - 'mizan/coach-test/**'
       - '.github/workflows/coach-privacy.yml'
 
 jobs:
@@ -16,16 +18,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Assert public coach view cannot carry clinical snapshots
+      - name: Assert public coach routes cannot carry private snapshots or credentials
         shell: bash
         run: |
           set -euo pipefail
-          f='mizan/coach/index.html'
-          test -f "$f"
-          ! grep -q 'D\.clinical' "$f"
-          ! grep -q 'data-view="clinical"' "$f"
-          ! grep -q 'mizan\.coachsnap' "$f"
-          ! grep -q 'atob(' "$f"
-          ! grep -q 'readFragment' "$f"
-          grep -q 'history.replaceState' "$f"
+
+          prod='mizan/coach/index.html'
+          testf='mizan/coach-test/index.html'
+          test -f "$prod"
+          test -f "$testf"
+
+          # Production coach route: no client-carried clinical snapshot machinery.
+          ! grep -q 'D\.clinical' "$prod"
+          ! grep -q 'data-view="clinical"' "$prod"
+          ! grep -q 'mizan\.coachsnap' "$prod"
+          ! grep -q 'atob(' "$prod"
+          ! grep -q 'readFragment' "$prod"
+          grep -q 'history.replaceState' "$prod"
+
+          # Public test route: no embedded credential or personal-calendar snapshot.
+          ! grep -q 'MIZAN26' "$testf"
+          ! grep -Eq 'const[[:space:]]+ACCESS|ACCESS=' "$testf"
+          ! grep -Eq 'const[[:space:]]+availability|primary calendar|availability snapshot' "$testf"
+          ! grep -q 'sessionStorage.setItem' "$testf"
+          grep -q '../../assets/brand/tokens.css' "$testf"
+
           echo 'coach privacy invariant: PASS'
