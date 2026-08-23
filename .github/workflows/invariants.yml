@@ -1,11 +1,12 @@
 name: invariants
 
-# The authoritative gate. The pre-commit hook is convenience and can be skipped
-# with --no-verify; this runs on what was actually pushed and cannot be.
+# Authoritative repository gate. Pull requests are checked before merge and
+# main is checked after merge. This avoids duplicate branch-push + PR runs.
 on:
-  push:
-    branches: ["**"]
   pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
