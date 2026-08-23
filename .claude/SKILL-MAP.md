@@ -19,6 +19,7 @@ For every substantive task:
 | User intent / trigger | Required skill | What it governs |
 |---|---|---|
 | Reel, video, article, PDF, screenshot, transcript, external link; “learn from this”, “extract the skills”, “remember this method” | `source-ingestion` | Source capture, provenance, durable skill extraction, no invented content |
+| DBA, auditor judgment, anchoring bias, literature review, theory, hypothesis, methods, survey, recruitment, IRB, Qualtrics, data analysis, faculty research feedback | `dba-research` | Lead-researcher workflow, provenance, theory/model discipline, methods, recruitment evidence, human-subject privacy |
 | Email, memo, professional letter, follow-up, outreach, reply, signature | `professional-communications` | Purpose-first writing, domain-aware tone, next-action clarity, branded signature routing |
 | Mīzān, workout, coach, training, health import, body/skills dashboard | `mizan` | Mīzān data model, coach boundaries, privacy, training UI and invariants |
 | Iqbal, khudī, Roohe Iqbal, reel/caption/merch involving Iqbal | `roohe-iqbal` | Iqbal provenance, reel grammar, series, caption system, merch gates |
@@ -29,6 +30,7 @@ For every substantive task:
 
 ## Combination examples
 
+- “Review this paper for my DBA model” → `dba-research` + `source-ingestion`.
 - “Draft a letter to the court about discovery” → `professional-communications` + `legal-work`; add `brand-design` if a polished PDF/letterhead is requested.
 - “Turn this Instagram reel into a reusable system” → `source-ingestion`; add `roohe-iqbal` if the reel concerns Iqbal/khudī.
 - “Build a coach dashboard” → `mizan` + `brand-design` + `repo-governance`.
