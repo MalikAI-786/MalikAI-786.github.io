@@ -1,0 +1,31 @@
+name: Coach privacy invariant
+
+on:
+  pull_request:
+    paths:
+      - 'mizan/coach/**'
+      - '.github/workflows/coach-privacy.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'mizan/coach/**'
+      - '.github/workflows/coach-privacy.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assert public coach view cannot carry clinical snapshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          f='mizan/coach/index.html'
+          test -f "$f"
+          ! grep -q 'D\.clinical' "$f"
+          ! grep -q 'data-view="clinical"' "$f"
+          ! grep -q 'mizan\.coachsnap' "$f"
+          ! grep -q 'atob(' "$f"
+          ! grep -q 'readFragment' "$f"
+          grep -q 'history.replaceState' "$f"
+          echo 'coach privacy invariant: PASS'
