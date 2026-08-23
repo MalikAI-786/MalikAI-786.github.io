@@ -14,7 +14,14 @@ if [ -z "${FF:-}" ]; then
   pip install --quiet imageio-ffmpeg >/dev/null 2>&1
   FF=$(python3 -c "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())")
 fi
+
+# A decode directory is a snapshot of ONE source. Reusing an output path must
+# never mix frames or audio from the prior source with the current one.
+mkdir -p "$OUT"
+rm -rf -- "$OUT/scene" "$OUT/grid"
+rm -f -- "$OUT/audio.m4a" "$OUT/probe.txt" "$OUT/MANIFEST"
 mkdir -p "$OUT/scene" "$OUT/grid"
+
 "$FF" -hide_banner -i "$VIDEO" 2>&1 | grep -E "Duration|Stream #" > "$OUT/probe.txt" || true
 "$FF" -y -loglevel error -i "$VIDEO" -vf "select='eq(n\,0)+gt(scene\,0.25)',scale=440:-1" -fps_mode vfr "$OUT/scene/cut%02d.png" 2>/dev/null || true
 "$FF" -y -loglevel error -i "$VIDEO" -vf "fps=1,scale=440:-1" "$OUT/grid/sec%02d.png" 2>/dev/null || true
