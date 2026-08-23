@@ -112,6 +112,11 @@ This is a GitHub Pages site published from `main`. A push is a deploy.""",
 My research, advisory practice, and the brand that every other surface on this
 account inherits from.
 
+> **Agent operating map:** [`.claude/SKILL-MAP.md`](.claude/SKILL-MAP.md) — the
+> one-page router that tells future agents which specialist skill to auto-consult
+> for legal work, design, career documents, Mīzān, Roohe Iqbal, source ingestion
+> and repository governance.
+
 This is the canonical surface. Everything else on my GitHub either feeds it or
 points back at it.
 
@@ -816,9 +821,18 @@ def render_agents(repo, spec):
 
 def render_claude_md(repo):
     """Claude Code reads CLAUDE.md. Keep one document, not two."""
+    skill_map = ""
+    if repo == "MalikAI-786.github.io":
+        skill_map = (
+            "Before substantive work, read **[.claude/SKILL-MAP.md](.claude/SKILL-MAP.md)** "
+            "and load the matching specialist skill(s). Claude Code discovers executable "
+            "skills from `.claude/skills/<name>/SKILL.md`; do not rely on flat skill files "
+            "or chat memory.\n\n"
+        )
     return (f"# {repo}\n\n"
             "Instructions for this repository live in **[AGENTS.md](AGENTS.md)**. "
             "Read it before making changes.\n\n"
+            + skill_map +
             f"Start with the control center: **[Malik Operating System]({CONTROL})** "
             "— git is the published record, Notion is the live state.\n")
 
