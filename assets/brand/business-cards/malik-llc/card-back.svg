@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1125 675" fill="none">
+  <rect width="1125" height="675" fill="#0E1114"/>
+<g transform="translate(825 -70) scale(8.2)" opacity=".07">
+    <path d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke="#0F5F5A" stroke-width="4.4" stroke-linecap="round"/>
+    <circle cx="12.85" cy="15.93" r="3.9" fill="#0F5F5A"/>
+    <path d="M21.5 45.5 L21.5 20.5 L32 37.0 L42.5 20.5 L42.5 45.5" stroke="#EDEFF1" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+  </g>
+<g transform="translate(466.5 150) scale(3.0)">
+    <path d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke="#0F5F5A" stroke-width="4.4" stroke-linecap="round"/>
+    <circle cx="12.85" cy="15.93" r="3.9" fill="#0F5F5A"/>
+    <path d="M21.5 45.5 L21.5 20.5 L32 37.0 L42.5 20.5 L42.5 45.5" stroke="#EDEFF1" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+  </g>
+  <path d="M502.5 430 H622.5" stroke="#0F5F5A" stroke-width="4"/>
+  <text x="562.5" y="490" text-anchor="middle" font-family="ui-monospace,&#39;SF Mono&#39;,Menlo,&#39;Cascadia Mono&#39;,&#39;Roboto Mono&#39;,monospace" font-size="24" letter-spacing="5" fill="#A6B0BA">MALIKAI-786.GITHUB.IO</text>
+</svg>

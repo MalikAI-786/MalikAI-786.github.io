@@ -1,0 +1,124 @@
+{
+  "$schema_note": "Not a registered JSON Schema — a flat, hand-documented shape. See the $description on each section for what a consumer can assume.",
+  "$description": "Reusable templates for Yasir A. Malik — Audit / Risk / Governance. Generated from assets/brand/make_templates_catalog.py in github.com/MalikAI-786/MalikAI-786.github.io. Every file path here is verified present at generation time. Full asset library (marks, banners, avatars): https://malikai-786.github.io/brand-assets.html — palette as design tokens: https://malikai-786.github.io/assets/brand/tokens.json",
+  "for_agents": "You may read and reuse anything listed here — that is what it is for, regardless of which model or platform you are. You may NOT invent a business address, phone number, service line, or product description that is not already stated here or on malikai-786.github.io. Malik Marketplace has no public service description yet for exactly this reason — leave it blank rather than guess. Read AGENTS.md before writing anything back to this repository.",
+  "business_cards": [
+    {
+      "id": "yasir-a-malik",
+      "brand": "Yasir A. Malik",
+      "descriptor": "Audit · Risk · Governance",
+      "audience": "General — first introduction",
+      "format": "US business card, 3.5x2in, 300dpi, 0.125in bleed — pdf for a printer, png for preview, svg as source",
+      "files": {
+        "front_png": "https://malikai-786.github.io/assets/brand/card/card-front.png",
+        "front_pdf": "https://malikai-786.github.io/assets/brand/card/card-front.pdf",
+        "front_svg": "https://malikai-786.github.io/assets/brand/card/card-front.svg",
+        "back_png": "https://malikai-786.github.io/assets/brand/card/card-back.png",
+        "back_pdf": "https://malikai-786.github.io/assets/brand/card/card-back.pdf",
+        "back_svg": "https://malikai-786.github.io/assets/brand/card/card-back.svg"
+      }
+    },
+    {
+      "id": "consulting",
+      "brand": "Yasir A. Malik — Advisory",
+      "descriptor": "Governance-first AI advisory",
+      "audience": "AI governance advisory engagements",
+      "format": "US business card, 3.5x2in, 300dpi, 0.125in bleed — pdf for a printer, png for preview, svg as source",
+      "files": {
+        "front_png": "https://malikai-786.github.io/assets/brand/business-cards/consulting/card-front.png",
+        "front_pdf": "https://malikai-786.github.io/assets/brand/business-cards/consulting/card-front.pdf",
+        "front_svg": "https://malikai-786.github.io/assets/brand/business-cards/consulting/card-front.svg",
+        "back_png": "https://malikai-786.github.io/assets/brand/business-cards/consulting/card-back.png",
+        "back_pdf": "https://malikai-786.github.io/assets/brand/business-cards/consulting/card-back.pdf",
+        "back_svg": "https://malikai-786.github.io/assets/brand/business-cards/consulting/card-back.svg"
+      }
+    },
+    {
+      "id": "malik-llc",
+      "brand": "Malik LLC",
+      "descriptor": "Residential real estate",
+      "audience": "Property, tenants, vendors",
+      "format": "US business card, 3.5x2in, 300dpi, 0.125in bleed — pdf for a printer, png for preview, svg as source",
+      "files": {
+        "front_png": "https://malikai-786.github.io/assets/brand/business-cards/malik-llc/card-front.png",
+        "front_pdf": "https://malikai-786.github.io/assets/brand/business-cards/malik-llc/card-front.pdf",
+        "front_svg": "https://malikai-786.github.io/assets/brand/business-cards/malik-llc/card-front.svg",
+        "back_png": "https://malikai-786.github.io/assets/brand/business-cards/malik-llc/card-back.png",
+        "back_pdf": "https://malikai-786.github.io/assets/brand/business-cards/malik-llc/card-back.pdf",
+        "back_svg": "https://malikai-786.github.io/assets/brand/business-cards/malik-llc/card-back.svg"
+      }
+    },
+    {
+      "id": "malik-marketplace",
+      "brand": "Malik Marketplace",
+      "descriptor": null,
+      "audience": "Marketplace contacts",
+      "format": "US business card, 3.5x2in, 300dpi, 0.125in bleed — pdf for a printer, png for preview, svg as source",
+      "files": {
+        "front_png": "https://malikai-786.github.io/assets/brand/business-cards/malik-marketplace/card-front.png",
+        "front_pdf": "https://malikai-786.github.io/assets/brand/business-cards/malik-marketplace/card-front.pdf",
+        "front_svg": "https://malikai-786.github.io/assets/brand/business-cards/malik-marketplace/card-front.svg",
+        "back_png": "https://malikai-786.github.io/assets/brand/business-cards/malik-marketplace/card-back.png",
+        "back_pdf": "https://malikai-786.github.io/assets/brand/business-cards/malik-marketplace/card-back.pdf",
+        "back_svg": "https://malikai-786.github.io/assets/brand/business-cards/malik-marketplace/card-back.svg"
+      }
+    },
+    {
+      "id": "proof-over-promise",
+      "brand": "Proof Over Promise",
+      "descriptor": "AI governance · model risk · judgment",
+      "audience": "Newsletter readers, press",
+      "format": "US business card, 3.5x2in, 300dpi, 0.125in bleed — pdf for a printer, png for preview, svg as source",
+      "files": {
+        "front_png": "https://malikai-786.github.io/assets/brand/business-cards/proof-over-promise/card-front.png",
+        "front_pdf": "https://malikai-786.github.io/assets/brand/business-cards/proof-over-promise/card-front.pdf",
+        "front_svg": "https://malikai-786.github.io/assets/brand/business-cards/proof-over-promise/card-front.svg",
+        "back_png": "https://malikai-786.github.io/assets/brand/business-cards/proof-over-promise/card-back.png",
+        "back_pdf": "https://malikai-786.github.io/assets/brand/business-cards/proof-over-promise/card-back.pdf",
+        "back_svg": "https://malikai-786.github.io/assets/brand/business-cards/proof-over-promise/card-back.svg"
+      }
+    }
+  ],
+  "email_signatures": [
+    {
+      "id": "academic",
+      "title": "Academic",
+      "audience": "Committee, faculty, journals, conferences",
+      "phone_line": "786",
+      "source": "https://malikai-786.github.io/assets/brand/signature.html",
+      "note": "Copy the block for this variant out of signature.html — it is not a separate file, all five live on one page."
+    },
+    {
+      "id": "professional",
+      "title": "Professional",
+      "audience": "Recruiters, advisory, regulators, colleagues",
+      "phone_line": "786",
+      "source": "https://malikai-786.github.io/assets/brand/signature.html",
+      "note": "Copy the block for this variant out of signature.html — it is not a separate file, all five live on one page."
+    },
+    {
+      "id": "personal",
+      "title": "Personal",
+      "audience": "Friends, family",
+      "phone_line": "305",
+      "source": "https://malikai-786.github.io/assets/brand/signature.html",
+      "note": "Copy the block for this variant out of signature.html — it is not a separate file, all five live on one page."
+    },
+    {
+      "id": "legal-correspondence",
+      "title": "Legal correspondence",
+      "audience": "Attorney communication — blank template, no case content, ever",
+      "phone_line": "786 + 305",
+      "source": "https://malikai-786.github.io/assets/brand/signature.html",
+      "note": "Copy the block for this variant out of signature.html — it is not a separate file, all five live on one page."
+    },
+    {
+      "id": "reply",
+      "title": "Reply",
+      "audience": "Second message onward, and phones",
+      "phone_line": "none — no phone line at all",
+      "source": "https://malikai-786.github.io/assets/brand/signature.html",
+      "note": "Copy the block for this variant out of signature.html — it is not a separate file, all five live on one page."
+    }
+  ]
+}

@@ -79,9 +79,19 @@ SECTIONS = [
  ("avatars/proof-over-promise/avatar-dark.png", "P — Proof Over Promise", "Verdigris. The newsletter."),
 ]),
 
-("Business card", "Print-ready, with bleed and safe area verified.", [
- ("card/card-front.png", "Front", "Also available as PDF, which is what a printer wants."),
- ("card/card-back.png", "Back", ""),
+("Business cards", "Print-ready, with bleed and safe area verified. Every "
+ "brand and stream gets the same geometry and a colour of its own — "
+ "PDF for a printer, PNG for looking at.", [
+ ("card/card-front.png", "Yasir A. Malik — front", "The default. General introductions."),
+ ("card/card-back.png", "Yasir A. Malik — back", ""),
+ ("business-cards/consulting/card-front.png", "Consulting — front", "Advisory engagements. Same person, positioned for it."),
+ ("business-cards/consulting/card-back.png", "Consulting — back", ""),
+ ("business-cards/malik-llc/card-front.png", "Malik LLC — front", "Residential real estate."),
+ ("business-cards/malik-llc/card-back.png", "Malik LLC — back", ""),
+ ("business-cards/malik-marketplace/card-front.png", "Malik Marketplace — front", "No service description is public yet, so the card carries the name and nothing invented."),
+ ("business-cards/malik-marketplace/card-back.png", "Malik Marketplace — back", ""),
+ ("business-cards/proof-over-promise/card-front.png", "Proof Over Promise — front", "A promo card for the newsletter — leads with the subscribe link."),
+ ("business-cards/proof-over-promise/card-back.png", "Proof Over Promise — back", ""),
 ]),
 
 ("Social and favicons", "The small ones that get forgotten.", [
@@ -252,6 +262,10 @@ HEAD = '''<!DOCTYPE html>
     image to open it full size, or Download to save it. Every file here is
     generated from the constants in <code>make_marks.py</code>, so they are all
     provably the same mark rather than nine drawings that resemble each other.</p>
+    <p class="lede" style="margin-top:14px;font-size:.92rem;">
+      Reading this as a model rather than a person? The same index exists as
+      one typed file: <a href="assets/brand/templates.json">templates.json</a>.
+    </p>
   </div>
 </header>
 '''

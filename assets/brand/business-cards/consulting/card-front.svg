@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1125 675" fill="none">
+  <rect width="1125" height="675" fill="#F6F3F0"/>
+  <rect x="0" y="0" width="1125" height="14" fill="#E0662E"/>
+<g transform="translate(90 118) scale(1.75)">
+    <path d="M19.88 10.13 A25 25 0 1 1 8.36 23.86" stroke="#E0662E" stroke-width="4.4" stroke-linecap="round"/>
+    <circle cx="12.85" cy="15.93" r="3.9" fill="#E0662E"/>
+    <path d="M20 47 L32 19.5 L44 47" stroke="#171A1D" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+    <path d="M21.09 38 H51.5" stroke="#171A1D" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
+  </g>
+  <text x="90" y="330" font-family="&#39;Bitstream Charter&#39;,Charter,&#39;Iowan Old Style&#39;,&#39;Palatino Linotype&#39;,Palatino,&#39;Book Antiqua&#39;,Georgia,serif" font-size="74" fill="#171A1D">Yasir A. Malik</text>
+  <path d="M93 364 H165" stroke="#E0662E" stroke-width="4"/>
+  <text x="92" y="410" font-family="ui-monospace,&#39;SF Mono&#39;,Menlo,&#39;Cascadia Mono&#39;,&#39;Roboto Mono&#39;,monospace" font-size="25" letter-spacing="5" fill="#5A646E">GOVERNANCE-FIRST AI ADVISORY</text>
+  <path d="M90 448 H1035" stroke="#E2DAD3" stroke-width="2"/>
+  <text x="90" y="496" font-family="ui-monospace,&#39;SF Mono&#39;,Menlo,&#39;Cascadia Mono&#39;,&#39;Roboto Mono&#39;,monospace" font-size="25" letter-spacing="1.2" fill="#5A646E">YasirAMalik@gmail.com</text>
+  <text x="90" y="540" font-family="ui-monospace,&#39;SF Mono&#39;,Menlo,&#39;Cascadia Mono&#39;,&#39;Roboto Mono&#39;,monospace" font-size="25" letter-spacing="1.2" fill="#5A646E">+1 (786) 704-8536</text>
+  <text x="90" y="584" font-family="ui-monospace,&#39;SF Mono&#39;,Menlo,&#39;Cascadia Mono&#39;,&#39;Roboto Mono&#39;,monospace" font-size="25" letter-spacing="1.2" fill="#5A646E">malikai-786.github.io/#advisory</text>
+</svg>

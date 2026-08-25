@@ -80,6 +80,12 @@ away, and it does not get softened.
 deleting history, changing a public URL, force-pushing, or altering how he is
 described professionally are his calls. Bring them to him.
 
+**9. Never invent a business detail either.** Not an address, a dedicated
+phone line, or a service a brand offers, just because a template has a blank
+for it. `templates.json` lists Malik Marketplace with no service description
+on purpose — nothing public exists yet to source one from, so the blank
+stays a blank rather than becoming a guess.
+
 ## The brand is settled
 
 Do not redesign it, and do not re-litigate the palette. It is documented at
@@ -114,9 +120,20 @@ either one in place works until the next regeneration silently reverts it.
 Change the manifest and regenerate.
 
 The same applies to every image under `assets/brand/`: marks, banners,
-avatars, the LinkedIn cover, the business card and the profile hero all come
+avatars, the LinkedIn cover, the business cards and the profile hero all come
 out of `make_*.py` generators driven by one set of constants. Never hand-edit
 an SVG or retouch a PNG — change the generator and re-run it.
+
+## Where to find the templates
+
+[`templates.json`](https://malikai-786.github.io/assets/brand/templates.json)
+is the typed, machine-readable index — business cards for every brand
+(`assets/brand/make_business_cards.py`, plus the personal one in
+`make_card.py`) and every email signature variant
+(`assets/brand/make_signatures.py`), each entry checked against the actual
+file on disk at generation time. It exists so any model or bot reading this
+account — not only the one that wrote it — can find and reuse these without
+scraping HTML for links.
 
 ---
 
