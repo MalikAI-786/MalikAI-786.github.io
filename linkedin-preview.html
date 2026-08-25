@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>LinkedIn preview — Yasir A. Malik</title>
+<meta name="description" content="Working mock of the LinkedIn profile: real brand assets, real copy, simulated fold. Not affiliated with LinkedIn." />
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
+<style>
+/* ===================================================================
+   LINKEDIN PREVIEW — a working mock, not a LinkedIn product
+   Deliberately rendered in the platform's visual language rather than
+   the brand's, because the whole point is to judge how the profile will
+   look THERE. The brand appears where it actually appears: the cover,
+   the avatar, the featured cards, the company logos.
+   =================================================================== */
+:root{
+  --li-bg:#f4f2ee; --li-card:#ffffff; --li-line:#e0dfdc;
+  --li-ink:rgba(0,0,0,.9); --li-mid:rgba(0,0,0,.6); --li-faint:rgba(0,0,0,.45);
+  --li-blue:#0a66c2; --li-blue-dk:#004182; --li-green:#01754f;
+  --li-sans:-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,"Cascadia Mono","Roboto Mono",monospace;
+  --ember:#E0662E; --ember-ink:#AD4317;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--li-bg);color:var(--li-ink);font-family:var(--li-sans);
+  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+/* pre-wrap preserves the line breaks that make a post readable, but it will not
+   break a long URL — and the first-comment blocks are mostly long URLs. Without
+   this the page scrolls sideways on a phone, which is where it gets judged. */
+.about-body,.pbody,.pcomment,.exp .desc{overflow-wrap:anywhere;word-break:break-word;}
+img{max-width:100%;display:block;}
+button{font-family:inherit;font-size:inherit;cursor:pointer;}
+:focus-visible{outline:2px solid var(--li-blue);outline-offset:2px;}
+a{color:var(--li-blue);}
+
+/* ---- the harness (not part of the mock) ---- */
+.harness{background:#171A1D;color:#F6F3F0;border-bottom:3px solid var(--ember);}
+.harness-in{max-width:1128px;margin:0 auto;padding:13px 24px;display:flex;
+  align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.harness h1{font-size:.95rem;margin:0;font-weight:600;letter-spacing:-.01em;}
+.harness p{margin:3px 0 0;font-size:.76rem;color:#A6B0BA;max-width:62ch;}
+.controls{display:flex;gap:8px;flex-wrap:wrap;}
+.ctrl{background:transparent;border:1px solid #3E464E;color:#E2DAD3;border-radius:16px;
+  padding:6px 13px;font-size:.72rem;font-family:var(--mono);letter-spacing:.05em;
+  text-transform:uppercase;}
+.ctrl:hover{border-color:var(--ember);color:#F58E5C;}
+.ctrl[aria-pressed="true"]{background:var(--ember);border-color:var(--ember);color:#1a0d05;
+  font-weight:700;}
+
+.page{max-width:1128px;margin:0 auto;padding:22px 24px 60px;
+  display:grid;grid-template-columns:1fr 300px;gap:22px;align-items:start;}
+@media (max-width:960px){ .page{grid-template-columns:1fr;} }
+
+.card{background:var(--li-card);border:1px solid var(--li-line);border-radius:10px;
+  margin-bottom:9px;overflow:hidden;}
+.card-pad{padding:20px 22px;}
+.card h2{font-size:1.25rem;margin:0 0 14px;font-weight:600;letter-spacing:-.01em;}
+
+/* ---- top card ---- */
+.cover{width:100%;aspect-ratio:1584/396;object-fit:cover;background:#171A1D;}
+.avatar-row{padding:0 22px;margin-top:-78px;position:relative;}
+.avatar{width:152px;height:152px;border-radius:50%;border:4px solid var(--li-card);
+  background:var(--li-card);object-fit:cover;}
+.ident{padding:14px 22px 20px;}
+.ident h1{font-size:1.6rem;margin:0;font-weight:600;letter-spacing:-.02em;}
+.headline{font-size:1rem;margin:5px 0 0;color:var(--li-ink);max-width:66ch;}
+.meta{font-size:.83rem;color:var(--li-faint);margin:6px 0 0;}
+.meta a{font-weight:600;}
+.otw{margin:15px 0 0;border:2px solid var(--li-green);border-radius:8px;
+  padding:11px 14px;background:#f0f7f4;}
+.otw b{color:var(--li-green);display:block;font-size:.9rem;}
+.otw span{font-size:.83rem;color:var(--li-mid);}
+.btn-row{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap;}
+.btn{border-radius:20px;padding:7px 17px;font-weight:600;font-size:.87rem;border:1px solid;}
+.btn.solid{background:var(--li-blue);border-color:var(--li-blue);color:#fff;}
+.btn.out{background:transparent;border-color:var(--li-blue);color:var(--li-blue);}
+.btn.grey{background:transparent;border-color:rgba(0,0,0,.6);color:var(--li-mid);}
+
+/* ---- field wrapper: the editable/copyable layer ---- */
+.field{position:relative;}
+.field.marked{outline:1.5px dashed var(--ember);outline-offset:5px;border-radius:3px;}
+.fbar{display:none;align-items:center;gap:9px;margin:7px 0 0;}
+.field.marked .fbar{display:flex;flex-wrap:wrap;}
+.copy{background:var(--ember);border:none;color:#1a0d05;border-radius:4px;
+  padding:4px 11px;font-size:.66rem;font-family:var(--mono);letter-spacing:.07em;
+  text-transform:uppercase;font-weight:700;}
+.copy.done{background:var(--li-green);color:#fff;}
+.count{font-family:var(--mono);font-size:.68rem;color:var(--li-faint);}
+.count.over{color:#b4271a;font-weight:700;}
+
+/* ---- about / see-more ---- */
+.about-body{white-space:pre-wrap;font-size:.93rem;line-height:1.62;}
+.folded .fold-rest{display:none;}
+.seemore{background:none;border:none;color:var(--li-faint);font-weight:600;
+  padding:4px 0;font-size:.9rem;}
+.seemore:hover{color:var(--li-blue);text-decoration:underline;}
+.foldline{border:0;border-top:2px dashed var(--ember);margin:0;position:relative;
+  display:none;}
+.showfold .foldline{display:block;}
+.foldline::after{content:"fold — everything below is behind \201Csee more\201D";
+  position:absolute;right:0;top:-9px;background:var(--li-card);padding:0 7px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ember-ink);}
+
+/* ---- featured ---- */
+.featured{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));}
+.feat{border:1px solid var(--li-line);border-radius:8px;overflow:hidden;
+  text-decoration:none;color:inherit;display:block;}
+.feat:hover{background:#f9f9f8;}
+.feat .thumb{aspect-ratio:1.91/1;object-fit:cover;background:#171A1D;width:100%;}
+/* a wide banner cropped to 1.91:1 loses its own wordmark, so it is fitted whole */
+.feat .thumb.fit{object-fit:contain;}
+.feat .ft{padding:11px 13px;}
+.feat .ft b{display:block;font-size:.88rem;line-height:1.35;}
+.feat .ft span{display:block;font-size:.78rem;color:var(--li-faint);margin-top:4px;}
+
+/* ---- experience ---- */
+.exp{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--li-line);}
+.exp:last-child{border-bottom:0;padding-bottom:0;}
+.exp:first-of-type{padding-top:0;}
+.exp .logo{width:48px;height:48px;border-radius:5px;flex:0 0 auto;object-fit:contain;
+  background:#F6F3F0;border:1px solid var(--li-line);padding:5px;}
+.exp .logo.ph{display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:1.25rem;color:var(--li-faint);background:#eeedea;}
+.exp .role{font-weight:600;font-size:.97rem;}
+.exp .org{font-size:.88rem;color:var(--li-ink);}
+.exp .when{font-size:.82rem;color:var(--li-faint);}
+.exp .desc{margin-top:9px;font-size:.88rem;white-space:pre-wrap;line-height:1.58;
+  color:var(--li-ink);}
+
+/* ---- skills ---- */
+.skills{display:flex;flex-wrap:wrap;gap:7px;}
+.skill{border:1px solid var(--li-line);border-radius:14px;padding:5px 12px;
+  font-size:.82rem;background:#fafafa;}
+.skill.pin{border-color:var(--ember);background:#FDF4EF;color:var(--ember-ink);
+  font-weight:700;}
+
+/* ---- posts ---- */
+.post{border-bottom:1px solid var(--li-line);padding:18px 0;}
+.post:last-child{border-bottom:0;padding-bottom:0;}
+.post:first-of-type{padding-top:0;}
+.phead{display:flex;gap:11px;align-items:center;margin-bottom:11px;}
+.phead img{width:46px;height:46px;border-radius:50%;object-fit:cover;}
+.phead b{display:block;font-size:.9rem;}
+.phead span{display:block;font-size:.76rem;color:var(--li-faint);line-height:1.35;}
+.pbody{white-space:pre-wrap;font-size:.93rem;line-height:1.55;}
+.tags{color:var(--li-blue);font-weight:600;}
+.pmeta{display:flex;gap:14px;margin-top:12px;padding-top:9px;
+  border-top:1px solid var(--li-line);font-size:.78rem;color:var(--li-faint);}
+.pcomment{margin-top:12px;background:#f4f2ee;border-radius:8px;padding:11px 13px;
+  font-size:.86rem;white-space:pre-wrap;line-height:1.5;}
+.pcomment .lbl{font-family:var(--mono);font-size:.6rem;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--li-faint);display:block;margin-bottom:6px;}
+.slot{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ember-ink);background:#FDF4EF;border:1px solid #F4C5AC;border-radius:3px;
+  padding:2px 8px;display:inline-block;margin-bottom:10px;}
+
+/* ---- right rail ---- */
+.rail .card-pad{padding:17px 18px;}
+.rail h3{font-size:.95rem;margin:0 0 10px;font-weight:600;}
+.rail p{font-size:.83rem;color:var(--li-mid);margin:0 0 9px;}
+.rail ul{margin:0;padding-left:17px;font-size:.83rem;color:var(--li-mid);}
+.rail li{margin-bottom:6px;}
+.disclaim{font-size:.72rem;color:var(--li-faint);line-height:1.5;}
+@media (max-width:640px){
+  .page{padding:14px 12px 40px;}
+  .avatar{width:104px;height:104px;}
+  .avatar-row{margin-top:-54px;padding:0 16px;}
+  .ident,.card-pad{padding-left:16px;padding-right:16px;}
+  .ident h1{font-size:1.3rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HARNESS — not part of the profile ============ -->
+<div class="harness">
+  <div class="harness-in">
+    <div>
+      <h1>LinkedIn preview · working mock</h1>
+      <p>An unofficial replica for laying out the profile. Not affiliated with,
+      endorsed by, or connected to LinkedIn. Every asset below is generated from
+      <span style="font-family:var(--mono)">assets/brand/</span>.</p>
+    </div>
+    <div class="controls">
+      <button class="ctrl" id="tFold" aria-pressed="false">Show fold</button>
+      <button class="ctrl" id="tCopy" aria-pressed="false">Copy mode</button>
+      <button class="ctrl" id="tCover" aria-pressed="false">Light cover</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ============================ MAIN ============================ -->
+<main>
+
+  <!-- ---------- top card ---------- -->
+  <div class="card">
+    <img class="cover" id="coverImg" src="assets/brand/linkedin/cover-dark.png"
+         alt="Cover: Breathe. Think. Then win. Audit, Risk, Governance." />
+    <div class="avatar-row">
+      <img class="avatar" src="assets/brand/portrait/portrait-circle.png"
+           alt="Portrait of Yasir A. Malik" />
+    </div>
+    <div class="ident">
+      <h1>Yasir A. Malik</h1>
+
+      <div class="field" data-copy="headline" data-limit="220">
+        <p class="headline" data-src>AI Governance &amp; Model Risk | Internal Audit Executive | Ex-OCC Bank Examiner | Citi, JPMorgan Chase | NIST AI RMF, SR 26-2, ISO 42001 | DBA researcher on AI and professional judgment</p>
+        <div class="fbar"><button class="copy">Copy</button><span class="count"></span></div>
+      </div>
+
+      <p class="meta">Newark, NJ · NYC metro ·
+        <a href="https://malikai-786.github.io/">malikai-786.github.io</a></p>
+
+      <div class="otw">
+        <b>Open to work</b>
+        <span>Director of AI Governance, Head of Model Risk, Chief Audit Executive
+        and 5 more — <b style="display:inline;font-weight:700">shared with recruiters only</b></span>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn solid">Open to</button>
+        <button class="btn out">Add profile section</button>
+        <button class="btn grey">More</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---------- featured ---------- -->
+  <div class="card"><div class="card-pad">
+    <h2>Featured</h2>
+    <div class="featured">
+      <a class="feat" href="https://malikai-786.github.io/" target="_blank" rel="noopener">
+        <img class="thumb" src="assets/brand/og-card.png" alt="" />
+        <span class="ft"><b>Research, advisory practice, and the record</b>
+        <span>malikai-786.github.io</span></span>
+      </a>
+      <a class="feat" href="https://proofoverpromise.substack.com/subscribe" target="_blank" rel="noopener">
+        <img class="thumb fit" src="assets/brand/banners/proof-over-promise/banner-dark.png" alt="" />
+        <span class="ft"><b>Proof Over Promise — the newsletter</b>
+        <span>proofoverpromise.substack.com</span></span>
+      </a>
+      <a class="feat" href="https://malikai-786.github.io/instrument.html" target="_blank" rel="noopener">
+        <img class="thumb" src="assets/brand/og-card.png" alt="" />
+        <span class="ft"><b>An instrument for what resists measurement</b>
+        <span>Case study · measurement design</span></span>
+      </a>
+      <a class="feat" href="https://github.com/MalikAI-786" target="_blank" rel="noopener">
+        <img class="thumb" src="assets/brand/profile-readme/profile-hero-dark.png" alt="" />
+        <span class="ft"><b>Public work</b><span>github.com/MalikAI-786</span></span>
+      </a>
+    </div>
+  </div></div>
+
+  <!-- ---------- about ---------- -->
+  <div class="card"><div class="card-pad">
+    <h2>About</h2>
+    <div class="field" data-copy="about" data-limit="2600">
+      <div class="about-body folded" id="aboutBox" data-src><span class="fold-head">The most dangerous number in the room is the one nobody questions.
+
+I have spent twenty years on that problem from three seats: as a national bank examiner at the OCC, as an internal audit leader inside Citi and JPMorgan Chase, and now as a doctoral researcher studying what happens to professional judgment when the analysis arrives already formed.</span><hr class="foldline" /><span class="fold-rest">
+WHAT I DO
+I help regulated organizations adopt AI without losing the ability to challenge it. In practice that means AI governance frameworks mapped to the NIST AI RMF and federal model risk guidance (SR 26-2, which superseded SR 11-7 in April 2026), model inventory and validation, human-in-the-loop control design, third-party AI risk, and the documentation trail an examiner will actually ask for.
+
+WHAT I HAVE ACTUALLY DONE
+- Built and shipped a retrieval-augmented generation (RAG) assistant into a live audit function at Citi, cutting review cycle time roughly 35%
+- Authored an AI governance framework for an internal governance team covering model risk, explainability, and human oversight
+- Led consent-order remediation and issue-closure packages submitted to quality assurance review and external regulators
+- Ran the Resolution and Recovery Planning program at JPMorgan Chase, coordinating 50+ stakeholders on Federal Reserve and FDIC submissions
+- Owned Basel III RWA and capital adequacy reporting, identifying $180M in capital optimization
+- Examined banks for safety and soundness at the OCC and the Florida Office of Financial Regulation
+
+THE RESEARCH
+My doctoral work at Florida International University asks a narrow and uncomfortable question: when an AI system produces the analysis, does the reviewer still review it? Systems tuned on human approval tend to affirm the position you already hold, and they are most agreeable exactly where a reviewer most needs pushback. That is a control problem before it is a technology problem.
+
+WHY IT MATTERS TO ME
+The auditor everyone dreads teaches nobody. You cannot examine your way out of deference, because nobody documents the moment they stopped thinking. So I use the audit discipline to teach judgment rather than police it: governance that produces better thinking, not just cleaner files.
+
+WHAT I AM LOOKING FOR
+Director and Head-of level roles in AI governance, model risk, and internal audit. Also open to advisory engagements, guest lecturing, and research collaboration.
+
+Breathe. Think. Then win.
+
+malikai-786.github.io</span></div>
+      <button class="seemore" data-target="aboutBox">…see more</button>
+      <div class="fbar"><button class="copy">Copy</button><span class="count"></span></div>
+    </div>
+  </div></div>
+
+  <!-- ---------- activity ---------- -->
+  <div class="card"><div class="card-pad">
+    <h2>Activity</h2>
+    <p style="margin:-8px 0 16px;font-size:.83rem;color:var(--li-faint)">
+      The queue, rendered as it will appear. Turn on <b>Show fold</b> to see exactly
+      where each post gets cut. Source of truth is
+      <span style="font-family:var(--mono)">tools/linkedin/queue/</span> — edit there, not here.</p>
+    <div id="posts"></div>
+  </div></div>
+
+  <!-- ---------- experience ---------- -->
+  <div class="card"><div class="card-pad">
+    <h2>Experience</h2>
+    <div id="exp"></div>
+  </div></div>
+
+  <!-- ---------- skills ---------- -->
+  <div class="card"><div class="card-pad">
+    <h2>Skills</h2>
+    <p style="margin:-8px 0 14px;font-size:.83rem;color:var(--li-faint)">
+      The three in ember are pinned. Pinned skills carry disproportionate weight in
+      recruiter search, so they are the three worth spending.</p>
+    <div class="skills" id="skills"></div>
+  </div></div>
+
+</main>
+
+<!-- ============================ RAIL ============================ -->
+<aside class="rail">
+  <div class="card"><div class="card-pad">
+    <h3>How to use this</h3>
+    <ul>
+      <li><b>Show fold</b> draws the line where LinkedIn cuts. Anything below it is
+      invisible until someone taps.</li>
+      <li><b>Copy mode</b> puts a copy button and a live character count on every
+      field that goes into the real profile.</li>
+      <li><b>Light cover</b> swaps the cover art so you can judge both against the
+      portrait.</li>
+    </ul>
+  </div></div>
+
+  <div class="card"><div class="card-pad">
+    <h3>Assets in use</h3>
+    <p>All generated, none hand-edited:</p>
+    <ul style="font-family:var(--mono);font-size:.72rem">
+      <li>linkedin/cover-dark.png</li>
+      <li>portrait/portrait-circle.png</li>
+      <li>og-card.png</li>
+      <li>banners/proof-over-promise/</li>
+      <li>profile-readme/profile-hero-dark.png</li>
+      <li>avatars/malik-llc/</li>
+    </ul>
+  </div></div>
+
+  <div class="card"><div class="card-pad">
+    <h3>Not yet decided</h3>
+    <p><b>Malik AI</b> has no generated identity. The avatar set covers
+    <span style="font-family:var(--mono);font-size:.75rem">yasir-a-malik</span>,
+    <span style="font-family:var(--mono);font-size:.75rem">malik-llc</span>,
+    <span style="font-family:var(--mono);font-size:.75rem">malik-marketplace</span> and
+    <span style="font-family:var(--mono);font-size:.75rem">proof-over-promise</span> —
+    nothing else. A new brand is a generator change and a decision, not a file to
+    draw. It is left out rather than mocked up.</p>
+  </div></div>
+
+  <div class="card"><div class="card-pad">
+    <p class="disclaim">Unofficial mock for personal layout work. Not affiliated with,
+    endorsed by, or connected to LinkedIn Corporation. No data is sent anywhere; this
+    page makes no network request.</p>
+  </div></div>
+</aside>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* Post text mirrors tools/linkedin/queue/. That directory is the source of
+     truth; this is a preview. If they drift, the queue is right. */
+  var POSTS = [
+    { slot:"Week 1 · Tuesday · M1 Muḥāsaba",
+      body:"A self-identified issue and an examiner-identified issue can describe exactly the same control failure. They are not the same finding, and every regulated institution knows it.\n\nThe difference is who looked first.\n\nI spent years on both sides of that gap. At the OCC I was the one who looked. Inside two banks I was the one hoping we had looked already. The institutions that came out of examinations best were never the ones with the fewest problems. They were the ones who had found their own problems and could show the work.\n\nSo a while ago I turned the method inward and built a measuring instrument for myself. Not a habit tracker. A habit tracker records compliance, which is the easy question. I wanted the harder one an auditor actually asks: is this control designed correctly, and is it operating effectively?\n\nThe first design decision was the one that mattered, and it was uncomfortable.\n\nThere is no field where I record how I think I am doing. The headline rating is computed from the measures underneath it, each against a written rubric, and there is no way to move the number except by moving something real. I cannot award myself anything.\n\nThe second decision followed from it. The rating can go down. Standing is a computed position, not a ratchet, and absent sustained input it falls. A measure you can only accumulate is not a measure of a capacity. It is a record of having once qualified.\n\nBoth decisions make the instrument worse to use. That was the point. A scoring field you can reach directly will be reached directly, and it will be reached hardest on exactly the days when the honest score would be bad.\n\nWhich puts a question to most of what passes for self-assessment in a control function. If your control self-assessment has a box where the owner states the residual rating, you are not measuring the control. You are measuring the owner's appetite for a difficult conversation.\n\nI do not yet know whether an instrument this unforgiving survives contact with a bad month, or whether the honest failure mode is that you simply stop opening it. That is a real question about control design and I cannot answer it yet.\n\nThe design is written up in full — the five decisions, what each one costs, and where the whole thing is weak. Link in the first comment.",
+      tags:"#AIGovernance #ModelRisk #InternalAudit",
+      comment:"The full case study, including the design decision I think is weakest:\nhttps://malikai-786.github.io/instrument.html\n\nThe instrument itself stays private — it holds a real daily record and runs entirely offline in one browser, which is the only reason it is honest enough to be worth building. What is publishable is the design." },
+
+    { slot:"Week 1 · Thursday · working record",
+      body:"\"A human reviews the output\" appears in almost every AI control description I have read. It is almost never a control.\n\nA control has a design you can describe, an operation you can evidence, and a failure mode you can name. Read that sentence again against those three tests and it fails all of them. It describes a seating arrangement.\n\nI ran into this from the inside. I built a retrieval-augmented assistant for audit and workpaper inquiry and put it into a live audit function, where it cut review cycle time by an estimated 35%. Then I had to write the governance framework that said under what conditions a thing like it was allowed to operate.\n\nThe number was the easy part. The hard section was human oversight, and it was hard for a reason I did not expect.\n\nEvery version I drafted said some form of \"the reviewer validates the output before use.\" And every version failed the question an examiner would ask on the first day: what evidence would exist if the reviewer had not validated it? There isn't any. A reviewer who reads carefully and a reviewer who scrolls to the bottom and clicks produce identical artefacts.\n\nSo the control cannot be \"a human reviews it.\" The control has to be something that changes what the human does.\n\nThe versions that survived had a shape in common. They specified what the reviewer must independently produce before seeing the machine's answer, or what must be recorded when the reviewer agrees, or what threshold of disagreement triggers a second look. Each one makes the moment of deference visible by making agreement cost something.\n\nThat is the whole of it. You cannot audit for deference directly, because nobody documents the moment they stopped thinking. There is no exception report for the reviewer who agreed because agreeing was easier. You can only infer it from design — from whether the arrangement makes disagreement possible, cheap and expected, or merely permitted in principle.\n\nWhat I still do not know is how much of the cycle-time saving survives a control built that way. If the reviewer has to form a view first, some of the 35% goes back. I would rather know that number than not, and I have not seen anyone publish it.\n\nIf you are writing an AI control description this quarter, the question worth putting to every line of it is simply: what would make the human disagree, and would we be able to tell?",
+      tags:"#AIGovernance #ModelRisk #InternalAudit",
+      comment:"I write about this at longer length in Proof Over Promise — model risk, AI governance, and what happens to professional judgment when the analysis arrives already formed:\nhttps://proofoverpromise.substack.com/subscribe" },
+
+    { slot:"Week 2 · Tuesday · M2 Su'āl",
+      body:"In 1915 a Punjabi poet writing about the structure of the self identified a failure mode that model risk teams are currently rediscovering, badly. He called it su'āl. Asking.\n\nMuhammad Iqbal's argument in Asrār-i-Khudī is that a self is not a thing you have but an activity you sustain, and that it thins under specific conditions. Su'āl is the one he is harshest about. Anything received rather than earned weakens the receiver — not because the giver did wrong, but because a self that habituates to being supplied stops generating.\n\nHe meant it broadly. The borrowed opinion. The unearned position. The conclusion adopted because it arrived already formed.\n\nI did not go looking for a hundred-year-old description of automation bias. It is simply the closest thing I have read to the mechanism my doctoral research is about, which is a narrow and uncomfortable question: when an AI system produces the analysis, does the reviewer still review it?\n\nThe evidence available so far suggests the problem is not that these systems are wrong. It is where they are agreeable. Systems tuned on human approval tend to affirm the position you already hold, which means they are least useful exactly where a reviewer most needs pushback. That is a control problem before it is a technology problem, and it does not get solved by a better model.\n\nIqbal's move, notably, is not to prohibit receiving. It is to treat the capacity to generate as something that decays with disuse and therefore has to be exercised deliberately. Read as a control principle rather than a moral one, that is unusually practical: the question is not whether your people use these tools, it is whether anything in the design still requires them to form a view of their own.\n\nI am not sure what the right exercise is at an institutional scale. Requiring an independent view before the model's output is visible is the obvious candidate and it is expensive. I do not know yet what it costs or whether the cost is worth paying.\n\nTo be clear about what this is and is not: the argument above is mine and the evidence for it has to be mine. Iqbal described a structure. He did not write about model risk, and citing him proves nothing. If the point does not stand with the citation deleted, it does not stand.",
+      tags:"#AIGovernance #ModelRisk #InternalAudit",
+      comment:"The research question, and where the doctoral work sits:\nhttps://malikai-786.github.io/#research\n\nNothing in it is peer-reviewed or concluded. It is in progress, and I write about it as it goes in Proof Over Promise." },
+
+    { slot:"Week 2 · Thursday · M5 / record",
+      body:"Days since the last incident. Consecutive clean months. Zero-findings quarters. Every one of those is a streak, and a streak reports zero the moment it breaks.\n\nThat is a true statement about the calendar and a false one about the control.\n\nI ran into this building a measuring instrument for myself, where the stakes were low enough to experiment and the subject was the only one I am entitled to experiment on. I wanted a daily figure. Daily figures want to be streaks. And a streak is genuinely motivating, which is exactly what makes it dangerous as a metric.\n\nThe problem is not that a streak is fragile. It is what a fragile metric does to the person holding it.\n\nOnce a counter is load-bearing, the cheapest way to protect it is to protect the counter rather than the thing it stands for. Nobody decides to do this. It happens by increment: the near-miss that does not quite meet the reporting threshold, the finding raised next quarter instead of this one, the day recorded generously because breaking a run of forty felt disproportionate to one bad Thursday.\n\nSo the instrument shows streaks and refuses to let them decide anything. The load-bearing figure is a rolling fourteen-day median.\n\nThe distinction it turns on is old. Iqbal, writing about time, separates serial time — the clock, discrete units, today ends at midnight — from duration, time lived from the inside, where the past is carried rather than gone. A streak is a serial-time artefact. It asks what the calendar looks like. A median asks what has actually been carried, and it survives a bad Thursday, because a capacity does.\n\nThat is not a philosophical flourish. It is a specification. One measure resets to zero on a single event and one does not, and which you put in the load-bearing position determines what your people optimise.\n\nThe governance version of this is everywhere and it is mostly unexamined. Ask of any operational metric on your dashboard: what single event takes it to zero, and is that event actually catastrophic, or merely discontinuous? If the answer is the second, you have built an incentive to manage the counter.\n\nWhat I have not resolved is the honest objection. Medians are harder to explain to a board than \"two hundred days clean\", and a metric nobody understands does not govern anything. I do not think the answer is to go back to streaks. I am not sure what it is.\n\nThe full write-up of the design decisions, including this one and the one I think is weakest, is in the first comment.",
+      tags:"#AIGovernance #ModelRisk #OperationalResilience",
+      comment:"Five decisions from building it, what each one costs, and where the design is weak:\nhttps://malikai-786.github.io/instrument.html" }
+  ];
+
+  var EXPERIENCE = [
+    { role:"VP, Audit Manager", org:"Citi", when:"See profile for dates", logo:null,
+      desc:"Led global, risk-based thematic audits across 15+ business units, assessing operational resilience, change management, and regulatory alignment against OCC and Federal Reserve expectations.\n\nDrove consent-order remediation: prepared issue-closure packages and audited remediation items submitted to quality assurance review and external regulators, including work tied to legal-entity divestitures.\n\nBuilt and deployed a prompt-engineered RAG document assistant for audit and workpaper inquiry, reducing review cycle time an estimated 35%. Applied AI shipped into a regulated control environment.\n\nAuthored an AI governance framework for the internal governance team referencing the NIST AI RMF and federal model risk guidance, addressing model risk, explainability, documentation standards, and human-in-the-loop oversight.\n\nDelivered executive risk reporting to senior leadership and the Board Audit Committee. Mentored 8+ auditors on responsible AI adoption and automation-bias awareness." },
+    { role:"Risk Control Manager", org:"JPMorgan Chase", when:"See profile for dates", logo:null,
+      desc:"Led the firm's Resolution and Recovery Planning (RRP) program, coordinating 50+ stakeholders across Legal, Treasury, and Operations on regulatory submissions to the Federal Reserve and FDIC.\n\nSupported Treasury and CIO capital controls and reconciliation reporting. Built automated reconciliation dashboards that cut manual review time approximately 40%." },
+    { role:"Capital Controller", org:"JPMorgan Chase", when:"See profile for dates", logo:null,
+      desc:"Owned Basel III RWA calculation and capital adequacy reporting. Identified $180M in capital optimization opportunities and modeled capital impacts for CFO decision support." },
+    { role:"Bank Examiner", org:"OCC / Florida Office of Financial Regulation", when:"See profile for dates", logo:null,
+      desc:"Conducted safety-and-soundness examinations evaluating credit, liquidity, and operational risk. Contributed to enforcement actions and remediation monitoring." },
+    { role:"Founder & Principal", org:"Malik LLC", when:"See profile for dates",
+      logo:"assets/brand/avatars/malik-llc/avatar-solid.svg",
+      desc:"Owner-operator of a multi-property residential portfolio. Direct accountability for P&L, capital allocation, leasing, vendor management, and reporting." }
+  ];
+
+  var SKILLS = ["AI Governance","Model Risk Management","Internal Audit","Responsible AI",
+    "NIST AI Risk Management Framework","AI Risk Management","Regulatory Compliance",
+    "Risk Assessment","ISO/IEC 42001","EU AI Act","Model Validation","Model Governance",
+    "Bank Regulation","Regulatory Examination","Consent Order Remediation","Issue Management",
+    "Operational Risk","Operational Resilience","Internal Controls","Audit Planning",
+    "SOX Compliance","Enterprise Risk Management","Governance, Risk & Compliance (GRC)",
+    "Basel III","Capital Adequacy","Resolution & Recovery Planning","Financial Services",
+    "Banking","Third-Party Risk Management","Data Governance","Artificial Intelligence (AI)",
+    "Machine Learning","Large Language Models (LLM)","Retrieval-Augmented Generation (RAG)",
+    "Prompt Engineering","AI Ethics","Explainable AI","Automation Bias","Behavioral Science",
+    "Research Design","Quantitative Research","SQL","Python","Tableau","Data Analysis",
+    "Executive Reporting","Stakeholder Management","Team Leadership","Public Speaking",
+    "Real Estate Investment"];
+  var PINNED = 3;
+  var FOLD = 200;
+
+  function el(t,c,x){ var n=document.createElement(t); if(c)n.className=c;
+    if(x!==undefined&&x!==null)n.textContent=String(x); return n; }
+
+  /* ---------- posts ---------- */
+  var host = document.getElementById("posts");
+  if(host) POSTS.forEach(function(p){
+    var wrap = el("div","post");
+    wrap.appendChild(el("div","slot", p.slot));
+
+    var head = el("div","phead");
+    var img = document.createElement("img");
+    img.src = "assets/brand/portrait/portrait-circle.png"; img.alt = "";
+    head.appendChild(img);
+    var who = el("div");
+    who.appendChild(el("b","","Yasir A. Malik"));
+    who.appendChild(el("span","","Audit · Risk · Governance · Newark, NJ"));
+    who.appendChild(el("span","","Now · Edited"));
+    head.appendChild(who);
+    wrap.appendChild(head);
+
+    // split at the fold, on a word boundary, so the cut is where LinkedIn cuts
+    var body = p.body, cut = FOLD;
+    if(body.length > FOLD){
+      var sp = body.lastIndexOf(" ", FOLD);
+      var nl = body.indexOf("\n");
+      cut = (nl > -1 && nl < FOLD) ? nl : (sp > 0 ? sp : FOLD);
+    }
+    var box = el("div","pbody folded");
+    box.appendChild(el("span","fold-head", body.slice(0,cut)));
+    if(body.length > cut){
+      box.appendChild(document.createElement("hr")).className = "foldline";
+      var rest = el("span","fold-rest", body.slice(cut));
+      var tag = el("span","tags", "\n\n" + p.tags);
+      rest.appendChild(tag);
+      box.appendChild(rest);
+    }
+    wrap.appendChild(box);
+
+    if(body.length > cut){
+      var more = el("button","seemore","…see more");
+      more.addEventListener("click", function(){
+        box.classList.toggle("folded");
+        more.textContent = box.classList.contains("folded") ? "…see more" : "see less";
+      });
+      wrap.appendChild(more);
+    }
+
+    var meta = el("div","pmeta");
+    meta.appendChild(el("span","", body.length + p.tags.length + 2 + " characters of 3,000"));
+    meta.appendChild(el("span","", "Hook: " + cut + " chars before the cut"));
+    wrap.appendChild(meta);
+
+    var c = el("div","pcomment");
+    c.appendChild(el("span","lbl","First comment — post this immediately after"));
+    c.appendChild(document.createTextNode(p.comment));
+    wrap.appendChild(c);
+
+    host.appendChild(wrap);
+  });
+
+  /* ---------- experience ---------- */
+  var eh = document.getElementById("exp");
+  if(eh) EXPERIENCE.forEach(function(x){
+    var row = el("div","exp");
+    if(x.logo){
+      var im = document.createElement("img");
+      im.className = "logo"; im.src = x.logo; im.alt = "";
+      row.appendChild(im);
+    } else {
+      // Employer marks belong to the employers. LinkedIn attaches the real one
+      // automatically when the company is selected, so a neutral tile stands in
+      // rather than his own mark, which would read as brand confusion.
+      row.appendChild(el("div","logo ph", (x.org || "?").trim().charAt(0)));
+    }
+    var b = el("div");
+    b.appendChild(el("div","role", x.role));
+    b.appendChild(el("div","org", x.org));
+    b.appendChild(el("div","when", x.when));
+    var d = el("div","desc", x.desc);
+    b.appendChild(d);
+    row.appendChild(b);
+    eh.appendChild(row);
+  });
+
+  /* ---------- skills ---------- */
+  var sh = document.getElementById("skills");
+  if(sh) SKILLS.forEach(function(s,i){
+    sh.appendChild(el("span","skill" + (i < PINNED ? " pin" : ""), s));
+  });
+
+  /* ---------- about see-more ---------- */
+  document.querySelectorAll(".seemore[data-target]").forEach(function(btn){
+    var t = document.getElementById(btn.getAttribute("data-target"));
+    if(!t) return;
+    btn.addEventListener("click", function(){
+      t.classList.toggle("folded");
+      btn.textContent = t.classList.contains("folded") ? "…see more" : "see less";
+    });
+  });
+
+  /* ---------- copy mode ---------- */
+  document.querySelectorAll(".field").forEach(function(f){
+    var src = f.querySelector("[data-src]");
+    var btn = f.querySelector(".copy");
+    var cnt = f.querySelector(".count");
+    if(!src || !btn) return;
+    var text = src.textContent;
+    if(cnt){
+      var lim = parseInt(f.getAttribute("data-limit"), 10);
+      cnt.textContent = text.length + " / " + lim;
+      if(text.length > lim) cnt.classList.add("over");
+    }
+    btn.addEventListener("click", function(){
+      var done = function(){
+        btn.textContent = "Copied"; btn.classList.add("done");
+        setTimeout(function(){ btn.textContent = "Copy"; btn.classList.remove("done"); }, 1500);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else fallback();
+      function fallback(){
+        var ta = document.createElement("textarea");
+        ta.value = text; ta.style.position="absolute"; ta.style.left="-9999px";
+        document.body.appendChild(ta); ta.select();
+        try{ document.execCommand("copy"); done(); }catch(e){}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+
+  /* ---------- harness toggles ---------- */
+  function toggle(id, fn){
+    var b = document.getElementById(id);
+    if(!b) return;
+    b.addEventListener("click", function(){
+      var on = b.getAttribute("aria-pressed") === "true";
+      b.setAttribute("aria-pressed", String(!on));
+      fn(!on, b);
+    });
+  }
+  toggle("tFold", function(on){
+    document.body.classList.toggle("showfold", on);
+    // unfold everything so the line is visible in context
+    document.querySelectorAll(".pbody, #aboutBox").forEach(function(x){
+      if(on) x.classList.remove("folded");
+    });
+  });
+  toggle("tCopy", function(on){
+    document.querySelectorAll(".field").forEach(function(f){
+      f.classList.toggle("marked", on);
+    });
+  });
+  toggle("tCover", function(on, b){
+    var img = document.getElementById("coverImg");
+    if(img) img.src = on ? "assets/brand/linkedin/cover-light.png"
+                        : "assets/brand/linkedin/cover-dark.png";
+    b.textContent = on ? "Dark cover" : "Light cover";
+  });
+})();
+</script>
+</body>
+</html>

@@ -25,3 +25,8 @@ scratch/
 
 # Newsletter drafts — local only, never published from this public repo
 tools/newsletter/drafts/
+
+# Raw LinkedIn drafts straight out of draft_post.py — local only, unreviewed.
+# tools/linkedin/queue/ IS committed: that is the curated set, and a draft only
+# earns a place in it after the checklist has been run against it by hand.
+tools/linkedin/drafts/
