@@ -54,10 +54,30 @@ CONTENTS = [
     ("avatars/malik-marketplace/avatar-dark.png", "06 Account avatars/M-malik-marketplace.png"),
     ("avatars/proof-over-promise/avatar-dark.png","06 Account avatars/P-proof-over-promise.png"),
 
-    ("card/card-front.pdf",                 "07 Business card/card-front-print.pdf"),
-    ("card/card-back.pdf",                  "07 Business card/card-back-print.pdf"),
-    ("card/card-front.png",                 "07 Business card/card-front-preview.png"),
-    ("card/card-back.png",                  "07 Business card/card-back-preview.png"),
+    ("card/card-front.pdf",                 "07 Business cards/yasir-a-malik/card-front-print.pdf"),
+    ("card/card-back.pdf",                  "07 Business cards/yasir-a-malik/card-back-print.pdf"),
+    ("card/card-front.png",                 "07 Business cards/yasir-a-malik/card-front-preview.png"),
+    ("card/card-back.png",                  "07 Business cards/yasir-a-malik/card-back-preview.png"),
+
+    ("business-cards/consulting/card-front.pdf",        "07 Business cards/consulting/card-front-print.pdf"),
+    ("business-cards/consulting/card-back.pdf",         "07 Business cards/consulting/card-back-print.pdf"),
+    ("business-cards/consulting/card-front.png",        "07 Business cards/consulting/card-front-preview.png"),
+    ("business-cards/consulting/card-back.png",         "07 Business cards/consulting/card-back-preview.png"),
+
+    ("business-cards/malik-llc/card-front.pdf",         "07 Business cards/malik-llc/card-front-print.pdf"),
+    ("business-cards/malik-llc/card-back.pdf",          "07 Business cards/malik-llc/card-back-print.pdf"),
+    ("business-cards/malik-llc/card-front.png",         "07 Business cards/malik-llc/card-front-preview.png"),
+    ("business-cards/malik-llc/card-back.png",          "07 Business cards/malik-llc/card-back-preview.png"),
+
+    ("business-cards/malik-marketplace/card-front.pdf", "07 Business cards/malik-marketplace/card-front-print.pdf"),
+    ("business-cards/malik-marketplace/card-back.pdf",  "07 Business cards/malik-marketplace/card-back-print.pdf"),
+    ("business-cards/malik-marketplace/card-front.png", "07 Business cards/malik-marketplace/card-front-preview.png"),
+    ("business-cards/malik-marketplace/card-back.png",  "07 Business cards/malik-marketplace/card-back-preview.png"),
+
+    ("business-cards/proof-over-promise/card-front.pdf","07 Business cards/proof-over-promise/card-front-print.pdf"),
+    ("business-cards/proof-over-promise/card-back.pdf", "07 Business cards/proof-over-promise/card-back-print.pdf"),
+    ("business-cards/proof-over-promise/card-front.png","07 Business cards/proof-over-promise/card-front-preview.png"),
+    ("business-cards/proof-over-promise/card-back.png", "07 Business cards/proof-over-promise/card-back-preview.png"),
 
     ("og-card.png",                         "08 Social and icons/open-graph-card.png"),
     ("icon-512.png",                        "08 Social and icons/icon-512.png"),
@@ -67,6 +87,8 @@ CONTENTS = [
     ("favicon.svg",                         "08 Social and icons/favicon.svg"),
 
     ("tokens.css",                          "09 For a designer/tokens.css"),
+    ("tokens.json",                         "09 For a designer/tokens.json"),
+    ("templates.json",                      "09 For a designer/templates.json"),
 ]
 
 README = """\
@@ -103,13 +125,18 @@ Folders are named for where the file goes, not for what type it is.
     One letter per stream. Ember is the personal and marketplace accounts,
     verdigris is Malik LLC and the newsletter.
 
-07  BUSINESS CARD
-    Send the PDFs to a printer. The PNGs are for looking at.
+07  BUSINESS CARDS
+    One folder per brand: yasir-a-malik (the default), consulting, malik-llc,
+    malik-marketplace, proof-over-promise. Send the PDFs to a printer. The
+    PNGs are for looking at.
 
 08  SOCIAL AND ICONS
 
 09  FOR A DESIGNER
     tokens.css is the palette, in full, with the usage rules as comments.
+    tokens.json is the same palette as W3C Design Tokens, for other tools.
+    templates.json is the typed index of every business card and email
+    signature — for another AI agent picking this up, not for a human.
 
 THE ONE COLOUR RULE
     Ember #E0662E is the brand, and it measures 3.11:1 on paper. It carries

@@ -17,67 +17,67 @@
     font-family:var(--statement);line-height:1.6;-webkit-font-smoothing:antialiased;}
   a{color:var(--accent-ink);text-underline-offset:3px;}
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
-.wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
 
   nav.top{position:sticky;top:0;z-index:60;
     background:color-mix(in srgb, var(--ground) 92%, transparent);
     backdrop-filter:saturate(150%) blur(9px);
     border-bottom:1px solid var(--line);border-top:3px solid var(--accent);}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;
     height:56px;max-width:1120px;margin:0 auto;padding:0 24px;}
-.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);}
-.brand .name{font-family:var(--record);font-size:1rem;font-weight:700;
+  .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);}
+  .brand .name{font-family:var(--record);font-size:1rem;font-weight:700;
     letter-spacing:var(--track-record);}
-.back{font-family:var(--instrument);font-size:.7rem;letter-spacing:.09em;
+  .back{font-family:var(--instrument);font-size:.7rem;letter-spacing:.09em;
     text-transform:uppercase;color:var(--muted);text-decoration:none;}
-.back:hover{color:var(--ink);}
-.logo .ring,.logo .node{stroke:var(--accent);fill:none;}
-.logo .node{fill:var(--accent);stroke:none;}
-.logo .letter{stroke:currentColor;}
+  .back:hover{color:var(--ink);}
+  .logo .ring,.logo .node{stroke:var(--accent);fill:none;}
+  .logo .node{fill:var(--accent);stroke:none;}
+  .logo .letter{stroke:currentColor;}
 
   header.hero{padding:56px 0 34px;}
-.eyebrow{font-family:var(--instrument);font-size:.68rem;
+  .eyebrow{font-family:var(--instrument);font-size:.68rem;
     letter-spacing:var(--track-instrument);text-transform:uppercase;
     color:var(--accent-ink);margin:0 0 14px;}
   h1{font-family:var(--record);font-size:clamp(2.1rem,5vw,3rem);
     letter-spacing:var(--track-record);margin:0 0 16px;line-height:1.1;font-weight:700;}
-.lede{font-family:var(--record);font-size:1.1rem;line-height:1.68;
+  .lede{font-family:var(--record);font-size:1.1rem;line-height:1.68;
     color:var(--muted);max-width:62ch;margin:0;}
 
   section{padding:40px 0;border-top:1px solid var(--line);}
   h2{font-family:var(--record);font-size:1.4rem;letter-spacing:var(--track-record);margin:0 0 6px;}
-.sub{color:var(--muted);margin:0 0 22px;max-width:64ch;font-size:.95rem;}
+  .sub{color:var(--muted);margin:0 0 22px;max-width:64ch;font-size:.95rem;}
 
-.grid{display:grid;gap:16px;
+  .grid{display:grid;gap:16px;
     grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
-.asset{margin:0;border:1px solid var(--line);border-radius:var(--radius);
+  .asset{margin:0;border:1px solid var(--line);border-radius:var(--radius);
     background:var(--surface);overflow:hidden;display:flex;flex-direction:column;}
-.thumb{display:flex;align-items:center;justify-content:center;
+  .thumb{display:flex;align-items:center;justify-content:center;
     padding:18px;min-height:150px;background:var(--ground);
     border-bottom:1px solid var(--line);}
-.asset.on-dark .thumb{background:#0E1114;}
-.thumb img{max-width:100%;max-height:190px;height:auto;display:block;}
+  .asset.on-dark .thumb{background:#0E1114;}
+  .thumb img{max-width:100%;max-height:190px;height:auto;display:block;}
   figcaption{padding:15px 17px 17px;display:flex;flex-direction:column;flex:1;}
   figcaption h3{font-family:var(--record);font-size:1rem;margin:0 0 6px;
     letter-spacing:var(--track-record);}
   figcaption p{margin:0 0 11px;font-size:.87rem;line-height:1.55;color:var(--muted);}
-.meta{display:flex;gap:14px;font-family:var(--instrument);font-size:.63rem;
+  .meta{display:flex;gap:14px;font-family:var(--instrument);font-size:.63rem;
     letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
     margin-top:auto;padding-top:4px;}
-.dl{display:inline-block;margin-top:11px;font-family:var(--instrument);
+  .dl{display:inline-block;margin-top:11px;font-family:var(--instrument);
     font-size:.72rem;letter-spacing:.03em;font-weight:600;text-decoration:none;
     padding:8px 15px;border:1px solid var(--line);border-radius:var(--radius);
     color:var(--ink);align-self:flex-start;}
-.dl:hover{border-color:var(--accent);color:var(--accent-ink);}
+  .dl:hover{border-color:var(--accent);color:var(--accent-ink);}
 
-.note{background:var(--surface);border:1px solid var(--line);
+  .note{background:var(--surface);border:1px solid var(--line);
     border-left:3px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
     padding:16px 19px;font-size:.9rem;line-height:1.62;color:var(--muted);max-width:70ch;}
-.note b{color:var(--ink);}
+  .note b{color:var(--ink);}
 
   footer.foot{padding:26px 0 46px;color:var(--muted);font-size:.75rem;
     font-family:var(--instrument);border-top:1px solid var(--line);}
-.foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
 </style>
 
 <nav class="top">
@@ -103,6 +103,10 @@
     image to open it full size, or Download to save it. Every file here is
     generated from the constants in <code>make_marks.py</code>, so they are all
     provably the same mark rather than nine drawings that resemble each other.</p>
+    <p class="lede" style="margin-top:14px;font-size:.92rem;">
+      Reading this as a model rather than a person? The same index exists as
+      one typed file: <a href="assets/brand/templates.json">templates.json</a>.
+    </p>
   </div>
 </header>
 
@@ -426,29 +430,117 @@
 
 <section>
   <div class="wrap">
-    <h2>Business card</h2>
-    <p class="sub">Print-ready, with bleed and safe area verified.</p>
+    <h2>Business cards</h2>
+    <p class="sub">Print-ready, with bleed and safe area verified. Every brand and stream gets the same geometry and a colour of its own — PDF for a printer, PNG for looking at.</p>
     <div class="grid">
     <figure class="asset">
       <a class="thumb" href="assets/brand/card/card-front.png" target="_blank" rel="noopener">
-        <img src="assets/brand/card/card-front.png" alt="Front" loading="lazy">
+        <img src="assets/brand/card/card-front.png" alt="Yasir A. Malik — front" loading="lazy">
       </a>
       <figcaption>
-        <h3>Front</h3>
-        <p>Also available as PDF, which is what a printer wants.</p>
+        <h3>Yasir A. Malik — front</h3>
+        <p>The default. General introductions.</p>
         <div class="meta"><span>1125×675</span><span>42 KB</span></div>
         <a class="dl" href="assets/brand/card/card-front.png" download>Download</a>
       </figcaption>
     </figure>
     <figure class="asset">
       <a class="thumb" href="assets/brand/card/card-back.png" target="_blank" rel="noopener">
-        <img src="assets/brand/card/card-back.png" alt="Back" loading="lazy">
+        <img src="assets/brand/card/card-back.png" alt="Yasir A. Malik — back" loading="lazy">
       </a>
       <figcaption>
-        <h3>Back</h3>
+        <h3>Yasir A. Malik — back</h3>
         
         <div class="meta"><span>1125×675</span><span>26 KB</span></div>
         <a class="dl" href="assets/brand/card/card-back.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/business-cards/consulting/card-front.png" target="_blank" rel="noopener">
+        <img src="assets/brand/business-cards/consulting/card-front.png" alt="Consulting — front" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Consulting — front</h3>
+        <p>Advisory engagements. Same person, positioned for it.</p>
+        <div class="meta"><span>1125×675</span><span>44 KB</span></div>
+        <a class="dl" href="assets/brand/business-cards/consulting/card-front.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/business-cards/consulting/card-back.png" target="_blank" rel="noopener">
+        <img src="assets/brand/business-cards/consulting/card-back.png" alt="Consulting — back" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Consulting — back</h3>
+        
+        <div class="meta"><span>1125×675</span><span>27 KB</span></div>
+        <a class="dl" href="assets/brand/business-cards/consulting/card-back.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/business-cards/malik-llc/card-front.png" target="_blank" rel="noopener">
+        <img src="assets/brand/business-cards/malik-llc/card-front.png" alt="Malik LLC — front" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Malik LLC — front</h3>
+        <p>Residential real estate.</p>
+        <div class="meta"><span>1125×675</span><span>35 KB</span></div>
+        <a class="dl" href="assets/brand/business-cards/malik-llc/card-front.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/business-cards/malik-llc/card-back.png" target="_blank" rel="noopener">
+        <img src="assets/brand/business-cards/malik-llc/card-back.png" alt="Malik LLC — back" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Malik LLC — back</h3>
+        
+        <div class="meta"><span>1125×675</span><span>23 KB</span></div>
+        <a class="dl" href="assets/brand/business-cards/malik-llc/card-back.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/business-cards/malik-marketplace/card-front.png" target="_blank" rel="noopener">
+        <img src="assets/brand/business-cards/malik-marketplace/card-front.png" alt="Malik Marketplace — front" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Malik Marketplace — front</h3>
+        <p>No service description is public yet, so the card carries the name and nothing invented.</p>
+        <div class="meta"><span>1125×675</span><span>29 KB</span></div>
+        <a class="dl" href="assets/brand/business-cards/malik-marketplace/card-front.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/business-cards/malik-marketplace/card-back.png" target="_blank" rel="noopener">
+        <img src="assets/brand/business-cards/malik-marketplace/card-back.png" alt="Malik Marketplace — back" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Malik Marketplace — back</h3>
+        
+        <div class="meta"><span>1125×675</span><span>25 KB</span></div>
+        <a class="dl" href="assets/brand/business-cards/malik-marketplace/card-back.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/business-cards/proof-over-promise/card-front.png" target="_blank" rel="noopener">
+        <img src="assets/brand/business-cards/proof-over-promise/card-front.png" alt="Proof Over Promise — front" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Proof Over Promise — front</h3>
+        <p>A promo card for the newsletter — leads with the subscribe link.</p>
+        <div class="meta"><span>1125×675</span><span>38 KB</span></div>
+        <a class="dl" href="assets/brand/business-cards/proof-over-promise/card-front.png" download>Download</a>
+      </figcaption>
+    </figure>
+    <figure class="asset">
+      <a class="thumb" href="assets/brand/business-cards/proof-over-promise/card-back.png" target="_blank" rel="noopener">
+        <img src="assets/brand/business-cards/proof-over-promise/card-back.png" alt="Proof Over Promise — back" loading="lazy">
+      </a>
+      <figcaption>
+        <h3>Proof Over Promise — back</h3>
+        
+        <div class="meta"><span>1125×675</span><span>20 KB</span></div>
+        <a class="dl" href="assets/brand/business-cards/proof-over-promise/card-back.png" download>Download</a>
       </figcaption>
     </figure>
     </div>

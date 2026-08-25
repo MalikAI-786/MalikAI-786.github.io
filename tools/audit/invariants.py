@@ -182,18 +182,18 @@ def check_palette_matches_css(_fix: bool) -> None:
                  "one of them was edited without the other — make them agree")
 
 
-def check_tokens_json_fresh(fix: bool) -> None:
-    """tokens.json is the portable export other tools read. Same rule as the
-    READMEs: compare against what the generator produces right now, never
-    trust a hand edit.
+def _check_json_generator_fresh(rule: str, generator_name: str, output_name: str,
+                                fix: bool) -> None:
+    """Shared by every generated-JSON check: compare against what the
+    generator produces right now, never trust a hand edit.
 
     Computed in-process rather than by running the script and diffing the
-    file it writes — that would overwrite tokens.json on every plain check,
+    file it writes — that would overwrite the output on every plain check,
     even without --fix, masking exactly the drift this exists to catch."""
     import json as _json
     brand_dir = ROOT / "assets/brand"
-    generator = brand_dir / "make_tokens_json.py"
-    tokens_json = brand_dir / "tokens.json"
+    generator = brand_dir / generator_name
+    output = brand_dir / output_name
     if not generator.exists():
         return
 
@@ -203,27 +203,42 @@ def check_tokens_json_fresh(fix: bool) -> None:
     try:
         exec(compile(generator.read_text(), str(generator), "exec"), ns)
         fresh = _json.dumps(ns["build"](), indent=2, ensure_ascii=False) + "\n"
-    except Exception as e:                      # generator itself is broken
-        fail("tokens.json", f"generator raised {e!r}", f"fix {generator.name}")
+    except (Exception, SystemExit) as e:
+        # SystemExit too: make_templates_catalog.py's build() raises it
+        # directly when it would reference a file that does not exist on
+        # disk, and that is exactly the kind of break this check exists to
+        # surface rather than let crash the whole invariants run.
+        fail(rule, f"generator raised {e!r}", f"fix {generator_name}")
         return
     finally:
         sys.path[:] = old_path
 
-    if not tokens_json.exists():
-        current = None
-    else:
-        current = tokens_json.read_text()
+    current = output.read_text() if output.exists() else None
 
     if current != fresh:
         if fix:
-            tokens_json.write_text(fresh)
-            print("  fixed: tokens.json regenerated")
+            output.write_text(fresh)
+            print(f"  fixed: {output_name} regenerated")
         else:
-            fail("tokens.json",
-                 "tokens.json does not match what make_tokens_json.py "
-                 "produces from the current palette.py",
-                 "run assets/brand/make_tokens_json.py, then commit the "
-                 "result")
+            fail(rule,
+                 f"{output_name} does not match what {generator_name} "
+                 "produces right now",
+                 f"run assets/brand/{generator_name}, then commit the result")
+
+
+def check_tokens_json_fresh(fix: bool) -> None:
+    """tokens.json is the portable export of palette.py that other tools
+    (Figma, Style Dictionary, an outside AI agent) read."""
+    _check_json_generator_fresh("tokens.json", "make_tokens_json.py",
+                                "tokens.json", fix)
+
+
+def check_templates_json_fresh(fix: bool) -> None:
+    """templates.json is the typed index of every business card and email
+    signature — checked the same way, so a stale entry or a moved file
+    can't sit there silently."""
+    _check_json_generator_fresh("templates.json", "make_templates_catalog.py",
+                                "templates.json", fix)
 
 
 def check_hex_budget(_fix: bool) -> None:
@@ -249,7 +264,7 @@ def main() -> int:
 
     checks = [check_generated_files, check_tracked_junk, check_nojekyll,
               check_hex_budget, check_palette_matches_css,
-              check_tokens_json_fresh]
+              check_tokens_json_fresh, check_templates_json_fresh]
 
     if args.fix:
         print("Repairing…")
