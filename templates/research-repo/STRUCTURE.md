@@ -5,7 +5,9 @@
 3. Create the empty directories with a placeholder so git tracks them:
 
        mkdir -p instrument models analysis data docs output
+       mkdir -p qualitative/{protocol,guide,memos,reflexivity,coding,propositions}
        touch instrument/.gitkeep models/.gitkeep analysis/.gitkeep docs/.gitkeep
+       find qualitative -type d -exec touch {}/.gitkeep \;
 
 4. Write `data/README.md` recording where the real data lives. That file is
    the one exception to the `data/` ignore rule, so it is the only thing in
