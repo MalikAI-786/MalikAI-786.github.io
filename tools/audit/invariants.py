@@ -47,6 +47,12 @@ HEX_BUDGET = {
     # token values is the entire point of it.
 }
 
+# Every method file states the same five things in the same order. The third is
+# the one that matters: a technique described only by its strengths is a sales
+# pitch, and this practice argues that a claim is worth what its evidence is.
+METHOD_SECTIONS = ["What it is", "When it applies", "What it cannot do",
+                   "Citation", "How I explain this"]
+
 failures: list[tuple[str, str, str]] = []   # (rule, evidence, fix)
 
 
@@ -241,6 +247,92 @@ def check_hex_budget(_fix: bool) -> None:
                  "reference it as a variable")
 
 
+def check_method_sections(_fix: bool) -> None:
+    """A method described only by its strengths is a sales pitch.
+
+    Every file under methods/qualitative/ carries the same five sections, in the
+    same order. "What it cannot do" is the one that exists because it is the one
+    a writer skips: malik-research already requires every model to state its own
+    limits, and a method is no different.
+    """
+    for path in sorted((ROOT / "methods" / "qualitative").glob("*.md")):
+        if path.name == "DESIGN.md":       # the study itself, not a method file
+            continue
+        text = path.read_text()
+        missing = [h for h in METHOD_SECTIONS if f"## {h}" not in text]
+        if missing:
+            fail("method sections",
+                 f"methods/qualitative/{path.name} is missing: "
+                 f"{', '.join(missing)}",
+                 "add the section — 'What it cannot do' is not optional")
+
+
+def check_prompts_are_portable(_fix: bool) -> None:
+    """A prompt that only works in one session dies when the session does.
+
+    Every prompt declares its INPUTS and OUTPUTS so it can be pasted cold into
+    any model, which is the whole point of keeping them as files.
+    """
+    for path in sorted((ROOT / "methods" / "prompts").glob("*.md")):
+        text = path.read_text()
+        for marker in ("INPUTS", "OUTPUTS"):
+            if marker not in text:
+                fail("prompt portability",
+                     f"methods/prompts/{path.name} does not declare {marker}",
+                     "add an INPUTS/OUTPUTS block so the prompt runs standalone")
+
+
+def check_citations_resolve(_fix: bool) -> None:
+    """A citation that goes nowhere is worse than no citation.
+
+    Every surname cited in a method file must appear in BIBLIOGRAPHY.md. Checks
+    attribution, not page numbers — the bibliography says itself that no page
+    number goes in unread.
+    """
+    bib = ROOT / "methods" / "BIBLIOGRAPHY.md"
+    if not bib.exists():
+        fail("citations", "methods/BIBLIOGRAPHY.md is missing",
+             "create it; every method file cites into it")
+        return
+    bib_text = bib.read_text()
+    for path in sorted((ROOT / "methods").rglob("*.md")):
+        if path.name in ("BIBLIOGRAPHY.md", "README.md", "RUNBOOK.md"):
+            continue
+        body = path.read_text()
+        section = body.split("## Citation", 1)
+        if len(section) < 2:
+            continue
+        names = re.findall(r"\b([A-Z][a-z]{3,})\b(?=\s*(?:&|,|\(|;|\.))",
+                           section[1].split("\n##", 1)[0])
+        for name in sorted(set(names)):
+            if name in ("See", "The", "Sage", "Anthropic") or name in bib_text:
+                continue
+            fail("citations",
+                 f"{path.relative_to(ROOT)} cites '{name}', absent from "
+                 f"methods/BIBLIOGRAPHY.md",
+                 f"add {name} to the bibliography, or drop the citation")
+
+
+def check_no_participant_data(_fix: bool) -> None:
+    """methods/ is public. Participant data lives in malik-research, private.
+
+    Under IRB-25-0462 a participant response in a public repository is not a
+    tidiness problem, so this looks for the shapes such a file takes rather than
+    trusting that nobody will paste one.
+    """
+    shapes = re.compile(
+        r"(^|\n)\s*(P\d{1,3}|Participant \d+|Interviewee \d+|R\d{1,3})\s*[:—-]"
+        r"|\btranscript of\b|\bconsent form signed\b", re.IGNORECASE)
+    for path in sorted((ROOT / "methods").rglob("*.md")):
+        m = shapes.search(path.read_text())
+        if m:
+            fail("no participant data",
+                 f"{path.relative_to(ROOT)} contains something shaped like a "
+                 f"participant response: {m.group(0).strip()[:60]!r}",
+                 "move it to malik-research; methods/ is public and carries "
+                 "method only")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[1])
     ap.add_argument("--fix", action="store_true",
@@ -249,7 +341,9 @@ def main() -> int:
 
     checks = [check_generated_files, check_tracked_junk, check_nojekyll,
               check_hex_budget, check_palette_matches_css,
-              check_tokens_json_fresh]
+              check_tokens_json_fresh, check_method_sections,
+              check_prompts_are_portable, check_citations_resolve,
+              check_no_participant_data]
 
     if args.fix:
         print("Repairing…")

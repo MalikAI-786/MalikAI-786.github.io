@@ -30,8 +30,24 @@ IRB-approved empirical study, IRB-25-0462.
 | `instrument/` | The measurement model. Constructs, items, scales, and the Qualtrics export. |
 | `models/` | Models built from the research. One directory each, with its own README stating inputs, assumptions, and known limits. |
 | `analysis/` | Scripts in run order: exploratory factor analysis, confirmatory factor analysis, structural model. |
+| `qualitative/` | The qualitative arm. `protocol/`, `guide/`, `memos/`, `reflexivity/`, `coding/`, `propositions/`. |
 | `data/` | Git-ignored. `data/README.md` records where the real data lives and who may access it. |
 | `docs/` | Protocol, codebook, IRB correspondence, decision log. |
+
+## The qualitative arm
+
+Method doctrine lives in the site repository under `methods/`, public, so it can
+be taught and cited. What lives here is the study: protocol, interview guide,
+memos, coding, and the propositions that come out the other end.
+
+**Transcripts are participant data.** They belong in `data/`, git-ignored, under
+the same rule as everything else. A transcript in `qualitative/` is in the wrong
+directory even after de-identification.
+
+`reflexivity/` holds predictions recorded **before** each interview and scored
+against the codes that actually emerged. That is the audit trail, and it only
+counts if the prediction is committed before the outcome is known — a file
+written afterwards proves nothing.
 
 ## Reproducing
 
