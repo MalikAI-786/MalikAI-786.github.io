@@ -56,7 +56,7 @@ THEMES = {
 }
 
 RECORD = [
-    ("REGULATOR",  "Safety-and-soundness examination — OCC, Florida OFR"),
+    ("REGULATOR",  "Safety-and-soundness examination — Florida OFR"),
     ("OPERATOR",   "Fifteen years in audit and risk — Citigroup, JPMorgan Chase"),
     ("BUILDER",    "Production AI shipped into a live audit function"),
     ("RESEARCHER", "DBA candidate, Florida International University"),
