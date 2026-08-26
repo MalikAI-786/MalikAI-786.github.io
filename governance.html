@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Audit the Algorithm — Yasir A. Malik</title>
+<meta name="description" content="Governance-first AI advisory for regulated organizations. Five offers, each grounded in work already done rather than a capability claimed." />
+
+<link rel="stylesheet" href="assets/brand/tokens.css" />
+
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="assets/brand/icon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png" />
+<link rel="manifest" href="site.webmanifest" />
+<meta name="theme-color" content="#E0662E" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Audit the Algorithm — Yasir A. Malik" />
+<meta property="og:description" content="Governance-first AI advisory for regulated organizations. Five offers, each grounded in work already done rather than a capability claimed." />
+<meta property="og:url" content="https://malikai-786.github.io/governance.html" />
+<meta property="og:image" content="https://malikai-786.github.io/assets/brand/og-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Audit the Algorithm — Yasir A. Malik" />
+<meta name="twitter:description" content="Governance-first AI advisory for regulated organizations." />
+<meta name="twitter:image" content="https://malikai-786.github.io/assets/brand/og-card.png" />
+<script data-goatcounter="https://malikai786.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<style>
+  /* Component-level aliases onto the brand tokens — same pattern as index.html. */
+  :root{
+    --display:var(--statement);
+    --read:var(--record);
+    --mono:var(--instrument);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} }
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--display);line-height:1.6;-webkit-font-smoothing:antialiased;
+    overflow-x:hidden;}
+  a{color:var(--accent-ink);text-underline-offset:3px;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
+
+.wrap{max-width:760px;margin:0 auto;padding:0 28px;}
+
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--accent-ink);margin:0 0 16px;
+    display:flex;align-items:center;gap:11px;}
+.eyebrow::before{content:"";width:18px;height:0;border-top:1.5px solid var(--accent);}
+
+  /* ---------- nav ---------- */
+  nav.top{position:sticky;top:0;z-index:60;
+    background:color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter:saturate(150%) blur(9px);border-bottom:1px solid var(--line);
+    border-top:3px solid var(--accent);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;
+    height:58px;max-width:900px;margin:0 auto;padding:0 28px;}
+.logo{display:block;flex:0 0 auto;}
+.logo .ring{stroke:var(--accent);}
+.logo .node{fill:var(--accent);}
+.logo .letter{stroke:currentColor;}
+.brand{display:inline-flex;align-items:center;gap:11px;
+    text-decoration:none;color:var(--ink);}
+.brand .name{font-family:var(--record);font-size:1.06rem;font-weight:700;
+    letter-spacing:var(--track-record);}
+.nav-links{display:flex;gap:18px;align-items:center;}
+.nav-links a{font-family:var(--mono);font-size:.71rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;
+    white-space:nowrap;}
+.nav-links a:hover{color:var(--ink);}
+.theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--muted);
+    font-family:var(--mono);font-size:.7rem;padding:6px 11px;border-radius:var(--radius);
+    cursor:pointer;transition:border-color .2s,color .2s;}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent-ink);}
+
+  /* ---------- mobile nav ---------- */
+.nav-toggle{display:none;border:1px solid var(--line);background:var(--surface);
+    color:var(--ink);width:36px;height:32px;border-radius:var(--radius);cursor:pointer;
+    flex:0 0 auto;position:relative;}
+.nav-toggle span{position:absolute;left:9px;right:9px;top:15px;height:1.5px;
+    background:currentColor;transition:background .2s;}
+.nav-toggle::before,.nav-toggle::after{content:"";position:absolute;left:9px;right:9px;
+    height:1.5px;background:currentColor;transition:transform .2s;}
+.nav-toggle::before{top:9px;}
+.nav-toggle::after{top:21px;}
+.nav-toggle[aria-expanded="true"] span{background:transparent;}
+.nav-toggle[aria-expanded="true"]::before{transform:translateY(6px) rotate(45deg);}
+.nav-toggle[aria-expanded="true"]::after{transform:translateY(-6px) rotate(-45deg);}
+  @media (max-width:640px){
+.nav-toggle{display:block;}
+.nav-links{position:fixed;top:58px;left:0;right:0;height:calc(100vh - 58px);
+    height:calc(100dvh - 58px);z-index:59;
+    display:flex;flex-direction:column;align-items:flex-start;gap:0;
+    background:var(--ground);border-top:1px solid var(--line);
+    padding:18px 28px 28px;overflow-y:auto;
+    transform:translateY(-8px);opacity:0;pointer-events:none;
+    transition:transform .2s ease,opacity .2s ease;}
+.nav-links.open{transform:translateY(0);opacity:1;pointer-events:auto;}
+.nav-links a{display:block;width:100%;padding:14px 0;font-size:.82rem;
+    border-bottom:1px solid var(--line);color:var(--ink);}
+.nav-links .theme-btn{margin-top:16px;}
+  }
+  html.nav-open{overflow:hidden;}
+
+  /* ---------- hero ---------- */
+  header.hero{padding:64px 0 20px;}
+  h1{font-family:var(--record);font-size:clamp(2rem,5.5vw,2.7rem);line-height:1.14;
+    margin:0 0 18px;letter-spacing:var(--track-record);font-weight:700;max-width:16ch;}
+.lede{font-family:var(--read);font-size:1.06rem;line-height:1.66;color:var(--muted);
+    max-width:60ch;margin:0 0 26px;}
+.lede strong{color:var(--ink);font-weight:600;}
+
+.cta-row{display:flex;flex-wrap:wrap;gap:11px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);
+    font-size:.76rem;letter-spacing:.03em;text-decoration:none;padding:11px 17px;
+    border-radius:var(--radius);transition:transform .15s,border-color .2s,background .2s;cursor:pointer;}
+.btn.primary{background:var(--accent);color:var(--on-accent);border:1px solid var(--accent);font-weight:600;}
+.btn.primary:hover{transform:translateY(-1px);}
+.btn.ghost{border:1px solid var(--line);color:var(--ink);background:transparent;}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent-ink);}
+
+  /* ---------- sections ---------- */
+  section{padding:44px 0;}
+  section.rule{border-top:1px solid var(--line);}
+  h2{font-family:var(--record);font-size:clamp(1.4rem,3vw,1.7rem);margin:0 0 10px;
+    letter-spacing:var(--track-record);font-weight:700;}
+.sub{color:var(--muted);font-size:.98rem;max-width:60ch;margin:0 0 28px;}
+
+  /* ---------- offer cards: elevated, numbered, one clear idea each ---------- */
+.offer-grid{display:grid;gap:14px;}
+.offer-card{background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius-lg);padding:22px 24px;box-shadow:var(--shadow);}
+.offer-card .num{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;
+    color:var(--accent-ink);text-transform:uppercase;margin-bottom:9px;}
+.offer-card h3{font-family:var(--record);font-size:1.1rem;margin:0 0 9px;
+    letter-spacing:var(--track-record);font-weight:700;}
+.offer-card .what{color:var(--ink);font-size:.92rem;line-height:1.58;margin:0 0 14px;}
+.offer-card .meta{display:grid;gap:6px;font-size:.79rem;color:var(--muted);
+    border-top:1px solid var(--line);padding-top:12px;}
+.offer-card .meta .k{color:var(--accent-ink);font-family:var(--mono);font-size:.63rem;
+    letter-spacing:.1em;text-transform:uppercase;margin-right:8px;}
+.offer-card .meta .why{color:var(--ink);font-weight:600;}
+
+.note{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:0 var(--radius) var(--radius) 0;padding:18px 20px;font-size:.9rem;
+    line-height:1.6;color:var(--muted);}
+.note b{color:var(--ink);}
+
+.contact-list{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:9px;}
+.contact-list a{font-family:var(--mono);font-size:.87rem;text-decoration:none;color:var(--ink);
+    display:inline-flex;align-items:center;gap:12px;transition:color .2s;}
+.contact-list a:hover{color:var(--accent);}
+.contact-list .tag{color:var(--accent-ink);font-size:.64rem;letter-spacing:.1em;
+    text-transform:uppercase;width:60px;flex:0 0 auto;}
+
+  footer.foot{padding:30px 0 44px;color:var(--muted);font-size:.76rem;font-family:var(--mono);
+    border-top:1px solid var(--line);}
+.foot-mark{display:flex;align-items:center;gap:13px;margin-bottom:16px;}
+.foot-mark .logo .ring{stroke:var(--accent);}
+.foot-mark .logo .node{fill:var(--accent);}
+.foot-mark .logo .letter{stroke:currentColor;}
+.foot-name{font-family:var(--record);font-size:1.02rem;font-weight:700;
+    letter-spacing:var(--track-record);color:var(--ink);}
+.foot-desc{font-family:var(--mono);font-size:.64rem;letter-spacing:var(--track-instrument);
+    text-transform:uppercase;margin-top:2px;}
+.foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+</style>
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="#top">
+      <svg class="logo" width="26" height="26" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" class="ring" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="14.38" cy="17.22" r="5.46" class="node"/>
+        <path d="M19.5 46.5 L32 19 L44.5 46.5" class="letter" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+        <path d="M21.6 38.4 H42.4" class="letter" stroke-width="8" stroke-linecap="butt"/>
+      </svg>
+      <span class="name">Yasir A. Malik</span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks"><span></span></button>
+    <div class="nav-links" id="navLinks">
+      <a href="#offers">Offers</a>
+      <a href="#ai-use">How I use AI</a>
+      <a href="#talk">Talk</a>
+      <a href="index.html">← Site</a>
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle colour theme">Theme</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="eyebrow">Advisory Practice</div>
+    <h1>Audit the Algorithm.</h1>
+    <p class="lede">Twenty years auditing how decisions get made — a regulator's seat, then
+    internal audit leadership at global banks — now applied to how AI enters review work.
+    <strong>Governance-first AI advisory for regulated organizations.</strong> Five offers,
+    each grounded in work already done rather than a capability claimed.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="mailto:YasirAMalik@gmail.com?subject=Audit%20the%20Algorithm&body=I%27d%20like%20to%20talk%20about%3A%0A%0A">Set up a 15-minute chat</a>
+      <a class="btn ghost" href="index.html">The full record ↗</a>
+    </div>
+  </div>
+</header>
+
+<section id="offers">
+  <div class="wrap">
+    <h2>Five offers.</h2>
+    <p class="sub">Each one is something already built or already done — not a capability being pitched for the first time.</p>
+    <div class="offer-grid">
+      <div class="offer-card">
+        <div class="num">01</div>
+        <h3>AI governance readiness review</h3>
+        <p class="what">Assess AI use against the NIST AI RMF and, for models, SR 26-2 (which superseded SR 11-7 in April 2026): inventory, documentation, human-oversight design, evidence trail.</p>
+        <div class="meta">
+          <div><span class="k">Who it's for</span>Banks, insurers, asset managers, regulated mid-market</div>
+          <div><span class="k">Why me</span><span class="why">I proposed exactly this framework inside a G-SIB.</span></div>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="num">02</div>
+        <h3>Human-oversight design for AI-assisted review</h3>
+        <p class="what">Where reliance is calibrated correctly and where it quietly isn't: reviewer workflow, challenge points, documentation standards.</p>
+        <div class="meta">
+          <div><span class="k">Who it's for</span>Internal audit, risk and compliance functions adopting AI</div>
+          <div><span class="k">Why me</span><span class="why">This is literally my research question.</span></div>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="num">03</div>
+        <h3>Audit-function AI enablement</h3>
+        <p class="what">Scoping and building AI assistance into audit workflow, with controls designed in from the start.</p>
+        <div class="meta">
+          <div><span class="k">Who it's for</span>Chief audit executives and audit directors under efficiency pressure</div>
+          <div><span class="k">Why me</span><span class="why">I built and shipped one. About 35% cycle-time reduction.</span></div>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="num">04</div>
+        <h3>Regulator-readiness translation</h3>
+        <p class="what">Preparing AI-related documentation and narratives for examination scrutiny.</p>
+        <div class="meta">
+          <div><span class="k">Who it's for</span>Firms anticipating supervisory questions on AI</div>
+          <div><span class="k">Why me</span><span class="why">Former examiner. I have sat on the other side of the table.</span></div>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="num">05</div>
+        <h3>Workshops &amp; guest lectures</h3>
+        <p class="what">Cognitive bias in professional judgment; AI over-reliance and automation bias; anchoring in recurring engagements.</p>
+        <div class="meta">
+          <div><span class="k">Who it's for</span>Professional bodies, firm training programs, universities</div>
+          <div><span class="k">Why me</span><span class="why">Practitioner credibility plus doctoral research.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="rule" id="ai-use">
+  <div class="wrap">
+    <div class="note">
+      <b>On how I use these tools:</b> I use AI systems intensively, which is precisely why
+      I study their failure modes. The risk I research is not hypothetical to me; it is the
+      risk in my own workflow, managed deliberately. My work uses AI for research assistance,
+      analysis, and drafting support. The judgment, synthesis, and interpretation are mine.
+    </div>
+  </div>
+</section>
+
+<section class="rule" id="talk">
+  <div class="wrap">
+    <div class="eyebrow">Contact</div>
+    <h2>Let's talk.</h2>
+    <p class="sub">Advisory engagements, research collaboration, speaking, and Director-level roles in internal audit, model risk and AI governance.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="mailto:YasirAMalik@gmail.com?subject=Audit%20the%20Algorithm&body=I%27d%20like%20to%20talk%20about%3A%0A%0A">Set up a 15-minute chat</a>
+    </div>
+    <ul class="contact-list">
+      <li><a href="mailto:YasirAMalik@gmail.com"><span class="tag">Email</span> YasirAMalik@gmail.com</a></li>
+      <li><a href="tel:+17867048536"><span class="tag">Phone</span> +1 (786) 704-8536</a></li>
+      <li><a href="https://linkedin.com/in/yasiramalik" target="_blank" rel="noopener"><span class="tag">LinkedIn</span> /in/yasiramalik ↗</a></li>
+      <li><a href="https://github.com/MalikAI-786" target="_blank" rel="noopener"><span class="tag">GitHub</span> /MalikAI-786 ↗</a></li>
+    </ul>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-mark">
+      <svg class="logo" width="34" height="34" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path class="ring" d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" stroke-width="7" stroke-linecap="round"/>
+        <circle class="node" cx="14.38" cy="17.22" r="5.46"/>
+        <path class="letter" d="M19.5 46.5 L32 19 L44.5 46.5" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+        <path class="letter" d="M21.6 38.4 H42.4" stroke-width="8" stroke-linecap="butt"/>
+      </svg>
+      <div>
+        <div class="foot-name">Yasir A. Malik</div>
+        <div class="foot-desc">Audit · Risk · Governance</div>
+      </div>
+    </div>
+    <div class="foot-in">
+      <span>© 2026 Yasir A. Malik</span>
+      <span><a href="index.html" style="color:inherit;">← Back to the full site</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var btn=document.getElementById('themeBtn');
+    if(btn){
+      btn.addEventListener('click',function(){
+        var root=document.documentElement;
+        var cur=root.getAttribute('data-theme');
+        var dark=cur? cur==='dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.setAttribute('data-theme', dark? 'light':'dark');
+      });
+    }
+
+    var navToggle=document.getElementById('navToggle');
+    var navLinks=document.getElementById('navLinks');
+    if(navToggle && navLinks){
+      var closeNav=function(){
+        navLinks.classList.remove('open');
+        navToggle.setAttribute('aria-expanded','false');
+        document.documentElement.classList.remove('nav-open');
+      };
+      navToggle.addEventListener('click',function(){
+        var open=navLinks.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', open?'true':'false');
+        document.documentElement.classList.toggle('nav-open', open);
+      });
+      navLinks.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click', closeNav);
+      });
+      document.addEventListener('keydown',function(e){
+        if(e.key==='Escape') closeNav();
+      });
+    }
+  })();
+</script>
+</body>
+</html>
