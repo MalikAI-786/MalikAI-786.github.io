@@ -87,15 +87,44 @@
     text-decoration:none;color:var(--ink);}
 .brand .name{font-family:var(--record);font-size:1.06rem;font-weight:700;
     letter-spacing:var(--track-record);}
-.nav-links{display:flex;gap:20px;align-items:center;}
+.nav-links{display:flex;gap:18px;align-items:center;}
 .nav-links a{font-family:var(--mono);font-size:.71rem;letter-spacing:.09em;
-    text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+    text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;
+    white-space:nowrap;}
 .nav-links a:hover{color:var(--ink);}
 .theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--muted);
     font-family:var(--mono);font-size:.7rem;padding:6px 11px;border-radius:3px;
     cursor:pointer;transition:border-color .2s,color .2s;}
 .theme-btn:hover{border-color:var(--accent);color:var(--accent-ink);}
-  @media (max-width:860px){ .nav-links a{display:none;} }
+
+  /* ---------- mobile nav: a real menu, not a vanished one ---------- */
+.nav-toggle{display:none;border:1px solid var(--line);background:var(--surface);
+    color:var(--ink);width:36px;height:32px;border-radius:3px;cursor:pointer;
+    flex:0 0 auto;position:relative;}
+.nav-toggle span{position:absolute;left:9px;right:9px;top:15px;height:1.5px;
+    background:currentColor;transition:background .2s;}
+.nav-toggle::before,.nav-toggle::after{content:"";position:absolute;left:9px;right:9px;
+    height:1.5px;background:currentColor;transition:transform .2s;}
+.nav-toggle::before{top:9px;}
+.nav-toggle::after{top:21px;}
+.nav-toggle[aria-expanded="true"] span{background:transparent;}
+.nav-toggle[aria-expanded="true"]::before{transform:translateY(6px) rotate(45deg);}
+.nav-toggle[aria-expanded="true"]::after{transform:translateY(-6px) rotate(-45deg);}
+  @media (max-width:860px){
+.nav-toggle{display:block;}
+.nav-links{position:fixed;top:58px;left:0;right:0;height:calc(100vh - 58px);
+    height:calc(100dvh - 58px);z-index:59;
+    display:flex;flex-direction:column;align-items:flex-start;gap:0;
+    background:var(--ground);border-top:1px solid var(--line);
+    padding:18px 28px 28px;overflow-y:auto;
+    transform:translateY(-8px);opacity:0;pointer-events:none;
+    transition:transform .2s ease,opacity .2s ease;}
+.nav-links.open{transform:translateY(0);opacity:1;pointer-events:auto;}
+.nav-links a{display:block;width:100%;padding:14px 0;font-size:.82rem;
+    border-bottom:1px solid var(--line);color:var(--ink);}
+.nav-links .theme-btn{margin-top:16px;}
+  }
+  html.nav-open{overflow:hidden;}
 
   /* ---------- hero ---------- */
   header.hero{padding:80px 0 26px;}
@@ -348,7 +377,8 @@
   </svg>
       <span class="name">Yasir A. Malik</span>
     </a>
-    <div class="nav-links">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="navLinks"><span></span></button>
+    <div class="nav-links" id="navLinks">
       <a href="#research">Research</a>
       <a href="#advisory">Advisory</a>
       <a href="#record">Record</a>
@@ -387,7 +417,7 @@
   </div>
   <div class="wrap">
     <div class="seats reveal">
-      <div class="seat-cell"><div class="n">01 · REGULATOR</div><div class="t">Bank examiner</div><div class="d">Safety-and-soundness examination of national and state-chartered banks.</div></div>
+      <div class="seat-cell"><div class="n">01 · REGULATOR</div><div class="t">Bank examiner</div><div class="d">Safety-and-soundness examination of state-chartered banks, Florida OFR.</div></div>
       <div class="seat-cell"><div class="n">02 · OPERATOR</div><div class="t">Audit &amp; risk</div><div class="d">Fifteen years in internal audit and risk at global banks, to Vice President.</div></div>
       <div class="seat-cell"><div class="n">03 · BUILDER</div><div class="t">Applied AI</div><div class="d">Built and deployed a production retrieval assistant inside a live audit function.</div></div>
       <div class="seat-cell"><div class="n">04 · RESEARCHER</div><div class="t">Doctoral work</div><div class="d">Cognitive bias in audit judgment, and what happens when AI enters the workflow.</div></div>
@@ -874,6 +904,27 @@
         var cur=root.getAttribute('data-theme');
         var dark=cur? cur==='dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
         root.setAttribute('data-theme', dark? 'light':'dark');
+      });
+    }
+
+    var navToggle=document.getElementById('navToggle');
+    var navLinks=document.getElementById('navLinks');
+    if(navToggle && navLinks){
+      var closeNav=function(){
+        navLinks.classList.remove('open');
+        navToggle.setAttribute('aria-expanded','false');
+        document.documentElement.classList.remove('nav-open');
+      };
+      navToggle.addEventListener('click',function(){
+        var open=navLinks.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', open?'true':'false');
+        document.documentElement.classList.toggle('nav-open', open);
+      });
+      navLinks.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click', closeNav);
+      });
+      document.addEventListener('keydown',function(e){
+        if(e.key==='Escape') closeNav();
       });
     }
 
