@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Ones Who Stayed Back — Yasir A. Malik</title>
+<meta name="description" content="A series by Yasir A. Malik. In development." />
+<!-- Draft: deliberately unlisted until the first episode is real. -->
+<meta name="robots" content="noindex" />
+
+<link rel="stylesheet" href="assets/brand/tokens.css" />
+
+<link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="assets/brand/icon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png" />
+<meta name="theme-color" content="#E0662E" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="The Ones Who Stayed Back — a series by Yasir A. Malik" />
+<meta property="og:description" content="In development." />
+<meta property="og:url" content="https://malikai-786.github.io/ones-who-stayed-back.html" />
+<meta property="og:image" content="https://malikai-786.github.io/assets/brand/series/ones-who-stayed-back/card-square.png" />
+</head>
+<body>
+<style>
+  :root{
+    --display:var(--statement);
+    --read:var(--record);
+    --mono:var(--instrument);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--display);line-height:1.6;-webkit-font-smoothing:antialiased;
+    overflow-x:hidden;}
+  a{color:var(--accent-ink);text-underline-offset:3px;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
+
+.wrap{max-width:680px;margin:0 auto;padding:0 28px;}
+
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--accent-ink);margin:0 0 16px;
+    display:flex;align-items:center;gap:11px;}
+.eyebrow::before{content:"";width:18px;height:0;border-top:1.5px solid var(--accent);}
+
+  nav.top{position:sticky;top:0;z-index:60;
+    background:color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter:saturate(150%) blur(9px);border-bottom:1px solid var(--line);
+    border-top:3px solid var(--accent);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;
+    height:58px;max-width:900px;margin:0 auto;padding:0 28px;}
+.logo{display:block;flex:0 0 auto;}
+.logo .ring{stroke:var(--accent);}
+.logo .node{fill:var(--accent);}
+.logo .letter{stroke:currentColor;}
+.brand{display:inline-flex;align-items:center;gap:11px;
+    text-decoration:none;color:var(--ink);}
+.brand .name{font-family:var(--record);font-size:1.06rem;font-weight:700;
+    letter-spacing:var(--track-record);}
+.nav-links{display:flex;gap:18px;align-items:center;}
+.nav-links a{font-family:var(--mono);font-size:.71rem;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap;}
+.nav-links a:hover{color:var(--ink);}
+
+  header.hero{padding:72px 0 30px;}
+  h1{font-family:var(--record);font-style:italic;
+    font-size:clamp(2.2rem,6vw,3.1rem);line-height:1.14;
+    margin:0 0 22px;letter-spacing:var(--track-record);font-weight:700;max-width:14ch;}
+.lede{font-family:var(--read);font-size:1.06rem;line-height:1.7;color:var(--muted);
+    max-width:56ch;margin:0 0 8px;}
+.lede strong{color:var(--ink);font-weight:600;}
+
+  section{padding:40px 0;}
+  section.rule{border-top:1px solid var(--line);}
+  h2{font-family:var(--record);font-size:clamp(1.3rem,3vw,1.55rem);margin:0 0 10px;
+    letter-spacing:var(--track-record);font-weight:700;}
+.sub{color:var(--muted);font-size:.96rem;max-width:56ch;margin:0 0 24px;}
+
+.ep{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);
+    padding:22px 24px;box-shadow:var(--shadow);}
+.ep .n{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;
+    color:var(--accent-ink);text-transform:uppercase;margin-bottom:8px;}
+.ep h3{font-family:var(--record);font-size:1.08rem;margin:0 0 6px;
+    letter-spacing:var(--track-record);}
+.ep p{margin:0;font-size:.9rem;color:var(--muted);line-height:1.55;}
+
+.note{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:0 var(--radius) var(--radius) 0;padding:16px 19px;font-size:.88rem;
+    line-height:1.6;color:var(--muted);}
+.note b{color:var(--ink);}
+
+  footer.foot{padding:28px 0 44px;color:var(--muted);font-size:.76rem;font-family:var(--mono);
+    border-top:1px solid var(--line);}
+.foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+</style>
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <!-- Series cut of the mark: the crossbar reaches back instead of overshooting forward. -->
+      <svg class="logo" width="26" height="26" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" class="ring" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="14.38" cy="17.22" r="5.46" class="node"/>
+        <path d="M19.5 46.5 L32 19 L44.5 46.5" class="letter" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+        <path d="M13.5 38.4 H42.4" class="letter" stroke-width="8" stroke-linecap="butt"/>
+      </svg>
+      <span class="name">Yasir A. Malik</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">← Site</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">A series · In development</div>
+    <h1>The Ones Who Stayed Back.</h1>
+    <p class="lede">A series of conversations, in the works. The mark above carries the
+    idea: everywhere else in this identity, the reference line extends <strong>forward</strong>
+    past the figure. Here it reaches <strong>back</strong>.</p>
+  </div>
+</header>
+
+<section class="rule">
+  <div class="wrap">
+    <h2>Episodes.</h2>
+    <p class="sub">Announced when they are real — names and dates go here only once they are confirmed.</p>
+    <div class="ep">
+      <div class="n">Episode 01 · In preparation</div>
+      <h3>First conversation</h3>
+      <p>Recording and details to be announced.</p>
+    </div>
+  </div>
+</section>
+
+<section class="rule">
+  <div class="wrap">
+    <div class="note">
+      <b>The standard this series holds itself to:</b> nothing is published about a
+      person without their consent, every quote is verified with its speaker before it
+      appears, and AI-assisted production is disclosed on each episode page — the same
+      evidence-before-claims rule as everything else on this site.
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-in">
+      <span>© 2026 Yasir A. Malik</span>
+      <span><a href="index.html" style="color:inherit;">← Back to the site</a></span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
