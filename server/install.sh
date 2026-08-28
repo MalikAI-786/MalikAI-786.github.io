@@ -24,17 +24,40 @@ die()  { printf '\n\033[1;31m  x \033[0m%s\n\n' "$*" >&2; exit 1; }
 # When piped from curl, stdin is the script — prompts must read the terminal.
 TTY=/dev/tty; [ -r $TTY ] || die "No terminal available. Download the script and run it directly instead of piping."
 
-say "Checking the hostname"
-printf '  The API needs a hostname pointed at this droplet.\n'
-printf '  Example: mizan.yourdomain.com  (an A record -> this IP)\n\n'
-IP="$(curl -fsS --max-time 10 https://ifconfig.me 2>/dev/null || echo 'unknown')"
-printf '  This droplet appears to be: %s\n\n' "$IP"
-printf '  Hostname: '
+say "Choosing a hostname"
+IP="$(curl -fsS --max-time 10 https://ifconfig.me 2>/dev/null || echo '')"
+[ -n "$IP" ] || { printf '  Could not detect this droplet IP. Enter it: '; read -r IP < $TTY; }
+
+# A bare IP cannot carry the Secure cookie this API sets, and Let's Encrypt
+# will not issue an ordinary certificate for one. sslip.io resolves
+# <ip>.sslip.io straight to <ip> with no DNS account and no registration, and
+# because it sits on the Public Suffix List each droplet gets its own
+# certificate rate limit. That gives real HTTPS, a real padlock on a coach's
+# phone, and nothing to buy.
+SUGGEST="${IP}.sslip.io"
+printf '  This droplet is \033[1m%s\033[0m\n\n' "$IP"
+printf '  If you own a domain, enter a hostname whose A record points here.\n'
+printf '  If you do not, press Enter and this is used instead:\n'
+printf '      \033[1m%s\033[0m   (free, no signup, real certificate)\n\n' "$SUGGEST"
+printf '  Hostname [%s]: ' "$SUGGEST"
 read -r HOST < $TTY
-[ -n "${HOST:-}" ] || die "A hostname is required — TLS cookies will not work over a bare IP."
+HOST="${HOST:-$SUGGEST}"
 HOST="${HOST#http://}"; HOST="${HOST#https://}"; HOST="${HOST%%/*}"
 
-RESOLVED="$(getent hosts "$HOST" | awk '{print $1}' | head -1 || true)"
+# Someone will type the bare IP anyway. Convert rather than fail.
+case "$HOST" in
+  *[0-9].[0-9]*) case "$HOST" in
+      *.*.*.*) [ "${HOST%%[!0-9.]*}" = "$HOST" ] && {
+          warn "A bare IP cannot get a certificate. Using ${HOST}.sslip.io instead."
+          HOST="${HOST}.sslip.io"; }
+      ;;
+    esac ;;
+esac
+
+case "$HOST" in
+  *.sslip.io|*.nip.io) RESOLVED="$IP" ;;   # resolves by construction
+  *) RESOLVED="$(getent hosts "$HOST" | awk '{print $1}' | head -1 || true)" ;;
+esac
 if [ -z "$RESOLVED" ]; then
   warn "$HOST does not resolve yet. Certificates will fail until the DNS A record exists."
   printf '  Continue anyway? [y/N] '; read -r GO < $TTY
