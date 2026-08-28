@@ -93,6 +93,31 @@
       <div class="btn-row" style="margin-top:12px"><button class="btn" id="resetWeights">Reset to default</button></div>
     </div>
 
+    <div class="card" id="healthCard">
+      <p class="eyebrow">Apple Health &amp; Google Fit</p>
+      <h3 style="font-size:1.1rem;margin-bottom:6px">Import what the watch already knows</h3>
+      <p class="small" style="max-width:70ch">Weight, sleep, workouts and step counts are already being recorded by your watch. Typing them in again is the single most likely reason this instrument gets abandoned. Point it at an export file and it fills the gaps.</p>
+      <div class="btn-row" style="margin-top:12px;margin-bottom:10px">
+        <button class="btn primary" id="healthBtn">Choose export file</button>
+        <input type="file" id="healthFile" accept=".xml,.zip,.csv,text/xml,text/csv" class="hide" />
+        <button class="btn hide" id="healthApply">Apply to my record</button>
+        <button class="btn hide" id="healthCancel">Cancel</button>
+      </div>
+      <div id="healthProg" class="tiny mono hide"></div>
+      <div id="healthOut" class="tiny" style="margin-top:10px"></div>
+      <details style="margin-top:12px">
+        <summary>How to get the file</summary>
+        <div class="small" style="margin-top:8px">
+          <p><b>iPhone — Apple Health.</b> Health app → tap your photo, top right → scroll down → <b>Export All Health Data</b> → Save to Files. That gives you <span class="mono">export.zip</span>. Tap it in Files to unzip, then choose <span class="mono">apple_health_export/export.xml</span> here. The export can take several minutes to build and can be very large; that is normal.</p>
+          <p style="margin-top:8px"><b>Android — Google Fit.</b> takeout.google.com → deselect all → select <b>Fit</b> → export → unzip → choose the <span class="mono">Daily activity metrics</span> CSV.</p>
+          <p style="margin-top:8px"><b>Nothing is uploaded.</b> The file is read inside this browser tab and never leaves the device. There is no server here to receive it.</p>
+        </div>
+      </details>
+      <div class="notice" style="margin-top:12px;font-size:.78rem">
+        <b>Import fills gaps; it never overwrites you.</b> If you already logged a session, a sleep figure or a weight for a day, the import leaves your entry alone and reports it as skipped. Your judgment about whether a session actually happened outranks whatever the watch inferred.
+      </div>
+    </div>
+
     <div class="card">
       <p class="eyebrow">Data</p>
       <div class="btn-row" style="margin-bottom:12px">

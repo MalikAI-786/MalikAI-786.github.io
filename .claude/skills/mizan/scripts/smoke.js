@@ -149,7 +149,7 @@ function check(name, cond, detail) {
   const ratio = await page.locator('#swRatio').innerText();
   check('shoulder-to-waist ratio computes', Math.abs(parseFloat(ratio) - 49.5 / 34) < 0.002, ratio);
   check('measurement trend draws', (await page.locator('#wtChart polyline').count()) >= 1);
-  check('Best-50 renders five standards', (await page.locator('[data-b50]').count()) === 5);
+  check('Best-50 renders six standards', (await page.locator('[data-b50]').count()) === 6);
   await page.click('[data-b50="pistol"] button[data-v="3"]'); await page.waitForTimeout(200);
   check('Best-50 composite responds to a level change',
     (await page.locator('#b50Score').innerText()) !== '0%');
@@ -167,6 +167,72 @@ function check(name, cond, detail) {
   await page.click('[data-gym="done"]'); await page.waitForTimeout(200);
   check('gym log persists', await page.evaluate(d =>
     JSON.parse(localStorage.getItem('mizan.v1')).days[d].gym.status === 'done', sat));
+
+  // --- health import ---------------------------------------------------
+  // Lives on the Record page, not the coach route: this reads a file the owner
+  // chose, in their own browser. The check that matters is not that it imports,
+  // it is that it REFUSES to overwrite something a human entered.
+  {
+    const os = require('os');
+    const hx = path.join(os.tmpdir(), 'mizan-smoke-health.xml');
+    const rows = ['<?xml version="1.0" encoding="UTF-8"?>', '<HealthData locale="en_US">'];
+    for (let i = 1; i <= 6; i++) {
+      const d = `2026-03-0${i}`;
+      const prev = i === 1 ? '2026-02-28' : `2026-03-0${i - 1}`;
+      rows.push(`<Record type="HKQuantityTypeIdentifierBodyMass" unit="lb" value="17${i}.0" startDate="${d} 07:00:00 -0500" endDate="${d} 07:00:00 -0500"/>`);
+      rows.push(`<Record type="HKQuantityTypeIdentifierStepCount" unit="count" value="9000" startDate="${d} 12:00:00 -0500" endDate="${d} 12:30:00 -0500"/>`);
+      rows.push(`<Record type="HKCategoryTypeIdentifierSleepAnalysis" value="HKCategoryValueSleepAnalysisAsleepCore" startDate="${prev} 23:00:00 -0500" endDate="${d} 07:00:00 -0500"/>`);
+      rows.push(`<Record type="HKCategoryTypeIdentifierSleepAnalysis" value="HKCategoryValueSleepAnalysisInBed" startDate="${prev} 22:00:00 -0500" endDate="${d} 08:00:00 -0500"/>`);
+      rows.push(`<Workout workoutActivityType="HKWorkoutActivityTypeTraditionalStrengthTraining" duration="60" durationUnit="min" startDate="${d} 17:00:00 -0500" endDate="${d} 18:00:00 -0500"></Workout>`);
+    }
+    // a deliberately impossible stretch: the guard must drop this, not average it
+    rows.push('<Record type="HKCategoryTypeIdentifierSleepAnalysis" value="HKCategoryValueSleepAnalysisAsleepCore" startDate="2026-03-10 23:00:00 -0500" endDate="2026-03-18 07:00:00 -0400"/>');
+    rows.push('</HealthData>');
+    require('fs').writeFileSync(hx, rows.join('\n'));
+
+    await page.goto(url('record/index.html')); await page.waitForTimeout(350);
+    check('record page carries the health import card',
+      (await page.locator('#healthBtn').count()) === 1);
+
+    // a day the owner already judged: the watch must not get a vote on it
+    await page.evaluate(() => {
+      const raw = localStorage.getItem('mizan.v1');
+      const s = raw ? JSON.parse(raw) : { v: 1, settings: {}, days: {}, urges: [], ships: {}, measures: [], best50: {} };
+      s.days = s.days || {}; s.measures = s.measures || [];
+      s.days['2026-03-02'] = { date: '2026-03-02', prayers: {}, scores: {}, weed: { sessions: [] },
+        gym: { status: 'missed-partner', note: 'trainer cancelled' }, food: {},
+        sleepHrs: 5.5, weight: 199, moved: false, friction: [0,0,0,0,0],
+        muhasaba: {}, closed: false, synthetic: false };
+      localStorage.setItem('mizan.v1', JSON.stringify(s));
+    });
+    await page.reload(); await page.waitForTimeout(350);
+
+    await page.setInputFiles('#healthFile', hx);
+    await page.waitForFunction(() => document.querySelector('#healthOut').innerText.length > 40, { timeout: 30000 });
+    const preview = await page.locator('#healthOut').innerText();
+    check('health import previews a plan before applying', /new entries/.test(preview),
+      preview.split('\n')[0]);
+    check('health import stages without writing to state', await page.evaluate(() =>
+      JSON.parse(localStorage.getItem('mizan.v1')).days['2026-03-01'] === undefined));
+
+    await page.click('#healthApply'); await page.waitForTimeout(500);
+    const after = await page.evaluate(() => {
+      const s = JSON.parse(localStorage.getItem('mizan.v1'));
+      return { kept: s.days['2026-03-02'], made: s.days['2026-03-01'] };
+    });
+    check('import writes sleep, session and weight for an untouched day',
+      after.made && after.made.sleepHrs === 8 && after.made.gym.status === 'done' &&
+      after.made.gym.src === 'health' && after.made.weight === 171);
+    check('import counts only Asleep intervals, never InBed',
+      after.made && after.made.sleepHrs === 8, String(after.made && after.made.sleepHrs));
+    check('import discards an impossible sleep stretch instead of averaging it in',
+      /discarded as impossible/.test(preview) && await page.evaluate(() =>
+        JSON.parse(localStorage.getItem('mizan.v1')).days['2026-03-18'] === undefined));
+    check('import never overwrites a human gym judgment',
+      after.kept.gym.status === 'missed-partner' && after.kept.gym.note === 'trainer cancelled');
+    check('import never overwrites a human sleep or weight entry',
+      after.kept.sleepHrs === 5.5 && after.kept.weight === 199);
+  }
 
   // --- cross-page day continuity, persistence, theme ---
   await page.goto(url('day/index.html')); await page.waitForTimeout(500);
