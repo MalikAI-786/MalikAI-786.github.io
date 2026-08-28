@@ -18,7 +18,7 @@
 
   <path d="M440 100 V174" stroke="#263039" stroke-width="1.5"/>
 
-  <text x="468" y="140" font-family="&#39;Bitstream Charter&#39;,Charter,&#39;Iowan Old Style&#39;,&#39;Palatino Linotype&#39;,Palatino,&#39;Book Antiqua&#39;,Georgia,serif" font-size="40" fill="#EDEFF1">Perseverance Commands Success.</text>
+  <text x="468" y="140" font-family="&#39;Bitstream Charter&#39;,Charter,&#39;Iowan Old Style&#39;,&#39;Palatino Linotype&#39;,Palatino,&#39;Book Antiqua&#39;,Georgia,serif" font-size="40" fill="#EDEFF1">Khudi: the discipline of not dissolving.</text>
   <text x="470" y="176" font-family="ui-monospace,&#39;SF Mono&#39;,Menlo,&#39;Cascadia Mono&#39;,&#39;Roboto Mono&#39;,monospace" font-size="15" letter-spacing="5.5" fill="#E0662E">AUDIT · RISK · GOVERNANCE</text>
 
   <path d="M340 232 H430" stroke="#E0662E" stroke-width="3"/>
