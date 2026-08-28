@@ -52,6 +52,42 @@ reason this guide exists.
 4. Disclose the assistance where disclosure matters.
 5. Never let it write the conclusion for you.
 
+## Recent tooling worth knowing
+
+Claude Code ships weekly. Most of it is cosmetic. A few changes actually
+change how you work with it.
+
+**Sessions follow you, not the machine.** `/resume` in the desktop app pulls
+in any terminal session, even a closed one, with the same transcript. Remote
+Control (`claude rc`) starts a session from your phone on a machine you left
+running, picking up its files, MCP servers, and tools where you left off.
+Running several sessions at once, `/color` and `/rename` label each one so
+you can tell them apart, and the label follows the session across `--resume`.
+
+**Supervised instead of trusted.** `claude --restricted` disables command
+execution, code execution, and web access outright, and confines file tools
+to the working directory. The right default for a shared machine or anywhere
+the assistant should be watched rather than given the keys.
+
+**Verification habits worth copying**, from engineers who use this daily:
+
+- *Recap before resuming.* A short skill that refreshes anything stale — a
+  PR, a running job, a linked thread — then reports four things: the goal in
+  the requester's own words, actual status with evidence ("tests passing"
+  does not count as proof), what's blocked on a person versus something
+  technical, and next steps split into "Claude's" and "yours." It is not
+  allowed to start new work during the recap.
+- *Adversarial review before you read a diff.* A fresh subagent that has not
+  seen the conversation — so it does not share its blind spots — attacks the
+  change for correctness and simplicity, then publishes its assumptions and
+  design reasoning as a short writeup. Read that first; it tells you where to
+  look instead of reading the whole diff cold.
+
+Neither of those is a feature. They are habits: verify before you trust the
+first answer, and get a second, independent read before you sign off on your
+own work. That is the whole argument of this document, restated in the
+tool's own vocabulary.
+
 ---
 
 <sub>[Profile](https://github.com/MalikAI-786) · [Site](https://malikai-786.github.io) · [Brand system](https://malikai-786.github.io/brand.html) · [Newsletter](https://proofoverpromise.substack.com) · [LinkedIn](https://linkedin.com/in/yasiramalik)</sub>
