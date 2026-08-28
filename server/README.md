@@ -40,18 +40,29 @@ not one.
 
 ## Deploying to a DigitalOcean Droplet
 
-```bash
-# on the droplet, in this directory
-cp .env.example .env && $EDITOR .env      # fill in the two passwords
-docker compose up -d --build
+Clone this repo onto the droplet, then, from `server/`:
 
-# create the schema and the app role, once
-export ADMIN_DATABASE_URL="postgresql://postgres:$POSTGRES_PASSWORD@localhost:5432/mizan"
-docker compose exec -T db sh -c 'apk add --no-cache bash >/dev/null'   # if needed
-docker compose cp sql db:/sql
-docker compose exec -T -e MIZAN_APP_PASSWORD="$MIZAN_APP_PASSWORD" db \
-  bash -c 'ADMIN_DATABASE_URL="postgresql://postgres@localhost/mizan" /sql/rebuild.sh'
+```bash
+./deploy-droplet.sh          # writes .env with generated passwords, then stops
+$EDITOR .env                 # set PUBLIC_URL to where the API will answer
+./deploy-droplet.sh          # builds, starts, creates the schema, health-checks
+./bootstrap.sh "Your Name"   # creates you, prints your link and ingest token
 ```
+
+The script is idempotent. Run it twice and nothing is lost — it checks whether
+the schema exists before creating it, because `sql/rebuild.sh` opens with
+`DROP SCHEMA` and would take the whole record with it.
+
+Coach links afterwards:
+
+```bash
+./mint-coach.sh "Coach Name" upper     # spine and upper body
+./mint-coach.sh "Coach Name" skills    # flexibility and the standards
+```
+
+Each prints a link once. Only the hash is stored, so a database dump does not
+hand over working credentials, and a lost link is re-minted rather than
+recovered. Links do not expire; they are revoked.
 
 Then put TLS in front of it. The API binds to `127.0.0.1:8080`, so the
 droplet's Postgres is never exposed and the API is only reachable through your
