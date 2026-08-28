@@ -36,7 +36,7 @@ THEMES = {
                   rule="#E2DAD3", meta="#8A929B"),
 }
 
-MOTTO = "Perseverance Commands Success."
+MOTTO = "Khudi: the discipline of not dissolving."
 VISION = "Judgment that holds when the machine agrees with you."
 DESCRIPTOR = "AUDIT · RISK · GOVERNANCE"
 
