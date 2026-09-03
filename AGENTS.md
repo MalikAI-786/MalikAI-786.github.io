@@ -37,7 +37,7 @@ Moving or renaming anything under `assets/brand/banners/` or
 at once. Regenerate rather than reorganise.
 
 `tools/` is not part of the site. It holds local-only utilities — a bootstrap
-for a private data-dump repository, and the Proof Over Promise drafting script.
+for a private data-dump repository, and the newsletter drafting script.
 Pages serves the directory because everything here is served, but nothing links
 to it. Neither tool sends anything anywhere: the drafting script writes a
 markdown file and stops, and no real data belongs in this repository, because
@@ -172,6 +172,6 @@ scraping HTML for links.
 
 ---
 
-<sub>[Profile](https://github.com/MalikAI-786) · [Site](https://malikai-786.github.io) · [Brand system](https://malikai-786.github.io/brand.html) · [Newsletter](https://proofoverpromise.substack.com) · [LinkedIn](https://linkedin.com/in/yasiramalik)</sub>
+<sub>[Profile](https://github.com/MalikAI-786) · [Site](https://malikai-786.github.io) · [Brand system](https://malikai-786.github.io/brand.html) · [Newsletter](https://howwouldweknow.substack.com) · [LinkedIn](https://linkedin.com/in/yasiramalik)</sub>
 
 <sub><b>Yasir A. Malik</b> · Audit · Risk · Governance · Newark, NJ · NYC metro</sub>

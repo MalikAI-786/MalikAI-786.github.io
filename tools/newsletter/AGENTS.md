@@ -1,19 +1,26 @@
 # Instructions for AI agents — newsletter drafting
 
-> 🚨 **BLOCKING, verified 2026-08-29 — `proofoverpromise.substack.com` is not ours.**
-> It is **William Zhu's** publication, *"Proof Over Promise: How to Build an
-> Undeniable Career in the Age of AI"*, with posts bylined him dated August 2026.
-> Verified by search; Substack is unreachable from the build environment, so the
-> evidence is indexed post URLs under that exact domain, not a page load.
+> 🚨 **Renamed 2026-09-03 — the newsletter is `How Would We Know`, not `Proof
+> Over Promise`.**
+> `proofoverpromise.substack.com` was never ours: it is **William Zhu's**
+> publication, *"Proof Over Promise: How to Build an Undeniable Career in the
+> Age of AI"*, with posts bylined him dated August 2026 — verified by search,
+> since Substack is unreachable from the build environment. Every Subscribe
+> CTA on the site and every generated footer pointed at his newsletter until
+> Yasir confirmed the replacement name and the codebase was renamed to match.
 >
-> **There is no Substack publication for Yasir.** Every Subscribe CTA on the live
-> site, and the generated footer on every repo, currently sends readers to
-> another author's newsletter. The name must change or move before anything
-> publishes. Nine references carry the URL; `SUBSTACK` in
-> `assets/brand/make_readmes.py` is the source that propagates it.
+> The canonical name and URL now live in `assets/brand/links.py`
+> (`NEWSLETTER_NAME`, `SUBSTACK` = `https://howwouldweknow.substack.com`) — every
+> generator that needs either imports from there. Change a name or URL there,
+> not by hand in a generator or a page.
 >
-> **Do not publish, and do not rename on your own** — the name and the public
-> URL are Yasir's calls.
+> **There is still no live Substack publication.** `howwouldweknow.substack.com`
+> does not exist yet — creating it is Yasir's, not something this environment
+> can do (Substack is unreachable from here regardless). Nothing here should
+> claim or imply the publication is live until he says so.
+>
+> **Do not publish, and do not rename again on your own** — the name and the
+> public URL are Yasir's calls.
 
 Read the root **[AGENTS.md](../../AGENTS.md)** first. Every safeguard there
 applies here, and two of them apply hardest: never invent a fact about him, and
@@ -21,8 +28,8 @@ never send anything as him.
 
 ## What this directory is
 
-`voice.md` is the deliverable. It is the system prompt for **Proof Over
-Promise** — the editorial position, the five threads, the facts on the record,
+`voice.md` is the deliverable. It is the system prompt for **How Would We
+Know** — the editorial position, the five threads, the facts on the record,
 and the lines a draft may not cross. `draft_issue.py` is plumbing around it.
 
 ## Rules
@@ -64,6 +71,6 @@ and the lines a draft may not cross. `draft_issue.py` is plumbing around it.
    draft to publish; Yasir gives the final yes.
 
 9. **Keep the pipeline honest.** Every issue is a row in *📰 Newsletter
-   Pipeline — Proof Over Promise* under the Notion control center. Move the
+   Pipeline — How Would We Know* under the Notion control center. Move the
    Stage as it moves and keep `Blocked on` current. A row parked at *Drafted*
    is the send-step bottleneck, and hiding it helps nobody.

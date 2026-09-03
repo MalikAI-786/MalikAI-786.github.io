@@ -1,6 +1,6 @@
 # Issue queue
 
-Candidates for Proof Over Promise, in the order I'd ship them. Every one is
+Candidates for How Would We Know, in the order I'd ship them. Every one is
 built from material **already public on the site** — no new facts needed, so
 none of them is blocked on research. Pick one, open it, run the drafter.
 

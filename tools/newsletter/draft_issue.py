@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Draft an issue of Proof Over Promise from source material.
+Draft an issue of How Would We Know from source material.
 
 Drafts only. This script writes a markdown file to disk and does nothing else —
 it does not post, publish, email, or touch Substack. Sending stays with you.
@@ -42,7 +42,7 @@ FALLBACK_BETA = "server-side-fallback-2026-07-01"
 def build_task(sources: list[tuple[str, str]], words: int, title: str | None) -> str:
     """The per-issue turn. Everything stable lives in the cached system prompt."""
     parts = [
-        "Draft the next issue of Proof Over Promise from the source material below.",
+        "Draft the next issue of How Would We Know from the source material below.",
         "",
         f"Target length: about {words} words. Match the length to what the material "
         "actually supports — do not pad to reach the number, and do not add filler "
@@ -79,7 +79,7 @@ def slugify(text: str) -> str:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Draft a Proof Over Promise issue.")
+    ap = argparse.ArgumentParser(description="Draft a How Would We Know issue.")
     ap.add_argument("sources", nargs="+", type=Path,
                     help="Files of source material: notes, transcripts, findings.")
     ap.add_argument("--words", type=int, default=900, help="Target length (default 900).")

@@ -132,7 +132,9 @@ STREAMS = [
     ("yasir-a-malik",     "A", EMBER,     "Yasir A. Malik"),
     ("malik-llc",         "M", VERDIGRIS, "Malik LLC"),
     ("malik-marketplace", "M", EMBER,     "Malik Marketplace"),
-    ("proof-over-promise","P", VERDIGRIS, "Proof Over Promise"),
+    # Letter kept as "P" — no "H" letterform exists yet; see the note in
+    # make_business_cards.py. Slug renamed to match.
+    ("how-would-we-know", "P", VERDIGRIS, "How Would We Know"),
 ]
 
 if __name__ == "__main__":

@@ -10,10 +10,13 @@ is "what do I put here", and the file is the answer.
 Dimensions are read off the files themselves rather than typed in, because a
 stated size that has drifted from the real one is worse than no size at all.
 """
-import os
+import os, sys
 from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from links import NEWSLETTER_NAME
+
 ROOT = os.path.dirname(os.path.dirname(HERE))
 OUT = os.path.join(ROOT, "brand-assets.html")
 
@@ -76,7 +79,7 @@ SECTIONS = [
  ("avatars/yasir-a-malik/avatar-dark.png", "A — Yasir A. Malik", "Ember. The personal account."),
  ("avatars/malik-llc/avatar-dark.png", "M — Malik LLC", "Verdigris, because the company verifies."),
  ("avatars/malik-marketplace/avatar-dark.png", "M — Malik Marketplace", "Ember, to separate it from the LLC."),
- ("avatars/proof-over-promise/avatar-dark.png", "P — Proof Over Promise", "Verdigris. The newsletter."),
+ ("avatars/how-would-we-know/avatar-dark.png", f"P — {NEWSLETTER_NAME}", "Verdigris. The newsletter."),
 ]),
 
 ("Business cards", "Print-ready, with bleed and safe area verified. Every "
@@ -90,8 +93,8 @@ SECTIONS = [
  ("business-cards/malik-llc/card-back.png", "Malik LLC — back", ""),
  ("business-cards/malik-marketplace/card-front.png", "Malik Marketplace — front", "No service description is public yet, so the card carries the name and nothing invented."),
  ("business-cards/malik-marketplace/card-back.png", "Malik Marketplace — back", ""),
- ("business-cards/proof-over-promise/card-front.png", "Proof Over Promise — front", "A promo card for the newsletter — leads with the subscribe link."),
- ("business-cards/proof-over-promise/card-back.png", "Proof Over Promise — back", ""),
+ ("business-cards/how-would-we-know/card-front.png", f"{NEWSLETTER_NAME} — front", "A promo card for the newsletter — leads with the subscribe link."),
+ ("business-cards/how-would-we-know/card-back.png", f"{NEWSLETTER_NAME} — back", ""),
 ]),
 
 ("Social and favicons", "The small ones that get forgotten.", [

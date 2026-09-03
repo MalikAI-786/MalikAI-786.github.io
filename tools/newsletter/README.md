@@ -1,4 +1,4 @@
-# Proof Over Promise — drafting tool
+# How Would We Know — drafting tool
 
 Drafts an issue from source material in the newsletter's own voice. It writes a
 markdown file and stops there: **it does not post, publish, email, or touch
