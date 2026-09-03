@@ -191,7 +191,7 @@ CARDS = [
     ("hook", ["The most dangerous number", "in the room is the one",
               "nobody questions."], "AUDIT · RISK · GOVERNANCE", False),
     ("ethics", ["The auditor everyone", "dreads teaches nobody."],
-     "PROOF OVER PROMISE", False),
+     "HOW WOULD WE KNOW", False),
     ("fiu", ["Judgment that holds", "when the machine", "agrees with you."],
      "FIU DBA · COHORT 8.14", True),
 ]

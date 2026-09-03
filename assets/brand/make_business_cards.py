@@ -25,7 +25,7 @@ than invented:
                  experience bullet, not a new claim
   Marketplace    no service description exists publicly yet, so the card
                  carries the name alone rather than a guessed one
-  Proof Over Promise   the newsletter's own meta description
+  How Would We Know   the newsletter's own meta description
 """
 import os, sys
 
@@ -35,6 +35,7 @@ import make_marks as M
 from make_avatars import letter_paths
 from make_card import DPI, BLEED_W, BLEED_H, TRIM, SAFE, guides
 from palette import EMBER, VERDIGRIS, INK, PAPER, NIGHT, LIGHT, DIM, RULE_L, MUTED
+from links import SUBSTACK
 import cairosvg
 
 OUT = os.path.join(HERE, "business-cards")
@@ -140,12 +141,16 @@ CARDS["malik-marketplace"] = (
     back(f"{SITE.upper()}", "M", EMBER),
 )
 
-CARDS["proof-over-promise"] = (
-    front("Proof Over Promise", "AI GOVERNANCE · MODEL RISK · JUDGMENT",
-          [("proofoverpromise.substack.com/subscribe", 496),
+CARDS["how-would-we-know"] = (
+    # Monogram kept as "P" — no "H" letterform exists in make_avatars.py's
+    # letter_paths() (only A/M/P are defined, with hand-tuned ring-clearance
+    # geometry each). Cutting a new letter is brand design, not a rename;
+    # flagged rather than improvised. Revisit with Yasir.
+    front("How Would We Know", "AI GOVERNANCE · MODEL RISK · JUDGMENT",
+          [(SUBSTACK.replace("https://", "") + "/subscribe", 496),
            ("Yasir A. Malik, author", 540)],
           "P", VERDIGRIS, VERDIGRIS),
-    back("PROOFOVERPROMISE.SUBSTACK.COM", "P", VERDIGRIS),
+    back(SUBSTACK.replace("https://", "").upper(), "P", VERDIGRIS),
 )
 
 

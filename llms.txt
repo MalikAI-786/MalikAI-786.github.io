@@ -17,7 +17,7 @@ police it. Governance that produces better thinking, not just cleaner files.
   the rest of the work is pointed at
 - [Research](https://malikai-786.github.io/#research): anchoring bias in audit
   judgment, and where AI takes that question next
-- [Proof Over Promise](https://malikai-786.github.io/newsletter.html): the
+- [How Would We Know](https://malikai-786.github.io/newsletter.html): the
   newsletter — AI governance, model risk, professional judgment
 - [Brand system](https://malikai-786.github.io/brand.html): the identity,
   documented — palette, mark, type, and the rules that govern them
