@@ -107,16 +107,30 @@ function blankDay(k){return {date:k,forecast:null,prayers:{},dhikrMin:0,sprints:
   muhasaba:{shukr:'',khata:'',kal:''},closed:false,synthetic:false}}
 function defaults(){return {v:1,settings:{lat:40.7128,lng:-74.0060,method:'ISNA',asr:1,
   path:'taper',start:iso(new Date()),cap:2,floorHour:20,weights:Object.assign({},DEFW),
-  gymDays:[0,2,4,6],gymHour:17,partner:'your training partner',proteinTarget:150,sleepTarget:7},
+  /* Sun/Sat 07:30, Mon 16:45 — matches the owner's actual recurring calendar
+     events, not the guessed Sun/Tue/Thu/Sat 17:00 this shipped with. Every
+     adherence and collision number reads off this, so it has to be the real
+     schedule, not a plausible-looking one. gymHour is the fallback for a day
+     with no override in gymHourByDay. */
+  gymDays:[0,1,6],gymHour:17,gymHourByDay:{0:7.5,1:16.75,6:7.5},
+  partner:'your training partner',proteinTarget:150,sleepTarget:7},
   days:{},urges:[],ships:{},measures:[],best50:{}}}
+/* The hour actually used for day k's session: an explicit per-day override
+   if one exists, else the flat fallback. Kept as one function so every read
+   site agrees, rather than three copies of the same lookup drifting apart. */
+function gymHourFor(dow){
+  var h=(S.settings.gymHourByDay||{})[dow];
+  return h!=null ? +h : +S.settings.gymHour;
+}
 function load(){
   try{var raw=localStorage.getItem(KEY); S=raw?JSON.parse(raw):defaults();}
   catch(e){S=defaults()}
   var d=defaults(); S.settings=Object.assign({},d.settings,S.settings||{});
   S.settings.weights=Object.assign({},DEFW,S.settings.weights||{});
+  S.settings.gymHourByDay=S.settings.gymHourByDay||{};
   S.days=S.days||{}; S.urges=S.urges||[]; S.ships=S.ships||{};
   S.measures=S.measures||[]; S.best50=S.best50||{};
-  if(!Array.isArray(S.settings.gymDays)) S.settings.gymDays=[0,2,4,6];
+  if(!Array.isArray(S.settings.gymDays)) S.settings.gymDays=[0,1,6];
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
   console.warn('storage full',e)}}
@@ -494,7 +508,8 @@ function renderPrayers(d,dt){
     g+='<rect x="'+(X(9+i*1.2)-2)+'" y="56" width="4" height="14" fill="var(--gold)" opacity=".8"/>';
   }
   if(isGymDay(CUR)){
-    var ga=X(+S.settings.gymHour), gb=X(+S.settings.gymHour+1.5);
+    var gh0=gymHourFor(parseISO(CUR).getDay());
+    var ga=X(gh0), gb=X(gh0+1.5);
     g+='<rect x="'+ga+'" y="52" width="'+(gb-ga)+'" height="7" fill="var(--good)" opacity=".8"/>';
     g+='<text x="'+(ga+4)+'" y="70" fill="var(--good)" font-size="9" font-family="ui-monospace,monospace">gym</text>';
   }
@@ -954,7 +969,7 @@ function renderDash(){
    {k:'Days closed',v:closed14,u:'/14',href:'day/',
     note:closed14>=12?'audit trail complete':closed14>=7?'holding':'the record has gaps'},
    {k:'Next session',v:ng?(ng===todayK()?'today':DOW[parseISO(ng).getDay()]):'—',u:'',href:'badan/',
-    note:ng?hm(S.settings.gymHour)+' · '+((ROT[parseISO(ng).getDay()]||{}).n||''):'no training days set'},
+    note:ng?hm(gymHourFor(parseISO(ng).getDay()))+' · '+((ROT[parseISO(ng).getDay()]||{}).n||''):'no training days set'},
    {k:'Training 28d',v:sched?Math.round(done/sched*100):'—',u:sched?'%':'',href:'badan/',
     note:sched?done+' of '+sched+' sessions':'nothing scheduled'},
    {k:'Calibration',v:pairs.length>=3?(mean(pairs)>0?'+':'')+mean(pairs).toFixed(1):'—',u:'',href:'record/',
@@ -1128,9 +1143,10 @@ on('#importFile','change',function(e){
 function load2(){ var d=defaults();
   S.settings=Object.assign({},d.settings,S.settings||{});
   S.settings.weights=Object.assign({},DEFW,S.settings.weights||{});
+  S.settings.gymHourByDay=S.settings.gymHourByDay||{};
   S.days=S.days||{}; S.urges=S.urges||[]; S.ships=S.ships||{};
   S.measures=S.measures||[]; S.best50=S.best50||{};
-  if(!Array.isArray(S.settings.gymDays)) S.settings.gymDays=[0,2,4,6] }
+  if(!Array.isArray(S.settings.gymDays)) S.settings.gymDays=[0,1,6] }
 on('#wipeBtn','click',function(){
   if(confirm('Erase every entry permanently? Export first if you want a copy.')){
     localStorage.removeItem(KEY); S=defaults(); touch()}});
@@ -1227,7 +1243,7 @@ function badanScore(d){
   return n>=3?3:n;
 }
 function gymPrayerRule(k){
-  var pt=prayerTimes(parseISO(k)),a=+S.settings.gymHour,b=a+1.5,W=windows(pt),out=[];
+  var pt=prayerTimes(parseISO(k)),a=gymHourFor(parseISO(k).getDay()),b=a+1.5,W=windows(pt),out=[];
   PRAYERS.forEach(function(p){
     var t=pt[p.id],w=W[p.id];
     if(isNaN(t)) return;
@@ -1242,11 +1258,15 @@ function renderBadan(){
   if(!$('#gymSched')) return;
   var d=day(CUR),st=S.settings;
   $('#partnerName').textContent=st.partner;
-  $('#gymSched').textContent=st.gymDays.slice().sort().map(function(i){return DOW[i]}).join(' · ')+
-    ' at '+hm(st.gymHour)+' · 90 min';
+  /* Per-day times, not one blanket hour — Sat/Sun and Mon genuinely differ,
+     and showing a single averaged-looking time here is how the mismatch with
+     the calendar went unnoticed for as long as it did. */
+  $('#gymSched').textContent=st.gymDays.slice().sort(function(a,b){
+      return (a===6?-1:b===6?1:a-b)}).map(function(i){
+    return DOW[i]+' '+hm(gymHourFor(i))}).join(' · ')+' · 90 min';
   var ng=nextGymDay();
-  $('#nextGym').textContent= ng? (ng===todayK()?'today':DOW[parseISO(ng).getDay()])+' '+hm(st.gymHour)+
-    ' — '+(ROT[parseISO(ng).getDay()]||{}).n : '—';
+  $('#nextGym').textContent= ng? (ng===todayK()?'today':DOW[parseISO(ng).getDay()])+' '+
+    hm(gymHourFor(parseISO(ng).getDay()))+' — '+(ROT[parseISO(ng).getDay()]||{}).n : '—';
 
   // today's session
   var rot=gymRotFor(CUR),g=d.gym||{};
@@ -1346,6 +1366,13 @@ function renderBadan(){
   $('#setProtein').value=st.proteinTarget; $('#setSleep').value=st.sleepTarget;
   $('#gymDayPick').innerHTML=DOW.map(function(n,i){
     return '<button data-gd="'+i+'" class="'+(st.gymDays.indexOf(i)>=0?'on':'')+'">'+n+'</button>'}).join('');
+  /* One start-time field per selected day, not one field for all of them —
+     the whole point of gymHourByDay is that Sat/Sun and Mon are not the same
+     time, and a single shared input would silently paper back over that. */
+  if($('#gymHourPick')) $('#gymHourPick').innerHTML=st.gymDays.slice().sort(function(a,b){
+      return (a===6?-1:b===6?1:a-b)}).map(function(i){
+    return '<div class="field" style="margin:0"><label class="fl">'+DOW[i]+' start (24h)</label>'+
+      '<input type="number" data-gh="'+i+'" min="4" max="23" step="0.25" value="'+gymHourFor(i)+'" /></div>'}).join('');
 }
 
 function renderMeasurements(){
@@ -1516,6 +1543,12 @@ on('#wtToday','change',function(e){var v=e.target.value; day(CUR).weight= v===''
 on('#sleepHrs','change',function(e){var v=e.target.value; day(CUR).sleepHrs= v===''?null:+v; touch()});
 on('#setPartner','change',function(e){S.settings.partner=e.target.value||'partner'; touch()});
 on('#setGymHour','change',function(e){S.settings.gymHour=clamp(+e.target.value||17,4,23); touch()});
+document.addEventListener('change',function(e){
+  var i=e.target.getAttribute&&e.target.getAttribute('data-gh');
+  if(i==null) return;
+  S.settings.gymHourByDay=S.settings.gymHourByDay||{};
+  S.settings.gymHourByDay[i]=clamp(+e.target.value||17,4,23); touch();
+});
 on('#setProtein','change',function(e){S.settings.proteinTarget=clamp(+e.target.value||150,60,300); touch()});
 on('#setSleep','change',function(e){S.settings.sleepTarget=clamp(+e.target.value||7,4,10); touch()});
 on('#addMeas','click',function(){
