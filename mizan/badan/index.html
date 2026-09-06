@@ -156,20 +156,21 @@
 
   <div class="grid g-2-1" style="margin-top:18px">
     <div class="card">
-      <p class="eyebrow">Coach's read · computed from your data</p>
+      <p class="eyebrow">Reading the data · computed, not scored by a coach</p>
       <div id="coachRead"></div>
     </div>
     <div class="card flat">
       <p class="eyebrow">Training &amp; food settings</p>
       <div class="grid g2" style="gap:10px">
         <div class="field" style="margin:0"><label class="fl" for="setPartner">Training partner</label><input type="text" id="setPartner" /></div>
-        <div class="field" style="margin:0"><label class="fl" for="setGymHour">Session start (24h)</label><input type="number" id="setGymHour" min="4" max="23" step="1" /></div>
+        <div class="field" style="margin:0"><label class="fl" for="setGymHour">Default start (24h)</label><input type="number" id="setGymHour" min="4" max="23" step="1" /></div>
         <div class="field" style="margin:0"><label class="fl" for="setProtein">Protein floor (g)</label><input type="number" id="setProtein" min="60" max="300" step="5" /></div>
         <div class="field" style="margin:0"><label class="fl" for="setSleep">Sleep target (hrs)</label><input type="number" id="setSleep" min="4" max="10" step="0.25" /></div>
       </div>
       <div class="field" style="margin-top:12px"><label class="fl">Training days</label>
         <div id="gymDayPick" class="seg sm"></div></div>
-      <div class="tiny" style="margin-top:10px">Session start drives the prayer-collision note and where the gym block is drawn on the day spine. It is a genuine scheduling constraint in both directions — in June a 5pm start sits inside ʿAṣr, in December it sits inside Maghrib, and the page works out which one applies today rather than making you remember.</div>
+      <div class="grid g2" id="gymHourPick" style="margin-top:12px;gap:10px"></div>
+      <div class="tiny" style="margin-top:10px">Each training day can carry its own start time — Saturday and Sunday do not have to match Monday. This drives the prayer-collision note and where the gym block is drawn on the day spine. It is a genuine scheduling constraint in both directions — in June a 5pm start sits inside ʿAṣr, in December it sits inside Maghrib, and the page works out which one applies today rather than making you remember.</div>
     </div>
   </div>
 </section>
