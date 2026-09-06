@@ -23,7 +23,7 @@ I examined banks as a regulator, ran audits inside two of them, and built and sh
 | | |
 | --- | --- |
 | [**malikai-786.github.io**](https://github.com/MalikAI-786/MalikAI-786.github.io) | The site, the identity system, and the generators behind it |
-| [**Proof Over Promise**](https://proofoverpromise.substack.com) | My newsletter on AI governance, model risk, and professional judgment |
+| [**How Would We Know**](https://howwouldweknow.substack.com) | My newsletter on AI governance, model risk, and professional judgment |
 
 #### Research
 
@@ -80,6 +80,6 @@ Fork the repo, swap the hex values in `palette.py`, and every generator — bann
 
 ---
 
-<sub>[Site](https://malikai-786.github.io) · [Brand system](https://malikai-786.github.io/brand.html) · [Newsletter](https://proofoverpromise.substack.com) · [LinkedIn](https://linkedin.com/in/yasiramalik)</sub>
+<sub>[Site](https://malikai-786.github.io) · [Brand system](https://malikai-786.github.io/brand.html) · [Newsletter](https://howwouldweknow.substack.com) · [LinkedIn](https://linkedin.com/in/yasiramalik)</sub>
 
 <sub><b>Yasir A. Malik</b> · Audit · Risk · Governance · Newark, NJ · NYC metro</sub>

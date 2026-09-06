@@ -64,18 +64,18 @@
       }
     },
     {
-      "id": "proof-over-promise",
-      "brand": "Proof Over Promise",
+      "id": "how-would-we-know",
+      "brand": "How Would We Know",
       "descriptor": "AI governance · model risk · judgment",
       "audience": "Newsletter readers, press",
       "format": "US business card, 3.5x2in, 300dpi, 0.125in bleed — pdf for a printer, png for preview, svg as source",
       "files": {
-        "front_png": "https://malikai-786.github.io/assets/brand/business-cards/proof-over-promise/card-front.png",
-        "front_pdf": "https://malikai-786.github.io/assets/brand/business-cards/proof-over-promise/card-front.pdf",
-        "front_svg": "https://malikai-786.github.io/assets/brand/business-cards/proof-over-promise/card-front.svg",
-        "back_png": "https://malikai-786.github.io/assets/brand/business-cards/proof-over-promise/card-back.png",
-        "back_pdf": "https://malikai-786.github.io/assets/brand/business-cards/proof-over-promise/card-back.pdf",
-        "back_svg": "https://malikai-786.github.io/assets/brand/business-cards/proof-over-promise/card-back.svg"
+        "front_png": "https://malikai-786.github.io/assets/brand/business-cards/how-would-we-know/card-front.png",
+        "front_pdf": "https://malikai-786.github.io/assets/brand/business-cards/how-would-we-know/card-front.pdf",
+        "front_svg": "https://malikai-786.github.io/assets/brand/business-cards/how-would-we-know/card-front.svg",
+        "back_png": "https://malikai-786.github.io/assets/brand/business-cards/how-would-we-know/card-back.png",
+        "back_pdf": "https://malikai-786.github.io/assets/brand/business-cards/how-would-we-know/card-back.pdf",
+        "back_svg": "https://malikai-786.github.io/assets/brand/business-cards/how-would-we-know/card-back.svg"
       }
     }
   ],

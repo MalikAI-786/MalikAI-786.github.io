@@ -38,7 +38,7 @@ USER = "MalikAI-786"
 SITE = "https://malikai-786.github.io"
 CDN = f"{SITE}/assets/brand"
 LINKEDIN = "https://linkedin.com/in/yasiramalik"
-SUBSTACK = "https://proofoverpromise.substack.com"
+from links import SUBSTACK, NEWSLETTER_NAME
 
 # The control center. Git is the published record; this is the live state.
 CONTROL = "https://www.notion.so/3b54ffd38c7e8183ad84fa2ca08c5c3c"
@@ -74,7 +74,7 @@ Moving or renaming anything under `assets/brand/banners/` or
 at once. Regenerate rather than reorganise.
 
 `tools/` is not part of the site. It holds local-only utilities — a bootstrap
-for a private data-dump repository, and the Proof Over Promise drafting script.
+for a private data-dump repository, and the newsletter drafting script.
 Pages serves the directory because everything here is served, but nothing links
 to it. Neither tool sends anything anywhere: the drafting script writes a
 markdown file and stops, and no real data belongs in this repository, because
@@ -139,7 +139,7 @@ ground.
 | --- | --- |
 | `index.html` | The site |
 | `brand.html` | The identity system, documented — palette, mark, type, usage rules |
-| `newsletter.html` | Proof Over Promise |
+| `newsletter.html` | How Would We Know |
 | `linkedin.html` | Profile copy, kept in sync with the resume |
 
 ## The generators
@@ -621,7 +621,7 @@ def render_master():
     md += "#### Practice\n\n" + table([
         ("malikai-786.github.io", f"https://github.com/{USER}/MalikAI-786.github.io",
          "The site, the identity system, and the generators behind it"),
-        ("Proof Over Promise", SUBSTACK,
+        (NEWSLETTER_NAME, SUBSTACK,
          "My newsletter on AI governance, model risk, and professional judgment"),
     ])
 

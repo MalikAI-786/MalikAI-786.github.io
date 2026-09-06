@@ -23,6 +23,7 @@ import json, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+from links import NEWSLETTER_NAME
 
 OUT = os.path.join(HERE, "templates.json")
 SITE = "https://malikai-786.github.io"
@@ -41,9 +42,9 @@ BUSINESS_CARDS = [
     dict(id="malik-marketplace", brand="Malik Marketplace", audience="Marketplace contacts",
          descriptor=None,
          dir="business-cards/malik-marketplace"),
-    dict(id="proof-over-promise", brand="Proof Over Promise", audience="Newsletter readers, press",
+    dict(id="how-would-we-know", brand=NEWSLETTER_NAME, audience="Newsletter readers, press",
          descriptor="AI governance · model risk · judgment",
-         dir="business-cards/proof-over-promise"),
+         dir="business-cards/how-would-we-know"),
 ]
 
 EMAIL_SIGNATURES = [

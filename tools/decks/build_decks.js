@@ -404,7 +404,7 @@ const ATA_DECK = {
   links: [
     ["Brief", "malikai-786.github.io/governance", "https://malikai-786.github.io/governance.html"],
     ...COMMON_LINKS_TAIL,
-    ["Newsletter", "proofoverpromise.substack.com", "https://proofoverpromise.substack.com"],
+    ["Newsletter", "howwouldweknow.substack.com", "https://howwouldweknow.substack.com"],
   ],
 };
 

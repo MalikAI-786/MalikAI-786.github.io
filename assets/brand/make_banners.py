@@ -129,7 +129,7 @@ SURFACES = [
     ("yasir-malik-biolink", "Links",                "DIRECTORY"),
     ("index007",            "SPX 0DTE Dashboard",   "RESEARCH INSTRUMENT · NOT ADVICE"),
     ("research",            "Research",             "AI & PROFESSIONAL JUDGMENT"),
-    ("proof-over-promise",  "Proof Over Promise",   "EVIDENCE BEFORE CLAIMS"),
+    ("how-would-we-know",   "How Would We Know",   "EVIDENCE BEFORE CLAIMS"),
 ]
 
 if __name__ == "__main__":

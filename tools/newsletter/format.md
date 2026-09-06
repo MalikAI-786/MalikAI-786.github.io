@@ -31,10 +31,10 @@ Worth naming precisely, because the useful parts are not the obvious ones.
 **Question-as-header is the piece that fits him best.** His whole method is
 *how would we know?* — the format and the argument want the same thing.
 
-## The Proof Over Promise issue template
+## The How Would We Know issue template
 
 ```
-PROOF OVER PROMISE
+HOW WOULD WE KNOW
 Evidence before claims · AI governance, model risk, professional judgment
 
 [One-sentence thesis: what this issue is about and why it matters now.]
@@ -72,7 +72,7 @@ audit at Citigroup and JPMorgan Chase, DBA candidate at FIU.
 Drafting assistance used and disclosed; the judgment is mine.
 
 Forward this to someone who has to assure AI they did not build.
-Subscribe: proofoverpromise.substack.com
+Subscribe: howwouldweknow.substack.com
 ```
 
 **Length:** 1,200–1,800 words. Two items. Three only when the third genuinely
@@ -134,7 +134,7 @@ The blocker is not strategy, it is inventory: **there is nothing to monetize
 until issues exist on a kept schedule.** Six published issues on a fortnightly
 cadence is the earliest point at which the question is worth asking, because
 before that there is no evidence the cadence holds — and a newsletter called
-Proof Over Promise cannot sell a subscription on a promise.
+How Would We Know cannot sell a subscription on a promise.
 
 One thing to decide *before* then, because it is hard to reverse: whether the
 advisory practice is ever pitched in the issue. Current position in `voice.md`

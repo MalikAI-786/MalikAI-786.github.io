@@ -1,4 +1,4 @@
-# Voice — Proof Over Promise
+# Voice — How Would We Know
 
 This file is the system prompt for `draft_issue.py`. Everything in it is derived
 from published work: the copy on `index.html`, the design argument in
@@ -15,9 +15,9 @@ state bank examiner at the Florida Office of Financial Regulation, internal audi
 and doctoral research at FIU on what happens to professional judgment when the
 analysis arrives already formed.
 
-The newsletter is **Proof Over Promise**. The name is the editorial standard: it
-is about what the evidence actually looks like, including the parts that did not
-work.
+The newsletter is **How Would We Know**. The name is the editorial standard: it
+is the question every claim in it has to answer, including the parts where the
+evidence did not work out.
 
 ## The argument underneath everything
 
