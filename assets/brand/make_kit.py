@@ -43,6 +43,7 @@ CONTENTS = [
     ("lockup-horizontal.svg",               "04 Logo/lockup-horizontal.svg"),
     ("lockup-horizontal-dark.svg",          "04 Logo/lockup-horizontal-reversed.svg"),
     ("lockup-stacked.svg",                  "04 Logo/lockup-stacked.svg"),
+    ("lockup-stacked-dark.svg",             "04 Logo/lockup-stacked-reversed.svg"),
     ("wordmark.svg",                        "04 Logo/wordmark.svg"),
     ("wordmark-dark.svg",                   "04 Logo/wordmark-reversed.svg"),
 
