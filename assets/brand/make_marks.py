@@ -229,47 +229,52 @@ def wordmark(name_col, sub_col, accent):
 """
 
 
-from palette import EMBER, INK, PAPER, MUTED, EMBER_TEXT
+from palette import (EMBER, INK, PAPER, MUTED, EMBER_TEXT,
+                     LIGHT, DIM, NIGHT, ON_ACCENT)
 
 FILES = {
     "mark.svg":            mark(),
     "mark-ember.svg":      mark(ring_col=EMBER, letter_col=INK, node_col=EMBER,
                                 label="The Reference Mark, two-tone"),
-    "mark-ember-dark.svg": mark(ring_col=EMBER, letter_col="#EDEFF1", node_col=EMBER,
+    "mark-ember-dark.svg": mark(ring_col=EMBER, letter_col=LIGHT, node_col=EMBER,
                                 label="The Reference Mark, two-tone on dark"),
-    "mark-badge.svg":      mark_on_disc(EMBER, "#1A1109"),
+    "mark-badge.svg":      mark_on_disc(EMBER, ON_ACCENT),
     "mark-micro.svg":      micro(),
-    "favicon.svg":         favicon(EMBER, "#1A1109"),
+    "favicon.svg":         favicon(EMBER, ON_ACCENT),
     "lockup-horizontal.svg": lockup_h(EMBER, INK, INK, MUTED),
-    "lockup-horizontal-dark.svg": lockup_h(EMBER, "#EDEFF1", "#EDEFF1", "#A6B0BA"),
+    "lockup-horizontal-dark.svg": lockup_h(EMBER, LIGHT, LIGHT, DIM),
     "lockup-stacked.svg":  lockup_v(EMBER, INK, INK, MUTED),
+    # Every other lockup ships a dark cut; the stacked one did not, which is
+    # an omission rather than a decision — it is the cut an avatar or a dark
+    # slide reaches for first.
+    "lockup-stacked-dark.svg": lockup_v(EMBER, LIGHT, LIGHT, DIM),
     "wordmark.svg":        wordmark(INK, MUTED, EMBER),
-    "wordmark-dark.svg":   wordmark("#EDEFF1", "#A6B0BA", EMBER),
+    "wordmark-dark.svg":   wordmark(LIGHT, DIM, EMBER),
 }
 
 def social_card():
     """1200x630 Open Graph card, dark cut."""
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
-  <rect width="1200" height="630" fill="#0E1114"/>
+  <rect width="1200" height="630" fill="{NIGHT}"/>
   <rect x="0" y="0" width="1200" height="6" fill="{EMBER}"/>
   <g transform="translate(830 -60) scale(11)" opacity=".07">
     <path d="{ring_path()}" stroke="{EMBER}" stroke-width="{f(SW)}" stroke-linecap="round"/>
     <circle cx="{f(pt(GAP_MID)[0])}" cy="{f(pt(GAP_MID)[1])}" r="3.9" fill="{EMBER}"/>
-    <path d="{letter_path()}" stroke="#EDEFF1" stroke-width="{f(AW)}" stroke-linejoin="miter" stroke-linecap="butt"/>
-    <path d="{bar_path()}" stroke="#EDEFF1" stroke-width="{f(AW)}" stroke-linecap="butt"/>
+    <path d="{letter_path()}" stroke="{LIGHT}" stroke-width="{f(AW)}" stroke-linejoin="miter" stroke-linecap="butt"/>
+    <path d="{bar_path()}" stroke="{LIGHT}" stroke-width="{f(AW)}" stroke-linecap="butt"/>
   </g>
   <g transform="translate(88 96) scale(2.05)">
     <path d="{ring_path()}" stroke="{EMBER}" stroke-width="{f(SW)}" stroke-linecap="round"/>
     <circle cx="{f(pt(GAP_MID)[0])}" cy="{f(pt(GAP_MID)[1])}" r="3.9" fill="{EMBER}"/>
-    <path d="{letter_path()}" stroke="#EDEFF1" stroke-width="{f(AW)}" stroke-linejoin="miter" stroke-linecap="butt"/>
-    <path d="{bar_path()}" stroke="#EDEFF1" stroke-width="{f(AW)}" stroke-linecap="butt"/>
+    <path d="{letter_path()}" stroke="{LIGHT}" stroke-width="{f(AW)}" stroke-linejoin="miter" stroke-linecap="butt"/>
+    <path d="{bar_path()}" stroke="{LIGHT}" stroke-width="{f(AW)}" stroke-linecap="butt"/>
   </g>
-  <text x="88" y="336" font-family="{SERIF}" font-size="76" letter-spacing="0" fill="#EDEFF1">Yasir A. Malik</text>
+  <text x="88" y="336" font-family="{SERIF}" font-size="76" letter-spacing="0" fill="{LIGHT}">Yasir A. Malik</text>
   <path d="M90 372 H150" stroke="{EMBER}" stroke-width="2.5"/>
-  <text x="92" y="404" font-family="{MONO}" font-size="19" letter-spacing="6.5" fill="#A6B0BA">{DESCRIPTOR}</text>
-  <text x="88" y="486" font-family="{SERIF}" font-size="28" fill="#A6B0BA">Regulator, operator, and researcher — on how</text>
-  <text x="88" y="524" font-family="{SERIF}" font-size="28" fill="#A6B0BA">professional judgment holds under scrutiny.</text>
-  <text x="88" y="580" font-family="{MONO}" font-size="16" letter-spacing="3" fill="#5A646E">MALIKAI-786.GITHUB.IO</text>
+  <text x="92" y="404" font-family="{MONO}" font-size="19" letter-spacing="6.5" fill="{DIM}">{DESCRIPTOR}</text>
+  <text x="88" y="486" font-family="{SERIF}" font-size="28" fill="{DIM}">Regulator, operator, and researcher — on how</text>
+  <text x="88" y="524" font-family="{SERIF}" font-size="28" fill="{DIM}">professional judgment holds under scrutiny.</text>
+  <text x="88" y="580" font-family="{MONO}" font-size="16" letter-spacing="3" fill="{MUTED}">MALIKAI-786.GITHUB.IO</text>
 </svg>
 """
 

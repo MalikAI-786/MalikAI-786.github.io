@@ -67,6 +67,7 @@ SECTIONS = [
  ("lockup-horizontal.svg", "Horizontal lockup", "Email signatures, letterheads, footers."),
  ("lockup-horizontal-dark.svg", "Horizontal, reversed", "The same on a dark ground."),
  ("lockup-stacked.svg", "Stacked lockup", "Where width is tight — cards, avatars, stamps."),
+ ("lockup-stacked-dark.svg", "Stacked, reversed", "The same on a dark ground."),
  ("wordmark.svg", "Wordmark", "Name alone, when the mark already appears nearby."),
  ("wordmark-dark.svg", "Wordmark, reversed", ""),
  ("signature-mark.svg", "Signature mark", "Sized for the bottom of an email."),

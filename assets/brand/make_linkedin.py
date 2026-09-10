@@ -18,7 +18,8 @@ import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import make_marks as M
-from palette import EMBER
+from palette import (EMBER, EMBER_TEXT, NIGHT, LIGHT, DIM, INK_700,
+                     PAPER, INK, MUTED, LINE)
 import cairosvg
 
 OUT = os.path.join(HERE, "linkedin")
@@ -29,11 +30,17 @@ SAFE_W, SAFE_H = 1350, 220           # centred band that survives desktop crop
 SAFE_X, SAFE_Y = (W - SAFE_W) // 2, (H - SAFE_H) // 2
 PHOTO_CX, PHOTO_CY, PHOTO_R = 200, H - 150, 96   # profile photo footprint
 
+# Colours come from palette.py, never from a literal typed here — and `desc`
+# is a role, not a constant, for the reason the whole system is built around:
+# the descriptor is 15px, so on the light cut it cannot be ember-500 (3.11:1
+# on paper). It was, until this was caught: the fill sat outside the theme
+# dict while every neighbouring value read from it, so the light cut shipped
+# failing text and the dark cut hid it. There was also a dead `meta` key here
+# carrying #8A929B — the same grey palette.py's docstring calls out — read by
+# nothing. Both are gone.
 THEMES = {
-    "dark":  dict(bg="#0E1114", ink="#EDEFF1", sub="#A6B0BA",
-                  rule="#263039", meta="#5A646E"),
-    "light": dict(bg="#F6F3F0", ink="#171A1D", sub="#5A646E",
-                  rule="#E2DAD3", meta="#8A929B"),
+    "dark":  dict(bg=NIGHT, ink=LIGHT, sub=DIM, rule=INK_700, desc=EMBER),
+    "light": dict(bg=PAPER, ink=INK, sub=MUTED, rule=LINE, desc=EMBER_TEXT),
 }
 
 MOTTO = "Khudi: the discipline of not dissolving."
@@ -75,7 +82,7 @@ def cover(theme="dark"):
   <path d="M{x + 100} 100 V174" stroke="{t['rule']}" stroke-width="1.5"/>
 
   <text x="{x + 128}" y="140" font-family="{M.SERIF}" font-size="40" fill="{t['ink']}">{esc(MOTTO)}</text>
-  <text x="{x + 130}" y="176" font-family="{M.MONO}" font-size="15" letter-spacing="5.5" fill="{EMBER}">{esc(DESCRIPTOR)}</text>
+  <text x="{x + 130}" y="176" font-family="{M.MONO}" font-size="15" letter-spacing="5.5" fill="{t['desc']}">{esc(DESCRIPTOR)}</text>
 
   <path d="M{x} 232 H{x + 90}" stroke="{EMBER}" stroke-width="3"/>
   <text x="{x}" y="284" font-family="{M.SERIF}" font-size="29" fill="{t['sub']}">{esc(VISION)}</text>
