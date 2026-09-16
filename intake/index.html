@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Start a discovery conversation · Yasir A. Malik</title>
+  <meta name="description" content="Turn a business, hospitality or education opportunity into an evidence-led discovery brief with Yasir A. Malik.">
+  <link rel="icon" href="../assets/brand/favicon.svg">
+  <link rel="stylesheet" href="../assets/brand/tokens.css"><link rel="stylesheet" href="intake.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to intake</a>
+<header><a href="../index.html"><img src="../assets/brand/favicon.svg" width="32" height="32" alt=""> Yasir A. Malik</a><nav aria-label="Main"><a href="../newsletter.html">Newsletter</a><a href="../insights/before-we-automate.html">The approach</a></nav></header>
+<main id="main">
+  <p class="eyebrow">Audit · Risk · Governance / Discovery MVP</p>
+  <h1>Start with the problem.<br>Build from the evidence.</h1>
+  <p class="intro">A promising idea deserves more than a pitch. Tell me what you want to improve, what you know, and what remains uncertain. We’ll use that to shape a focused first conversation—not a prepackaged solution.</p>
+  <p>I’m Yasir A. Malik. My work connects audit, risk and AI governance; my doctoral research at FIU examines cognitive bias in audit judgment. <a href="https://business.fiu.edu/academics/graduate/doctor-of-business-administration/our-students/class-of-2028/index.html">Read my FIU profile</a>.</p>
+  <aside><strong>How this works · About 5 minutes</strong><p>Complete the form → review your brief → send it using your email app. This page does not submit or store your answers on a server. Nothing reaches me until you send the email. No newsletter signup is included.</p><p>Please use high-level descriptions only. Do not include confidential client, employer, student, financial or personal records. This is exploratory intake, not an engagement, an audit opinion or a university partnership.</p></aside>
+  <noscript><p>JavaScript is needed to generate your brief. Instead, email <a href="mailto:yasiramalik@gmail.com">yasiramalik@gmail.com</a> with your organization, challenge, desired outcome and timing.</p></noscript>
+  <form id="intake">
+    <p>Fields marked * are required. “Not sure yet” is a useful answer.</p>
+    <fieldset><legend>01 / The people and the opportunity</legend>
+      <div class="grid"><div><label for="name">Your name *</label><input id="name" name="name" autocomplete="name" maxlength="100" required></div><div><label for="email">Your email *</label><input id="email" name="email" type="email" autocomplete="email" maxlength="160" required></div></div>
+      <div class="grid"><div><label for="organization">Organization or project *</label><input id="organization" name="organization" autocomplete="organization" maxlength="120" required></div><div><label for="role">Your role *</label><input id="role" name="role" autocomplete="organization-title" maxlength="100" required></div></div>
+      <label for="track">Which conversation best fits? *</label><select id="track" name="track" required aria-describedby="track-help"><option value="">Choose a path</option><option value="business">Business operations &amp; responsible AI</option><option value="hospitality">Hospitality &amp; multi-location readiness</option><option value="education">Education &amp; workforce collaboration</option><option value="explore">Not sure—help me frame it</option></select>
+      <p class="help" id="track-help">Choose your main goal. We can connect related needs during discovery.</p><p id="track-note" class="note" aria-live="polite"></p>
+      <label for="location">Market or location</label><input id="location" name="location" maxlength="120" placeholder="For example: Miami / Sweetwater, New Jersey, or remote">
+      <label for="source">How did you find me?</label><select id="source" name="source"><option>Prefer not to say</option><option>Personal introduction</option><option>LinkedIn</option><option>Newsletter</option><option>FIU / academic network</option><option>Website / other</option></select>
+    </fieldset>
+    <fieldset><legend>02 / The problem—not just the proposed solution</legend>
+      <label for="challenge">What is getting in the way? *</label><p class="help" id="challenge-help">Describe one recurring problem and who it affects. Example: “Managers rebuild the weekly sales report by hand.”</p><textarea id="challenge" name="challenge" required maxlength="800" rows="4" aria-describedby="challenge-help"></textarea>
+      <label for="outcome">What would a worthwhile result look like? *</label><p class="help" id="outcome-help">Name a measurable change if you can: hours saved, fewer errors, repeatable training, or a tested expansion decision. Estimates are welcome if labeled.</p><textarea id="outcome" name="outcome" required maxlength="500" rows="3" aria-describedby="outcome-help"></textarea>
+      <label for="evidence">What evidence do you have today?</label><p class="help" id="evidence-help">Describe the baseline or source—not the underlying records. Example: “We estimate six hours each week; we have not timed it yet.”</p><textarea id="evidence" name="evidence" maxlength="500" rows="3" aria-describedby="evidence-help"></textarea>
+      <label for="assumption">What are you assuming, and what could change your mind?</label><p class="help" id="assumption-help">Example: “We think another location will work; weak repeat visits or staffing constraints would make us reconsider.” It is fine not to know.</p><textarea id="assumption" name="assumption" maxlength="500" rows="3" aria-describedby="assumption-help"></textarea>
+    </fieldset>
+    <fieldset><legend>03 / Make the next step realistic</legend>
+      <label for="readiness">Where are you in the decision? *</label><select id="readiness" name="readiness" required><option value="">Choose a stage</option><option value="exploring">Exploring the idea</option><option value="sponsor">Identifying a sponsor / decision-maker</option><option value="ready">Ready to scope a pilot</option></select>
+      <div class="grid"><div><label for="timeline">When would you like to start? *</label><select id="timeline" name="timeline" required><option value="">Choose timing</option><option>Within 30 days</option><option>1–3 months</option><option>3–6 months</option><option>Exploring / no deadline</option></select></div><div><label for="budget">Pilot budget status</label><select id="budget" name="budget"><option>Not discussed yet</option><option>Need a business case first</option><option>Budget exists; scope needed</option><option>Academic / grant funding needed</option></select></div></div>
+      <label for="constraints">What must we respect?</label><p class="help" id="constraints-help">Think approvals, staffing, systems, data access or deadlines. For education: course sponsor, learning outcomes, student safeguards and procurement. No sensitive details.</p><textarea id="constraints" name="constraints" maxlength="500" rows="3" aria-describedby="constraints-help"></textarea>
+      <label class="check"><input type="checkbox" name="consent" required> <span>I understand this generates a brief on my device. If I send it, I agree that Yasir may contact me about this inquiry. I have not included confidential records. *</span></label>
+    </fieldset>
+    <button type="submit" disabled>Prepare my discovery brief</button><button type="reset" class="secondary">Clear answers</button>
+  </form>
+  <section id="result" hidden aria-labelledby="result-title"><h2 id="result-title" tabindex="-1">Your brief is prepared—not submitted.</h2><p id="next-step"></p><p>Review the text below. “Open email draft” shares it with your email app; it does not send it. For a longer brief, copy it into an email to <a href="mailto:yasiramalik@gmail.com">yasiramalik@gmail.com</a>, or attach the downloaded text file.</p><pre id="brief"></pre><div class="actions"><a class="button" id="email-link">Open email draft</a><button type="button" id="copy">Copy brief</button><button type="button" id="download-text">Download text</button><button type="button" id="download-json">Download lead JSON</button></div><p id="status" role="status"></p><p class="help">Downloads contain your answers. Keep them private; never upload them to a public GitHub issue. Edits above invalidate this preview—prepare it again before sending.</p></section>
+  <footer><p><strong>Yasir A. Malik</strong><br>Audit · Risk · Governance<br><a href="mailto:yasiramalik@gmail.com">yasiramalik@gmail.com</a> · <a href="https://linkedin.com/in/yasiramalik">LinkedIn</a></p><p>Independent exploratory work. FIU affiliation is academic; no institutional endorsement or delivery-partner commitment is implied. Any scope, fees and qualified specialist involvement must be agreed separately.</p><a href="../plans/discovery-mvp.md">MVP scope &amp; delivery roadmap</a></footer>
+</main></body></html>

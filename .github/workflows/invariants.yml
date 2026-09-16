@@ -26,3 +26,8 @@ jobs:
       # cannot break because a dependency moved.
       - name: Check repository invariants
         run: python3 tools/audit/invariants.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check discovery intake
+        run: node --test tools/audit/intake.test.mjs
