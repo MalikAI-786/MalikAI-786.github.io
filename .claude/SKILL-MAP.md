@@ -18,6 +18,7 @@ For every substantive task:
 
 | User intent / trigger | Required skill | What it governs |
 |---|---|---|
+| Lead intake, discovery brief, business qualification, hospitality or education collaboration scoping | `discovery-intake` | Private lead handling, evidence-led questions, receipt truthfulness and human qualification |
 | Reel, video, article, PDF, screenshot, transcript, external link; “learn from this”, “extract the skills”, “remember this method” | `source-ingestion` | Source capture, provenance, durable skill extraction, no invented content |
 | DBA, auditor judgment, anchoring bias, literature review, theory, hypothesis, methods, survey, recruitment, IRB, Qualtrics, data analysis, faculty research feedback | `dba-research` | Lead-researcher workflow, provenance, theory/model discipline, methods, recruitment evidence, human-subject privacy |
 | Email, memo, professional letter, follow-up, outreach, reply, signature | `professional-communications` | Purpose-first writing, domain-aware tone, next-action clarity, branded signature routing |
