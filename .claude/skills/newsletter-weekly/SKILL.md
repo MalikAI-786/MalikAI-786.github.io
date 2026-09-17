@@ -31,6 +31,35 @@ description: >-
 
 **It drafts. It does not publish.** No merge, no send, no LinkedIn post, no Substack, no scheduler — root `AGENTS.md` safeguard 4. Publishing is a decision, and the most reliable way to honor that is a routine that structurally cannot make it. Yasir merges the PR and posts to LinkedIn himself, every time.
 
+## The harness
+
+The run is automated. Config, recorded here so it can be rebuilt if it is ever lost:
+
+| | |
+|---|---|
+| Routine | `trig_01HZQENNnJP2Xg2BQNYQFUTL` — "Weekly newsletter — draft, gate, deliver to Yasir" |
+| Schedule | `0 14 * * 1` — Mondays, 14:00 UTC (7am Pacific, 10am Eastern) |
+| Mode | Fresh session each firing. No memory of previous runs, so the prompt is self-contained and the repo is the only state. |
+| Delivery | Push and email notification on completion |
+
+**Step 12 of the routine prompt is the actual deliverable.** Connectors are not available to routines on this organization, so a fired session has no Gmail, no Notion and no way to mail anything. What reaches Yasir is the completion notification, and a notification carries the run's final message. That makes the final message the newsletter briefing rather than a status report, and it is why the prompt specifies its shape down to the line breaks:
+
+```
+<Issue headline>
+<One-sentence thesis.>
+
+Number: <the hard number>
+Heuristic: <which one, and why it fits>
+Gate: <verdict, naming the check>
+Read it: <PR or compare URL>
+
+Needs you: <the decision, or nothing>
+```
+
+Ten seconds should be enough to decide whether to open it now or at the weekend. A run that buries that under an account of its own process has not delivered, however good the draft is.
+
+If connectors ever become available, add Gmail from the claude.ai routines interface and the prompt's step 11 starts working — it creates a **draft**, never a send.
+
 ## On the cadence
 
 The **run** is weekly. The **promise** is whatever Yasir has publicly committed to, which is currently nothing — `newsletter.html` says email subscriptions are not yet available, so there is no cadence to break. Keep those separate. A weekly routine that reliably produces a reviewed draft is a different object from a weekly publishing commitment, and only the second one can fail in public. Do not add a cadence claim to the site without his explicit say-so.
