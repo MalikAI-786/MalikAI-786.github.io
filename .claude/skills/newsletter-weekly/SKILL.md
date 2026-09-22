@@ -60,6 +60,10 @@ Ten seconds should be enough to decide whether to open it now or at the weekend.
 
 If connectors ever become available, add Gmail from the claude.ai routines interface and the prompt's step 11 starts working — it creates a **draft**, never a send.
 
+**Run 1, 21 September 2026 — what actually happened.** Fired on time, wrote for six minutes, reported success, pushed nothing; session ended review-ready with the notification unread. An unattended session cannot answer a permission prompt, so any step that might prompt stalls the run silently. Two consequences, both now in the routine prompt: the full issue text goes into the final message whenever the push does not land, so the notification is the deliverable regardless; and a run counts as delivered only when a branch exists on `origin` **and** a review request has reached Yasir — GitHub emails the owner on a review request, no connector needed.
+
+**The model-agnostic copy of this run is `tools/newsletter/RUNBOOK.md`.** Part 1 is the procedure for any executor — Claude, Codex, ChatGPT, a person. Part 2 is the spec for a harness where the schedule and the push credential live in GitHub Actions and the model is a parameter, which is the design that removes the permission-prompt failure entirely.
+
 ## On the cadence
 
 The **run** is weekly. The **promise** is whatever Yasir has publicly committed to, which is currently nothing — `newsletter.html` says email subscriptions are not yet available, so there is no cadence to break. Keep those separate. A weekly routine that reliably produces a reviewed draft is a different object from a weekly publishing commitment, and only the second one can fail in public. Do not add a cadence claim to the site without his explicit say-so.
