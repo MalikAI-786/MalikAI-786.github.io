@@ -11,16 +11,25 @@ LinkedIn cover, The Reference Mark.
 
 So the bottom-left quadrant is dead space and everything meaningful sits
 upper-centre. The cover does not repeat his name: LinkedIn already prints
-it directly underneath. It carries the motto and the vision instead.
+it directly underneath.
+
+Refit to the same frame as the profile hero and the repository banners: the
+mark, a kicker, a title, a sub. The ember stripe, the ghost mark bleeding off
+the right edge and the vertical divider are gone — they were furniture around
+the statement, and on a surface LinkedIn already fills with a photo, a name and
+a headline, furniture is the first thing to go. The hero carries the same four
+elements plus a face; this cover is the hero with the face supplied by the
+profile circle instead.
 """
-import os, sys
+import io, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import make_marks as M
-from palette import (EMBER, EMBER_TEXT, NIGHT, LIGHT, DIM, INK_700,
-                     PAPER, INK, MUTED, LINE)
+from palette import (EMBER, EMBER_TEXT, EMBER_TINT, NIGHT, LIGHT, DIM,
+                     PAPER, INK, MUTED)
 import cairosvg
+from PIL import Image
 
 OUT = os.path.join(HERE, "linkedin")
 os.makedirs(OUT, exist_ok=True)
@@ -30,17 +39,12 @@ SAFE_W, SAFE_H = 1350, 220           # centred band that survives desktop crop
 SAFE_X, SAFE_Y = (W - SAFE_W) // 2, (H - SAFE_H) // 2
 PHOTO_CX, PHOTO_CY, PHOTO_R = 200, H - 150, 96   # profile photo footprint
 
-# Colours come from palette.py, never from a literal typed here — and `desc`
-# is a role, not a constant, for the reason the whole system is built around:
-# the descriptor is 15px, so on the light cut it cannot be ember-500 (3.11:1
-# on paper). It was, until this was caught: the fill sat outside the theme
-# dict while every neighbouring value read from it, so the light cut shipped
-# failing text and the dark cut hid it. There was also a dead `meta` key here
-# carrying #8A929B — the same grey palette.py's docstring calls out — read by
-# nothing. Both are gone.
+# Four roles for four elements. `kick` is a role, not a constant: at 15px it
+# cannot be ember-500 on paper (3.11:1), so ember-650 on light, ember-tint on
+# dark — the same rule the banners and the hero follow.
 THEMES = {
-    "dark":  dict(bg=NIGHT, ink=LIGHT, sub=DIM, rule=INK_700, desc=EMBER),
-    "light": dict(bg=PAPER, ink=INK, sub=MUTED, rule=LINE, desc=EMBER_TEXT),
+    "dark":  dict(bg=NIGHT, name=LIGHT, sub=DIM,   kick=EMBER_TINT, letter=LIGHT),
+    "light": dict(bg=PAPER, name=INK,   sub=MUTED, kick=EMBER_TEXT, letter=INK),
 }
 
 MOTTO = "Khudi: the discipline of not dissolving."
@@ -61,31 +65,27 @@ def cover(theme="dark"):
     # off the left (238). The later of the two, plus breathing room, wins.
     x = max(PHOTO_CX + PHOTO_R, int(W * 0.15)) + 44
 
+    # Everything sits inside the safe band (y 88–308). Same stacking rhythm as
+    # the hero: mark, then kicker fourteen px above the title's cap height,
+    # then the sub. Baselines are placed so the lowest descender clears 308.
+    mark_y = 96
+    kick_y = 196
+    title_y = 242
+    sub_y = 288
+
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" fill="none">
   <rect width="{W}" height="{H}" fill="{t['bg']}"/>
-  <rect x="0" y="0" width="{W}" height="6" fill="{EMBER}"/>
 
-  <g transform="translate({W - 250} -110) scale(8.6)" opacity="{'.06' if theme == 'dark' else '.05'}">
+  <g transform="translate({x} {mark_y}) scale(.9)">
     <path d="{M.ring_path()}" stroke="{EMBER}" stroke-width="{M.f(M.SW)}" stroke-linecap="round"/>
     <circle cx="{M.f(nx)}" cy="{M.f(ny)}" r="3.9" fill="{EMBER}"/>
-    <path d="{M.letter_path()}" stroke="{t['ink']}" stroke-width="{M.f(M.AW)}" stroke-linejoin="miter" stroke-linecap="butt"/>
-    <path d="{M.bar_path()}" stroke="{t['ink']}" stroke-width="{M.f(M.AW)}" stroke-linecap="butt"/>
+    <path d="{M.letter_path()}" stroke="{t['letter']}" stroke-width="{M.f(M.AW)}" stroke-linejoin="miter" stroke-linecap="butt"/>
+    <path d="{M.bar_path()}" stroke="{t['letter']}" stroke-width="{M.f(M.AW)}" stroke-linecap="butt"/>
   </g>
 
-  <g transform="translate({x} 96) scale(1.15)">
-    <path d="{M.ring_path()}" stroke="{EMBER}" stroke-width="{M.f(M.SW)}" stroke-linecap="round"/>
-    <circle cx="{M.f(nx)}" cy="{M.f(ny)}" r="3.9" fill="{EMBER}"/>
-    <path d="{M.letter_path()}" stroke="{t['ink']}" stroke-width="{M.f(M.AW)}" stroke-linejoin="miter" stroke-linecap="butt"/>
-    <path d="{M.bar_path()}" stroke="{t['ink']}" stroke-width="{M.f(M.AW)}" stroke-linecap="butt"/>
-  </g>
-
-  <path d="M{x + 100} 100 V174" stroke="{t['rule']}" stroke-width="1.5"/>
-
-  <text x="{x + 128}" y="140" font-family="{M.SERIF}" font-size="40" fill="{t['ink']}">{esc(MOTTO)}</text>
-  <text x="{x + 130}" y="176" font-family="{M.MONO}" font-size="15" letter-spacing="5.5" fill="{t['desc']}">{esc(DESCRIPTOR)}</text>
-
-  <path d="M{x} 232 H{x + 90}" stroke="{EMBER}" stroke-width="3"/>
-  <text x="{x}" y="284" font-family="{M.SERIF}" font-size="29" fill="{t['sub']}">{esc(VISION)}</text>
+  <text x="{x}" y="{kick_y}" font-family="{M.MONO}" font-size="15" letter-spacing="5.5" fill="{t['kick']}">{esc(DESCRIPTOR)}</text>
+  <text x="{x}" y="{title_y}" font-family="{M.SERIF}" font-size="44" letter-spacing="-0.97" fill="{t['name']}">{esc(MOTTO)}</text>
+  <text x="{x}" y="{sub_y}" font-family="{M.SERIF}" font-size="27" fill="{t['sub']}">{esc(VISION)}</text>
 </svg>
 """
 
@@ -103,16 +103,19 @@ def guides(svg):
 </svg>""")
 
 
+def render(svg, path):
+    # 2x then averaged down: cairo antialiases glyphs with subpixel coverage,
+    # and at 44px the serif picks up colour fringes along every stem.
+    png = cairosvg.svg2png(bytestring=svg.encode(), output_width=W * 2)
+    Image.open(io.BytesIO(png)).convert("RGB").resize((W, H), Image.LANCZOS).save(path, optimize=True)
+
+
 if __name__ == "__main__":
     for theme in ("dark", "light"):
         svg = cover(theme)
         open(os.path.join(OUT, f"cover-{theme}.svg"), "w").write(svg)
-        cairosvg.svg2png(bytestring=svg.encode(),
-                         write_to=os.path.join(OUT, f"cover-{theme}.png"),
-                         output_width=W)
+        render(svg, os.path.join(OUT, f"cover-{theme}.png"))
         print(f"  cover-{theme}.png  {W}x{H}")
 
-    cairosvg.svg2png(bytestring=guides(cover("dark")).encode(),
-                     write_to=os.path.join(OUT, "cover-guides.png"),
-                     output_width=W)
+    render(guides(cover("dark")), os.path.join(OUT, "cover-guides.png"))
     print("  cover-guides.png (blue = desktop safe band, red = mobile crop + photo)")
