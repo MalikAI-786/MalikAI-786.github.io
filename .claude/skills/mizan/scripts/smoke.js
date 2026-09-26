@@ -138,6 +138,22 @@ function check(name, cond, detail) {
   const idx = await page.locator('#idxNum').innerText();
   check('index computes to a number', /^\d+$/.test(idx), idx);
 
+  // --- 3-6-9 practice ---
+  await page.fill('#i369', 'Test intention line');
+  await page.waitForTimeout(150);
+  check('369 intention persists to settings', await page.evaluate(() =>
+    JSON.parse(localStorage.getItem('mizan.v1')).settings.intention369 === 'Test intention line'));
+  check('369 renders three progress rows', (await page.locator('[data-369]').count()) === 3);
+  for (let i = 0; i < 3; i++) await page.click('[data-369="morning"]');
+  await page.waitForTimeout(150);
+  const p369 = await page.evaluate(k =>
+    JSON.parse(localStorage.getItem('mizan.v1')).days[k].practice369.morning, todayKey);
+  check('369 morning count caps at target (3)', p369 === 3, String(p369));
+  check('369 morning button disables once capped',
+    await page.locator('[data-369="morning"]').isDisabled());
+  await page.reload(); await page.waitForTimeout(400);
+  check('369 intention survives reload', (await page.inputValue('#i369')) === 'Test intention line');
+
   // --- badan ---
   await page.evaluate(() => {
     const s = JSON.parse(localStorage.getItem('mizan.v1'));

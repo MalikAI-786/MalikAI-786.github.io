@@ -104,7 +104,8 @@ function blankDay(k){return {date:k,forecast:null,prayers:{},dhikrMin:0,sprints:
   oneThing:'',oneThingDone:false,scores:{},weed:{sessions:[],clean:false,fog:0},
   gym:{},food:{},weight:null,sleepHrs:null,moved:false,
   friction:[false,false,false,false,false],hyper:'',
-  muhasaba:{shukr:'',khata:'',kal:''},closed:false,synthetic:false}}
+  muhasaba:{shukr:'',khata:'',kal:''},closed:false,synthetic:false,
+  practice369:{morning:0,midday:0,evening:0}}}
 function defaults(){return {v:1,settings:{lat:40.7128,lng:-74.0060,method:'ISNA',asr:1,
   path:'taper',start:iso(new Date()),cap:2,floorHour:20,weights:Object.assign({},DEFW),
   /* Sun/Sat 07:30, Mon 16:45 — matches the owner's actual recurring calendar
@@ -113,7 +114,7 @@ function defaults(){return {v:1,settings:{lat:40.7128,lng:-74.0060,method:'ISNA'
      schedule, not a plausible-looking one. gymHour is the fallback for a day
      with no override in gymHourByDay. */
   gymDays:[0,1,6],gymHour:17,gymHourByDay:{0:7.5,1:16.75,6:7.5},
-  partner:'your training partner',proteinTarget:150,sleepTarget:7},
+  partner:'your training partner',proteinTarget:150,sleepTarget:7,intention369:''},
   days:{},urges:[],ships:{},measures:[],best50:{}}}
 /* The hour actually used for day k's session: an explicit per-day override
    if one exists, else the flat fallback. Kept as one function so every read
@@ -139,6 +140,7 @@ function day(k){ if(!S.days[k]) S.days[k]=blankDay(k);
   d.weed.sessions=d.weed.sessions||[]; d.scores=d.scores||{}; d.prayers=d.prayers||{};
   d.muhasaba=d.muhasaba||{shukr:'',khata:'',kal:''};
   d.gym=d.gym||{}; d.food=d.food||{};
+  d.practice369=d.practice369||{morning:0,midday:0,evening:0};
   if(!Array.isArray(d.friction)||d.friction.length!==5) d.friction=[false,false,false,false,false];
   return d}
 function has(k){return Object.prototype.hasOwnProperty.call(S.days,k)}
@@ -466,6 +468,28 @@ function renderToday(){
     .filter(function(x){return x!=null});
   $('#sprint7').textContent=s7.length?mean(s7).toFixed(1):'—';
 
+  render369(d);
+}
+
+/* ---- the 3-6-9 practice: write one intention 3× morning, 6× midday, 9×
+   evening. Constructed, provenance D — see references/citations.md. The
+   intention is a single running line (S.settings.intention369), not a
+   per-day field: a focus practice loses the point if it resets daily. The
+   counts DO reset daily, in blankDay()/day(), because the repetition is
+   the point and yesterday's reps do not carry over. ---- */
+var P369=[['morning',3],['midday',6],['evening',9]];
+function render369(d){
+  if(!$('#i369')) return;
+  $('#i369').value=S.settings.intention369||'';
+  var p=d.practice369||{morning:0,midday:0,evening:0};
+  $('#p369Rows').innerHTML=P369.map(function(x){
+    var k=x[0],target=x[1],n=Math.min(target,+p[k]||0),done=n>=target;
+    return '<div class="row" style="align-items:center;gap:10px;margin-top:8px">'+
+      '<span class="tag" style="width:64px;text-transform:capitalize">'+k+'</span>'+
+      '<span class="mono" style="min-width:38px">'+n+' / '+target+'</span>'+
+      '<button class="btn'+(done?'':' primary')+'" data-369="'+k+'" data-369-max="'+target+'"'+
+      (done?' disabled':'')+' style="padding:4px 10px">'+(done?'done':'+1')+'</button></div>'
+  }).join('');
 }
 
 function renderPrayers(d,dt){
@@ -1016,6 +1040,9 @@ document.addEventListener('click',function(e){
   if(t.hasAttribute('data-fog')){ day(CUR).weed.fog=+t.getAttribute('data-fog'); touch(); return }
   if(t.hasAttribute('data-path')){ S.settings.path=t.getAttribute('data-path'); touch(); return }
   if(t.hasAttribute('data-delsess')){ day(CUR).weed.sessions.splice(+t.getAttribute('data-delsess'),1); touch(); return }
+  if(t.hasAttribute('data-369')){
+    var k369=t.getAttribute('data-369'),max369=+t.getAttribute('data-369-max');
+    var p369=day(CUR).practice369; p369[k369]=Math.min(max369,(+p369[k369]||0)+1); touch(); return }
 });
 
 document.addEventListener('change',function(e){
@@ -1033,6 +1060,7 @@ on('#fcInput','change',function(e){var v=e.target.value;
   day(CUR).forecast= v===''? null : clamp(+v,0,100); touch()});
 on('#oneThing','input',function(e){day(CUR).oneThing=e.target.value; save()});
 on('#oneThingDone','change',function(e){day(CUR).oneThingDone=e.target.checked; touch()});
+on('#i369','input',function(e){S.settings.intention369=e.target.value; save()});
 on('#hyper','input',function(e){day(CUR).hyper=e.target.value; save()});
 ['#mShukr','#mKhata','#mKal'].forEach(function(sel){
   on(sel,'input',function(e){
