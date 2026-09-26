@@ -252,6 +252,31 @@ Beyond the smoke test, exercise the specific thing you changed and say in your
 report what you actually ran. A change to scoring should be verified by
 setting scores and reading the index, not by the page merely loading.
 
+## The day sheet (Word / OneNote loop)
+
+The owner keeps notes in OneNote. Each evening a one-day Word document is
+written from his calendar and the engine's prayer times; he annotates it,
+saves it, sends it back; the next sheet is written from that. The calendar
+data is personal — the input JSON lives in the scratchpad and is **never
+committed**. Only the scripts are.
+
+```bash
+# 1. calendar → events JSON (Google Calendar MCP; output lands in tool-results)
+# 2. prayer times for the run of days, in the owner's timezone
+node .claude/skills/mizan/scripts/prayers.js 2026-09-27 8 > $SCRATCH/prayers.json
+# 3. assemble input: { date, prayers, gym:{"0":"07:30","1":"16:45","6":"07:30"}, events:[{date,start,end,title,allDay}] }
+#    (all-day items from a phone-synced calendar arrive as start.date = "YYYY-MM-DDT00:00:00Z" — slice to 10 chars)
+# 4. write the document; `docx` must be resolvable (npm install docx in $SCRATCH if require fails)
+cd $SCRATCH && node /path/to/repo/.claude/skills/mizan/scripts/daysheet.js sheet-<date>.json out/
+```
+
+Send `out/mizan-<date>.docx` with SendUserFile. Measure names and rubrics in
+`daysheet.js` mirror `MEASURES` in core.js — change both or neither. When an
+annotated sheet comes back, read it with the docx skill (`pandoc` if present,
+otherwise unzip and read `word/document.xml`), reconcile against what the
+calendar says happened, and write the next sheet. Never guess the numbers he
+didn't write.
+
 ## Voice
 
 Direct, specific, unsentimental; the register of a good examiner's memo rather
