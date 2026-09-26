@@ -257,6 +257,22 @@ function check(name, cond, detail) {
   await page.reload(); await page.waitForTimeout(500);
   check('state survives reload', (await page.locator('#idxNum').innerText()) === before, before);
 
+  // --- .ics export (record page) ---
+  await page.goto(url('record/index.html')); await page.waitForTimeout(400);
+  const ics = await page.evaluate(async () => {
+    let captured = null;
+    URL.createObjectURL = b => { captured = b; return 'blob:mizan-test'; };
+    URL.revokeObjectURL = () => {};
+    HTMLAnchorElement.prototype.click = () => {};
+    document.querySelector('#icsBtn').click();
+    return captured ? await captured.text() : '';
+  });
+  const vevents = (ics.match(/BEGIN:VEVENT/g) || []).length;
+  check('ics export is a calendar with 3 sessions + 4 prompts', /^BEGIN:VCALENDAR/.test(ics) && vevents === 7, String(vevents));
+  check('ics training sessions carry the real per-day hours',
+    /DTSTART:\d{8}T073000\r\nDTEND:\d{8}T090000\r\nRRULE:FREQ=WEEKLY;BYDAY=SA/.test(ics)
+    && /DTSTART:\d{8}T164500\r\nDTEND:\d{8}T181500\r\nRRULE:FREQ=WEEKLY;BYDAY=MO/.test(ics));
+
   await page.click('#themeBtn'); await page.waitForTimeout(250);
   check('theme toggles to light',
     (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'light');

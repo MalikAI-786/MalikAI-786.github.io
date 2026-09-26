@@ -1159,6 +1159,41 @@ on('#exportBtn','click',function(){
   var blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
   var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
   a.download='mizan-'+todayK()+'.json'; a.click(); URL.revokeObjectURL(a.href)});
+
+/* ---- .ics export: the instrument's schedule as calendar events, for apps
+   that aren't already carrying it. Floating local times, no TZID — every
+   calendar app treats them as the device's local time, which is what a
+   daily prompt should be. Prompt times match the owner's Google Calendar
+   so a second import stays consistent with the first. ---- */
+var ICS_PROMPTS=[
+  ['3-6-9 · morning — write the intention 3×',6,35,10],
+  ['3-6-9 · midday — write the intention 6×',12,30,10],
+  ['3-6-9 · evening — write the intention 9×',21,45,10],
+  ['Mīzān · nightly close — muḥāsaba',21,55,15]];
+var ICS_BYDAY=['SU','MO','TU','WE','TH','FR','SA'];
+function icsStamp(d){return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(d.getHours())+pad(d.getMinutes())+'00'}
+function icsEvent(uid,summary,start,minutes,rrule){
+  var end=new Date(start.getTime()+minutes*60000);
+  return ['BEGIN:VEVENT','UID:'+uid+'@mizan','DTSTAMP:'+icsStamp(new Date()),
+    'DTSTART:'+icsStamp(start),'DTEND:'+icsStamp(end),'RRULE:'+rrule,
+    'SUMMARY:'+summary,'TRANSP:TRANSPARENT',
+    'BEGIN:VALARM','TRIGGER:PT0M','ACTION:DISPLAY','DESCRIPTION:'+summary,'END:VALARM',
+    'END:VEVENT'].join('\r\n')}
+function buildIcs(){
+  var now=new Date(),ev=[];
+  (S.settings.gymDays||[]).forEach(function(dow){
+    var h=gymHourFor(dow),d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+((dow-now.getDay()+7)%7));
+    d.setHours(Math.floor(h),Math.round((h%1)*60),0,0);
+    ev.push(icsEvent('gym-'+dow,'Training session',d,90,'FREQ=WEEKLY;BYDAY='+ICS_BYDAY[dow]))});
+  ICS_PROMPTS.forEach(function(p,i){
+    var d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),p[1],p[2],0,0);
+    ev.push(icsEvent('prompt-'+i,p[0],d,p[3],'FREQ=DAILY'))});
+  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Mizan//self-audit//EN','CALSCALE:GREGORIAN',
+    'X-WR-CALNAME:Mīzān'].concat(ev,['END:VCALENDAR']).join('\r\n')+'\r\n'}
+on('#icsBtn','click',function(){
+  var blob=new Blob([buildIcs()],{type:'text/calendar'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='mizan-schedule.ics'; a.click(); URL.revokeObjectURL(a.href)});
 on('#importBtn','click',function(){$('#importFile').click()});
 on('#importFile','change',function(e){
   var f=e.target.files[0]; if(!f) return;
