@@ -89,10 +89,19 @@ collection off and say the attribution is unverified, or do not use it.
 Rubrics and their four definitions · the seven weights · faculty assignments ·
 ladder gates and thresholds · the four-phase 40-day design · the taper
 schedule · the Path-B control set · Best-50 level ladders and drills ·
-shoulder-to-waist target · the four food rules · the coach's-read rule set.
+shoulder-to-waist target · the four food rules · the coach's-read rule set ·
+the 3-6-9 intention-repetition practice (Day page).
 
 These are declared as constructed on the Provenance card. They carry no
 religious authority and should be argued with.
+
+**On the 3-6-9 card specifically:** the "Tesla said 3, 6 and 9" quote is
+popular online but has no verifiable primary source — no lecture, paper, or
+notebook entry traces to it. Same pattern as the ʿUmar row above: don't let a
+popular attribution launder an unverified claim into the page as fact. The
+card names Tesla only as the popular association and states plainly that the
+practice is a personal ritual (write one intention, repeat it 3×/6×/9×
+across the day), not a scientific or historical claim.
 
 ## E — Empirical direction
 
