@@ -248,6 +248,54 @@ function check(name, cond, detail) {
       after.kept.gym.status === 'missed-partner' && after.kept.gym.note === 'trainer cancelled');
     check('import never overwrites a human sleep or weight entry',
       after.kept.sleepHrs === 5.5 && after.kept.weight === 199);
+
+    // --- two phones + a watch + Fitbit, selected together ---
+    // Every device records the same walk and night; the day must take the
+    // largest single device, never the sum. Dates sit inside the 30-day chart window.
+    const fs = require('fs');
+    const ymd = n => { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); };
+    const mdy = k => k.slice(5, 7) + '/' + k.slice(8, 10) + '/' + k.slice(2, 4);
+    const dA = ymd(4), dPrev = ymd(5), dB = ymd(3);
+    const rec = (src, type, extra) => `<Record type="HK${type}" sourceName="${src}" ${extra}/>`;
+    const phoneA = path.join(os.tmpdir(), 'mizan-phoneA.xml'), phoneB = path.join(os.tmpdir(), 'mizan-phoneB.xml');
+    fs.writeFileSync(phoneA, ['<HealthData>',
+      rec('Phone A', 'QuantityTypeIdentifierStepCount', `unit="count" value="8000" startDate="${dA} 12:00:00 -0400" endDate="${dA} 13:00:00 -0400"`),
+      rec('Watch', 'QuantityTypeIdentifierStepCount', `unit="count" value="7000" startDate="${dA} 12:00:00 -0400" endDate="${dA} 13:00:00 -0400"`),
+      rec('Watch', 'CategoryTypeIdentifierSleepAnalysis', `value="HKCategoryValueSleepAnalysisAsleepCore" startDate="${dPrev} 23:00:00 -0400" endDate="${dA} 06:00:00 -0400"`),
+      rec('Phone A', 'CategoryTypeIdentifierSleepAnalysis', `value="HKCategoryValueSleepAnalysisAsleepUnspecified" startDate="${dPrev} 23:30:00 -0400" endDate="${dA} 05:30:00 -0400"`),
+      '</HealthData>'].join('\n'));
+    fs.writeFileSync(phoneB, ['<HealthData>',
+      rec('Phone B', 'QuantityTypeIdentifierStepCount', `unit="count" value="9500" startDate="${dA} 09:00:00 -0400" endDate="${dA} 18:00:00 -0400"`),
+      '</HealthData>'].join('\n'));
+    const fbDir = path.join(os.tmpdir(), 'mizan-fitbit'); fs.mkdirSync(fbDir, { recursive: true });
+    const fbSteps = path.join(fbDir, `steps-${dB}.json`), fbSleep = path.join(fbDir, `sleep-${dB}.json`),
+          fbRhr = path.join(fbDir, `resting_heart_rate-${dB}.json`);
+    fs.writeFileSync(fbSteps, JSON.stringify([{ dateTime: mdy(dB) + ' 10:00:00', value: '6000' }, { dateTime: mdy(dB) + ' 16:00:00', value: '5000' }]));
+    fs.writeFileSync(fbSleep, JSON.stringify([{ dateOfSleep: dB, minutesAsleep: 390, mainSleep: true }]));
+    fs.writeFileSync(fbRhr, JSON.stringify([{ dateTime: mdy(dB) + ' 00:00:00', value: { date: mdy(dB), value: 58.4, error: 6 } }]));
+
+    await page.reload(); await page.waitForTimeout(300);
+    await page.setInputFiles('#healthFile', [phoneA, phoneB, fbSteps, fbSleep, fbRhr]);
+    await page.waitForFunction(() => /new entries|Nothing new/.test(document.querySelector('#healthOut').innerText), { timeout: 30000 });
+    const multi = await page.locator('#healthOut').innerText();
+    check('multi-file import names every device it saw', /Phone A/.test(multi) && /Phone B/.test(multi) && /Fitbit/.test(multi) && /Watch/.test(multi), multi.split('\n')[0]);
+    await page.click('#healthApply'); await page.waitForTimeout(400);
+    const md = await page.evaluate(([a, b]) => { const s = JSON.parse(localStorage.getItem('mizan.v1')); return [s.days[a], s.days[b]]; }, [dA, dB]);
+    check('steps across phone, watch and second phone take the largest device, not the sum',
+      md[0] && md[0].steps === 9500, String(md[0] && md[0].steps));
+    check('sleep across watch and phone takes the largest device, not the sum',
+      md[0] && md[0].sleepHrs === 7, String(md[0] && md[0].sleepHrs));
+    check('Fitbit JSON imports steps, sleep and resting heart rate',
+      md[1] && md[1].steps === 11000 && md[1].sleepHrs === 6.5 && md[1].rhr === 58, JSON.stringify(md[1] && [md[1].steps, md[1].sleepHrs, md[1].rhr]));
+
+    await page.goto(url('badan/index.html')); await page.waitForTimeout(400);
+    check('health charts draw imported steps as bars',
+      (await page.locator(`#hSteps rect title:text-is("${dA} · 9.5k")`).count()) === 1);
+    check('health charts draw sleep against the target line',
+      (await page.locator('#hSleep text', { hasText: 'target' }).count()) === 1 &&
+      /Mean/.test(await page.locator('#hSleepNote').innerText()));
+    check('health charts draw resting heart rate',
+      (await page.locator('#hRhr circle').count()) >= 1);
   }
 
   // --- cross-page day continuity, persistence, theme ---
