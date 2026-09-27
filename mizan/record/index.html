@@ -94,12 +94,12 @@
     </div>
 
     <div class="card" id="healthCard">
-      <p class="eyebrow">Apple Health &amp; Google Fit</p>
+      <p class="eyebrow">Apple Health · Fitbit · Google Fit</p>
       <h3 style="font-size:1.1rem;margin-bottom:6px">Import what the watch already knows</h3>
-      <p class="small" style="max-width:70ch">Weight, sleep, workouts and step counts are already being recorded by your watch. Typing them in again is the single most likely reason this instrument gets abandoned. Point it at an export file and it fills the gaps.</p>
+      <p class="small" style="max-width:70ch">Weight, sleep, workouts and step counts are already being recorded by your watch. Typing them in again is the single most likely reason this instrument gets abandoned. Point it at the export files — from both phones at once if you like — and it fills the gaps.</p>
       <div class="btn-row" style="margin-top:12px;margin-bottom:10px">
-        <button class="btn primary" id="healthBtn">Choose export file</button>
-        <input type="file" id="healthFile" accept=".xml,.zip,.csv,text/xml,text/csv" class="hide" />
+        <button class="btn primary" id="healthBtn">Choose export files</button>
+        <input type="file" id="healthFile" accept=".xml,.zip,.csv,.json,text/xml,text/csv,application/json" multiple class="hide" />
         <button class="btn hide" id="healthApply">Apply to my record</button>
         <button class="btn hide" id="healthCancel">Cancel</button>
       </div>
@@ -110,6 +110,8 @@
         <div class="small" style="margin-top:8px">
           <p><b>iPhone — Apple Health.</b> Health app → tap your photo, top right → scroll down → <b>Export All Health Data</b> → Save to Files. That gives you <span class="mono">export.zip</span>. Tap it in Files to unzip, then choose <span class="mono">apple_health_export/export.xml</span> here. The export can take several minutes to build and can be very large; that is normal.</p>
           <p style="margin-top:8px"><b>Android — Google Fit.</b> takeout.google.com → deselect all → select <b>Fit</b> → export → unzip → choose the <span class="mono">Daily activity metrics</span> CSV.</p>
+          <p style="margin-top:8px"><b>Fitbit.</b> fitbit.com → Settings → Data export → <b>Request data</b> (or takeout.google.com → Fitbit). Unzip it, open <span class="mono">Global Export Data</span>, and select the <span class="mono">steps-</span>, <span class="mono">sleep-</span>, <span class="mono">resting_heart_rate-</span>, <span class="mono">weight-</span> and <span class="mono">exercise-</span> files — all of them at once is fine.</p>
+          <p style="margin-top:8px"><b>Two phones.</b> Export from each and select both files together. A phone and a watch — or two phones — record the same walk and the same night, so steps and sleep take the <b>largest single device</b> for each day, never the sum. If you carried one phone in the morning and the other in the evening, that day will read low; over-counting would be the worse error.</p>
           <p style="margin-top:8px"><b>Nothing is uploaded.</b> The file is read inside this browser tab and never leaves the device. There is no server here to receive it.</p>
         </div>
       </details>

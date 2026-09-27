@@ -117,6 +117,22 @@
     </div>
   </div>
 
+  <!-- health charts -->
+  <div class="card" style="margin-bottom:18px" id="healthBlock">
+    <div class="spread" style="margin-bottom:10px">
+      <div><p class="eyebrow" style="margin-bottom:4px">From the watch · last 30 days</p>
+        <h3 style="font-size:1.2rem">Health</h3></div>
+      <a class="btn" href="../record/#healthCard">Import from phones</a>
+    </div>
+    <div class="grid g2" style="gap:14px">
+      <div class="chartbox"><h4>Sleep · hours</h4><svg class="chart" id="hSleep" viewBox="0 0 640 200"></svg><div class="tiny" id="hSleepNote" style="margin-top:8px">—</div></div>
+      <div class="chartbox"><h4>Steps · per day</h4><svg class="chart" id="hSteps" viewBox="0 0 640 200"></svg><div class="tiny" id="hStepsNote" style="margin-top:8px">—</div></div>
+      <div class="chartbox"><h4>Resting heart rate · bpm</h4><svg class="chart" id="hRhr" viewBox="0 0 640 200"></svg><div class="tiny" id="hRhrNote" style="margin-top:8px">—</div></div>
+      <div class="chartbox"><h4>Weight · daily</h4><svg class="chart" id="hWt" viewBox="0 0 640 200"></svg><div class="tiny" id="hWtNote" style="margin-top:8px">—</div></div>
+    </div>
+    <div class="tiny" style="margin-top:10px">Gold ticks under the axis are training days you logged as done. Where two devices recorded the same day, the larger single reading is kept, never the sum. Hollow bars and gaps mean <b>no reading</b> — which is a different finding from a bad one.</div>
+  </div>
+
   <!-- measurement index -->
   <div class="grid g2" style="margin-bottom:18px">
     <div class="chartbox">

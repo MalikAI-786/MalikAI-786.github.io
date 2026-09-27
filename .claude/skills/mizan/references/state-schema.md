@@ -65,9 +65,12 @@ render function rather than at the point of the mistake.
 | `synthetic` | bool | `makeSample()` | **exclusion filter** — see below |
 | `gym` | `{status,rpe,note}` | Badan | `badanScore()`, adherence, package |
 | `food` | `{protein,window,thirds,late}` | Badan | `badanScore()`, coach's read |
-| `weight` | number\|null | Badan | reserved for daily-weight trend |
+| `weight` | number\|null | Badan, health import | health charts (daily-weight line) |
 | `sleepHrs` | number\|null | Badan | `badanScore()`, sleep-effect panel |
 | `moved` | bool | Badan (non-gym days) | `badanScore()` |
+| `steps` | number\|null | health import only | health charts (Badan). Largest single device for the day, never the sum; a later import may raise it |
+| `rhr` | number\|null | health import only | health charts (Badan). Mean of the day's resting-HR readings |
+| `practice369` | `{morning,midday,evening}` counts | 3-6-9 card | display only; capped at 3/6/9 |
 
 `weed.sessions[]` entries: `{time:'HH:MM', trigger, setting, displaced}`.
 Trigger and displaced values come from the `TRIGGERS` / `DISPLACED` tables —
@@ -114,3 +117,12 @@ changes. In that case: bump `v`, write a migration in `load()` keyed on the
 old value, and never mutate stored records in place without bumping. The
 import path (`load2()`) must apply the same normalisation as `load()`; they
 have drifted before and that is the single most likely place for a bug to hide.
+
+## Health import rules
+
+A synthetic (sample) day is **not** an entry: real device data replaces the
+whole synthetic day rather than being skipped as "already entered". Any other
+existing value the owner typed wins over the device. Steps and sleep from
+several devices (phone + watch, two phones, Fitbit) are totalled per source
+and the day keeps the largest single source — summing would double-count the
+same walk and the same night.

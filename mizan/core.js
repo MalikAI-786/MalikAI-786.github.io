@@ -102,7 +102,7 @@ var PHASES=[
 var S=null;
 function blankDay(k){return {date:k,forecast:null,prayers:{},dhikrMin:0,sprints:0,
   oneThing:'',oneThingDone:false,scores:{},weed:{sessions:[],clean:false,fog:0},
-  gym:{},food:{},weight:null,sleepHrs:null,moved:false,
+  gym:{},food:{},weight:null,sleepHrs:null,moved:false,steps:null,rhr:null,
   friction:[false,false,false,false,false],hyper:'',
   muhasaba:{shukr:'',khata:'',kal:''},closed:false,synthetic:false,
   practice369:{morning:0,midday:0,evening:0}}}
@@ -944,7 +944,7 @@ function renderAll(){
   var d=day(CUR),dt=parseISO(CUR);
   renderNav(); renderDayBar(); renderToday(); renderPrayers(d,dt); renderMeasures(d); renderFriction(d);
   renderHyperLog(); renderLedgerToday(d); renderReference(); renderLadder(); renderPhases();
-  renderTrend(); renderSettings(); renderBadan(); renderDash(); renderForceDiagram();
+  renderTrend(); renderSettings(); renderBadan(); renderHealth(); renderDash(); renderForceDiagram();
 }
 
 /* ==================================================================
@@ -1241,6 +1241,8 @@ function makeSample(){
     ['dhikr','zabt','attn','ihsan'].forEach(function(id){
       d.scores[id]=clamp(Math.round(rnd()*2+arc*1.4),0,3)});
     d.sleepHrs=+(5.8+rnd()*2.4).toFixed(2);
+    d.steps=Math.round(3500+rnd()*7000+arc*1500); d.rhr=Math.round(66-arc*4+rnd()*4);
+    d.weight=+(182-arc*2+rnd()*1.2).toFixed(1);
     d.moved=rnd()<0.4;
     if(isGymDay(k)) d.gym={status: rnd()<0.35+arc*0.4?'done':(rnd()<0.6?'missed-me':'missed-partner'),rpe:Math.round(5+rnd()*4)};
     d.food={protein:rnd()<0.4+arc*0.4,window:rnd()<0.5+arc*0.3,thirds:rnd()<0.45+arc*0.3,late:rnd()<0.5+arc*0.3};
@@ -1436,6 +1438,86 @@ function renderBadan(){
       return (a===6?-1:b===6?1:a-b)}).map(function(i){
     return '<div class="field" style="margin:0"><label class="fl">'+DOW[i]+' start (24h)</label>'+
       '<input type="number" data-gh="'+i+'" min="4" max="23" step="0.25" value="'+gymHourFor(i)+'" /></div>'}).join('');
+}
+
+/* ---- health charts: four small multiples over the last 30 days. Every
+   value is a device reading or the owner's own entry — nothing here is
+   interpolated. A missing day is drawn as missing. ---- */
+var HEALTH_DAYS=30;
+function healthSeries(key){
+  return recentKeys(HEALTH_DAYS).map(function(k){
+    var d=has(k)?S.days[k]:null, v=d&&d[key]!=null&&d[key]!==''?+d[key]:null;
+    return {k:k,v:isFinite(v)?v:null,gym:!!(d&&d.gym&&d.gym.status==='done'),syn:!!(d&&d.synthetic)};
+  });
+}
+function hChart(sel,pts,o){
+  /* type is sized for a 390px phone, where this 640 viewBox renders ~290px wide */
+  var W=640,H=200,PL=58,PR=14,PT=22,PB=38,n=pts.length,bw=(W-PL-PR)/n,FS=17;
+  var vals=pts.filter(function(p){return p.v!=null}).map(function(p){return p.v});
+  var mono='font-family="ui-monospace,monospace"';
+  if(!vals.length){
+    $(sel).innerHTML='<text x="20" y="100" fill="var(--faint)" font-size="'+FS+'" '+mono+'>'+o.empty+'</text>';
+    return null;
+  }
+  var lo=o.zero?0:Math.min.apply(null,vals),hi=Math.max.apply(null,vals.concat(o.ref!=null?[o.ref]:[]));
+  if(!o.zero){ var pad=Math.max(1,(hi-lo)*0.2); lo-=pad; hi+=pad } else hi*=1.12;
+  if(hi-lo<1e-9) hi=lo+1;
+  var Y=function(v){return PT+(1-(v-lo)/(hi-lo))*(H-PT-PB)};
+  var X=function(i){return PL+i*bw+bw/2};
+  var g='<line x1="'+PL+'" y1="'+(H-PB)+'" x2="'+(W-PR)+'" y2="'+(H-PB)+'" stroke="var(--line)"/>';
+  var vmin=Math.min.apply(null,vals),vmax=Math.max.apply(null,vals);
+  (o.zero?[0,vmax]:[vmin,vmax]).forEach(function(t){
+    g+='<text x="'+(PL-8)+'" y="'+(Y(t)+6)+'" text-anchor="end" fill="var(--faint)" font-size="'+FS+'" '+mono+'>'+o.fmt(t)+'</text>'});
+  if(o.ref!=null){
+    g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(o.ref).toFixed(1)+'" y2="'+Y(o.ref).toFixed(1)+'" stroke="var(--gold)" stroke-dasharray="4 4"/>'+
+       '<text x="'+(W-PR)+'" y="'+(Y(o.ref)-6).toFixed(1)+'" text-anchor="end" fill="var(--gold)" font-size="'+FS+'" '+mono+'>'+o.refLabel+'</text>';
+  }
+  if(o.kind==='bar'){
+    pts.forEach(function(p,i){
+      var x=(PL+i*bw+1.5).toFixed(1),w=Math.max(1,bw-3).toFixed(1);
+      if(p.v==null){ g+='<rect x="'+x+'" y="'+(H-PB-3)+'" width="'+w+'" height="3" fill="none" stroke="var(--line)"/>'; return }
+      var col=o.ref!=null&&p.v<o.ref?'var(--signal)':'var(--accent)';
+      g+='<rect x="'+x+'" y="'+Y(p.v).toFixed(1)+'" width="'+w+'" height="'+(H-PB-Y(p.v)).toFixed(1)+'" fill="'+col+'"'+(p.syn?' opacity=".55"':'')+'><title>'+p.k+' · '+o.fmt(p.v)+'</title></rect>';
+    });
+  } else {
+    var seg=[],segs=[];
+    pts.forEach(function(p,i){ if(p.v==null){ if(seg.length) segs.push(seg); seg=[] } else seg.push(X(i).toFixed(1)+','+Y(p.v).toFixed(1)) });
+    if(seg.length) segs.push(seg);
+    segs.forEach(function(s){ if(s.length>1) g+='<polyline points="'+s.join(' ')+'" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>' });
+    pts.forEach(function(p,i){ if(p.v!=null) g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="2.8" fill="var(--accent)"><title>'+p.k+' · '+o.fmt(p.v)+'</title></circle>' });
+  }
+  pts.forEach(function(p,i){ if(p.gym) g+='<rect x="'+(X(i)-3).toFixed(1)+'" y="'+(H-PB+5)+'" width="6" height="6" fill="var(--gold)"/>' });
+  g+='<text x="'+PL+'" y="'+(H-4)+'" fill="var(--faint)" font-size="'+FS+'" '+mono+'>'+pts[0].k.slice(5)+'</text>'+
+     '<text x="'+(W-PR)+'" y="'+(H-4)+'" text-anchor="end" fill="var(--faint)" font-size="'+FS+'" '+mono+'>'+pts[n-1].k.slice(5)+'</text>';
+  $(sel).innerHTML=g;
+  return {n:vals.length,mean:mean(vals)};
+}
+function renderHealth(){
+  if(!$('#hSleep')) return;
+  var st=S.settings, cov=function(r){return r.n+' of '+HEALTH_DAYS+' days have a reading'};
+  var sl=healthSeries('sleepHrs');
+  var r1=hChart('#hSleep',sl,{kind:'bar',zero:true,ref:+st.sleepTarget,refLabel:'target '+st.sleepTarget+'h',
+    fmt:function(v){return v.toFixed(1)},empty:'No sleep readings yet — import from Record.'});
+  if(r1){
+    var under=sl.filter(function(p){return p.v!=null&&p.v<+st.sleepTarget}).length;
+    $('#hSleepNote').innerHTML='Mean <b>'+r1.mean.toFixed(1)+' h</b> · <b>'+under+'</b> night'+(under===1?'':'s')+' under target · '+cov(r1)+'.';
+  } else $('#hSleepNote').textContent='—';
+  var r2=hChart('#hSteps',healthSeries('steps'),{kind:'bar',zero:true,ref:STEP_MOVED,refLabel:'moved '+STEP_MOVED,
+    fmt:function(v){return v>=1000?(v/1000).toFixed(1)+'k':Math.round(v)+''},empty:'No step readings yet — import from Record.'});
+  $('#hStepsNote').innerHTML=r2?'Mean <b>'+Math.round(r2.mean).toLocaleString()+'</b> steps · '+cov(r2)+'.':'—';
+  var r3=hChart('#hRhr',healthSeries('rhr'),{kind:'line',fmt:function(v){return Math.round(v)+''},
+    empty:'No resting heart rate yet.'});
+  if(r3){
+    var rh=healthSeries('rhr').filter(function(p){return p.v!=null}),half=Math.floor(rh.length/2);
+    var drift=rh.length>=6?mean(rh.slice(half).map(function(p){return p.v}))-mean(rh.slice(0,half).map(function(p){return p.v})):null;
+    $('#hRhrNote').innerHTML='Mean <b>'+Math.round(r3.mean)+' bpm</b>'+(drift!=null?' · second half of the window is <b>'+(drift>0?'+':'')+drift.toFixed(1)+' bpm</b> against the first':'')+' · '+cov(r3)+'.';
+  } else $('#hRhrNote').textContent='—';
+  var r4=hChart('#hWt',healthSeries('weight'),{kind:'line',fmt:function(v){return v.toFixed(0)},
+    empty:'No daily weight yet.'});
+  if(r4){
+    var wv=healthSeries('weight').filter(function(p){return p.v!=null});
+    $('#hWtNote').innerHTML=wv.length>=2?'<b>'+wv[0].v+' → '+wv[wv.length-1].v+' lb</b> ('+wv[0].k.slice(5)+' → '+wv[wv.length-1].k.slice(5)+') · '+cov(r4)+'.':'One reading: <b>'+wv[0].v+' lb</b>.';
+  } else $('#hWtNote').textContent='—';
 }
 
 function renderMeasurements(){
@@ -1639,7 +1721,7 @@ on('#addMeas','click',function(){
    current-page marker off every link. renderNav() owns that class. */
 
 /* ==================================================================
-   HEALTH IMPORT — Apple Health export.xml / Google Fit CSV
+   HEALTH IMPORT — Apple Health export.xml / Google Fit CSV / Fitbit JSON
    ------------------------------------------------------------------
    Read entirely in this tab. There is no server in this project and
    this function adds none: the File is sliced, scanned and discarded.
@@ -1660,6 +1742,15 @@ on('#addMeas','click',function(){
       fact from "missed-me" and the watch cannot tell them apart. A
       staged preview is built first; nothing touches state until the
       owner presses Apply.
+
+   3. Two phones and a watch record the SAME walk and the SAME night.
+      Apple's export keeps every device's samples side by side (iPhone
+      and Watch both count your steps), and two phones' exports overlap
+      again. Summing them double-counts. So steps and sleep are totalled
+      per source per day, and the day takes the LARGEST single source —
+      never the sum. The cost is honest and small: if you carried one
+      phone in the morning and the other in the evening, that day
+      under-reads. Over-reading is the worse error on an audit page.
    ================================================================== */
 
 /* Apple workout types -> what this instrument calls them. Anything not
@@ -1673,7 +1764,23 @@ var SLEEP_MAX_DAY=18;     /* and no day's total can exceed this, however many st
 function hkDate(s){ return s ? s.slice(0,10) : null }   /* "2026-08-21 14:03:00 -0400" */
 
 function blankHarvest(){ return {weights:[],sleep:{},work:{},steps:{},rhr:{},
-  seen:{rec:0,wo:0},bad:{sleep:0},unit:null} }
+  bySrc:{steps:{},sleep:{}},sources:{},
+  seen:{rec:0,wo:0},bad:{sleep:0},unit:null,fitbitWeightUnit:null} }
+/* accumulate one source's contribution; finalizeHarvest() picks the max */
+function addSrc(H,kind,k,src,v){
+  var day=H.bySrc[kind][k]=H.bySrc[kind][k]||{};
+  day[src]=(day[src]||0)+v; H.sources[src]=1;
+}
+function finalizeHarvest(H){
+  ['steps','sleep'].forEach(function(kind){
+    Object.keys(H.bySrc[kind]).forEach(function(k){
+      var per=H.bySrc[kind][k],best=0;
+      Object.keys(per).forEach(function(s){ if(per[s]>best) best=per[s] });
+      H[kind][k]= kind==='sleep' ? Math.min(SLEEP_MAX_DAY,best) : best;
+    });
+  });
+  return H;
+}
 
 /* --- scan one chunk of Apple Health XML --------------------------- */
 function hkScanChunk(t,H){
@@ -1685,6 +1792,7 @@ function hkScanChunk(t,H){
     var unit=(at.match(/\sunit="([^"]*)"/)||[])[1];
     var sd=(at.match(/\sstartDate="([^"]*)"/)||[])[1];
     var ed=(at.match(/\sendDate="([^"]*)"/)||[])[1];
+    var src=(at.match(/\ssourceName="([^"]*)"/)||[])[1]||'Apple Health';
     if(type==='QuantityTypeIdentifierBodyMass'&&val&&sd){
       var lb=parseFloat(val); if(!isFinite(lb)) continue;
       if(unit&&/kg/i.test(unit)){ lb=lb*2.20462; H.unit='kg'; } else H.unit=H.unit||'lb';
@@ -1694,7 +1802,7 @@ function hkScanChunk(t,H){
       var k=hkDate(sd); (H.rhr[k]=H.rhr[k]||[]).push(parseFloat(val));
     }
     else if(type==='QuantityTypeIdentifierStepCount'&&val&&sd){
-      var ks=hkDate(sd); H.steps[ks]=(H.steps[ks]||0)+ (parseFloat(val)||0);
+      addSrc(H,'steps',hkDate(sd),src,parseFloat(val)||0);
     }
     else if(type==='CategoryTypeIdentifierSleepAnalysis'&&sd&&ed){
       /* only actually-asleep intervals; "InBed" overstates it badly */
@@ -1711,8 +1819,7 @@ function hkScanChunk(t,H){
       if(hrs>SLEEP_MAX_BLOCK){ H.bad.sleep++; continue }
       /* attribute the night to the day you WAKE into — that is the day
          whose readiness it explains, and the day the sheet asks about */
-      var kk=hkDate(ed);
-      H.sleep[kk]=Math.min(SLEEP_MAX_DAY,(H.sleep[kk]||0)+hrs);
+      addSrc(H,'sleep',hkDate(ed),src,hrs);
     }
   }
   var rw=/<Workout\s+workoutActivityType="HKWorkoutActivityType([A-Za-z]+)"([^>]*?)>/g, w;
@@ -1746,7 +1853,7 @@ function fitScanCsv(text,H){
     var c=lines[i].split(','); if(c.length<2) continue;
     var k=(c[iDate]||'').trim().slice(0,10); if(!/^\d{4}-\d{2}-\d{2}$/.test(k)) continue;
     H.seen.rec++;
-    if(iStep>=0&&c[iStep]) H.steps[k]=(H.steps[k]||0)+(parseFloat(c[iStep])||0);
+    if(iStep>=0&&c[iStep]) addSrc(H,'steps',k,'Google Fit',parseFloat(c[iStep])||0);
     if(iWt>=0&&c[iWt]){ var kg=parseFloat(c[iWt]);
       if(isFinite(kg)&&kg>0){ H.unit='kg'; H.weights.push({d:k,w:Math.round(kg*2.20462*10)/10}) } }
     if(iMove>=0&&c[iMove]&&parseFloat(c[iMove])>=30&&!H.work[k])
@@ -1754,9 +1861,51 @@ function fitScanCsv(text,H){
   }
 }
 
+/* --- Fitbit "Global Export Data" JSON ------------------------------
+   From Fitbit's account data export (or Google Takeout → Fitbit). One
+   file per metric per month: steps-YYYY-MM-DD.json, sleep-…, weight-…,
+   resting_heart_rate-…, exercise-N.json. Dates are "MM/DD/YY hh:mm:ss"
+   and are read as local time. Written against the documented export
+   shape; if Fitbit changes it, nothing is recognised and the preview
+   says so rather than guessing. */
+function fbDate(s){
+  var m=/^(\d{2})\/(\d{2})\/(\d{2})/.exec(s||''); return m?('20'+m[3]+'-'+m[1]+'-'+m[2]):null }
+function fitbitScanJson(name,text,H){
+  var a; try{ a=JSON.parse(text) }catch(e){ return }
+  if(!Array.isArray(a)) return;
+  var n=name.toLowerCase();
+  a.forEach(function(r){
+    if(!r||typeof r!=='object') return;
+    if(/^steps-/.test(n)){ var k=fbDate(r.dateTime); var v=parseFloat(r.value);
+      if(k&&isFinite(v)){ H.seen.rec++; addSrc(H,'steps',k,'Fitbit',v) } }
+    else if(/^sleep-/.test(n)){ var ks=r.dateOfSleep; var mins=parseFloat(r.minutesAsleep);
+      if(/^\d{4}-\d{2}-\d{2}$/.test(ks||'')&&isFinite(mins)&&mins>0){
+        H.seen.rec++; if(mins/60>SLEEP_MAX_BLOCK){ H.bad.sleep++; return }
+        addSrc(H,'sleep',ks,'Fitbit',mins/60) } }
+    else if(/^resting_heart_rate-/.test(n)){ var kr=fbDate(r.dateTime);
+      var hr=r.value&&parseFloat(r.value.value);
+      if(kr&&isFinite(hr)&&hr>20){ H.seen.rec++; (H.rhr[kr]=H.rhr[kr]||[]).push(hr) } }
+    else if(/^weight-/.test(n)){ var kw=fbDate(r.date); var w=parseFloat(r.weight);
+      if(kw&&isFinite(w)&&w>0){ H.seen.rec++;
+        /* the export does not state its unit; it follows the account setting.
+           Below 90 can only plausibly be kg for an adult. Stated in the preview. */
+        var kg=w<90; H.fitbitWeightUnit=kg?'kg':'lb';
+        H.weights.push({d:kw,w:Math.round((kg?w*2.20462:w)*10)/10}) } }
+    else if(/^exercise-/.test(n)){ var ke=fbDate(r.startTime); if(!ke) return;
+      H.seen.wo++;
+      var nm=String(r.activityName||''), min=Math.round((parseFloat(r.activeDuration||r.duration)||0)/60000);
+      var cls=/weight|strength|workout|hiit|circuit|crossfit|bootcamp/i.test(nm)?'strength':
+              /yoga|pilates|stretch/i.test(nm)?'mobility':'other';
+      var cur=H.work[ke],rank={strength:3,mobility:2,other:1};
+      if(!cur||rank[cls]>rank[cur.cls]||(cls===cur.cls&&min>cur.min)) H.work[ke]={cls:cls,kind:nm.replace(/\s+/g,''),min:min} }
+  });
+  if(/^(steps|sleep|resting_heart_rate|weight|exercise)-/.test(n)) H.sources.Fitbit=1;
+}
+
 /* --- stream the file past the scanner ----------------------------- */
-function scanHealthFile(file,onProgress){
-  var H=blankHarvest();
+function scanHealthFile(file,H,onProgress){
+  if(/\.json$/i.test(file.name))
+    return file.text().then(function(t){ fitbitScanJson(file.name,t,H); onProgress(1,H); return H });
   var CH=4*1024*1024, off=0, tail='';
   var csv=/\.csv$/i.test(file.name);
   return (function step(){
@@ -1779,7 +1928,7 @@ function scanHealthFile(file,onProgress){
 
 /* --- turn a harvest into a staged, reversible plan ----------------- */
 function planHealthMerge(H){
-  var plan={sleep:[],gym:[],moved:[],weightDay:[],meas:[],rhr:[],
+  var plan={sleep:[],gym:[],moved:[],weightDay:[],meas:[],rhr:[],steps:[],
             skipped:{sleep:0,gym:0,moved:0,weight:0},range:null};
   var keys={};
   Object.keys(H.sleep).forEach(function(k){keys[k]=1});
@@ -1789,8 +1938,10 @@ function planHealthMerge(H){
   var ks=Object.keys(keys).filter(function(k){return /^\d{4}-\d{2}-\d{2}$/.test(k)}).sort();
   if(ks.length) plan.range=[ks[0],ks[ks.length-1]];
 
+  /* a synthetic demo day is not an entry: real device data replaces it */
+  var real=function(k){ return has(k)&&!S.days[k].synthetic ? S.days[k] : null };
   ks.forEach(function(k){
-    var existing=has(k)?S.days[k]:null;
+    var existing=real(k);
     var d=existing||blankDay(k);
     var g=d.gym||{}, hasHuman=!!g.status && g.src!=='health';
 
@@ -1805,6 +1956,9 @@ function planHealthMerge(H){
       else plan.skipped.gym++;
     }
     var st=H.steps[k];
+    /* steps only ever come from a device, so a later import from the other
+       phone may raise the day to the larger source — same max rule */
+    if(st!=null&&st>0&&(d.steps==null||Math.round(st)>d.steps)) plan.steps.push({k:k,v:Math.round(st)});
     if(st!=null&&st>=STEP_MOVED&&!d.moved&&!(w&&w.cls!=='other')){
       plan.moved.push({k:k,steps:Math.round(st)});
     } else if(st!=null&&st>=STEP_MOVED&&d.moved) plan.skipped.moved++;
@@ -1823,7 +1977,7 @@ function planHealthMerge(H){
   wdays.forEach(function(k){
     var a=byDay[k].slice().sort(function(x,y){return x-y});
     var med=a[Math.floor(a.length/2)];
-    var d=has(k)?S.days[k]:null;
+    var d=real(k);
     if(!d||d.weight==null) plan.weightDay.push({k:k,v:med}); else plan.skipped.weight++;
     /* the measurement index is a sparse trend, not a daily log — thin to one
        reading a fortnight and skip anything near a manual entry */
@@ -1836,6 +1990,10 @@ function planHealthMerge(H){
 }
 
 function applyHealthMerge(plan){
+  var touched={};
+  ['sleep','gym','moved','weightDay','rhr','steps'].forEach(function(f){
+    plan[f].forEach(function(x){ touched[x.k]=1 }) });
+  Object.keys(touched).forEach(function(k){ if(has(k)&&S.days[k].synthetic) S.days[k]=blankDay(k) });
   plan.sleep.forEach(function(x){ day(x.k).sleepHrs=x.v });
   plan.gym.forEach(function(x){
     var d=day(x.k);
@@ -1845,6 +2003,7 @@ function applyHealthMerge(plan){
   plan.moved.forEach(function(x){ day(x.k).moved=true });
   plan.weightDay.forEach(function(x){ day(x.k).weight=x.v });
   plan.rhr.forEach(function(x){ day(x.k).rhr=x.v });
+  plan.steps.forEach(function(x){ day(x.k).steps=x.v });
   plan.meas.forEach(function(m){ S.measures.push({date:m.date,weight:m.weight,src:'health'}) });
   S.measures.sort(function(a,b){return a.date<b.date?-1:1});
 }
@@ -1856,6 +2015,7 @@ function healthSummary(plan,H){
     ['Training sessions',n(plan.gym),plan.skipped.gym],
     ['Moved (non-training days)',n(plan.moved),plan.skipped.moved],
     ['Daily weight',n(plan.weightDay),plan.skipped.weight],
+    ['Daily steps',n(plan.steps),0],
     ['Resting heart rate',n(plan.rhr),0],
     ['Measurement-index entries',n(plan.meas),0]
   ];
@@ -1864,9 +2024,13 @@ function healthSummary(plan,H){
     rows.map(function(r){
       return '<tr><td>'+r[0]+'</td><td class="n mono">'+r[1]+'</td><td class="n mono">'+
         (r[2]||'—')+'</td></tr>'}).join('')+'</table>';
+  var srcs=Object.keys(H.sources||{});
   var head='<b>'+total+' new entries</b> from '+H.seen.rec.toLocaleString()+' records and '+
     H.seen.wo.toLocaleString()+' workouts'+
-    (plan.range?', covering '+plan.range[0]+' to '+plan.range[1]:'')+'.';
+    (plan.range?', covering '+plan.range[0]+' to '+plan.range[1]:'')+'.'+
+    (srcs.length?' Devices seen: <b>'+srcs.map(esc).join(', ')+'</b>.':'')+
+    (srcs.length>1?' Where more than one recorded the same day, steps and sleep take the <b>largest single device</b>, never the sum.':'')+
+    (H.fitbitWeightUnit?' Fitbit weight read as <b>'+H.fitbitWeightUnit+'</b> (the export does not say) — check one value.':'');
   if(!total) head='<b>Nothing new to add.</b> Everything in that file is already on your record, '+
     'or you have already entered your own values for those days.';
   if(H.bad&&H.bad.sleep) head+=' <span style="color:var(--signal)">'+H.bad.sleep+
@@ -1885,31 +2049,38 @@ on('#healthCancel','click',function(){
   $('#healthApply').classList.add('hide'); $('#healthCancel').classList.add('hide');
 });
 on('#healthFile','change',function(e){
-  var f=e.target.files[0]; if(!f) return;
-  if(/\.zip$/i.test(f.name)){
+  var files=[].slice.call(e.target.files||[]); if(!files.length) return;
+  var f=files[0];
+  if(files.some(function(x){return /\.zip$/i.test(x.name)})){
     $('#healthOut').innerHTML='<div class="notice">That is still zipped. Tap it in Files (iPhone) '+
       'or double-click it (desktop) to unzip, then choose <span class="mono">export.xml</span> '+
       'from inside <span class="mono">apple_health_export</span>.</div>';
     $('#healthFile').value=''; return;
   }
   var P=$('#healthProg'); P.classList.remove('hide');
-  P.textContent='reading 0% — '+(f.size/1048576).toFixed(1)+' MB';
+  var total=files.reduce(function(a,x){return a+x.size},0),doneB=0,H=blankHarvest();
+  P.textContent='reading 0% — '+files.length+' file'+(files.length>1?'s':'')+', '+(total/1048576).toFixed(1)+' MB';
   $('#healthOut').innerHTML=''; $('#healthApply').classList.add('hide');
   $('#healthCancel').classList.remove('hide');
-  scanHealthFile(f,function(p,H){
-    P.textContent='reading '+Math.round(p*100)+'% — '+H.seen.rec.toLocaleString()+' records, '+
-      H.seen.wo.toLocaleString()+' workouts';
-  }).then(function(H){
+  files.reduce(function(chain,file){
+    return chain.then(function(){
+      return scanHealthFile(file,H,function(p){
+        P.textContent='reading '+Math.round((doneB+p*file.size)/Math.max(1,total)*100)+'% — '+
+          H.seen.rec.toLocaleString()+' records, '+H.seen.wo.toLocaleString()+' workouts';
+      }).then(function(){ doneB+=file.size });
+    });
+  },Promise.resolve()).then(function(){ return finalizeHarvest(H) }).then(function(H){
     P.classList.add('hide');
     if(!H.seen.rec&&!H.seen.wo){
       $('#healthOut').innerHTML='<div class="notice">No Health records found in that file. '+
         'For Apple Health choose <span class="mono">export.xml</span> (not '+
-        '<span class="mono">export_cda.xml</span>); for Google Fit choose the daily-activity CSV.</div>';
+        '<span class="mono">export_cda.xml</span>); for Google Fit the daily-activity CSV; for Fitbit the '+
+        '<span class="mono">steps-/sleep-/weight-/resting_heart_rate-/exercise-</span> JSON files.</div>';
       return;
     }
     HEALTH_PLAN={plan:planHealthMerge(H),H:H};
     $('#healthOut').innerHTML=healthSummary(HEALTH_PLAN.plan,H);
-    var any=['sleep','gym','moved','weightDay','rhr','meas']
+    var any=['sleep','gym','moved','weightDay','rhr','meas','steps']
       .some(function(k){return HEALTH_PLAN.plan[k].length});
     $('#healthApply').classList.toggle('hide',!any);
   }).catch(function(err){
@@ -1926,7 +2097,7 @@ on('#healthApply','click',function(){
   $('#healthApply').classList.add('hide'); $('#healthCancel').classList.add('hide');
   $('#healthOut').innerHTML='<div class="notice teal"><b>Imported.</b> '+
     (done.sleep.length+done.gym.length+done.moved.length+done.weightDay.length+
-     done.rhr.length+done.meas.length)+
+     done.rhr.length+done.meas.length+done.steps.length)+
     ' entries added. Nothing you had already written was changed. '+
     'Export a backup from the Data card if you want a copy of this state.</div>';
   touch();
