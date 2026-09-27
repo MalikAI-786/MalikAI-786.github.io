@@ -270,7 +270,16 @@ node .claude/skills/mizan/scripts/prayers.js 2026-09-27 8 > $SCRATCH/prayers.jso
 cd $SCRATCH && node /path/to/repo/.claude/skills/mizan/scripts/daysheet.js sheet-<date>.json out/
 ```
 
-Send `out/mizan-<date>.docx` with SendUserFile. Measure names and rubrics in
+Then make the OneNote copy — OneNote does not open .docx as a page, but it
+keeps tables and ☐ boxes when pasted from a web page (inline styles only;
+it drops `<style>` blocks):
+
+```bash
+cd $SCRATCH && npm install mammoth   # once, if require fails
+node /path/to/repo/.claude/skills/mizan/scripts/tohtml.js out/mizan-<date>.docx out/mizan-<date>.html "Mīzān · <Day DD Mon>"
+```
+
+Send the `.html` first (that is the one he uses), the `.docx` second, with SendUserFile. Measure names and rubrics in
 `daysheet.js` mirror `MEASURES` in core.js — change both or neither. When an
 annotated sheet comes back, read it with the docx skill (`pandoc` if present,
 otherwise unzip and read `word/document.xml`), reconcile against what the

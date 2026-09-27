@@ -86,7 +86,7 @@ const blank = (lines = 1) => Array.from({ length: lines }, () => p([run(' ')], {
 const body = [];
 body.push(eyebrow('Mīzān · day sheet'));
 body.push(h1(longDate(DATE)));
-body.push(tiny('Fill it by hand or in OneNote, save it as mizan-' + DATE + '.docx, send it back. The next sheet is written from what you put here. Prayer times: New York, ISNA, ʿAṣr standard — check against your own settings.'));
+body.push(tiny('Fill it in OneNote (or on paper), then send it back — share the OneNote page, paste its text into the chat, or send a photo. The next sheet is written from what you put here. Prayer times: New York, ISNA, ʿAṣr standard — check against your own settings.'));
 body.push(rule());
 
 // 1 · intention
