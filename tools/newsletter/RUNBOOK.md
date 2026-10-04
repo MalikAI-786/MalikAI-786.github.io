@@ -40,13 +40,22 @@ reading the definition and following it:
 6. **Gate.** Run `review.md` in order. Section A is pass/fail. Record the
    verdict naming the check: `GATE: PASS · A1-A8 clear · B: B5 noted` or
    `GATE: FAIL · A4 — citation unverified`. "Needs work" is not a verdict.
+   Then run the executable half, `python3 tools/newsletter/gate.py
+   insights/<note>.html` — length, the disclosure line, forbidden strings
+   (the retired name, the OCC, "validated" about the study), the meta tags,
+   the template, resolving links. It is the part of the gate a model must not
+   be trusted to run on itself, and it fails the run if it fails.
 7. **Build the field note.** Self-contained HTML in `insights/`, matching
    `insights/proof-passed-what-certified.html`: `../assets/brand/tokens.css`
    and `../intake/intake.css`, `<p class="eyebrow">Field note · DD Month
    YYYY</p>`, `<h1>`, `<p class="intro">` carrying the one-sentence thesis,
    `<h2>` question headers, footer with the drafting-assistance disclosure
-   intact. Point the "Read the latest field note" links in `newsletter.html`
-   and `index.html` at it; keep older notes reachable.
+   intact, and two `<meta>` tags in the head: `thread` (Governance, Judgment,
+   Evidence, Ethics or Practice) and `heuristic` (the one named). Then run
+   `python3 tools/newsletter/make_archive.py` — it rebuilds the archive on
+   `newsletter.html` from the notes themselves, and `invariants.py` fails if
+   the block was hand-edited or not regenerated. Point the "Read the latest
+   field note" link in `index.html` at the new note.
 8. **Invariants.** `python3 tools/audit/invariants.py`. Fix by changing a
    generator, never a generated file.
 9. **Branch and push.** `claude/newsletter-<slug>` (or `codex/newsletter-<slug>`

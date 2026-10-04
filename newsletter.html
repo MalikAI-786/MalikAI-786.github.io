@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Proof Over Promise — Yasir A. Malik</title>
-<meta name="description" content="Proof Over Promise — Yasir A. Malik on AI governance, model risk, and what happens to professional judgment when the analysis arrives already formed. Written by a bank examiner." />
+<title>Field Notes — Yasir A. Malik</title>
+<meta name="description" content="Field notes on AI governance, model risk and professional judgment, written from a bank examiner's seat. One heuristic named, one number you can check, every issue." />
 <meta name="author" content="Yasir A. Malik" />
 <link rel="stylesheet" href="assets/brand/tokens.css" />
 <link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml" />
@@ -12,13 +12,28 @@
 <meta name="theme-color" content="#E0662E" />
 
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Proof Over Promise" />
-<meta property="og:description" content="Evidence before claims. AI governance, model risk, and professional judgment, from a former bank examiner." />
+<meta property="og:title" content="Field Notes — Yasir A. Malik" />
+<meta property="og:description" content="AI governance, model risk and professional judgment, from a bank examiner. One heuristic named, one number you can check, every issue." />
 <meta property="og:url" content="https://malikai-786.github.io/newsletter.html" />
-<meta property="og:image" content="https://malikai-786.github.io/assets/brand/banners/proof-over-promise/banner-dark.png" />
+<meta property="og:image" content="https://malikai-786.github.io/assets/brand/banners/site/banner-dark.png" />
 <meta name="twitter:card" content="summary_large_image" />
 </head>
 <body>
+<script>
+  /* ---------------------------------------------------------------------
+     The two things this page cannot do by itself on a static host.
+     Fill in whichever exists; leave the rest empty. Nothing here is a
+     secret — these are public identifiers, the same ones the embed
+     would expose. Instructions: tools/newsletter/README.md.
+     --------------------------------------------------------------------- */
+  window.NEWSLETTER = {
+    // Email sign-up. Set ONE.
+    substack:   "",   // publication subdomain, e.g. "yasiramalik" → yasiramalik.substack.com
+    formAction: "",   // a form endpoint that accepts POST {email}, e.g. Buttondown or Beehiiv
+    // Visit tracking, privacy-first, no cookies: a GoatCounter site code.
+    goatcounter: ""   // e.g. "malikai" → malikai.goatcounter.com
+  };
+</script>
 <style>
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -28,13 +43,14 @@
   a{color:var(--accent-ink);text-underline-offset:3px;}
   :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px;}
 .wrap{max-width:760px;margin:0 auto;padding:0 24px;}
+.wrap.wide{max-width:980px;}
 
   nav.top{position:sticky;top:0;z-index:60;
     background:color-mix(in srgb, var(--ground) 90%, transparent);
     backdrop-filter:saturate(150%) blur(9px);
     border-bottom:1px solid var(--line);border-top:3px solid var(--accent);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;
-    height:56px;max-width:760px;margin:0 auto;padding:0 24px;}
+    height:56px;max-width:980px;margin:0 auto;padding:0 24px;}
 .brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);}
 .brand .name{font-family:var(--record);font-size:1rem;font-weight:700;
     letter-spacing:var(--track-record);}
@@ -51,7 +67,7 @@
 .pmark .node{fill:var(--evidence);stroke:none;}
 .pmark .letter{stroke:currentColor;}
 
-  header.hero{padding:58px 0 34px;text-align:center;}
+  header.hero{padding:58px 0 40px;text-align:center;}
 .hero .pmark{margin:0 auto 22px;}
 .eyebrow{font-family:var(--instrument);font-size:.68rem;
     letter-spacing:var(--track-instrument);text-transform:uppercase;
@@ -61,6 +77,20 @@
 .lede{font-family:var(--record);font-size:1.16rem;line-height:1.68;
     color:var(--muted);max-width:54ch;margin:0 auto;}
 .lede strong{color:var(--ink);font-weight:600;}
+
+  /* sign-up */
+.subscribe{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+    max-width:520px;margin:28px auto 0;}
+.subscribe input{flex:1 1 260px;font:inherit;font-size:1rem;padding:13px 16px;
+    border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+    color:var(--ink);}
+.subscribe input:focus{border-color:var(--evidence);outline:none;}
+.subscribe .btn{cursor:pointer;border:0;}
+.trust{font-family:var(--instrument);font-size:.68rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);margin:14px 0 0;}
+.subscribe-note{font-size:.88rem;color:var(--muted);max-width:52ch;margin:14px auto 0;line-height:1.55;}
+.embed{max-width:520px;margin:28px auto 0;}
+.embed iframe{width:100%;height:150px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);}
 
 .cta-row{display:flex;justify-content:center;flex-wrap:wrap;gap:11px;margin-top:30px;}
 .btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--instrument);
@@ -73,25 +103,52 @@
 .btn.ghost:hover{border-color:var(--evidence);color:var(--evidence);}
 
   section{padding:44px 0;border-top:1px solid var(--line);}
+.kicker{font-family:var(--instrument);font-size:.63rem;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--evidence);margin:0 0 8px;}
   h2{font-family:var(--record);font-size:1.5rem;letter-spacing:var(--track-record);
     margin:0 0 8px;}
 .sub{color:var(--muted);margin:0 0 24px;max-width:60ch;}
 
-.spine{max-width:62ch;padding-left:24px;border-left:1px solid var(--line);
-    position:relative;}
-.spine .mark{position:absolute;left:-1px;top:0;width:3px;height:44px;
-    background:var(--evidence);}
+  /* archive */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px;}
+.filters button{font-family:var(--instrument);font-size:.68rem;letter-spacing:.08em;
+    text-transform:uppercase;padding:7px 12px;border-radius:999px;cursor:pointer;
+    border:1px solid var(--line);background:transparent;color:var(--muted);}
+.filters button[aria-pressed="true"]{border-color:var(--evidence);color:var(--evidence);}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.card{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--ink);
+    border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);
+    padding:18px 20px;transition:border-color .15s,transform .15s;}
+.card:hover{border-color:var(--evidence);transform:translateY(-1px);}
+.card time{font-family:var(--instrument);font-size:.63rem;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--muted);}
+.card h3{font-family:var(--record);font-size:1.08rem;margin:0;letter-spacing:var(--track-record);line-height:1.3;}
+.card p{margin:0;font-size:.9rem;color:var(--muted);line-height:1.55;flex:1;}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.tag{font-family:var(--instrument);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--evidence);border:1px solid var(--line);border-radius:999px;padding:3px 8px;}
+.tag.heur{color:var(--accent-ink);}
+.card[hidden]{display:none;}
+.card.future{display:none;}
+.empty{color:var(--muted);font-size:.92rem;}
+
+  /* tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.tile{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:16px 18px;}
+.tile h3{font-family:var(--record);font-size:1rem;margin:0 0 6px;letter-spacing:var(--track-record);}
+.tile p{margin:0;font-size:.88rem;color:var(--muted);line-height:1.55;}
+
+.spine{max-width:62ch;padding-left:24px;border-left:1px solid var(--line);position:relative;}
+.spine .mark{position:absolute;left:-1px;top:0;width:3px;height:44px;background:var(--evidence);}
 .spine p{font-family:var(--record);font-size:1.04rem;line-height:1.72;margin:0 0 16px;}
 .spine p:last-child{margin-bottom:0;}
 .spine strong{font-weight:600;}
 
 .issues{display:grid;gap:12px;}
-.issue{border:1px solid var(--line);border-radius:var(--radius);
-    background:var(--surface);padding:18px 20px;}
+.issue{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:18px 20px;}
 .issue .n{font-family:var(--instrument);font-size:.63rem;letter-spacing:.13em;
     text-transform:uppercase;color:var(--evidence);margin-bottom:7px;}
-.issue h3{font-family:var(--record);font-size:1.08rem;margin:0 0 6px;
-    letter-spacing:var(--track-record);}
+.issue h3{font-family:var(--record);font-size:1.08rem;margin:0 0 6px;letter-spacing:var(--track-record);}
 .issue p{margin:0;font-size:.92rem;color:var(--muted);line-height:1.58;}
 
 .who{list-style:none;margin:0;padding:0;display:grid;gap:11px;max-width:62ch;}
@@ -103,6 +160,11 @@
     border-left:3px solid var(--evidence);border-radius:0 var(--radius) var(--radius) 0;
     padding:17px 20px;font-size:.92rem;line-height:1.62;color:var(--muted);max-width:66ch;}
 .note b{color:var(--ink);}
+
+.reach{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+.stat{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:16px 18px;}
+.stat .num{font-family:var(--record);font-size:1.9rem;line-height:1;letter-spacing:var(--track-record);}
+.stat .lbl{font-family:var(--instrument);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-top:8px;}
 
   footer.foot{padding:28px 0 46px;color:var(--muted);font-size:.75rem;
     font-family:var(--instrument);border-top:1px solid var(--line);}
@@ -132,43 +194,141 @@
       <path d="M24 20.5 L24 45.5" class="letter" stroke-width="5.2" stroke-linecap="butt"/>
       <path d="M24 20.5 H34 A6.25 6.25 0 0 1 34 33 H24" class="letter" stroke-width="5.2" stroke-linejoin="miter" stroke-linecap="butt"/>
     </svg>
-    <div class="eyebrow">Newsletter · Written by Yasir A. Malik</div>
-    <h1>Proof Over Promise</h1>
+    <div class="eyebrow">Field notes · Written by Yasir A. Malik</div>
+    <h1>How would we know?</h1>
     <p class="lede">Every deck I am handed says the model is governed.
-    <strong>Almost none of them show me the evidence.</strong> I spent years asking for
-    that evidence as a bank examiner. I write this newsletter because I still have to
-    ask.</p>
-    <div class="cta-row">
-      <a class="btn primary" href="insights/proof-passed-what-certified.html">Read the latest field note</a>
-      <a class="btn ghost" href="index.html#research">More about my research</a>
-      <a class="btn ghost" href="intake/">Bring a business challenge</a>
-    </div>
+    <strong>Almost none of them show me the evidence.</strong> One field note a week on AI
+    governance, model risk and professional judgment, from a bank examiner's seat. One
+    heuristic named. One number you can check.</p>
+
+    <form class="subscribe" id="subscribe" method="post" novalidate>
+      <label class="visually-hidden" for="email" style="position:absolute;left:-9999px;">Email address</label>
+      <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@firm.com" required />
+      <button class="btn primary" type="submit">Subscribe</button>
+    </form>
+    <p class="trust">No spam · Independent · Unsubscribe anytime</p>
+    <p class="subscribe-note" id="subscribe-note"></p>
+    <div class="embed" id="embed" hidden></div>
   </div>
 </header>
 
+<section id="latest">
+  <div class="wrap wide">
+    <div class="kicker">Latest field note</div>
+    <div class="grid" id="latest-grid"></div>
+  </div>
+</section>
+
+<section id="archive">
+  <div class="wrap wide">
+    <div class="kicker">Recent issues</div>
+    <h2>Browse the field notes.</h2>
+    <p class="sub">Every issue turns on one named heuristic and carries at least one number you can
+    go and check. Filter by thread.</p>
+    <div class="filters" role="group" aria-label="Filter by thread">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="Governance" aria-pressed="false">Governance</button>
+      <button type="button" data-filter="Judgment" aria-pressed="false">Judgment</button>
+      <button type="button" data-filter="Evidence" aria-pressed="false">Evidence</button>
+      <button type="button" data-filter="Ethics" aria-pressed="false">Ethics</button>
+      <button type="button" data-filter="Practice" aria-pressed="false">Practice</button>
+    </div>
+    <div class="grid" id="archive-grid">
+      <!-- archive:start -->
+      <a class="card" href="insights/what-i-ask-for-and-in-what-order.html" data-thread="Evidence">
+        <time datetime="2026-12-07">7 December 2026</time>
+        <h3>What would you show me first?</h3>
+        <p>When a firm says its AI is governed, the next sentence from the examiner&#x27;s seat is a request for a document. The order of the requests is the method.</p>
+        <div class="tags"><span class="tag">Evidence</span> <span class="tag heur">Availability</span></div>
+      </a>
+      <a class="card" href="insights/most-agreeable-where-you-need-pushback.html" data-thread="Judgment">
+        <time datetime="2026-11-30">30 November 2026</time>
+        <h3>What did you ask it, and did the question contain the answer?</h3>
+        <p>A system tuned on human approval tends to affirm the position it was handed. The tell is in the prompt, not the output, and the audit literature on reliance is older than the tools.</p>
+        <div class="tags"><span class="tag">Judgment</span> <span class="tag heur">Confirmation</span></div>
+      </a>
+      <a class="card" href="insights/superhuman-patience-is-not-a-leap.html" data-thread="Judgment">
+        <time datetime="2026-11-23">23 November 2026</time>
+        <h3>Superhuman patience is not a leap. What was the work meant to achieve?</h3>
+        <p>One mathematician reviewed a machine&#x27;s proof the way he would review a colleague&#x27;s, and what he found says more about review than it does about machines.</p>
+        <div class="tags"><span class="tag">Judgment</span> <span class="tag heur">Fluency</span></div>
+      </a>
+      <a class="card" href="insights/the-moment-they-stopped-thinking.html" data-thread="Ethics">
+        <time datetime="2026-11-16">16 November 2026</time>
+        <h3>Nobody writes down the moment they stopped thinking. How would we know?</h3>
+        <p>The risk is deference, and deference leaves no finding, so the one control I know for it is a question rather than a procedure.</p>
+        <div class="tags"><span class="tag">Ethics</span> <span class="tag heur">Automation bias</span></div>
+      </a>
+      <a class="card" href="insights/listed-as-open-is-not-unsolved.html" data-thread="Evidence">
+        <time datetime="2026-11-09">9 November 2026</time>
+        <h3>Listed as open is not unsolved. What did open mean, and who checked?</h3>
+        <p>In October 2025 an accurate observation about a database became a claim that ten unsolved problems had been solved. It took three posts to get there and one person to undo it.</p>
+        <div class="tags"><span class="tag">Evidence</span> <span class="tag heur">Confirmation</span></div>
+      </a>
+      <a class="card" href="insights/sr-26-2-rewrote-the-test.html" data-thread="Governance">
+        <time datetime="2026-11-02">2 November 2026</time>
+        <h3>Effective challenge was rewritten. What does it require now?</h3>
+        <p>In April the agencies replaced the definition of effective challenge. Most of the industry read a restatement. It is a rewrite, and AI-assisted review is where the difference will be tested.</p>
+        <div class="tags"><span class="tag">Governance</span> <span class="tag heur">The accountability gap</span></div>
+      </a>
+      <a class="card" href="insights/sample-what-it-cleared.html" data-thread="Evidence">
+        <time datetime="2026-10-26">26 October 2026</time>
+        <h3>When did your team last open something the system passed?</h3>
+        <p>An exception report with no exceptions ends the inquiry, and the population it cleared is the one nobody samples.</p>
+        <div class="tags"><span class="tag">Evidence</span> <span class="tag heur">Automation bias</span></div>
+      </a>
+      <a class="card" href="insights/the-anchor-that-looks-neutral.html" data-thread="Judgment">
+        <time datetime="2026-10-19">19 October 2026</time>
+        <h3>Why does the most neutral-looking document move a reviewer the most?</h3>
+        <p>A reviewer is moved most by a conclusion that does not look like it is trying to move anyone, and machine output never looks like it is trying.</p>
+        <div class="tags"><span class="tag">Judgment</span> <span class="tag heur">Fluency</span></div>
+      </a>
+      <a class="card" href="insights/last-years-number.html" data-thread="Judgment">
+        <time datetime="2026-10-12">12 October 2026</time>
+        <h3>This year&#x27;s evidence, or last year&#x27;s number?</h3>
+        <p>Every recurring engagement starts with a figure nobody in the room produced this year, and the audit literature has been testing what that does to judgment since 1981.</p>
+        <div class="tags"><span class="tag">Judgment</span> <span class="tag heur">Anchoring and adjustment</span></div>
+      </a>
+      <a class="card" href="insights/six-in-one-hundred-thousand.html" data-thread="Practice">
+        <time datetime="2026-10-05">5 October 2026</time>
+        <h3>Six in one hundred thousand. Who was in the survey of auditors?</h3>
+        <p>A study built to measure anchoring in auditors screened 330,000 people and found roughly twenty it could use, and the number is the finding.</p>
+        <div class="tags"><span class="tag">Practice</span> <span class="tag heur">Availability</span></div>
+      </a>
+      <a class="card" href="insights/proof-passed-what-certified.html" data-thread="Evidence">
+        <time datetime="2026-09-16">16 September 2026</time>
+        <h3>The proof passed. What did the check certify?</h3>
+        <p>In August a machine-checkable proof certified ten mathematical results. The argument that followed was not about whether they were true.</p>
+        <div class="tags"><span class="tag">Evidence</span> <span class="tag heur">Automation bias</span></div>
+      </a>
+      <a class="card" href="insights/before-we-automate.html" data-thread="Practice">
+        <time datetime="2026-09-15">15 September 2026</time>
+        <h3>Before we automate, how would we know?</h3>
+        <p>A compelling growth story is a starting hypothesis. It is not yet a business case.</p>
+        <div class="tags"><span class="tag">Practice</span></div>
+      </a>
+      <!-- archive:end -->
+    </div>
+    <p class="empty" id="archive-empty" hidden>Nothing in this thread yet.</p>
+  </div>
+</section>
+
 <section>
-  <div class="wrap">
-    <h2>Why I write this</h2>
-    <div class="spine">
-      <span class="mark"></span>
-      <p>I am a bank examiner. Before that I spent fifteen years running internal audits
-      inside Citigroup and JPMorgan Chase, to Vice President. In all of it, the finding I
-      wrote most often was not that a control was missing. It was that the control existed
-      on paper and nobody could produce evidence it had ever operated.</p>
-      <p>AI has made that gap much wider and much easier to hide. I build with these tools,
-      not just review them: I put a retrieval assistant into a live audit function and took
-      about a third off the cycle time. That is exactly why I do not trust the demo. I know
-      what the demo leaves out.</p>
-      <p><strong>So I write down the evidence.</strong> Model inventories that are current
-      rather than aspirational, human oversight that is designed rather than assumed, and
-      documentation that survives contact with somebody who is allowed to disagree with you.
-      Proof, not promise. That is the whole editorial position.</p>
+  <div class="wrap wide">
+    <div class="kicker">What you get</div>
+    <h2>The shape of every issue.</h2>
+    <div class="tiles">
+      <div class="tile"><h3>One field note a week</h3><p>Two items, each framed as the question you also have. Finishable in one sitting.</p></div>
+      <div class="tile"><h3>One heuristic, named</h3><p>Anchoring, automation bias, confirmation, availability: the mechanism that explains why competent people missed it.</p></div>
+      <div class="tile"><h3>One number you can check</h3><p>A citation with volume and pages, a date, a count. Never "studies show."</p></div>
+      <div class="tile"><h3>What I am not claiming</h3><p>Each issue closes on the part that is unsettled. I would rather be corrected than agreed with.</p></div>
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
+    <div class="kicker">Editorial threads</div>
     <h2>What I write about</h2>
     <p class="sub">Five threads I keep returning to, drawn from my doctoral research and from
     work I have actually shipped inside regulated institutions.</p>
@@ -213,61 +373,155 @@
 
 <section>
   <div class="wrap">
+    <div class="kicker">Who it is for</div>
     <h2>Who I write for</h2>
     <ul class="who">
-      <li>Internal audit, risk, and compliance leaders being asked to assure AI they did not build</li>
+      <li>Internal audit, risk and compliance leaders being asked to assure AI they did not build</li>
       <li>Model risk teams extending SR 26-2 practice to systems that do not behave like models</li>
       <li>Anyone preparing to explain their AI controls to a regulator</li>
-      <li>Researchers working near judgment, automation bias, and professional skepticism</li>
+      <li>Researchers working near judgment, automation bias and professional skepticism</li>
     </ul>
     <div class="note" style="margin-top:26px;">
       <b>How I write it.</b> I use AI tools heavily, which is precisely why I study how they
       fail. Drafting assistance is used and disclosed. The judgment, the argument, and every
       claim about what happened inside a real institution are mine, and I would rather be
       corrected than agreed with. If I get something wrong here,
-      <a href="mailto:YasirAMalik@gmail.com?subject=Proof%20Over%20Promise%20%E2%80%94%20where%20you%27re%20wrong">tell me</a>.
+      <a href="mailto:YasirAMalik@gmail.com?subject=Field%20notes%20%E2%80%94%20where%20you%27re%20wrong">tell me</a>.
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
+    <div class="kicker">The writer</div>
     <h2>Who I am</h2>
     <div class="spine">
       <span class="mark"></span>
-      <p>Yasir A. Malik. I examine banks for a living, currently as a state examiner in
-      Florida and previously for the Office of the Comptroller of the Currency. Before the
-      regulator I spent fifteen years in internal audit at Citigroup and JPMorgan Chase,
-      finishing as a Vice President.</p>
+      <p>Yasir A. Malik. I examine banks for a living, as a state examiner at the Florida
+      Office of Financial Regulation. Before the regulator I spent fifteen years in internal
+      audit at Citigroup and JPMorgan Chase, finishing as a Vice President. I have also built
+      with these tools: I put a retrieval assistant into a live audit function and took about
+      a third off the cycle time, which is exactly why I do not trust the demo.</p>
       <p>I am a doctoral candidate at Florida International University, expected 2028. My
       research asks a narrow question with wide consequences: what happens to a professional's
       judgment when the answer arrives already formed, and confident, and usually right.</p>
       <p>I grew up in Lahore and went to Aitchison College, whose motto I have never managed
-      to put down: <strong>Perseverance Commands Success.</strong> The work since has run
-      through London, Germany, Miami, Dubai, back to Miami, West Palm Beach, Tampa, New York,
-      and now Newark. This newsletter is where I think out loud along the way.</p>
+      to put down: <strong>Perseverance Commands Success.</strong> This is where I think out
+      loud along the way.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap wide">
+    <div class="kicker">The record so far</div>
+    <h2>Counted, not estimated.</h2>
+    <p class="sub">The only numbers on this page are ones the page can count. Subscriber and
+    open figures appear here once there is an issue to report them from.</p>
+    <div class="reach">
+      <div class="stat"><div class="num" id="stat-notes">—</div><div class="lbl">Field notes published</div></div>
+      <div class="stat"><div class="num" id="stat-threads">5</div><div class="lbl">Editorial threads</div></div>
+      <div class="stat"><div class="num">1</div><div class="lbl">Heuristic named per issue</div></div>
+      <div class="stat"><div class="num">0</div><div class="lbl">Paid tiers, sponsors, pitches</div></div>
     </div>
   </div>
 </section>
 
 <section style="border-bottom:0;">
   <div class="wrap" style="text-align:center;">
-    <h2>Read and stay connected</h2>
-    <p class="sub" style="margin:0 auto 22px;">Read the current field note here or connect with me on LinkedIn.
-    Email subscriptions are not yet available through this page.</p>
-    <div class="cta-row" style="margin-top:0;">
-      <a class="btn primary" href="insights/proof-passed-what-certified.html">The proof passed. What did the check certify?</a>
-      <a class="btn ghost" href="insights/before-we-automate.html">Before we automate, how would we know?</a>
+    <h2>One field note a week.</h2>
+    <p class="sub" style="margin:0 auto;">One question, one mechanism, one number. No fluff, and
+    no schedule I would not keep.</p>
+    <form class="subscribe" id="subscribe-2" method="post" novalidate>
+      <label for="email-2" style="position:absolute;left:-9999px;">Email address</label>
+      <input id="email-2" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@firm.com" required />
+      <button class="btn primary" type="submit">Subscribe</button>
+    </form>
+    <p class="trust">Built for audit, risk and model-risk practitioners · Unsubscribe anytime</p>
+    <div class="cta-row" style="margin-top:22px;">
       <a class="btn ghost" href="https://linkedin.com/in/yasiramalik" target="_blank" rel="noopener">Connect on LinkedIn ↗</a>
+      <a class="btn ghost" href="intake/">Bring a business challenge</a>
     </div>
   </div>
 </section>
 
 <footer class="foot">
   <div class="wrap foot-in">
-    <span>Proof Over Promise · Yasir A. Malik</span>
+    <span>Field notes · Yasir A. Malik · Audit · Risk · Governance</span>
     <span><a href="index.html">malikai-786.github.io</a></span>
   </div>
 </footer>
+
+<script>
+(function(){
+  var cfg = window.NEWSLETTER || {};
+
+  /* ---- sign-up: embed, endpoint, or honest fallback ---- */
+  var forms = [document.getElementById('subscribe'), document.getElementById('subscribe-2')].filter(Boolean);
+  var note = document.getElementById('subscribe-note');
+  if (cfg.substack) {
+    var box = document.getElementById('embed');
+    box.hidden = false;
+    var f = document.createElement('iframe');
+    f.src = 'https://' + cfg.substack + '.substack.com/embed';
+    f.title = 'Subscribe';
+    f.setAttribute('frameborder', '0');
+    f.setAttribute('scrolling', 'no');
+    box.appendChild(f);
+    forms.forEach(function(x){ x.hidden = true; });
+  } else if (cfg.formAction) {
+    forms.forEach(function(x){ x.action = cfg.formAction; });
+  } else {
+    if (note) note.textContent = 'Email delivery is not wired up yet. Subscribing opens a message to me and I add you by hand until it is.';
+    forms.forEach(function(x){
+      x.addEventListener('submit', function(e){
+        e.preventDefault();
+        var email = x.querySelector('input[type=email]').value.trim();
+        if (!email) { x.querySelector('input[type=email]').focus(); return; }
+        location.href = 'mailto:YasirAMalik@gmail.com?subject=' + encodeURIComponent('Subscribe me to the field notes')
+          + '&body=' + encodeURIComponent('Please add ' + email + ' to the field notes.');
+      });
+    });
+  }
+
+  /* ---- visit tracking: GoatCounter, only when a site code is set ---- */
+  if (cfg.goatcounter) {
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://gc.zgo.at/count.js';
+    s.setAttribute('data-goatcounter', 'https://' + cfg.goatcounter + '.goatcounter.com/count');
+    document.head.appendChild(s);
+  }
+
+  /* ---- archive: hide future-dated notes, feature the newest live one, filter ---- */
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#archive-grid .card'));
+  var today = new Date(); today.setHours(23,59,59,999);
+  var live = cards.filter(function(c){
+    var t = c.querySelector('time');
+    var future = t && new Date(t.getAttribute('datetime')) > today;
+    if (future) c.classList.add('future');
+    return !future;
+  });
+  var statNotes = document.getElementById('stat-notes');
+  if (statNotes) statNotes.textContent = String(live.length);
+
+  var latest = document.getElementById('latest-grid');
+  if (latest && live.length) latest.appendChild(live[0].cloneNode(true));
+  else if (latest) latest.closest('section').hidden = true;
+
+  var empty = document.getElementById('archive-empty');
+  document.querySelectorAll('.filters button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.filters button').forEach(function(o){ o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); });
+      var want = b.getAttribute('data-filter'), shown = 0;
+      live.forEach(function(c){
+        var ok = want === 'all' || c.getAttribute('data-thread') === want;
+        c.hidden = !ok; if (ok) shown++;
+      });
+      if (empty) empty.hidden = shown > 0;
+    });
+  });
+})();
+</script>
 </body>
 </html>

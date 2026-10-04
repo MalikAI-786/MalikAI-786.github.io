@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Listed as open is not unsolved. What did open mean, and who checked? · Yasir A. Malik</title>
+<meta name="description" content="In October 2025 an accurate observation about a database became a claim that ten unsolved problems had been solved. It took three posts to get there and one person to undo it.">
+<meta name="thread" content="Evidence">
+<meta name="heuristic" content="Confirmation">
+<link rel="stylesheet" href="../assets/brand/tokens.css">
+<link rel="stylesheet" href="../intake/intake.css">
+<link rel="icon" href="../assets/brand/favicon.svg">
+</head>
+<body>
+<header>
+<a href="../index.html">Yasir A. Malik</a>
+<nav aria-label="Main">
+<a href="../newsletter.html">Newsletter</a>
+<a href="../intake/">Start a conversation</a>
+</nav>
+</header>
+<main>
+<article>
+
+<p class="eyebrow">Field note · 9 November 2026</p>
+
+<h1>Listed as open is not unsolved.<br>What did open mean, and who checked?</h1>
+
+<p class="intro">In October 2025 an accurate observation about a database became a claim that ten unsolved problems had been solved. It took three posts to get there and one person to undo it.</p>
+
+<p>On 12 October 2025 Sébastien Bubeck of OpenAI posted that GPT-5 Pro had turned something up about Erdős problem #339. The problem was listed as open on erdosproblems.com. It had been solved twenty years earlier. The model had run a literature search and found the paper. That observation was accurate and it was narrow. The object of record was a status field in a database, and the model had found that the field was out of date.</p>
+
+<p>Five days later, on 17 October at 16:42 UTC, Mark Sellke posted ten more. Ten problems listed as open on the site for which the model had found existing solutions. Still accurate, still narrow, and the phrase was still "listed as open." Then Kevin Weil, a vice president at OpenAI, amplified it. GPT-5 had "found solutions to 10 previously unsolved Erdős problems."</p>
+
+<p>Put the two phrases side by side. "Listed as open" is a statement about a database. "Previously unsolved" is a statement about mathematics. Between them nothing was discovered, verified or checked. A phrase changed, and the object of the claim changed with it. The timeline here is as TechCrunch reported it on 19 October 2025.</p>
+
+<h2>What does a status field mean?</h2>
+
+<p>At 18:32 UTC Thomas Bloom, who maintains erdosproblems.com, answered. He called it "a dramatic misrepresentation. GPT-5 found references, which solved these problems, that I personally was unaware of. The 'open' status only means I personally am unaware of a paper which solves it."</p>
+
+<p>Read that as a control description. The field had a definition, and the definition lived with the maintainer. Open meant that one person had not seen a paper. It never meant that no paper existed. Anyone who read the status as a fact about mathematics was reading a data field for a meaning its owner never gave it, and the owner said so within two hours.</p>
+
+<p>I spend a good part of my working life reading status fields. Remediated. Closed. Validated. Not applicable. Each one means exactly what the person who maintains it says it means, and usually less than the reader wants it to mean. Closed in an issue tracker often means that someone was satisfied, not that the condition stopped. Validated often means that a validation was scheduled and a report exists. The reader supplies the stronger meaning, and the stronger meaning is the one that gets cited upward.</p>
+
+<p>The number worth holding onto is twenty years. On one problem the database was twenty years behind the literature, and that is not a failure of the database. It is one person keeping a list as well as one person can. The failure was treating a one-person flag as the state of the world's knowledge, and then letting the stronger reading leave the chain without anyone going back to the flag.</p>
+
+<p>There is a version of this in examination work, and I will describe it generically. An institution reports an issue as remediated. The report is accurate in the sense that the status field says remediated. What the field means is that the owner of the issue submitted closure evidence and the person maintaining the tracker accepted it. Whether the condition stopped is a separate question, and it is the only question that matters, and it is not what the field records.</p>
+
+<p><strong>On Monday.</strong> Before a status is cited in anything that leaves the room, ask the person who maintains it what the value means. Then write the definition next to the status in the file. "Closed, meaning the control owner reported the fix" is a different sentence from "Closed," and the difference is where the finding lives.</p>
+
+<h2>Who checked?</h2>
+
+<p>Weil retracted at 19:36 UTC. From Sellke's post at 16:42 to the retraction is under three hours. That is fast, and I want to give it credit before saying what it shows, because the correction behavior is the behavior you want.</p>
+
+<p>Now look at the shape of the chain. Bubeck, then Sellke, then Weil. Each post built on the one before it, and none of them went back to the field. Nobody inside the chain checked what open meant, and each of them could reasonably take the previous post as having been checked. The correction came from outside the chain entirely, from the one person who could not take the claim as checked, because it was his definition being misread.</p>
+
+<p>The shortcut underneath this is documented. Nickerson's 1998 review in the <em>Review of General Psychology</em>, "Confirmation Bias: A Ubiquitous Phenomenon in Many Guises," collects the evidence that people seek and weight evidence in the direction of the position they already hold, and that evidence against that position is held to a higher standard than evidence for it. The asymmetry is the mechanism, not the direction.</p>
+
+<p>Apply it to the chain. A model finding solutions to ten unsolved problems is the result the chain wanted to be true, so "previously unsolved" cleared a bar that the accurate phrase would have been made to clear with evidence. Nobody asked what open meant, because the strong reading was the welcome one. The correction, by contrast, arrived with a definition, a direct quotation and the maintainer's name attached, and it needed all three to land. The claim was held to the lower standard and the correction to the higher one. That is confirmation, in the ordinary sense Nickerson describes, operating on a status field.</p>
+
+<p>I should say where my own work sits relative to this. The direction my doctoral research is pointed at is a version of this failure with the roles reversed: when the system is the one affirming the position it was handed. That work is in development and has no results. The Erdős chain is useful to me precisely because it had no such system in it. The model's literature search was the one accurate step. The humans did the confirming.</p>
+
+<p>There is a second thing to notice about who corrected it. Bloom was reading. He was on the same platform, in the same afternoon, and the claim was about his list. Inside a bank the person who knows what the field means is rarely reading the memo that cites it. The analyst who closed the issue is not on the distribution for the board report that calls it remediated. The chain publishes, and the person who could correct it never sees the published version.</p>
+
+<p><strong>On Monday.</strong> For any load-bearing claim, write the weaker version beside it and name what evidence moved you from the weaker to the stronger. If nothing did, publish the weaker. Then, for each correction that reaches you this quarter, record who made it and how long it took. If the corrector is never inside the chain, the chain has no check in it, and the clock is your only measure of exposure.</p>
+
+<h2>What I am not claiming</h2>
+
+<p>I am not claiming the model did anything wrong. Its literature search was the one step in this sequence that was accurate, and finding a twenty-year-old solution the maintainer had missed is useful work.</p>
+
+<p>I am not claiming anyone in the chain acted in bad faith. Each phrase was a reasonable reading of the one before it, and a retraction in under three hours is what good faith looks like when it is caught. I am not claiming the database is poorly run. A status field that means one honest person's knowledge is more honest than most of the fields I read.</p>
+
+<p>The part I cannot resolve is the clock. Three hours worked because the maintainer was on the same platform reading. I do not know what the equivalent correction looks like inside an institution, where the person who knows what a status means is not in the room, and where a remediated flag is rarely challenged by anyone outside the chain that wrote it. I have no number for how long that takes. I suspect nobody does, and I would like to be wrong about that.</p>
+
+<p>If something here is wrong, overstated or too confident, tell me: <a href="mailto:YasirAMalik@gmail.com">YasirAMalik@gmail.com</a>. I would rather be corrected than agreed with.</p>
+
+</article>
+<footer>
+<p>Yasir A. Malik · Audit · Risk · Governance</p>
+<p>Original commentary. Quotations and figures are drawn from public sources, including contemporaneous reporting of the posts described, and are attributed to their authors rather than endorsed by them. No affiliation or endorsement is implied. Drafting assistance was used and is disclosed; the judgment is mine.</p>
+</footer>
+</main>
+</body>
+</html>
