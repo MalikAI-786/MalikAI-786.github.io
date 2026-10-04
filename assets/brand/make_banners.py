@@ -7,27 +7,34 @@ Light and dark variants so GitHub's <picture> element can switch with the
 reader's theme. PNG rather than SVG on purpose: a banner's type must not
 re-flow into whatever serif the viewer happens to have installed.
 """
-import os, sys
+import os, sys, io
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import make_marks as M
-from palette import EMBER
+from palette import EMBER, EMBER_TEXT, EMBER_TINT, NIGHT, LIGHT, PAPER, INK
 import cairosvg
+from PIL import Image
 
 OUT = os.path.join(HERE, "banners")
 os.makedirs(OUT, exist_ok=True)
 
 W, H = 1280, 300
 
+# The margin. It was 72px, which is what you use when there are six things in
+# the frame and they have to fit. There are three now.
+PAD = 120
+
+# Three roles, because there are three elements: the mark, the kicker above
+# the title, and the title. `sub`, `rule` and `meta` went with the byline
+# strip, the divider and the repeated URL.
+#
+# `kick` is a role rather than a constant for the reason the whole system is
+# built around: it is 12px, so on the light cut it cannot be ember-500
+# (3.11:1 on paper). Ember-650 on light, ember-tint on dark.
 THEMES = {
-    # `meta` was #5A646E / #8A929B, which measured 3.14:1 and 2.85:1 against
-    # their grounds — both failing AA for 14px text. Moved up the same neutral
-    # ramp to the first step that clears 4.5:1, rather than inventing a colour.
-    "dark":  dict(bg="#0E1114", name="#EDEFF1", sub="#A6B0BA",
-                  rule="#263039", meta="#7C8590", letter="#EDEFF1"),
-    "light": dict(bg="#F6F3F0", name="#171A1D", sub="#5A646E",
-                  rule="#E2DAD3", meta="#5A646E", letter="#171A1D"),
+    "dark":  dict(bg=NIGHT, name=LIGHT, kick=EMBER_TINT, letter=LIGHT),
+    "light": dict(bg=PAPER, name=INK,   kick=EMBER_TEXT, letter=INK),
 }
 
 
@@ -53,9 +60,9 @@ def assert_legible():
     His name sits on these banners. It is not decoration, and a ratio nobody
     measured is how it ended up as the faintest thing in the frame.
     """
-    # role -> minimum ratio. 3.0 is the large-text allowance; the title is 46px
+    # role -> minimum ratio. 3.0 is the large-text allowance; the title is 48px
     # or more, everything else is small text and gets the full 4.5.
-    NEED = {"name": 3.0, "sub": 4.5, "meta": 4.5, "letter": 3.0}
+    NEED = {"name": 3.0, "kick": 4.5, "letter": 3.0}
     bad = []
     for theme, t in THEMES.items():
         for role, need in NEED.items():
@@ -75,51 +82,56 @@ def esc(s):
     return (s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
 
 
-def banner(title, descriptor, theme="dark", byline="Yasir A. Malik",
-           meta="MALIKAI-786.GITHUB.IO"):
+def banner(title, descriptor, theme="dark"):
+    """Three elements: the mark, a kicker, a title. Nothing else gets in.
+
+    What used to be here and is not any more: an ember stripe across the top,
+    a ghost mark bleeding off the right edge, a vertical divider, a hairline
+    above a byline strip, his name, and the site URL. Six pieces of furniture
+    around one piece of information. The banner's job is to name the surface
+    and tie it to the system; the name is in the account, and the URL is in
+    the address bar.
+    """
     t = THEMES[theme]
     nx, ny = M.pt(M.GAP_MID)
 
-    # Long titles step down a size rather than overrun the mark's clear space.
-    size = 72 if len(title) <= 22 else (58 if len(title) <= 32 else 46)
+    # Only a genuinely long title steps down; at PAD=120 the measure is 1040px,
+    # which 60px Charter fills at roughly thirty characters.
+    size = 60 if len(title) <= 30 else 48
+
+    # Set from the bottom up, the way the frame reads. Baselines are the line
+    # box top plus half-leading plus the ascent (~0.75em for Charter).
+    baseline = H - 48
+    title_lh = round(size * 1.05)
+    title_top = baseline - title_lh
+    title_y = round(title_top + (title_lh - size) / 2 + size * 0.75)
+    kick_top = title_top - 14 - 15
+    kick_y = round(kick_top + 1.5 + 9)
 
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" fill="none">
   <rect width="{W}" height="{H}" fill="{t['bg']}"/>
-  <rect x="0" y="0" width="{W}" height="5" fill="{EMBER}"/>
 
-  <g transform="translate({W-300} -80) scale(7.2)" opacity="{'.06' if theme=='dark' else '.05'}">
+  <g transform="translate({PAD} 44) scale(.66)">
     <path d="{M.ring_path()}" stroke="{EMBER}" stroke-width="{M.f(M.SW)}" stroke-linecap="round"/>
     <circle cx="{M.f(nx)}" cy="{M.f(ny)}" r="3.9" fill="{EMBER}"/>
     <path d="{M.letter_path()}" stroke="{t['letter']}" stroke-width="{M.f(M.AW)}" stroke-linejoin="miter" stroke-linecap="butt"/>
     <path d="{M.bar_path()}" stroke="{t['letter']}" stroke-width="{M.f(M.AW)}" stroke-linecap="butt"/>
   </g>
 
-  <g transform="translate(72 62) scale(1.45)">
-    <path d="{M.ring_path()}" stroke="{EMBER}" stroke-width="{M.f(M.SW)}" stroke-linecap="round"/>
-    <circle cx="{M.f(nx)}" cy="{M.f(ny)}" r="3.9" fill="{EMBER}"/>
-    <path d="{M.letter_path()}" stroke="{t['letter']}" stroke-width="{M.f(M.AW)}" stroke-linejoin="miter" stroke-linecap="butt"/>
-    <path d="{M.bar_path()}" stroke="{t['letter']}" stroke-width="{M.f(M.AW)}" stroke-linecap="butt"/>
-  </g>
-
-  <path d="M186 70 V162" stroke="{t['rule']}" stroke-width="1.5"/>
-
-  <text x="222" y="{110 if size >= 58 else 104}" font-family="{M.SERIF}" font-size="{size}" fill="{t['name']}">{esc(title)}</text>
-  <path d="M224 {138 if size >= 58 else 130} H274" stroke="{EMBER}" stroke-width="2.5"/>
-  <text x="226" y="{170 if size >= 58 else 162}" font-family="{M.MONO}" font-size="17" letter-spacing="5" fill="{t['sub']}">{esc(descriptor)}</text>
-
-  <path d="M72 224 H{W-72}" stroke="{t['rule']}" stroke-width="1.5"/>
-
-  <rect x="72" y="245" width="3.5" height="23" fill="{EMBER}"/>
-  <text x="89" y="264" font-family="{M.SERIF}" font-size="27" fill="{t['name']}">{esc(byline)}</text>
-  <text x="{W-72}" y="263" text-anchor="end" font-family="{M.MONO}" font-size="14" letter-spacing="3" fill="{t['meta']}">{esc(meta)}</text>
+  <text x="{PAD}" y="{kick_y}" font-family="{M.MONO}" font-size="12" letter-spacing="3.12" fill="{t['kick']}">{esc(descriptor)}</text>
+  <text x="{PAD}" y="{title_y}" font-family="{M.SERIF}" font-size="{size}" letter-spacing="{-size * 0.022:.2f}" fill="{t['name']}">{esc(title)}</text>
 </svg>
 """
 
 
 # (directory slug, banner title, descriptor line)
+#
+# The profile entry used to carry a fourth field, "Regulator · Operator ·
+# Researcher", which the byline strip printed. There is no byline strip now,
+# so the field is gone rather than left here to be silently dropped. That
+# line still appears, in the profile README, where it can be read.
 SURFACES = [
-    ("profile",             "Yasir A. Malik",       "AUDIT · RISK · GOVERNANCE",
-     "Regulator · Operator · Researcher"),
+    ("profile",             "Yasir A. Malik",       "AUDIT · RISK · GOVERNANCE"),
     ("site",                "The Site",             "PRACTICE · RESEARCH · IDENTITY"),
     ("portfolio-website",   "Portfolio",            "SELECTED WORK"),
     ("yasira-malik",        "Yasir A. Malik",       "PERSONAL SITE"),
@@ -137,14 +149,17 @@ if __name__ == "__main__":
     print(f"  contrast: every text role clears AA "
           f"(worst {worst:.2f}:1)\n")
 
-    for slug, title, descriptor, *rest in SURFACES:
-        byline = rest[0] if rest else "Yasir A. Malik"
+    for slug, title, descriptor in SURFACES:
         d = os.path.join(OUT, slug)
         os.makedirs(d, exist_ok=True)
         for theme in ("dark", "light"):
-            svg = banner(title, descriptor, theme, byline)
-            cairosvg.svg2png(bytestring=svg.encode(),
-                             write_to=os.path.join(d, f"banner-{theme}.png"),
-                             output_width=W)
+            svg = banner(title, descriptor, theme)
+            # 2x then averaged down: cairo antialiases glyphs with subpixel
+            # coverage, which is invisible on a 17px label and shows as green
+            # and yellow fringes along the stems of a 60px title.
+            png = cairosvg.svg2png(bytestring=svg.encode(), output_width=W * 2)
+            (Image.open(io.BytesIO(png)).convert("RGB")
+                  .resize((W, H), Image.LANCZOS)
+                  .save(os.path.join(d, f"banner-{theme}.png"), optimize=True))
         print(f"  {slug:22s} {title}")
     print(f"\nWrote {len(SURFACES)*2} banners to {OUT}")
