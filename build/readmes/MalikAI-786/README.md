@@ -8,6 +8,13 @@
 
 I examined banks as a regulator, ran audits inside two of them, and built and shipped an AI tool into a live audit function. Now I research what happens to professional judgment when the evidence arrives pre-interpreted.
 
+| | |
+| --- | --- |
+| **Regulator** | Safety-and-soundness examination — Florida OFR |
+| **Operator** | Fifteen years in audit and risk — Citigroup, JPMorgan Chase |
+| **Builder** | Production AI shipped into a live audit function |
+| **Researcher** | DBA candidate, Florida International University |
+
 ### What I work on
 
 **Cognitive bias in audit judgment.** An eleven-construct, fifty-five-item measurement model grounded in dual-process theory and the anchoring-and-adjustment heuristic. The question underneath it: in a recurring engagement, does this year's judgment follow this year's evidence, or last year's number?
@@ -39,9 +46,8 @@ I examined banks as a regulator, ran audits inside two of them, and built and sh
 | [**index007.html**](https://github.com/MalikAI-786/index007.html) | Its public ledger. Every call posted before the outcome is known |
 | [**claudebot-onboarding**](https://github.com/MalikAI-786/claudebot-onboarding) | The LLM walkthrough I hand to audit and risk colleagues |
 
-#### Foundations
-
-Quantitative and machine-learning work from the Columbia Engineering FinTech programme. Older, and still the reason the rest of this is possible.
+<details>
+<summary><b>Foundations</b> — quantitative and machine-learning work from the Columbia Engineering FinTech programme. Older, and still the reason the rest of this is possible.</summary>
 
 **Applied machine learning** — [DeepLearning](https://github.com/MalikAI-786/DeepLearning) · [Natural Language Processing](https://github.com/MalikAI-786/Natural_Language_Processing) · [Machine Learning Classification](https://github.com/MalikAI-786/Machine_Learning_Classification) · [Time Series](https://github.com/MalikAI-786/Time_Series)
 
@@ -50,6 +56,8 @@ Quantitative and machine-learning work from the Columbia Engineering FinTech pro
 **Distributed ledger** — [BlockChain](https://github.com/MalikAI-786/BlockChain) · [BlockChain-Python](https://github.com/MalikAI-786/BlockChain-Python) · [Decentralized-Apps](https://github.com/MalikAI-786/Decentralized-Apps)
 
 **Programme** — [Columbia-FinTech](https://github.com/MalikAI-786/Columbia-FinTech) · [Fintech Introduction](https://github.com/MalikAI-786/Fintech_Introduction) · [Python](https://github.com/MalikAI-786/Python) · [AWS](https://github.com/MalikAI-786/AWS)
+
+</details>
 
 ### Where this is pointed
 
