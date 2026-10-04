@@ -138,6 +138,22 @@ function check(name, cond, detail) {
   const idx = await page.locator('#idxNum').innerText();
   check('index computes to a number', /^\d+$/.test(idx), idx);
 
+  // --- 3-6-9 practice ---
+  await page.fill('#i369', 'Test intention line');
+  await page.waitForTimeout(150);
+  check('369 intention persists to settings', await page.evaluate(() =>
+    JSON.parse(localStorage.getItem('mizan.v1')).settings.intention369 === 'Test intention line'));
+  check('369 renders three progress rows', (await page.locator('[data-369]').count()) === 3);
+  for (let i = 0; i < 3; i++) await page.click('[data-369="morning"]');
+  await page.waitForTimeout(150);
+  const p369 = await page.evaluate(k =>
+    JSON.parse(localStorage.getItem('mizan.v1')).days[k].practice369.morning, todayKey);
+  check('369 morning count caps at target (3)', p369 === 3, String(p369));
+  check('369 morning button disables once capped',
+    await page.locator('[data-369="morning"]').isDisabled());
+  await page.reload(); await page.waitForTimeout(400);
+  check('369 intention survives reload', (await page.inputValue('#i369')) === 'Test intention line');
+
   // --- badan ---
   await page.evaluate(() => {
     const s = JSON.parse(localStorage.getItem('mizan.v1'));
@@ -149,7 +165,7 @@ function check(name, cond, detail) {
   const ratio = await page.locator('#swRatio').innerText();
   check('shoulder-to-waist ratio computes', Math.abs(parseFloat(ratio) - 49.5 / 34) < 0.002, ratio);
   check('measurement trend draws', (await page.locator('#wtChart polyline').count()) >= 1);
-  check('Best-50 renders five standards', (await page.locator('[data-b50]').count()) === 5);
+  check('Best-50 renders six standards', (await page.locator('[data-b50]').count()) === 6);
   await page.click('[data-b50="pistol"] button[data-v="3"]'); await page.waitForTimeout(200);
   check('Best-50 composite responds to a level change',
     (await page.locator('#b50Score').innerText()) !== '0%');
@@ -168,12 +184,142 @@ function check(name, cond, detail) {
   check('gym log persists', await page.evaluate(d =>
     JSON.parse(localStorage.getItem('mizan.v1')).days[d].gym.status === 'done', sat));
 
+  // --- health import ---------------------------------------------------
+  // Lives on the Record page, not the coach route: this reads a file the owner
+  // chose, in their own browser. The check that matters is not that it imports,
+  // it is that it REFUSES to overwrite something a human entered.
+  {
+    const os = require('os');
+    const hx = path.join(os.tmpdir(), 'mizan-smoke-health.xml');
+    const rows = ['<?xml version="1.0" encoding="UTF-8"?>', '<HealthData locale="en_US">'];
+    for (let i = 1; i <= 6; i++) {
+      const d = `2026-03-0${i}`;
+      const prev = i === 1 ? '2026-02-28' : `2026-03-0${i - 1}`;
+      rows.push(`<Record type="HKQuantityTypeIdentifierBodyMass" unit="lb" value="17${i}.0" startDate="${d} 07:00:00 -0500" endDate="${d} 07:00:00 -0500"/>`);
+      rows.push(`<Record type="HKQuantityTypeIdentifierStepCount" unit="count" value="9000" startDate="${d} 12:00:00 -0500" endDate="${d} 12:30:00 -0500"/>`);
+      rows.push(`<Record type="HKCategoryTypeIdentifierSleepAnalysis" value="HKCategoryValueSleepAnalysisAsleepCore" startDate="${prev} 23:00:00 -0500" endDate="${d} 07:00:00 -0500"/>`);
+      rows.push(`<Record type="HKCategoryTypeIdentifierSleepAnalysis" value="HKCategoryValueSleepAnalysisInBed" startDate="${prev} 22:00:00 -0500" endDate="${d} 08:00:00 -0500"/>`);
+      rows.push(`<Workout workoutActivityType="HKWorkoutActivityTypeTraditionalStrengthTraining" duration="60" durationUnit="min" startDate="${d} 17:00:00 -0500" endDate="${d} 18:00:00 -0500"></Workout>`);
+    }
+    // a deliberately impossible stretch: the guard must drop this, not average it
+    rows.push('<Record type="HKCategoryTypeIdentifierSleepAnalysis" value="HKCategoryValueSleepAnalysisAsleepCore" startDate="2026-03-10 23:00:00 -0500" endDate="2026-03-18 07:00:00 -0400"/>');
+    rows.push('</HealthData>');
+    require('fs').writeFileSync(hx, rows.join('\n'));
+
+    await page.goto(url('record/index.html')); await page.waitForTimeout(350);
+    check('record page carries the health import card',
+      (await page.locator('#healthBtn').count()) === 1);
+
+    // a day the owner already judged: the watch must not get a vote on it
+    await page.evaluate(() => {
+      const raw = localStorage.getItem('mizan.v1');
+      const s = raw ? JSON.parse(raw) : { v: 1, settings: {}, days: {}, urges: [], ships: {}, measures: [], best50: {} };
+      s.days = s.days || {}; s.measures = s.measures || [];
+      s.days['2026-03-02'] = { date: '2026-03-02', prayers: {}, scores: {}, weed: { sessions: [] },
+        gym: { status: 'missed-partner', note: 'trainer cancelled' }, food: {},
+        sleepHrs: 5.5, weight: 199, moved: false, friction: [0,0,0,0,0],
+        muhasaba: {}, closed: false, synthetic: false };
+      localStorage.setItem('mizan.v1', JSON.stringify(s));
+    });
+    await page.reload(); await page.waitForTimeout(350);
+
+    await page.setInputFiles('#healthFile', hx);
+    await page.waitForFunction(() => document.querySelector('#healthOut').innerText.length > 40, { timeout: 30000 });
+    const preview = await page.locator('#healthOut').innerText();
+    check('health import previews a plan before applying', /new entries/.test(preview),
+      preview.split('\n')[0]);
+    check('health import stages without writing to state', await page.evaluate(() =>
+      JSON.parse(localStorage.getItem('mizan.v1')).days['2026-03-01'] === undefined));
+
+    await page.click('#healthApply'); await page.waitForTimeout(500);
+    const after = await page.evaluate(() => {
+      const s = JSON.parse(localStorage.getItem('mizan.v1'));
+      return { kept: s.days['2026-03-02'], made: s.days['2026-03-01'] };
+    });
+    check('import writes sleep, session and weight for an untouched day',
+      after.made && after.made.sleepHrs === 8 && after.made.gym.status === 'done' &&
+      after.made.gym.src === 'health' && after.made.weight === 171);
+    check('import counts only Asleep intervals, never InBed',
+      after.made && after.made.sleepHrs === 8, String(after.made && after.made.sleepHrs));
+    check('import discards an impossible sleep stretch instead of averaging it in',
+      /discarded as impossible/.test(preview) && await page.evaluate(() =>
+        JSON.parse(localStorage.getItem('mizan.v1')).days['2026-03-18'] === undefined));
+    check('import never overwrites a human gym judgment',
+      after.kept.gym.status === 'missed-partner' && after.kept.gym.note === 'trainer cancelled');
+    check('import never overwrites a human sleep or weight entry',
+      after.kept.sleepHrs === 5.5 && after.kept.weight === 199);
+
+    // --- two phones + a watch + Fitbit, selected together ---
+    // Every device records the same walk and night; the day must take the
+    // largest single device, never the sum. Dates sit inside the 30-day chart window.
+    const fs = require('fs');
+    const ymd = n => { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); };
+    const mdy = k => k.slice(5, 7) + '/' + k.slice(8, 10) + '/' + k.slice(2, 4);
+    const dA = ymd(4), dPrev = ymd(5), dB = ymd(3);
+    const rec = (src, type, extra) => `<Record type="HK${type}" sourceName="${src}" ${extra}/>`;
+    const phoneA = path.join(os.tmpdir(), 'mizan-phoneA.xml'), phoneB = path.join(os.tmpdir(), 'mizan-phoneB.xml');
+    fs.writeFileSync(phoneA, ['<HealthData>',
+      rec('Phone A', 'QuantityTypeIdentifierStepCount', `unit="count" value="8000" startDate="${dA} 12:00:00 -0400" endDate="${dA} 13:00:00 -0400"`),
+      rec('Watch', 'QuantityTypeIdentifierStepCount', `unit="count" value="7000" startDate="${dA} 12:00:00 -0400" endDate="${dA} 13:00:00 -0400"`),
+      rec('Watch', 'CategoryTypeIdentifierSleepAnalysis', `value="HKCategoryValueSleepAnalysisAsleepCore" startDate="${dPrev} 23:00:00 -0400" endDate="${dA} 06:00:00 -0400"`),
+      rec('Phone A', 'CategoryTypeIdentifierSleepAnalysis', `value="HKCategoryValueSleepAnalysisAsleepUnspecified" startDate="${dPrev} 23:30:00 -0400" endDate="${dA} 05:30:00 -0400"`),
+      '</HealthData>'].join('\n'));
+    fs.writeFileSync(phoneB, ['<HealthData>',
+      rec('Phone B', 'QuantityTypeIdentifierStepCount', `unit="count" value="9500" startDate="${dA} 09:00:00 -0400" endDate="${dA} 18:00:00 -0400"`),
+      '</HealthData>'].join('\n'));
+    const fbDir = path.join(os.tmpdir(), 'mizan-fitbit'); fs.mkdirSync(fbDir, { recursive: true });
+    const fbSteps = path.join(fbDir, `steps-${dB}.json`), fbSleep = path.join(fbDir, `sleep-${dB}.json`),
+          fbRhr = path.join(fbDir, `resting_heart_rate-${dB}.json`);
+    fs.writeFileSync(fbSteps, JSON.stringify([{ dateTime: mdy(dB) + ' 10:00:00', value: '6000' }, { dateTime: mdy(dB) + ' 16:00:00', value: '5000' }]));
+    fs.writeFileSync(fbSleep, JSON.stringify([{ dateOfSleep: dB, minutesAsleep: 390, mainSleep: true }]));
+    fs.writeFileSync(fbRhr, JSON.stringify([{ dateTime: mdy(dB) + ' 00:00:00', value: { date: mdy(dB), value: 58.4, error: 6 } }]));
+
+    await page.reload(); await page.waitForTimeout(300);
+    await page.setInputFiles('#healthFile', [phoneA, phoneB, fbSteps, fbSleep, fbRhr]);
+    await page.waitForFunction(() => /new entries|Nothing new/.test(document.querySelector('#healthOut').innerText), { timeout: 30000 });
+    const multi = await page.locator('#healthOut').innerText();
+    check('multi-file import names every device it saw', /Phone A/.test(multi) && /Phone B/.test(multi) && /Fitbit/.test(multi) && /Watch/.test(multi), multi.split('\n')[0]);
+    await page.click('#healthApply'); await page.waitForTimeout(400);
+    const md = await page.evaluate(([a, b]) => { const s = JSON.parse(localStorage.getItem('mizan.v1')); return [s.days[a], s.days[b]]; }, [dA, dB]);
+    check('steps across phone, watch and second phone take the largest device, not the sum',
+      md[0] && md[0].steps === 9500, String(md[0] && md[0].steps));
+    check('sleep across watch and phone takes the largest device, not the sum',
+      md[0] && md[0].sleepHrs === 7, String(md[0] && md[0].sleepHrs));
+    check('Fitbit JSON imports steps, sleep and resting heart rate',
+      md[1] && md[1].steps === 11000 && md[1].sleepHrs === 6.5 && md[1].rhr === 58, JSON.stringify(md[1] && [md[1].steps, md[1].sleepHrs, md[1].rhr]));
+
+    await page.goto(url('badan/index.html')); await page.waitForTimeout(400);
+    check('health charts draw imported steps as bars',
+      (await page.locator(`#hSteps rect title:text-is("${dA} · 9.5k")`).count()) === 1);
+    check('health charts draw sleep against the target line',
+      (await page.locator('#hSleep text', { hasText: 'target' }).count()) === 1 &&
+      /Mean/.test(await page.locator('#hSleepNote').innerText()));
+    check('health charts draw resting heart rate',
+      (await page.locator('#hRhr circle').count()) >= 1);
+  }
+
   // --- cross-page day continuity, persistence, theme ---
   await page.goto(url('day/index.html')); await page.waitForTimeout(500);
   check('viewed day carries from Badan to Day', (await page.inputValue('#dayPicker')) === sat, sat);
   const before = await page.locator('#idxNum').innerText();
   await page.reload(); await page.waitForTimeout(500);
   check('state survives reload', (await page.locator('#idxNum').innerText()) === before, before);
+
+  // --- .ics export (record page) ---
+  await page.goto(url('record/index.html')); await page.waitForTimeout(400);
+  const ics = await page.evaluate(async () => {
+    let captured = null;
+    URL.createObjectURL = b => { captured = b; return 'blob:mizan-test'; };
+    URL.revokeObjectURL = () => {};
+    HTMLAnchorElement.prototype.click = () => {};
+    document.querySelector('#icsBtn').click();
+    return captured ? await captured.text() : '';
+  });
+  const vevents = (ics.match(/BEGIN:VEVENT/g) || []).length;
+  check('ics export is a calendar with 3 sessions + 4 prompts', /^BEGIN:VCALENDAR/.test(ics) && vevents === 7, String(vevents));
+  check('ics training sessions carry the real per-day hours',
+    /DTSTART:\d{8}T073000\r\nDTEND:\d{8}T090000\r\nRRULE:FREQ=WEEKLY;BYDAY=SA/.test(ics)
+    && /DTSTART:\d{8}T164500\r\nDTEND:\d{8}T181500\r\nRRULE:FREQ=WEEKLY;BYDAY=MO/.test(ics));
 
   await page.click('#themeBtn'); await page.waitForTimeout(250);
   check('theme toggles to light',
