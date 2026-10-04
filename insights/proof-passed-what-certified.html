@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The proof passed. What did the check certify? · Yasir A. Malik</title>
+<meta name="description" content="A machine-checkable proof certified ten mathematical results in August 2026. The argument that followed was not about whether they were true.">
+<link rel="stylesheet" href="../assets/brand/tokens.css">
+<link rel="stylesheet" href="../intake/intake.css">
+<link rel="icon" href="../assets/brand/favicon.svg">
+</head>
+<body>
+<header>
+<a href="../index.html">Yasir A. Malik</a>
+<nav aria-label="Main">
+<a href="../newsletter.html">Newsletter</a>
+<a href="../intake/">Start a conversation</a>
+</nav>
+</header>
+<main>
+<article>
+
+<p class="eyebrow">Field note · 16 September 2026</p>
+
+<h1>The proof passed.<br>What did the check certify?</h1>
+
+<p class="intro">In August a machine-checkable proof certified ten mathematical results. The argument that followed was not about whether they were true.</p>
+
+<p>On 1 August 2026 OpenAI published ten mathematical results together with their formal proofs, in a public repository. I went and read the manifest, because the manifest is the part an examiner would ask for.</p>
+
+<p>It is a file called <code>formalization.yaml</code>. It reports <code>sorry_count: 0</code>. In Lean, a <code>sorry</code> is an admitted gap, a place where the author asserts a step rather than proving it. Zero of them means the proof chain is closed end to end. The axioms listed are the ordinary three that most of formalized mathematics runs on. It was built on Lean 4.32.0 against mathlib, and the manifest puts the wall time at one week.</p>
+
+<p>That is a real control and it produced a real pass. A formal proof assistant cannot be talked into agreeing with you. It has no sense of whether an argument sounds authoritative. Against a plausible but wrong proof it is far stronger than a human referee, and anyone in model risk should want more of it, not less.</p>
+
+<p>Then read what happened next, because nobody disputed that the theorems were true.</p>
+
+<h2>What does a passing check actually certify?</h2>
+
+<p>Quanta put the limit in a parenthesis, which is where the load-bearing sentence usually ends up. The verification that still has to be done by humans is confirming that the statement shown to be true in Lean is logically equivalent to what the mathematicians set out to prove.</p>
+
+<p>Read that as a control description. Lean tests one assertion: this proof establishes this formal statement. It does not test the assertion anyone actually cares about, which is that the formal statement is the problem we meant. The translation from the mathematics into the formal language sits outside the control boundary. It is done by people, or now by a model, and the passing check says nothing about it.</p>
+
+<p>This is the shape I have spent fifteen years writing up. A control operates. Evidence of operation exists and is clean. The control tests something adjacent to the risk. The file closes.</p>
+
+<p>The same repository shows how easily this gets flattened. There are twelve <code>sorry</code> statements elsewhere in it, in a directory used to state each target theorem for an independent checking harness. They are deliberate and they are not gaps in the proofs. Several write-ups reported the zero and mentioned neither the directory nor the reason. Both facts take about a minute to check against the repository. Nobody checked, because the number had already answered the question.</p>
+
+<p><strong>On Monday.</strong> When a control returns a binary pass, write down the assertion it tested. Underneath it write the assertion you need. If those two sentences are not the same sentence, what you are holding is scope, not assurance. Put the difference in the file before it becomes the thing nobody wrote down.</p>
+
+<h2>Who reviewed it?</h2>
+
+<p>The same manifest carries a field called <code>review</code>. Its value is <code>agent-reviewed</code>.</p>
+
+<p>So the argument was produced by a model. The formalization into Lean was produced by a model. The review was performed by a model. That is disclosed, in public, in a machine-readable file, by the people who built it. Nothing here was concealed.</p>
+
+<p>My own supervisors rewrote the definition of review four months earlier. SR 26-2 replaced SR 11-7 on 17 April 2026, and it defines effective challenge as critical analysis by objective experts, performed by people with appropriate expertise, sufficient independence to maintain objectivity and the organizational standing to actually effect a change. That guidance governs model risk at large banking organizations. It does not govern anybody's mathematics, and I am not pretending otherwise.</p>
+
+<p>Use it as a test anyway, because it is the sharpest three-part test of review I know. Expertise: the reviewing agent had the same capability as the producing one, which is not independent expertise but the same expertise applied twice. Independence: none, in the sense the guidance means. Standing to effect a change: an agent cannot decline to ship. A review that structurally cannot say no is not a control. It is a step.</p>
+
+<p>What broke was the characterization. The first version of the announcement described the problems as having seen no progress on the main result for at least a decade. That language was later revised. Stephen Miller of Yeshiva University, whose 2016 paper contains the key argument behind the sphere-packing result, said the work ran roughshod over people who came before, deliberately, and that it pointed to research misconduct. Francesco Fournier-Facio of Cambridge said he was stunned by one result until he engaged with it as he would if a human had written it, at which point the key step resolved into ideas from papers published in 2016 and 2019. His summary of the capability is the most useful sentence I have read this year: superhuman patience for assembling pieces, not a profound intellectual leap.</p>
+
+<p>Correctness was never contested. The proofs hold. What failed was the review of what the result <em>was</em>, and that is the review that had been handed to an agent.</p>
+
+<p>There is a precedent worth the number. In October 2025 an OpenAI executive posted that the model had solved ten previously unsolved problems from the Erdős database. The underlying observation had been accurate and much narrower: the problems were <em>listed as open</em>, and the model had found existing papers that solved them. Thomas Bloom, who maintains the database, corrected it publicly, explaining that open status only means he personally was unaware of a paper solving it. The post was retracted in under three hours.</p>
+
+<p>Under three hours is fast. Notice who did it. The correction came from the one person who knew what the status field meant, not from anyone in the chain that published the claim. Every reviewer in that chain could reasonably assume someone closer to the work had checked. This is the failure I find hardest to write up, because it is nobody's error. The analyst assumes the reviewer verifies. The reviewer assumes the analyst confirmed. The approver assumes the tool was validated. Everyone behaves reasonably and the checking does not happen.</p>
+
+<p>The shortcut underneath it is documented. Mosier and Skitka named automation bias in 1996 and split it in two: acting on a bad automated cue, and failing to act on what the automation never raised. The second is the expensive one. An exception report with no exceptions ends the inquiry, and nobody writes a memo about the thing that was not flagged, because there is no artifact to write it about. Skitka, Mosier and Burdick put evidence under it in 1999, finding that people working with a highly but imperfectly reliable aid made <em>more</em> monitoring errors than people working without one. A verification that returns zero gaps is that exception report in its most persuasive available form.</p>
+
+<p>There is a finding from my own field that I think about more than any of these. Tan and Yip-Ow tested in 2001 whether audit reviewers are swayed by the conclusion a preparer has already written into the workpaper. They are. The part that matters is what reduced it: reviewers leaned on that conclusion <em>less</em> when the memo was visibly stylized, when it read as advocacy and the shaping showed. The anchor works best when it looks neutral.</p>
+
+<p>Sit with that alongside a manifest. Machine output arrives with no author to argue with, no rhetorical tells, no visible stake in the answer and uniform formatting. It is the most neutral-looking document a reviewer will ever be handed, which by that finding makes it close to the most anchoring. Twenty-five years ago the tell was a memo that read like it was selling something. There is no tell now.</p>
+
+<p><strong>On Monday.</strong> Name the accountable reviewer for the output in the document, before the work starts. Not the process owner. The person answerable for that specific conclusion. Then ask three people in the chain who verified it. If you get three different names and none of them is the speaker, you have found the finding.</p>
+
+<h2>What I am not claiming</h2>
+
+<p>I am not claiming the mathematics is wrong, because as far as I can tell it is right, and the formal verification is a genuine advance over what came before it. I am not claiming the disclosure was inadequate. The manifest told me everything I have used here.</p>
+
+<p>On 11 September 2026 twenty-five Fields Medallists, Terence Tao among them, signed a declaration arguing that the push to solve mathematical problems as a benchmark is detrimental to mathematics, and that mass-producing true statements at increasing speed could destroy fertile ground rather than create it. It does not dispute correctness either. It closes on a question I would put to any institution deploying these systems: how do we make sure that, as this changes the way the work is done, we do not lose sight of what the work was meant to achieve.</p>
+
+<p>The part I cannot resolve is narrower and it is the one I would want an examiner to press on. If the check is machine-run and the review of the check is machine-run, the residual human control is the translation of the problem into the thing that got checked. I do not yet know how you would evidence that control. I know what it would look like if it were absent, because it looked like August.</p>
+
+<p>If something here is wrong, overstated or too confident, tell me: <a href="mailto:YasirAMalik@gmail.com">YasirAMalik@gmail.com</a>. I would rather be corrected than agreed with.</p>
+
+</article>
+<footer>
+<p>Yasir A. Malik · Audit · Risk · Governance</p>
+<p>Original commentary. Quotations and figures are drawn from public sources, including the published repository manifest, and are attributed to their authors rather than endorsed by them. No affiliation or endorsement is implied. Drafting assistance was used and is disclosed; the judgment is mine.</p>
+</footer>
+</main>
+</body>
+</html>
