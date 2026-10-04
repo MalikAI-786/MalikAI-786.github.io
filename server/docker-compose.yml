@@ -1,0 +1,34 @@
+# For a DigitalOcean Droplet. Brings up Postgres and the API together.
+#   1. copy .env.example to .env and fill it in
+#   2. docker compose up -d
+#   3. docker compose exec -T db psql -U postgres -d mizan < sql/001_schema.sql   (see README)
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: mizan
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    # deliberately not published to the host: the API reaches it over the
+    # compose network, and an exposed 5432 on a public droplet is a bad night
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
+
+  api:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      DATABASE_URL: postgresql://mizan_app:${MIZAN_APP_PASSWORD}@db:5432/mizan
+      PGSSL: "off"          # traffic never leaves the compose network
+      PUBLIC_URL: ${PUBLIC_URL}
+      APP_URL: ${APP_URL}
+    ports:
+      - "127.0.0.1:8080:8080"   # bind to loopback; put Caddy or nginx in front for TLS
+volumes:
+  dbdata:

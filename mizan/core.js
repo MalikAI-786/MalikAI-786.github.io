@@ -102,21 +102,36 @@ var PHASES=[
 var S=null;
 function blankDay(k){return {date:k,forecast:null,prayers:{},dhikrMin:0,sprints:0,
   oneThing:'',oneThingDone:false,scores:{},weed:{sessions:[],clean:false,fog:0},
-  gym:{},food:{},weight:null,sleepHrs:null,moved:false,
+  gym:{},food:{},weight:null,sleepHrs:null,moved:false,steps:null,rhr:null,
   friction:[false,false,false,false,false],hyper:'',
-  muhasaba:{shukr:'',khata:'',kal:''},closed:false,synthetic:false}}
+  muhasaba:{shukr:'',khata:'',kal:''},closed:false,synthetic:false,
+  practice369:{morning:0,midday:0,evening:0}}}
 function defaults(){return {v:1,settings:{lat:40.7128,lng:-74.0060,method:'ISNA',asr:1,
   path:'taper',start:iso(new Date()),cap:2,floorHour:20,weights:Object.assign({},DEFW),
-  gymDays:[0,2,4,6],gymHour:17,partner:'your training partner',proteinTarget:150,sleepTarget:7},
+  /* Sun/Sat 07:30, Mon 16:45 — matches the owner's actual recurring calendar
+     events, not the guessed Sun/Tue/Thu/Sat 17:00 this shipped with. Every
+     adherence and collision number reads off this, so it has to be the real
+     schedule, not a plausible-looking one. gymHour is the fallback for a day
+     with no override in gymHourByDay. */
+  gymDays:[0,1,6],gymHour:17,gymHourByDay:{0:7.5,1:16.75,6:7.5},
+  partner:'your training partner',proteinTarget:150,sleepTarget:7,intention369:''},
   days:{},urges:[],ships:{},measures:[],best50:{}}}
+/* The hour actually used for day k's session: an explicit per-day override
+   if one exists, else the flat fallback. Kept as one function so every read
+   site agrees, rather than three copies of the same lookup drifting apart. */
+function gymHourFor(dow){
+  var h=(S.settings.gymHourByDay||{})[dow];
+  return h!=null ? +h : +S.settings.gymHour;
+}
 function load(){
   try{var raw=localStorage.getItem(KEY); S=raw?JSON.parse(raw):defaults();}
   catch(e){S=defaults()}
   var d=defaults(); S.settings=Object.assign({},d.settings,S.settings||{});
   S.settings.weights=Object.assign({},DEFW,S.settings.weights||{});
+  S.settings.gymHourByDay=S.settings.gymHourByDay||{};
   S.days=S.days||{}; S.urges=S.urges||[]; S.ships=S.ships||{};
   S.measures=S.measures||[]; S.best50=S.best50||{};
-  if(!Array.isArray(S.settings.gymDays)) S.settings.gymDays=[0,2,4,6];
+  if(!Array.isArray(S.settings.gymDays)) S.settings.gymDays=[0,1,6];
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
   console.warn('storage full',e)}}
@@ -125,6 +140,7 @@ function day(k){ if(!S.days[k]) S.days[k]=blankDay(k);
   d.weed.sessions=d.weed.sessions||[]; d.scores=d.scores||{}; d.prayers=d.prayers||{};
   d.muhasaba=d.muhasaba||{shukr:'',khata:'',kal:''};
   d.gym=d.gym||{}; d.food=d.food||{};
+  d.practice369=d.practice369||{morning:0,midday:0,evening:0};
   if(!Array.isArray(d.friction)||d.friction.length!==5) d.friction=[false,false,false,false,false];
   return d}
 function has(k){return Object.prototype.hasOwnProperty.call(S.days,k)}
@@ -452,6 +468,28 @@ function renderToday(){
     .filter(function(x){return x!=null});
   $('#sprint7').textContent=s7.length?mean(s7).toFixed(1):'—';
 
+  render369(d);
+}
+
+/* ---- the 3-6-9 practice: write one intention 3× morning, 6× midday, 9×
+   evening. Constructed, provenance D — see references/citations.md. The
+   intention is a single running line (S.settings.intention369), not a
+   per-day field: a focus practice loses the point if it resets daily. The
+   counts DO reset daily, in blankDay()/day(), because the repetition is
+   the point and yesterday's reps do not carry over. ---- */
+var P369=[['morning',3],['midday',6],['evening',9]];
+function render369(d){
+  if(!$('#i369')) return;
+  $('#i369').value=S.settings.intention369||'';
+  var p=d.practice369||{morning:0,midday:0,evening:0};
+  $('#p369Rows').innerHTML=P369.map(function(x){
+    var k=x[0],target=x[1],n=Math.min(target,+p[k]||0),done=n>=target;
+    return '<div class="row" style="align-items:center;gap:10px;margin-top:8px">'+
+      '<span class="tag" style="width:64px;text-transform:capitalize">'+k+'</span>'+
+      '<span class="mono" style="min-width:38px">'+n+' / '+target+'</span>'+
+      '<button class="btn'+(done?'':' primary')+'" data-369="'+k+'" data-369-max="'+target+'"'+
+      (done?' disabled':'')+' style="padding:4px 10px">'+(done?'done':'+1')+'</button></div>'
+  }).join('');
 }
 
 function renderPrayers(d,dt){
@@ -494,7 +532,8 @@ function renderPrayers(d,dt){
     g+='<rect x="'+(X(9+i*1.2)-2)+'" y="56" width="4" height="14" fill="var(--gold)" opacity=".8"/>';
   }
   if(isGymDay(CUR)){
-    var ga=X(+S.settings.gymHour), gb=X(+S.settings.gymHour+1.5);
+    var gh0=gymHourFor(parseISO(CUR).getDay());
+    var ga=X(gh0), gb=X(gh0+1.5);
     g+='<rect x="'+ga+'" y="52" width="'+(gb-ga)+'" height="7" fill="var(--good)" opacity=".8"/>';
     g+='<text x="'+(ga+4)+'" y="70" fill="var(--good)" font-size="9" font-family="ui-monospace,monospace">gym</text>';
   }
@@ -905,7 +944,7 @@ function renderAll(){
   var d=day(CUR),dt=parseISO(CUR);
   renderNav(); renderDayBar(); renderToday(); renderPrayers(d,dt); renderMeasures(d); renderFriction(d);
   renderHyperLog(); renderLedgerToday(d); renderReference(); renderLadder(); renderPhases();
-  renderTrend(); renderSettings(); renderBadan(); renderDash(); renderForceDiagram();
+  renderTrend(); renderSettings(); renderBadan(); renderHealth(); renderDash(); renderForceDiagram();
 }
 
 /* ==================================================================
@@ -954,14 +993,14 @@ function renderDash(){
    {k:'Days closed',v:closed14,u:'/14',href:'day/',
     note:closed14>=12?'audit trail complete':closed14>=7?'holding':'the record has gaps'},
    {k:'Next session',v:ng?(ng===todayK()?'today':DOW[parseISO(ng).getDay()]):'—',u:'',href:'badan/',
-    note:ng?hm(S.settings.gymHour)+' · '+((ROT[parseISO(ng).getDay()]||{}).n||''):'no training days set'},
+    note:ng?hm(gymHourFor(parseISO(ng).getDay()))+' · '+((ROT[parseISO(ng).getDay()]||{}).n||''):'no training days set'},
    {k:'Training 28d',v:sched?Math.round(done/sched*100):'—',u:sched?'%':'',href:'badan/',
     note:sched?done+' of '+sched+' sessions':'nothing scheduled'},
    {k:'Calibration',v:pairs.length>=3?(mean(pairs)>0?'+':'')+mean(pairs).toFixed(1):'—',u:'',href:'record/',
     note:pairs.length>=3?(mean(pairs)<-4?'over-forecasting yourself':mean(pairs)>4?'under-forecasting':'well calibrated')
       :'needs '+(3-pairs.length)+' more forecast days'},
-   {k:'Best 50',v:Math.round(B50.reduce(function(a,x){return a+(+(S.best50||{})[x.id]||0)},0)/25*100),u:'%',href:'badan/',
-    note:'composite of five standards'}
+   {k:'Best 50',v:Math.round(B50.reduce(function(a,x){return a+(+(S.best50||{})[x.id]||0)},0)/(B50.length*5)*100),u:'%',href:'badan/',
+    note:'composite of '+B50.length+' standards'}
   ];
   $('#dashGrid').innerHTML=tiles.map(function(t){
     var root=document.body.getAttribute('data-root')||'';
@@ -1001,6 +1040,9 @@ document.addEventListener('click',function(e){
   if(t.hasAttribute('data-fog')){ day(CUR).weed.fog=+t.getAttribute('data-fog'); touch(); return }
   if(t.hasAttribute('data-path')){ S.settings.path=t.getAttribute('data-path'); touch(); return }
   if(t.hasAttribute('data-delsess')){ day(CUR).weed.sessions.splice(+t.getAttribute('data-delsess'),1); touch(); return }
+  if(t.hasAttribute('data-369')){
+    var k369=t.getAttribute('data-369'),max369=+t.getAttribute('data-369-max');
+    var p369=day(CUR).practice369; p369[k369]=Math.min(max369,(+p369[k369]||0)+1); touch(); return }
 });
 
 document.addEventListener('change',function(e){
@@ -1018,6 +1060,7 @@ on('#fcInput','change',function(e){var v=e.target.value;
   day(CUR).forecast= v===''? null : clamp(+v,0,100); touch()});
 on('#oneThing','input',function(e){day(CUR).oneThing=e.target.value; save()});
 on('#oneThingDone','change',function(e){day(CUR).oneThingDone=e.target.checked; touch()});
+on('#i369','input',function(e){S.settings.intention369=e.target.value; save()});
 on('#hyper','input',function(e){day(CUR).hyper=e.target.value; save()});
 ['#mShukr','#mKhata','#mKal'].forEach(function(sel){
   on(sel,'input',function(e){
@@ -1116,6 +1159,41 @@ on('#exportBtn','click',function(){
   var blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
   var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
   a.download='mizan-'+todayK()+'.json'; a.click(); URL.revokeObjectURL(a.href)});
+
+/* ---- .ics export: the instrument's schedule as calendar events, for apps
+   that aren't already carrying it. Floating local times, no TZID — every
+   calendar app treats them as the device's local time, which is what a
+   daily prompt should be. Prompt times match the owner's Google Calendar
+   so a second import stays consistent with the first. ---- */
+var ICS_PROMPTS=[
+  ['3-6-9 · morning — write the intention 3×',6,35,10],
+  ['3-6-9 · midday — write the intention 6×',12,30,10],
+  ['3-6-9 · evening — write the intention 9×',21,45,10],
+  ['Mīzān · nightly close — muḥāsaba',21,55,15]];
+var ICS_BYDAY=['SU','MO','TU','WE','TH','FR','SA'];
+function icsStamp(d){return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(d.getHours())+pad(d.getMinutes())+'00'}
+function icsEvent(uid,summary,start,minutes,rrule){
+  var end=new Date(start.getTime()+minutes*60000);
+  return ['BEGIN:VEVENT','UID:'+uid+'@mizan','DTSTAMP:'+icsStamp(new Date()),
+    'DTSTART:'+icsStamp(start),'DTEND:'+icsStamp(end),'RRULE:'+rrule,
+    'SUMMARY:'+summary,'TRANSP:TRANSPARENT',
+    'BEGIN:VALARM','TRIGGER:PT0M','ACTION:DISPLAY','DESCRIPTION:'+summary,'END:VALARM',
+    'END:VEVENT'].join('\r\n')}
+function buildIcs(){
+  var now=new Date(),ev=[];
+  (S.settings.gymDays||[]).forEach(function(dow){
+    var h=gymHourFor(dow),d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+((dow-now.getDay()+7)%7));
+    d.setHours(Math.floor(h),Math.round((h%1)*60),0,0);
+    ev.push(icsEvent('gym-'+dow,'Training session',d,90,'FREQ=WEEKLY;BYDAY='+ICS_BYDAY[dow]))});
+  ICS_PROMPTS.forEach(function(p,i){
+    var d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),p[1],p[2],0,0);
+    ev.push(icsEvent('prompt-'+i,p[0],d,p[3],'FREQ=DAILY'))});
+  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Mizan//self-audit//EN','CALSCALE:GREGORIAN',
+    'X-WR-CALNAME:Mīzān'].concat(ev,['END:VCALENDAR']).join('\r\n')+'\r\n'}
+on('#icsBtn','click',function(){
+  var blob=new Blob([buildIcs()],{type:'text/calendar'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='mizan-schedule.ics'; a.click(); URL.revokeObjectURL(a.href)});
 on('#importBtn','click',function(){$('#importFile').click()});
 on('#importFile','change',function(e){
   var f=e.target.files[0]; if(!f) return;
@@ -1128,9 +1206,10 @@ on('#importFile','change',function(e){
 function load2(){ var d=defaults();
   S.settings=Object.assign({},d.settings,S.settings||{});
   S.settings.weights=Object.assign({},DEFW,S.settings.weights||{});
+  S.settings.gymHourByDay=S.settings.gymHourByDay||{};
   S.days=S.days||{}; S.urges=S.urges||[]; S.ships=S.ships||{};
   S.measures=S.measures||[]; S.best50=S.best50||{};
-  if(!Array.isArray(S.settings.gymDays)) S.settings.gymDays=[0,2,4,6] }
+  if(!Array.isArray(S.settings.gymDays)) S.settings.gymDays=[0,1,6] }
 on('#wipeBtn','click',function(){
   if(confirm('Erase every entry permanently? Export first if you want a copy.')){
     localStorage.removeItem(KEY); S=defaults(); touch()}});
@@ -1162,6 +1241,8 @@ function makeSample(){
     ['dhikr','zabt','attn','ihsan'].forEach(function(id){
       d.scores[id]=clamp(Math.round(rnd()*2+arc*1.4),0,3)});
     d.sleepHrs=+(5.8+rnd()*2.4).toFixed(2);
+    d.steps=Math.round(3500+rnd()*7000+arc*1500); d.rhr=Math.round(66-arc*4+rnd()*4);
+    d.weight=+(182-arc*2+rnd()*1.2).toFixed(1);
     d.moved=rnd()<0.4;
     if(isGymDay(k)) d.gym={status: rnd()<0.35+arc*0.4?'done':(rnd()<0.6?'missed-me':'missed-partner'),rpe:Math.round(5+rnd()*4)};
     d.food={protein:rnd()<0.4+arc*0.4,window:rnd()<0.5+arc*0.3,thirds:rnd()<0.45+arc*0.3,late:rnd()<0.5+arc*0.3};
@@ -1209,7 +1290,9 @@ var B50=[
  {id:'pistol',n:'Pistol squat',lv:['not started','box pistol to a high box','to a low box','assisted full — band or TRX','one clean rep each leg','three clean reps each leg'],
   drill:['Ankle range first — knee-to-wall test. Then heel-elevated split squats.','Box pistols, 3×5 a side, controlled descent.','Lower the box an inch a week. Counterweight a plate at the chest.','TRX-assisted full range; take the hands off progressively.','One rep, then stand up straight before celebrating.','Three, clean, no hand touch, both sides.']},
  {id:'burpees',n:'50 burpees in 2:00',lv:['under 20 in 2:00','20–29','30–37','38–44','45–49','50 or more'],
-  drill:['Build the engine: 8×20s hard / 40s easy, twice a week.','Practise the step-back version to save the shoulders. Cadence over speed.','Intervals at target pace: 5×20 burpees, 60s rest.','Two sets of 25 with 45s rest. Close the gap.','One set of 40 at pace, then finish.','Test it, then keep it — this one decays fastest.']}
+  drill:['Build the engine: 8×20s hard / 40s easy, twice a week.','Practise the step-back version to save the shoulders. Cadence over speed.','Intervals at target pace: 5×20 burpees, 60s rest.','Two sets of 25 with 45s rest. Close the gap.','One set of 40 at pace, then finish.','Test it, then keep it — this one decays fastest.']},
+ {id:'pullup',n:'Strict pull-up',lv:['not started','dead hang, 20s','1–2 strict reps','5 strict reps','10 strict reps','15 strict reps, dead hang to chin'],
+  drill:['Dead hangs, 3×max, plus scapular pulls — build the hang before the pull.','Negatives, 5×5s descent, then band-assisted reps.','Reduce the band each week; grease the groove with 3 singles across the day.','5×5 at a moderate band, cluster sets, 90s rest.','Weighted holds at the top; add a rep every two weeks.','Add load. This is the one where progress means the next 5lb, not the next rep.']}
 ];
 
 function gymRotFor(k){ return ROT[parseISO(k).getDay()]||null }
@@ -1225,7 +1308,7 @@ function badanScore(d){
   return n>=3?3:n;
 }
 function gymPrayerRule(k){
-  var pt=prayerTimes(parseISO(k)),a=+S.settings.gymHour,b=a+1.5,W=windows(pt),out=[];
+  var pt=prayerTimes(parseISO(k)),a=gymHourFor(parseISO(k).getDay()),b=a+1.5,W=windows(pt),out=[];
   PRAYERS.forEach(function(p){
     var t=pt[p.id],w=W[p.id];
     if(isNaN(t)) return;
@@ -1240,11 +1323,15 @@ function renderBadan(){
   if(!$('#gymSched')) return;
   var d=day(CUR),st=S.settings;
   $('#partnerName').textContent=st.partner;
-  $('#gymSched').textContent=st.gymDays.slice().sort().map(function(i){return DOW[i]}).join(' · ')+
-    ' at '+hm(st.gymHour)+' · 90 min';
+  /* Per-day times, not one blanket hour — Sat/Sun and Mon genuinely differ,
+     and showing a single averaged-looking time here is how the mismatch with
+     the calendar went unnoticed for as long as it did. */
+  $('#gymSched').textContent=st.gymDays.slice().sort(function(a,b){
+      return (a===6?-1:b===6?1:a-b)}).map(function(i){
+    return DOW[i]+' '+hm(gymHourFor(i))}).join(' · ')+' · 90 min';
   var ng=nextGymDay();
-  $('#nextGym').textContent= ng? (ng===todayK()?'today':DOW[parseISO(ng).getDay()])+' '+hm(st.gymHour)+
-    ' — '+(ROT[parseISO(ng).getDay()]||{}).n : '—';
+  $('#nextGym').textContent= ng? (ng===todayK()?'today':DOW[parseISO(ng).getDay()])+' '+
+    hm(gymHourFor(parseISO(ng).getDay()))+' — '+(ROT[parseISO(ng).getDay()]||{}).n : '—';
 
   // today's session
   var rot=gymRotFor(CUR),g=d.gym||{};
@@ -1344,6 +1431,93 @@ function renderBadan(){
   $('#setProtein').value=st.proteinTarget; $('#setSleep').value=st.sleepTarget;
   $('#gymDayPick').innerHTML=DOW.map(function(n,i){
     return '<button data-gd="'+i+'" class="'+(st.gymDays.indexOf(i)>=0?'on':'')+'">'+n+'</button>'}).join('');
+  /* One start-time field per selected day, not one field for all of them —
+     the whole point of gymHourByDay is that Sat/Sun and Mon are not the same
+     time, and a single shared input would silently paper back over that. */
+  if($('#gymHourPick')) $('#gymHourPick').innerHTML=st.gymDays.slice().sort(function(a,b){
+      return (a===6?-1:b===6?1:a-b)}).map(function(i){
+    return '<div class="field" style="margin:0"><label class="fl">'+DOW[i]+' start (24h)</label>'+
+      '<input type="number" data-gh="'+i+'" min="4" max="23" step="0.25" value="'+gymHourFor(i)+'" /></div>'}).join('');
+}
+
+/* ---- health charts: four small multiples over the last 30 days. Every
+   value is a device reading or the owner's own entry — nothing here is
+   interpolated. A missing day is drawn as missing. ---- */
+var HEALTH_DAYS=30;
+function healthSeries(key){
+  return recentKeys(HEALTH_DAYS).map(function(k){
+    var d=has(k)?S.days[k]:null, v=d&&d[key]!=null&&d[key]!==''?+d[key]:null;
+    return {k:k,v:isFinite(v)?v:null,gym:!!(d&&d.gym&&d.gym.status==='done'),syn:!!(d&&d.synthetic)};
+  });
+}
+function hChart(sel,pts,o){
+  /* type is sized for a 390px phone, where this 640 viewBox renders ~290px wide */
+  var W=640,H=200,PL=58,PR=14,PT=22,PB=38,n=pts.length,bw=(W-PL-PR)/n,FS=17;
+  var vals=pts.filter(function(p){return p.v!=null}).map(function(p){return p.v});
+  var mono='font-family="ui-monospace,monospace"';
+  if(!vals.length){
+    $(sel).innerHTML='<text x="20" y="100" fill="var(--faint)" font-size="'+FS+'" '+mono+'>'+o.empty+'</text>';
+    return null;
+  }
+  var lo=o.zero?0:Math.min.apply(null,vals),hi=Math.max.apply(null,vals.concat(o.ref!=null?[o.ref]:[]));
+  if(!o.zero){ var pad=Math.max(1,(hi-lo)*0.2); lo-=pad; hi+=pad } else hi*=1.12;
+  if(hi-lo<1e-9) hi=lo+1;
+  var Y=function(v){return PT+(1-(v-lo)/(hi-lo))*(H-PT-PB)};
+  var X=function(i){return PL+i*bw+bw/2};
+  var g='<line x1="'+PL+'" y1="'+(H-PB)+'" x2="'+(W-PR)+'" y2="'+(H-PB)+'" stroke="var(--line)"/>';
+  var vmin=Math.min.apply(null,vals),vmax=Math.max.apply(null,vals);
+  (o.zero?[0,vmax]:[vmin,vmax]).forEach(function(t){
+    g+='<text x="'+(PL-8)+'" y="'+(Y(t)+6)+'" text-anchor="end" fill="var(--faint)" font-size="'+FS+'" '+mono+'>'+o.fmt(t)+'</text>'});
+  if(o.ref!=null){
+    g+='<line x1="'+PL+'" x2="'+(W-PR)+'" y1="'+Y(o.ref).toFixed(1)+'" y2="'+Y(o.ref).toFixed(1)+'" stroke="var(--gold)" stroke-dasharray="4 4"/>'+
+       '<text x="'+(W-PR)+'" y="'+(Y(o.ref)-6).toFixed(1)+'" text-anchor="end" fill="var(--gold)" font-size="'+FS+'" '+mono+'>'+o.refLabel+'</text>';
+  }
+  if(o.kind==='bar'){
+    pts.forEach(function(p,i){
+      var x=(PL+i*bw+1.5).toFixed(1),w=Math.max(1,bw-3).toFixed(1);
+      if(p.v==null){ g+='<rect x="'+x+'" y="'+(H-PB-3)+'" width="'+w+'" height="3" fill="none" stroke="var(--line)"/>'; return }
+      var col=o.ref!=null&&p.v<o.ref?'var(--signal)':'var(--accent)';
+      g+='<rect x="'+x+'" y="'+Y(p.v).toFixed(1)+'" width="'+w+'" height="'+(H-PB-Y(p.v)).toFixed(1)+'" fill="'+col+'"'+(p.syn?' opacity=".55"':'')+'><title>'+p.k+' · '+o.fmt(p.v)+'</title></rect>';
+    });
+  } else {
+    var seg=[],segs=[];
+    pts.forEach(function(p,i){ if(p.v==null){ if(seg.length) segs.push(seg); seg=[] } else seg.push(X(i).toFixed(1)+','+Y(p.v).toFixed(1)) });
+    if(seg.length) segs.push(seg);
+    segs.forEach(function(s){ if(s.length>1) g+='<polyline points="'+s.join(' ')+'" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>' });
+    pts.forEach(function(p,i){ if(p.v!=null) g+='<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="2.8" fill="var(--accent)"><title>'+p.k+' · '+o.fmt(p.v)+'</title></circle>' });
+  }
+  pts.forEach(function(p,i){ if(p.gym) g+='<rect x="'+(X(i)-3).toFixed(1)+'" y="'+(H-PB+5)+'" width="6" height="6" fill="var(--gold)"/>' });
+  g+='<text x="'+PL+'" y="'+(H-4)+'" fill="var(--faint)" font-size="'+FS+'" '+mono+'>'+pts[0].k.slice(5)+'</text>'+
+     '<text x="'+(W-PR)+'" y="'+(H-4)+'" text-anchor="end" fill="var(--faint)" font-size="'+FS+'" '+mono+'>'+pts[n-1].k.slice(5)+'</text>';
+  $(sel).innerHTML=g;
+  return {n:vals.length,mean:mean(vals)};
+}
+function renderHealth(){
+  if(!$('#hSleep')) return;
+  var st=S.settings, cov=function(r){return r.n+' of '+HEALTH_DAYS+' days have a reading'};
+  var sl=healthSeries('sleepHrs');
+  var r1=hChart('#hSleep',sl,{kind:'bar',zero:true,ref:+st.sleepTarget,refLabel:'target '+st.sleepTarget+'h',
+    fmt:function(v){return v.toFixed(1)},empty:'No sleep readings yet — import from Record.'});
+  if(r1){
+    var under=sl.filter(function(p){return p.v!=null&&p.v<+st.sleepTarget}).length;
+    $('#hSleepNote').innerHTML='Mean <b>'+r1.mean.toFixed(1)+' h</b> · <b>'+under+'</b> night'+(under===1?'':'s')+' under target · '+cov(r1)+'.';
+  } else $('#hSleepNote').textContent='—';
+  var r2=hChart('#hSteps',healthSeries('steps'),{kind:'bar',zero:true,ref:STEP_MOVED,refLabel:'moved '+STEP_MOVED,
+    fmt:function(v){return v>=1000?(v/1000).toFixed(1)+'k':Math.round(v)+''},empty:'No step readings yet — import from Record.'});
+  $('#hStepsNote').innerHTML=r2?'Mean <b>'+Math.round(r2.mean).toLocaleString()+'</b> steps · '+cov(r2)+'.':'—';
+  var r3=hChart('#hRhr',healthSeries('rhr'),{kind:'line',fmt:function(v){return Math.round(v)+''},
+    empty:'No resting heart rate yet.'});
+  if(r3){
+    var rh=healthSeries('rhr').filter(function(p){return p.v!=null}),half=Math.floor(rh.length/2);
+    var drift=rh.length>=6?mean(rh.slice(half).map(function(p){return p.v}))-mean(rh.slice(0,half).map(function(p){return p.v})):null;
+    $('#hRhrNote').innerHTML='Mean <b>'+Math.round(r3.mean)+' bpm</b>'+(drift!=null?' · second half of the window is <b>'+(drift>0?'+':'')+drift.toFixed(1)+' bpm</b> against the first':'')+' · '+cov(r3)+'.';
+  } else $('#hRhrNote').textContent='—';
+  var r4=hChart('#hWt',healthSeries('weight'),{kind:'line',fmt:function(v){return v.toFixed(0)},
+    empty:'No daily weight yet.'});
+  if(r4){
+    var wv=healthSeries('weight').filter(function(p){return p.v!=null});
+    $('#hWtNote').innerHTML=wv.length>=2?'<b>'+wv[0].v+' → '+wv[wv.length-1].v+' lb</b> ('+wv[0].k.slice(5)+' → '+wv[wv.length-1].k.slice(5)+') · '+cov(r4)+'.':'One reading: <b>'+wv[0].v+' lb</b>.';
+  } else $('#hWtNote').textContent='—';
 }
 
 function renderMeasurements(){
@@ -1431,7 +1605,7 @@ function renderB50(){
       '</div><div class="seg" data-b50="'+s.id+'">'+[0,1,2,3,4,5].map(function(v){
         return '<button data-v="'+v+'" class="'+(lv===v?('on '+(v===0?'s0':v<=1?'s1':'')):'')+'">'+v+'</button>'}).join('')+
       '</div></div>'}).join('');
-  $('#b50Score').textContent=Math.round(tot/25*100)+'%';
+  $('#b50Score').textContent=Math.round(tot/(B50.length*5)*100)+'%';
 }
 
 function renderCoach(){
@@ -1514,6 +1688,12 @@ on('#wtToday','change',function(e){var v=e.target.value; day(CUR).weight= v===''
 on('#sleepHrs','change',function(e){var v=e.target.value; day(CUR).sleepHrs= v===''?null:+v; touch()});
 on('#setPartner','change',function(e){S.settings.partner=e.target.value||'partner'; touch()});
 on('#setGymHour','change',function(e){S.settings.gymHour=clamp(+e.target.value||17,4,23); touch()});
+document.addEventListener('change',function(e){
+  var i=e.target.getAttribute&&e.target.getAttribute('data-gh');
+  if(i==null) return;
+  S.settings.gymHourByDay=S.settings.gymHourByDay||{};
+  S.settings.gymHourByDay[i]=clamp(+e.target.value||17,4,23); touch();
+});
 on('#setProtein','change',function(e){S.settings.proteinTarget=clamp(+e.target.value||150,60,300); touch()});
 on('#setSleep','change',function(e){S.settings.sleepTarget=clamp(+e.target.value||7,4,10); touch()});
 on('#addMeas','click',function(){
@@ -1539,6 +1719,389 @@ on('#addMeas','click',function(){
 /* The single-page scroll-spy that used to live here is gone: nav links are now
    page URLs, not in-page anchors, and toggling .on by href match stripped the
    current-page marker off every link. renderNav() owns that class. */
+
+/* ==================================================================
+   HEALTH IMPORT — Apple Health export.xml / Google Fit CSV / Fitbit JSON
+   ------------------------------------------------------------------
+   Read entirely in this tab. There is no server in this project and
+   this function adds none: the File is sliced, scanned and discarded.
+
+   Two constraints shape the whole design.
+
+   1. Apple's export.xml is routinely 100-500MB. Reading it into one
+      string crashes mobile Safari, and DOMParser on it is worse. So it
+      is streamed in slices and scanned with regexes, never parsed into
+      a tree. `tail` carries the trailing partial record across the
+      slice boundary so a record split down the middle is not lost.
+      (Slicing at byte offsets can split a multi-byte UTF-8 character;
+      every field read below is ASCII, so a mangled byte lands only in
+      free-text a human never sees.)
+
+   2. Import fills gaps and NEVER overwrites a human entry. gym.status
+      in particular is a judgment — "missed-partner" is a different
+      fact from "missed-me" and the watch cannot tell them apart. A
+      staged preview is built first; nothing touches state until the
+      owner presses Apply.
+
+   3. Two phones and a watch record the SAME walk and the SAME night.
+      Apple's export keeps every device's samples side by side (iPhone
+      and Watch both count your steps), and two phones' exports overlap
+      again. Summing them double-counts. So steps and sleep are totalled
+      per source per day, and the day takes the LARGEST single source —
+      never the sum. The cost is honest and small: if you carried one
+      phone in the morning and the other in the evening, that day
+      under-reads. Over-reading is the worse error on an audit page.
+   ================================================================== */
+
+/* Apple workout types -> what this instrument calls them. Anything not
+   listed still counts as movement, just not as a training session. */
+var HK_STRENGTH=/TraditionalStrengthTraining|FunctionalStrengthTraining|CoreTraining|HighIntensityIntervalTraining|Cooldown/;
+var HK_MOBILITY=/Flexibility|Yoga|Pilates|PreparationAndRecovery|MindAndBody/;
+var STEP_MOVED=6000;      /* steps that count as having moved on a non-gym day */
+var SLEEP_MAX_BLOCK=16;   /* a single "asleep" stretch longer than this is a broken record */
+var SLEEP_MAX_DAY=18;     /* and no day's total can exceed this, however many stretches */
+
+function hkDate(s){ return s ? s.slice(0,10) : null }   /* "2026-08-21 14:03:00 -0400" */
+
+function blankHarvest(){ return {weights:[],sleep:{},work:{},steps:{},rhr:{},
+  bySrc:{steps:{},sleep:{}},sources:{},
+  seen:{rec:0,wo:0},bad:{sleep:0},unit:null,fitbitWeightUnit:null} }
+/* accumulate one source's contribution; finalizeHarvest() picks the max */
+function addSrc(H,kind,k,src,v){
+  var day=H.bySrc[kind][k]=H.bySrc[kind][k]||{};
+  day[src]=(day[src]||0)+v; H.sources[src]=1;
+}
+function finalizeHarvest(H){
+  ['steps','sleep'].forEach(function(kind){
+    Object.keys(H.bySrc[kind]).forEach(function(k){
+      var per=H.bySrc[kind][k],best=0;
+      Object.keys(per).forEach(function(s){ if(per[s]>best) best=per[s] });
+      H[kind][k]= kind==='sleep' ? Math.min(SLEEP_MAX_DAY,best) : best;
+    });
+  });
+  return H;
+}
+
+/* --- scan one chunk of Apple Health XML --------------------------- */
+function hkScanChunk(t,H){
+  var re=/<Record\s+type="HK([A-Za-z]+TypeIdentifier[A-Za-z]+)"([^>]*?)\/?>/g, m;
+  while((m=re.exec(t))){
+    H.seen.rec++;
+    var type=m[1], at=m[2];
+    var val=(at.match(/\svalue="([^"]*)"/)||[])[1];
+    var unit=(at.match(/\sunit="([^"]*)"/)||[])[1];
+    var sd=(at.match(/\sstartDate="([^"]*)"/)||[])[1];
+    var ed=(at.match(/\sendDate="([^"]*)"/)||[])[1];
+    var src=(at.match(/\ssourceName="([^"]*)"/)||[])[1]||'Apple Health';
+    if(type==='QuantityTypeIdentifierBodyMass'&&val&&sd){
+      var lb=parseFloat(val); if(!isFinite(lb)) continue;
+      if(unit&&/kg/i.test(unit)){ lb=lb*2.20462; H.unit='kg'; } else H.unit=H.unit||'lb';
+      H.weights.push({d:hkDate(sd),w:Math.round(lb*10)/10});
+    }
+    else if(type==='QuantityTypeIdentifierRestingHeartRate'&&val&&sd){
+      var k=hkDate(sd); (H.rhr[k]=H.rhr[k]||[]).push(parseFloat(val));
+    }
+    else if(type==='QuantityTypeIdentifierStepCount'&&val&&sd){
+      addSrc(H,'steps',hkDate(sd),src,parseFloat(val)||0);
+    }
+    else if(type==='CategoryTypeIdentifierSleepAnalysis'&&sd&&ed){
+      /* only actually-asleep intervals; "InBed" overstates it badly */
+      if(!/Asleep/i.test(at)) continue;
+      var t0=Date.parse(sd.replace(' ','T').replace(/ ([+-]\d{2})(\d{2})$/,'$1:$2'));
+      var t1=Date.parse(ed.replace(' ','T').replace(/ ([+-]\d{2})(\d{2})$/,'$1:$2'));
+      if(!isFinite(t0)||!isFinite(t1)||t1<=t0) continue;
+      var hrs=(t1-t0)/36e5;
+      /* Real exports contain impossible intervals: a watch that lost power
+         mid-night, a manual entry with the wrong date, a DST or timezone
+         change. One of those silently became a 176-hour "night" in testing.
+         A single sleep stretch longer than SLEEP_MAX_BLOCK is not sleep, it
+         is a broken record, and averaging it in would poison the trend. */
+      if(hrs>SLEEP_MAX_BLOCK){ H.bad.sleep++; continue }
+      /* attribute the night to the day you WAKE into — that is the day
+         whose readiness it explains, and the day the sheet asks about */
+      addSrc(H,'sleep',hkDate(ed),src,hrs);
+    }
+  }
+  var rw=/<Workout\s+workoutActivityType="HKWorkoutActivityType([A-Za-z]+)"([^>]*?)>/g, w;
+  while((w=rw.exec(t))){
+    H.seen.wo++;
+    var kind=w[1], wat=w[2];
+    var wsd=(wat.match(/\sstartDate="([^"]*)"/)||[])[1];
+    var dur=parseFloat((wat.match(/\sduration="([^"]*)"/)||[])[1]||'0');
+    var du=(wat.match(/\sdurationUnit="([^"]*)"/)||[])[1]||'min';
+    if(/sec/i.test(du)) dur=dur/60;
+    var kd=hkDate(wsd); if(!kd) continue;
+    var cls=HK_STRENGTH.test(kind)?'strength':HK_MOBILITY.test(kind)?'mobility':'other';
+    var cur=H.work[kd];
+    /* one day, one headline session: strength outranks mobility outranks other */
+    var rank={strength:3,mobility:2,other:1};
+    if(!cur||rank[cls]>rank[cur.cls]||(cls===cur.cls&&dur>cur.min))
+      H.work[kd]={cls:cls,kind:kind,min:Math.round(dur)};
+  }
+}
+
+/* --- Google Fit daily-activity CSV -------------------------------- */
+function fitScanCsv(text,H){
+  var lines=text.split(/\r?\n/); if(lines.length<2) return;
+  var head=lines[0].split(',').map(function(x){return x.trim().toLowerCase()});
+  var iDate=head.indexOf('date');
+  var iStep=head.findIndex(function(x){return /step count/.test(x)});
+  var iMove=head.findIndex(function(x){return /move minutes/.test(x)});
+  var iWt  =head.findIndex(function(x){return /average weight|weight \(kg\)/.test(x)});
+  if(iDate<0) return;
+  for(var i=1;i<lines.length;i++){
+    var c=lines[i].split(','); if(c.length<2) continue;
+    var k=(c[iDate]||'').trim().slice(0,10); if(!/^\d{4}-\d{2}-\d{2}$/.test(k)) continue;
+    H.seen.rec++;
+    if(iStep>=0&&c[iStep]) addSrc(H,'steps',k,'Google Fit',parseFloat(c[iStep])||0);
+    if(iWt>=0&&c[iWt]){ var kg=parseFloat(c[iWt]);
+      if(isFinite(kg)&&kg>0){ H.unit='kg'; H.weights.push({d:k,w:Math.round(kg*2.20462*10)/10}) } }
+    if(iMove>=0&&c[iMove]&&parseFloat(c[iMove])>=30&&!H.work[k])
+      H.work[k]={cls:'other',kind:'MoveMinutes',min:Math.round(parseFloat(c[iMove]))};
+  }
+}
+
+/* --- Fitbit "Global Export Data" JSON ------------------------------
+   From Fitbit's account data export (or Google Takeout → Fitbit). One
+   file per metric per month: steps-YYYY-MM-DD.json, sleep-…, weight-…,
+   resting_heart_rate-…, exercise-N.json. Dates are "MM/DD/YY hh:mm:ss"
+   and are read as local time. Written against the documented export
+   shape; if Fitbit changes it, nothing is recognised and the preview
+   says so rather than guessing. */
+function fbDate(s){
+  var m=/^(\d{2})\/(\d{2})\/(\d{2})/.exec(s||''); return m?('20'+m[3]+'-'+m[1]+'-'+m[2]):null }
+function fitbitScanJson(name,text,H){
+  var a; try{ a=JSON.parse(text) }catch(e){ return }
+  if(!Array.isArray(a)) return;
+  var n=name.toLowerCase();
+  a.forEach(function(r){
+    if(!r||typeof r!=='object') return;
+    if(/^steps-/.test(n)){ var k=fbDate(r.dateTime); var v=parseFloat(r.value);
+      if(k&&isFinite(v)){ H.seen.rec++; addSrc(H,'steps',k,'Fitbit',v) } }
+    else if(/^sleep-/.test(n)){ var ks=r.dateOfSleep; var mins=parseFloat(r.minutesAsleep);
+      if(/^\d{4}-\d{2}-\d{2}$/.test(ks||'')&&isFinite(mins)&&mins>0){
+        H.seen.rec++; if(mins/60>SLEEP_MAX_BLOCK){ H.bad.sleep++; return }
+        addSrc(H,'sleep',ks,'Fitbit',mins/60) } }
+    else if(/^resting_heart_rate-/.test(n)){ var kr=fbDate(r.dateTime);
+      var hr=r.value&&parseFloat(r.value.value);
+      if(kr&&isFinite(hr)&&hr>20){ H.seen.rec++; (H.rhr[kr]=H.rhr[kr]||[]).push(hr) } }
+    else if(/^weight-/.test(n)){ var kw=fbDate(r.date); var w=parseFloat(r.weight);
+      if(kw&&isFinite(w)&&w>0){ H.seen.rec++;
+        /* the export does not state its unit; it follows the account setting.
+           Below 90 can only plausibly be kg for an adult. Stated in the preview. */
+        var kg=w<90; H.fitbitWeightUnit=kg?'kg':'lb';
+        H.weights.push({d:kw,w:Math.round((kg?w*2.20462:w)*10)/10}) } }
+    else if(/^exercise-/.test(n)){ var ke=fbDate(r.startTime); if(!ke) return;
+      H.seen.wo++;
+      var nm=String(r.activityName||''), min=Math.round((parseFloat(r.activeDuration||r.duration)||0)/60000);
+      var cls=/weight|strength|workout|hiit|circuit|crossfit|bootcamp/i.test(nm)?'strength':
+              /yoga|pilates|stretch/i.test(nm)?'mobility':'other';
+      var cur=H.work[ke],rank={strength:3,mobility:2,other:1};
+      if(!cur||rank[cls]>rank[cur.cls]||(cls===cur.cls&&min>cur.min)) H.work[ke]={cls:cls,kind:nm.replace(/\s+/g,''),min:min} }
+  });
+  if(/^(steps|sleep|resting_heart_rate|weight|exercise)-/.test(n)) H.sources.Fitbit=1;
+}
+
+/* --- stream the file past the scanner ----------------------------- */
+function scanHealthFile(file,H,onProgress){
+  if(/\.json$/i.test(file.name))
+    return file.text().then(function(t){ fitbitScanJson(file.name,t,H); onProgress(1,H); return H });
+  var CH=4*1024*1024, off=0, tail='';
+  var csv=/\.csv$/i.test(file.name);
+  return (function step(){
+    if(off>=file.size){ if(tail&&!csv) hkScanChunk(tail,H); return Promise.resolve(H) }
+    return file.slice(off,off+CH).text().then(function(buf){
+      if(csv){ fitScanCsv(tail+buf,H); tail=''; }
+      else{
+        var s=tail+buf;
+        /* never cut a record in half: hold back from the last '<' */
+        var cut=s.lastIndexOf('<');
+        if(cut>0){ hkScanChunk(s.slice(0,cut),H); tail=s.slice(cut) }
+        else { hkScanChunk(s,H); tail='' }
+      }
+      off+=CH;
+      onProgress(Math.min(1,off/file.size),H);
+      return step();
+    });
+  })();
+}
+
+/* --- turn a harvest into a staged, reversible plan ----------------- */
+function planHealthMerge(H){
+  var plan={sleep:[],gym:[],moved:[],weightDay:[],meas:[],rhr:[],steps:[],
+            skipped:{sleep:0,gym:0,moved:0,weight:0},range:null};
+  var keys={};
+  Object.keys(H.sleep).forEach(function(k){keys[k]=1});
+  Object.keys(H.work).forEach(function(k){keys[k]=1});
+  Object.keys(H.steps).forEach(function(k){keys[k]=1});
+  Object.keys(H.rhr).forEach(function(k){keys[k]=1});
+  var ks=Object.keys(keys).filter(function(k){return /^\d{4}-\d{2}-\d{2}$/.test(k)}).sort();
+  if(ks.length) plan.range=[ks[0],ks[ks.length-1]];
+
+  /* a synthetic demo day is not an entry: real device data replaces it */
+  var real=function(k){ return has(k)&&!S.days[k].synthetic ? S.days[k] : null };
+  ks.forEach(function(k){
+    var existing=real(k);
+    var d=existing||blankDay(k);
+    var g=d.gym||{}, hasHuman=!!g.status && g.src!=='health';
+
+    var hrs=H.sleep[k];
+    if(hrs!=null&&hrs>0.5){
+      if(d.sleepHrs==null) plan.sleep.push({k:k,v:Math.round(hrs*10)/10});
+      else plan.skipped.sleep++;
+    }
+    var w=H.work[k];
+    if(w&&w.cls!=='other'){
+      if(!hasHuman) plan.gym.push({k:k,v:'done',kind:w.kind,min:w.min,cls:w.cls});
+      else plan.skipped.gym++;
+    }
+    var st=H.steps[k];
+    /* steps only ever come from a device, so a later import from the other
+       phone may raise the day to the larger source — same max rule */
+    if(st!=null&&st>0&&(d.steps==null||Math.round(st)>d.steps)) plan.steps.push({k:k,v:Math.round(st)});
+    if(st!=null&&st>=STEP_MOVED&&!d.moved&&!(w&&w.cls!=='other')){
+      plan.moved.push({k:k,steps:Math.round(st)});
+    } else if(st!=null&&st>=STEP_MOVED&&d.moved) plan.skipped.moved++;
+
+    var r=H.rhr[k];
+    if(r&&r.length) plan.rhr.push({k:k,v:Math.round(r.reduce(function(a,b){return a+b},0)/r.length)});
+  });
+
+  /* weight: one value per day (median), into the day record and, when it is
+     far enough from an existing measurement, into the measurement index */
+  var byDay={};
+  H.weights.forEach(function(x){ if(x.d) (byDay[x.d]=byDay[x.d]||[]).push(x.w) });
+  var wdays=Object.keys(byDay).sort();
+  var existing=(S.measures||[]).map(function(m){return m.date}).sort();
+  var lastKept=null;
+  wdays.forEach(function(k){
+    var a=byDay[k].slice().sort(function(x,y){return x-y});
+    var med=a[Math.floor(a.length/2)];
+    var d=real(k);
+    if(!d||d.weight==null) plan.weightDay.push({k:k,v:med}); else plan.skipped.weight++;
+    /* the measurement index is a sparse trend, not a daily log — thin to one
+       reading a fortnight and skip anything near a manual entry */
+    var nearManual=existing.some(function(e){return Math.abs(dayDiff(e,k))<=3});
+    if(!nearManual&&(!lastKept||dayDiff(lastKept,k)>=14)){
+      plan.meas.push({date:k,weight:med}); lastKept=k;
+    }
+  });
+  return plan;
+}
+
+function applyHealthMerge(plan){
+  var touched={};
+  ['sleep','gym','moved','weightDay','rhr','steps'].forEach(function(f){
+    plan[f].forEach(function(x){ touched[x.k]=1 }) });
+  Object.keys(touched).forEach(function(k){ if(has(k)&&S.days[k].synthetic) S.days[k]=blankDay(k) });
+  plan.sleep.forEach(function(x){ day(x.k).sleepHrs=x.v });
+  plan.gym.forEach(function(x){
+    var d=day(x.k);
+    d.gym.status='done'; d.gym.src='health';
+    d.gym.note=(d.gym.note?d.gym.note+' · ':'')+x.kind+' '+x.min+'min (watch)';
+  });
+  plan.moved.forEach(function(x){ day(x.k).moved=true });
+  plan.weightDay.forEach(function(x){ day(x.k).weight=x.v });
+  plan.rhr.forEach(function(x){ day(x.k).rhr=x.v });
+  plan.steps.forEach(function(x){ day(x.k).steps=x.v });
+  plan.meas.forEach(function(m){ S.measures.push({date:m.date,weight:m.weight,src:'health'}) });
+  S.measures.sort(function(a,b){return a.date<b.date?-1:1});
+}
+
+function healthSummary(plan,H){
+  var n=function(a){return a.length};
+  var rows=[
+    ['Sleep hours',n(plan.sleep),plan.skipped.sleep],
+    ['Training sessions',n(plan.gym),plan.skipped.gym],
+    ['Moved (non-training days)',n(plan.moved),plan.skipped.moved],
+    ['Daily weight',n(plan.weightDay),plan.skipped.weight],
+    ['Daily steps',n(plan.steps),0],
+    ['Resting heart rate',n(plan.rhr),0],
+    ['Measurement-index entries',n(plan.meas),0]
+  ];
+  var total=rows.reduce(function(a,r){return a+r[1]},0);
+  var html='<table class="t"><tr><th>What</th><th class="n">Will add</th><th class="n">Left alone</th></tr>'+
+    rows.map(function(r){
+      return '<tr><td>'+r[0]+'</td><td class="n mono">'+r[1]+'</td><td class="n mono">'+
+        (r[2]||'—')+'</td></tr>'}).join('')+'</table>';
+  var srcs=Object.keys(H.sources||{});
+  var head='<b>'+total+' new entries</b> from '+H.seen.rec.toLocaleString()+' records and '+
+    H.seen.wo.toLocaleString()+' workouts'+
+    (plan.range?', covering '+plan.range[0]+' to '+plan.range[1]:'')+'.'+
+    (srcs.length?' Devices seen: <b>'+srcs.map(esc).join(', ')+'</b>.':'')+
+    (srcs.length>1?' Where more than one recorded the same day, steps and sleep take the <b>largest single device</b>, never the sum.':'')+
+    (H.fitbitWeightUnit?' Fitbit weight read as <b>'+H.fitbitWeightUnit+'</b> (the export does not say) — check one value.':'');
+  if(!total) head='<b>Nothing new to add.</b> Everything in that file is already on your record, '+
+    'or you have already entered your own values for those days.';
+  if(H.bad&&H.bad.sleep) head+=' <span style="color:var(--signal)">'+H.bad.sleep+
+    ' sleep record'+(H.bad.sleep===1?' was':'s were')+' discarded as impossible '+
+    '(longer than '+SLEEP_MAX_BLOCK+' hours in one stretch) — usually a watch that '+
+    'lost power or a timezone change.</span>';
+  return '<div style="margin-bottom:8px">'+head+'</div>'+html+
+    '<div class="tiny" style="margin-top:8px;color:var(--muted)">"Left alone" means you had already '+
+    'entered something for that day. Your entry wins — the import will not touch it.</div>';
+}
+
+var HEALTH_PLAN=null;
+on('#healthBtn','click',function(){ $('#healthFile').click() });
+on('#healthCancel','click',function(){
+  HEALTH_PLAN=null; $('#healthOut').innerHTML=''; $('#healthFile').value='';
+  $('#healthApply').classList.add('hide'); $('#healthCancel').classList.add('hide');
+});
+on('#healthFile','change',function(e){
+  var files=[].slice.call(e.target.files||[]); if(!files.length) return;
+  var f=files[0];
+  if(files.some(function(x){return /\.zip$/i.test(x.name)})){
+    $('#healthOut').innerHTML='<div class="notice">That is still zipped. Tap it in Files (iPhone) '+
+      'or double-click it (desktop) to unzip, then choose <span class="mono">export.xml</span> '+
+      'from inside <span class="mono">apple_health_export</span>.</div>';
+    $('#healthFile').value=''; return;
+  }
+  var P=$('#healthProg'); P.classList.remove('hide');
+  var total=files.reduce(function(a,x){return a+x.size},0),doneB=0,H=blankHarvest();
+  P.textContent='reading 0% — '+files.length+' file'+(files.length>1?'s':'')+', '+(total/1048576).toFixed(1)+' MB';
+  $('#healthOut').innerHTML=''; $('#healthApply').classList.add('hide');
+  $('#healthCancel').classList.remove('hide');
+  files.reduce(function(chain,file){
+    return chain.then(function(){
+      return scanHealthFile(file,H,function(p){
+        P.textContent='reading '+Math.round((doneB+p*file.size)/Math.max(1,total)*100)+'% — '+
+          H.seen.rec.toLocaleString()+' records, '+H.seen.wo.toLocaleString()+' workouts';
+      }).then(function(){ doneB+=file.size });
+    });
+  },Promise.resolve()).then(function(){ return finalizeHarvest(H) }).then(function(H){
+    P.classList.add('hide');
+    if(!H.seen.rec&&!H.seen.wo){
+      $('#healthOut').innerHTML='<div class="notice">No Health records found in that file. '+
+        'For Apple Health choose <span class="mono">export.xml</span> (not '+
+        '<span class="mono">export_cda.xml</span>); for Google Fit the daily-activity CSV; for Fitbit the '+
+        '<span class="mono">steps-/sleep-/weight-/resting_heart_rate-/exercise-</span> JSON files.</div>';
+      return;
+    }
+    HEALTH_PLAN={plan:planHealthMerge(H),H:H};
+    $('#healthOut').innerHTML=healthSummary(HEALTH_PLAN.plan,H);
+    var any=['sleep','gym','moved','weightDay','rhr','meas','steps']
+      .some(function(k){return HEALTH_PLAN.plan[k].length});
+    $('#healthApply').classList.toggle('hide',!any);
+  }).catch(function(err){
+    P.classList.add('hide');
+    $('#healthOut').innerHTML='<div class="notice">Could not read that file: '+
+      (err&&err.message?err.message:err)+'</div>';
+  });
+});
+on('#healthApply','click',function(){
+  if(!HEALTH_PLAN) return;
+  applyHealthMerge(HEALTH_PLAN.plan);
+  var done=HEALTH_PLAN.plan;
+  HEALTH_PLAN=null; $('#healthFile').value='';
+  $('#healthApply').classList.add('hide'); $('#healthCancel').classList.add('hide');
+  $('#healthOut').innerHTML='<div class="notice teal"><b>Imported.</b> '+
+    (done.sleep.length+done.gym.length+done.moved.length+done.weightDay.length+
+     done.rhr.length+done.meas.length+done.steps.length)+
+    ' entries added. Nothing you had already written was changed. '+
+    'Export a backup from the Data card if you want a copy of this state.</div>';
+  touch();
+});
 
 /* ---- boot ---- */
 try{ var th=localStorage.getItem('mizan.theme'); if(th) document.documentElement.setAttribute('data-theme',th) }catch(e){}

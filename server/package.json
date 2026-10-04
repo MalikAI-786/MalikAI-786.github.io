@@ -1,0 +1,14 @@
+{
+  "name": "mizan-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Mizan backend — one athlete, several coaches, a watch that writes on its own.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node src/index.js",
+    "migrate": "node src/migrate.js",
+    "test": "node --test test/"
+  },
+  "dependencies": { "pg": "^8.13.1" }
+}
