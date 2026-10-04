@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>When did your team last open something the system passed? · Yasir A. Malik</title>
+<meta name="description" content="People working with a highly but imperfectly reliable aid made more monitoring errors than people without one. The population a tool clears is the one nobody samples.">
+<meta name="thread" content="Evidence">
+<meta name="heuristic" content="Automation bias">
+<link rel="stylesheet" href="../assets/brand/tokens.css">
+<link rel="stylesheet" href="../intake/intake.css">
+<link rel="icon" href="../assets/brand/favicon.svg">
+</head>
+<body>
+<header>
+<a href="../index.html">Yasir A. Malik</a>
+<nav aria-label="Main">
+<a href="../newsletter.html">Newsletter</a>
+<a href="../intake/">Start a conversation</a>
+</nav>
+</header>
+<main>
+<article>
+
+<p class="eyebrow">Field note · 26 October 2026</p>
+
+<h1>When did your team last open<br>something the system passed?</h1>
+
+<p class="intro">An exception report with no exceptions ends the inquiry, and the population it cleared is the one nobody samples.</p>
+
+<p>In 1999 three researchers gave people a monitoring task and, for some of them, an automated aid to help with it. The aid was highly reliable. It was not perfectly reliable. That gap is the whole experiment. Skitka, Mosier and Burdick reported the result in the International Journal of Human-Computer Studies, volume 51, issue 5, pages 991 to 1006: the people working with the aid made more monitoring errors than the people working without one.</p>
+
+<p>Read that again with an examiner's eye, because the direction is the finding. Not fewer errors with a weaker tool. More errors with a very good one. A tool that is right most of the time teaches its user to stop looking, and when it is wrong, the user is no longer looking.</p>
+
+<p>Three years before that, Mosier and Skitka had given the pattern its name. Automation bias, as they defined it in 1996, is reliance on an automated aid that displaces vigilance, and it takes two distinct shapes. Commission: acting on an automated cue that is wrong. Omission: failing to act on something the automation did not raise. Those two words do a lot of work and I want to keep them separate, because one of them leaves evidence and the other does not.</p>
+
+<h2>Which of the two errors shows up in the file?</h2>
+
+<p>A commission error leaves a trail. The tool flagged something, a person acted on it, the action was wrong. There is an artifact. Someone can write a finding about it, and a remediation, and a lesson learned. It is the kind of error a quality review is built to catch.</p>
+
+<p>An omission error leaves nothing. The tool did not flag something. A person, reasonably, did nothing. The thing the tool missed stays where it was. There is no memo, because there is no event to write a memo about. Nobody documents the moment they stopped thinking, and with an automated aid nobody has to, because the aid supplies a reason not to think that looks exactly like diligence. The report came back clean.</p>
+
+<p>That is what the literature established. What follows is my own inference from fifteen years inside audit functions, and it should be read as that.</p>
+
+<p>What I think this looks like in practice is a file in which every finding originated inside the tool. Trace each one back and it starts with a flag. Then look for testing on the population the tool cleared and find none, because the sampling plan was written from the exception report, and the exception report is by construction a list of what was flagged. The cleared population was never in scope. It was never out of scope either. It did not exist as a thing to be sampled, because the artifact that would have made it exist is the one the tool does not produce.</p>
+
+<p>An exception report with no exceptions is the most persuasive document in this whole pattern. It arrives looking like assurance. It is, strictly, a statement that the aid raised nothing, and the 1999 result is a reminder that a highly reliable aid raising nothing is precisely the condition under which its users were making more errors, not fewer. The clean report does not end the inquiry. It ends the part of the inquiry the tool was doing, and hands the rest to a person who has just been told there is nothing to do.</p>
+
+<p><strong>On Monday.</strong> Take the last exception report that came back empty and write underneath it the sentence the tool actually tested. Then write the sentence you need to be true. If the second sentence covers a population the first one never looked at, that gap is your sample, and it is not in your plan.</p>
+
+<h2>What would I ask of a tool I built myself?</h2>
+
+<p>I have sat in both seats on this, so let me take the harder one. At Citi I built and deployed a retrieval-augmented assistant into the audit function. It was a production system, and the number attached to it is a reduction of roughly 35% in review cycle time. About a third. I quote that number because it is on the record, and it is the one I would press on if someone else quoted it to me. Cycle time measured how, over which reviews, against what baseline. [UNVERIFIED: how the 35% was measured and against what baseline.] A number without its denominator is a claim, and this newsletter is named for the difference.</p>
+
+<p>The questions an examiner asks of a tool are not the questions its builder asks. The builder asks whether it works, which in practice means whether the people using it are faster and whether they come back. Both are real. Neither is the question the 1999 result puts on the table. The examiner's question is what happened to the population the tool passed, and the honest answer for most deployed tools, including ones I would be proud of, is that nobody has looked, because looking there produces nothing you can put in a dashboard.</p>
+
+<p>Parasuraman and Riley gave the two failure modes their names in 1997, in Human Factors, volume 39, issue 2, pages 230 to 253. Misuse is over-reliance on automation. Disuse is under-reliance. Those are their words and I use them exactly, because the audience for this note notices when a citation is paraphrased into something its authors did not say. Most conversations I have been in about tools like mine have been about disuse. Will they adopt it. Will they trust it. Will they go back to the old way. Adoption metrics are disuse metrics. Nobody in those conversations was measuring misuse, and misuse is where the 1999 experiment says the errors go.</p>
+
+<p>So here is what I would ask of my own tool, as an examiner walking in to look at it. Show me the cleared population. Not the flagged one. Pull a sample from what the assistant passed through without comment and test it by hand, the slow way, as if the tool did not exist. The result of that test is the only evidence that the cycle-time number was bought with speed and not with omission. If the cleared sample is clean, the 35% stands and I would defend it. If it is not, the number is still true and it means something different, because some of the time it saved was time that was supposed to be spent looking.</p>
+
+<p>What I think this looks like in practice is that the cleared sample is almost never in the plan, and it is never in the plan for a reason nobody states. It costs the same as the old method, on a slice of the work, and the whole point of the tool was to stop paying that cost. That is a real tension and I do not want to pretend it away. The answer is not to test everything the tool cleared. The answer is to test some of it, on a schedule, and to treat the result as a control over the tool rather than as a review of the work. A tool whose cleared population has never been sampled is a tool whose reliability is asserted, and an asserted control is not an operating one.</p>
+
+<p><strong>On Monday.</strong> Put the cleared population in the sampling plan, as its own line, with a sample size and an owner. Then ask when the team last opened something the system passed. If the answer is a date, write it down. If the answer is a pause, that pause is the finding.</p>
+
+<h2>What I am not claiming</h2>
+
+<p>I am not claiming the tool I built failed in this way. I do not know, which is the point of the note, and the examiner walking in to look at it is a hypothetical one. I am not claiming that the 1996 definition or the 1999 result transfer cleanly to retrieval-augmented review of audit work. The step from a laboratory monitoring task to a document-review assistant is an inference, mine, and it would need its own test.</p>
+
+<p>I am also not claiming the 35% is wrong. I am claiming that I would want its denominator before I let it carry weight, and that the same standard applies to numbers I like.</p>
+
+<p>The open question is cost. Sampling the cleared population is a control that spends the thing the tool was deployed to save. I do not yet know what fraction is enough, or whether the right answer changes as the tool gets better, which by the 1999 result is exactly when the omission errors should get worse. If you have a sampling rate you can defend, I would like to hear how you arrived at it.</p>
+
+<p>If something here is wrong, overstated or too confident, tell me: <a href="mailto:YasirAMalik@gmail.com">YasirAMalik@gmail.com</a>. I would rather be corrected than agreed with.</p>
+
+</article>
+<footer>
+<p>Yasir A. Malik · Audit · Risk · Governance</p>
+<p>Original commentary. Findings and figures are drawn from the published journal articles cited in the text, and are attributed to their authors rather than endorsed by them. No affiliation or endorsement is implied. Drafting assistance was used and is disclosed; the judgment is mine.</p>
+</footer>
+</main>
+</body>
+</html>
