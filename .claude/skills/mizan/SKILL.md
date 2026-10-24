@@ -252,6 +252,56 @@ Beyond the smoke test, exercise the specific thing you changed and say in your
 report what you actually ran. A change to scoring should be verified by
 setting scores and reading the index, not by the page merely loading.
 
+## The day sheet (Word / OneNote loop)
+
+The owner keeps notes in OneNote. Each evening a one-day Word document is
+written from his calendar and the engine's prayer times; he annotates it,
+saves it, sends it back; the next sheet is written from that. The calendar
+data is personal — the input JSON lives in the scratchpad and is **never
+committed**. Only the scripts are.
+
+```bash
+# 1. calendar → events JSON (Google Calendar MCP; output lands in tool-results)
+# 2. prayer times for the run of days, in the owner's timezone
+node .claude/skills/mizan/scripts/prayers.js 2026-09-27 8 > $SCRATCH/prayers.json
+# 3. assemble input: { date, prayers, gym:{"0":"07:30","1":"16:45","6":"07:30"}, events:[{date,start,end,title,allDay}] }
+#    (all-day items from a phone-synced calendar arrive as start.date = "YYYY-MM-DDT00:00:00Z" — slice to 10 chars)
+# 4. write the document; `docx` must be resolvable (npm install docx in $SCRATCH if require fails)
+cd $SCRATCH && node /path/to/repo/.claude/skills/mizan/scripts/daysheet.js sheet-<date>.json out/
+```
+
+Then make the OneNote copy — OneNote does not open .docx as a page, but it
+keeps tables and ☐ boxes when pasted from a web page (inline styles only;
+it drops `<style>` blocks):
+
+```bash
+cd $SCRATCH && npm install mammoth   # once, if require fails
+node /path/to/repo/.claude/skills/mizan/scripts/tohtml.js out/mizan-<date>.docx out/mizan-<date>.html "Mīzān · <Day DD Mon>"
+```
+
+Send the `.html` first (that is the one he uses), the `.docx` second, with SendUserFile. Measure names and rubrics in
+`daysheet.js` mirror `MEASURES` in core.js — change both or neither. When an
+annotated sheet comes back, read it with the docx skill (`pandoc` if present,
+otherwise unzip and read `word/document.xml`), reconcile against what the
+calendar says happened, and write the next sheet. Never guess the numbers he
+didn't write.
+
+## The Lab (participant edition)
+
+`mizan/lab/` is the same model for other people: a standalone sheet over
+`mizan/lab/lab.js`, its own key (`mizan.lab.v1`), a five-question onboarding
+that assigns a participant code, three feedback boxes, and a packet the
+participant sends from their own mail app. `mizan/lab/log/` is the public
+record of what their feedback changed, by code only. The protocol — roles, the
+nightly ingest, what is private, the research boundary — is in
+`references/lab-protocol.md`; read it before touching anything under `lab/`.
+
+Two rules that bite: **`lab.js` mirrors `MEASURES`, `DEFW`, `PHASES` and the
+ladder gates from `core.js`** — change both or neither; `smoke.js` fails if the
+rubrics or weights drift. And **nothing a participant sends is ever committed**:
+packets go through `scripts/lab-ingest.js` into the scratchpad, and only the
+decision reaches the Log.
+
 ## Voice
 
 Direct, specific, unsentimental; the register of a good examiner's memo rather

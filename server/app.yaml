@@ -1,0 +1,25 @@
+# DigitalOcean App Platform alternative to the Droplet.
+# doctl apps create --spec server/app.yaml
+name: mizan
+region: nyc
+services:
+  - name: api
+    dockerfile_path: server/Dockerfile
+    source_dir: server
+    github:
+      repo: MalikAI-786/MalikAI-786.github.io
+      branch: main
+      deploy_on_push: true
+    http_port: 8080
+    instance_size_slug: basic-xxs
+    health_check:
+      http_path: /healthz
+    envs:
+      - { key: DATABASE_URL,  scope: RUN_TIME, type: SECRET }
+      - { key: PUBLIC_URL,    scope: RUN_TIME, value: "${APP_URL}" }
+      - { key: APP_URL,       scope: RUN_TIME, value: "https://malikai-786.github.io/mizan/coach/" }
+databases:
+  - name: mizan-db
+    engine: PG
+    version: "16"
+    production: false

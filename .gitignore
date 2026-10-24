@@ -25,3 +25,7 @@ scratch/
 
 # Newsletter drafts — local only, never published from this public repo
 tools/newsletter/drafts/
+
+# server — never commit secrets or installed deps
+server/.env
+server/node_modules/

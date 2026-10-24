@@ -1,0 +1,411 @@
+<title>Mīzān</title>
+<style>
+/* Layout: a command sheet — masthead, then Today | Ask Mīzān side by side, then the next fourteen days, then the backlog under triage. One column under 820px. */
+:root{
+  --ground:#F6F3F0; --surface:#FFFFFF; --raise:#EFE9E3; --line:#E2DAD3;
+  --ink:#14181C; --muted:#5A646E; --faint:#A6B0BA;
+  --ember:#E0662E; --ember-ink:#AD4317; --ember-wash:#FAE3D6;
+  --verd:#0F5F5A; --verd-wash:rgba(15,95,90,.09);
+  --warn:#9A6400; --warn-wash:#FBF0D9; --bad:#A02C2C; --bad-wash:#F8E1DF;
+  --record:"Bitstream Charter",Charter,"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --statement:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --instrument:ui-monospace,"SF Mono",Menlo,"Cascadia Mono","Roboto Mono",monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ground:#0E1114; --surface:#14181C; --raise:#1A2027; --line:#263039;
+  --ink:#EFE9E3; --muted:#A6B0BA; --faint:#5A646E;
+  --ember:#E8834F; --ember-ink:#F58E5C; --ember-wash:rgba(224,102,46,.14);
+  --verd:#4FC0B2; --verd-wash:rgba(79,192,178,.12);
+  --warn:#E6B65C; --warn-wash:rgba(230,182,92,.12); --bad:#F08A80; --bad-wash:rgba(240,138,128,.12);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --ground:#0E1114; --surface:#14181C; --raise:#1A2027; --line:#263039;
+  --ink:#EFE9E3; --muted:#A6B0BA; --faint:#5A646E;
+  --ember:#E8834F; --ember-ink:#F58E5C; --ember-wash:rgba(224,102,46,.14);
+  --verd:#4FC0B2; --verd-wash:rgba(79,192,178,.12);
+  --warn:#E6B65C; --warn-wash:rgba(230,182,92,.12); --bad:#F08A80; --bad-wash:rgba(240,138,128,.12);
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--statement);font-size:15px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px;padding-block:22px 64px;display:grid;gap:22px}
+.lbl{font-family:var(--instrument);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+h1,h2{font-family:var(--record);font-weight:700;letter-spacing:-.015em;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.9rem,4.5vw,2.6rem);line-height:1.05}
+h2{font-size:1.25rem}
+.mast{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;border-bottom:2px solid var(--ember);padding-bottom:14px}
+.mast .sub{color:var(--muted);font-size:.9rem}
+.stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.stage{background:var(--surface);padding:14px 16px;min-width:0}
+.stage .ar{font-family:var(--record);font-size:1.05rem;font-weight:700}
+.stage p{margin:4px 0 0;color:var(--muted);font-size:.86rem}
+.stage ul{margin:8px 0 0;padding-left:18px;font-size:.88rem}
+.cols{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:22px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0;display:grid;gap:14px}
+.ph{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.prayers{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.pr{background:var(--verd-wash);border-radius:6px;padding:8px 6px;text-align:center}
+.pr b{display:block;font-family:var(--record);font-size:.95rem}
+.pr span{font-family:var(--instrument);font-size:.82rem;font-variant-numeric:tabular-nums;color:var(--verd)}
+.pr.next{outline:2px solid var(--verd)}
+.tl{display:grid;gap:2px}
+.ev{display:grid;grid-template-columns:5.2rem minmax(0,1fr);gap:10px;padding:6px 8px;border-radius:6px}
+.ev .tm{font-family:var(--instrument);font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
+.ev.key{background:var(--ember-wash)}
+.ev.key .tt{font-weight:600}
+.ev.rt .tt{color:var(--muted)}
+.ev.past{opacity:.45}
+.one{display:grid;gap:6px}
+input[type=text],textarea{width:100%;font:inherit;color:var(--ink);background:var(--ground);border:1px solid var(--line);border-radius:6px;padding:9px 11px}
+input[type=text]:focus,textarea:focus,button:focus-visible{outline:2px solid var(--ember);outline-offset:1px}
+.c369{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cnt{border:1px solid var(--line);border-radius:6px;padding:8px;display:grid;gap:6px;justify-items:center}
+.cnt .n{font-family:var(--instrument);font-variant-numeric:tabular-nums}
+.cnt.done{background:var(--verd-wash);border-color:var(--verd)}
+button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 11px}
+button.pri{background:var(--ember);border-color:var(--ember);color:#fff;font-weight:600}
+button:disabled{opacity:.45;cursor:default}
+.chat{display:grid;gap:10px}
+.log{display:grid;gap:10px;max-height:460px;overflow-y:auto;padding-right:4px}
+.msg{padding:10px 12px;border-radius:8px;white-space:pre-wrap;font-size:.93rem;min-width:0;overflow-wrap:anywhere}
+.msg.me{background:var(--raise);justify-self:end;max-width:88%}
+.msg.ai{background:var(--ground);border-left:3px solid var(--ember)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.82rem;padding:5px 10px;border-radius:999px}
+.chip.on{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.ask{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.note{font-size:.82rem;color:var(--muted)}
+.days{display:grid;gap:12px}
+.day{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:12px;border-top:1px solid var(--line);padding-top:10px}
+.day .dl{font-family:var(--record);font-weight:700}
+.day .dl small{display:block;font-family:var(--instrument);font-weight:400;font-size:.72rem;color:var(--muted);letter-spacing:.08em}
+.items{display:grid;gap:4px}
+.it{display:flex;gap:8px;align-items:baseline;min-width:0}
+.it .tm{font-family:var(--instrument);font-size:.78rem;color:var(--muted);flex:none;width:3.2rem;font-variant-numeric:tabular-nums}
+.tag{font-family:var(--instrument);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:4px;flex:none;background:var(--raise);color:var(--muted)}
+.tag.legal{background:var(--bad-wash);color:var(--bad)}
+.tag.money{background:var(--warn-wash);color:var(--warn)}
+.tag.school,.tag.career{background:var(--verd-wash);color:var(--verd)}
+.tag.travel,.tag.body{background:var(--ember-wash);color:var(--ember-ink)}
+.stats{display:flex;flex-wrap:wrap;gap:18px}
+.stat b{display:block;font-family:var(--record);font-size:1.7rem;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{font-size:.8rem;color:var(--muted)}
+.tasks{display:grid;gap:6px}
+.task{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:8px;border-left-width:4px}
+.task.Urgent{border-left-color:var(--bad)}
+.task.High{border-left-color:var(--warn)}
+.task.Medium,.task.Long-term{border-left-color:var(--faint)}
+.task .tt{font-weight:600}
+.task .meta{font-size:.8rem;color:var(--muted)}
+.task .nx{font-size:.84rem;color:var(--muted);margin-top:2px}
+.task.st-done{opacity:.5}
+.task.st-done .tt{text-decoration:line-through}
+.task.st-drop{opacity:.4}
+.task.st-today{background:var(--ember-wash)}
+.acts{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.acts button{font-size:.78rem;padding:4px 8px}
+.acts button.sel{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.empty{color:var(--muted);font-size:.9rem}
+@media (max-width:820px){.cols{grid-template-columns:minmax(0,1fr)}.stages{grid-template-columns:minmax(0,1fr)}.day{grid-template-columns:minmax(0,1fr)}.task{grid-template-columns:minmax(0,1fr)}.acts{justify-content:flex-start}}
+@media (max-width:460px){.prayers{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <div>
+      <div class="lbl">Mīzān · the balance</div>
+      <h1 id="today-h">Today</h1>
+    </div>
+    <div class="sub" id="fresh"></div>
+  </header>
+
+  <section class="stages" aria-label="Today through the three stages of khudī">
+    <div class="stage"><div class="lbl">1 · Iṭāʿat — obedience</div><div class="ar">What cannot move</div><p>Prayers, hard deadlines, money that is due.</p><ul id="st1"></ul></div>
+    <div class="stage"><div class="lbl">2 · Ẓabt-e-nafs — restraint</div><div class="ar">What to refuse</div><p>The backlog you will not touch today. Drop is a decision, not a failure.</p><ul id="st2"></ul></div>
+    <div class="stage"><div class="lbl">3 · Niyābat — vicegerency</div><div class="ar">What to build</div><p>The one thing that moves your life forward.</p><ul id="st3"></ul></div>
+  </section>
+
+  <div class="cols">
+    <section class="panel" aria-labelledby="h-today">
+      <div class="ph"><h2 id="h-today">The day</h2><span class="lbl" id="today-sub"></span></div>
+      <div class="prayers" id="prayers"></div>
+      <div class="one">
+        <label class="lbl" for="oneThing">One thing that makes today count</label>
+        <input type="text" id="oneThing" placeholder="Name it. One line." />
+      </div>
+      <div>
+        <div class="lbl" style="margin-bottom:6px">3-6-9 · same line, 3× morning, 6× midday, 9× evening</div>
+        <div class="c369" id="c369"></div>
+      </div>
+      <div>
+        <div class="ph" style="margin-bottom:6px"><span class="lbl">Timeline</span><button class="chip" id="rtToggle" type="button">Show routine</button></div>
+        <div class="tl" id="timeline"></div>
+      </div>
+      <div class="note" id="saveNote">Your entries here are saved for Claude to read.</div>
+    </section>
+
+    <section class="panel chat" aria-labelledby="h-ask">
+      <div class="ph"><h2 id="h-ask">Ask Mīzān</h2><span class="lbl">sees your calendar, backlog and today</span></div>
+      <div class="chips" id="quick"></div>
+      <div class="log" id="log" aria-live="polite"></div>
+      <form class="ask" id="askForm">
+        <textarea id="askIn" rows="2" placeholder="What should I do with the next two hours?"></textarea>
+        <button class="pri" type="submit" id="askBtn">Ask</button>
+      </form>
+      <div class="note" id="askNote">Answers come from the data on this page. Mīzān does not give legal, medical or religious rulings. It points you to counsel or a scholar.</div>
+    </section>
+  </div>
+
+  <section class="panel" aria-labelledby="h-days">
+    <div class="ph"><h2 id="h-days">Next fourteen days</h2><span class="lbl">routine blocks hidden</span></div>
+    <div class="days" id="days"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="h-back">
+    <div class="ph"><h2 id="h-back">Backlog under triage</h2><span class="lbl">from the Notion Command Center</span></div>
+    <div class="stats" id="stats"></div>
+    <p class="note" style="margin:0">Most of these passed their due date weeks ago. A list this long cannot be done; it can only be decided. Mark each one: <b>Today</b>, <b>Done</b>, or <b>Drop</b>. Claude reads your marks each night and updates Notion.</p>
+    <div class="chips" id="cats"></div>
+    <div class="tasks" id="tasks"></div>
+  </section>
+</div>
+
+<script id="mz-data" type="application/json">/*__DATA__*/</script>
+<script>
+(function(){
+'use strict';
+var D = JSON.parse(document.getElementById('mz-data').textContent);
+var $ = function(id){ return document.getElementById(id); };
+function el(tag, cls, txt){ var e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; }
+function pad(n){ return (n<10?'0':'')+n; }
+function nyNow(){
+  var p = new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+  var o={}; p.forEach(function(x){o[x.type]=x.value;});
+  return {date:o.year+'-'+o.month+'-'+o.day, hm:(o.hour==='24'?'00':o.hour)+':'+o.minute};
+}
+var NOW = nyNow(), TODAY = NOW.date;
+var DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function dt(k){ var a=k.split('-'); return new Date(+a[0],+a[1]-1,+a[2],12); }
+function lab(k){ var d=dt(k); return DOW[d.getDay()]+' '+d.getDate()+' '+MON[d.getMonth()]; }
+function addD(k,n){ var d=dt(k); d.setDate(d.getDate()+n); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function daysBetween(a,b){ return Math.round((dt(b)-dt(a))/864e5); }
+function clean(t){ return String(t||'').replace(/^[☀-➿\uD83C-􏰀-\uDFFF️\s·]+/,'').trim(); }
+var ROUTINE=/3-6-9|Daily brief|Articulation drill|Health chase|APPLY BLOCK|Application block|nightly close|weekly read|APPLY —/i;
+/* Domain keywords are generic here; personal names (parties, counsel) come
+   only from the private data file as D.domains, never from this public template. */
+var DOM = Object.assign({
+  legal:'subpoena|transcript|deposition|CPLR|NYSCEF|court|trial|expert|counsel|filing',
+  money:'mortgage|rent|payment|\\$|tax|bank|credit|certify',
+  school:'class|Canvas|Residency|research|Chapter|DBA|law school',
+  career:'apply|job|career|interview|club|newsletter',
+  travel:'flight|travel|airport',
+  body:'workout|gym|training|health'
+}, D.domains||{});
+function domain(t){
+  for(var k in DOM){ if(new RegExp(DOM[k],'i').test(t)) return k; }
+  return 'other';
+}
+var DLAB={legal:'Legal',money:'Money',school:'School',career:'Career',travel:'Travel',body:'Body',other:'Life'};
+
+/* ---- masthead ---- */
+$('today-h').textContent = lab(TODAY);
+$('fresh').textContent = 'Calendar and Notion as of '+D.builtAt+' · refreshed nightly';
+var dayN = Math.max(1, daysBetween(D.cycleStart||TODAY, TODAY)+1);
+
+/* ---- prayers ---- */
+var pt = D.prayers[TODAY] || [];
+var nextIdx = pt.findIndex(function(p){ return p[1] > NOW.hm; });
+pt.forEach(function(p,i){ var c=el('div','pr'+(i===nextIdx?' next':'')); c.appendChild(el('b',null,p[0])); c.appendChild(el('span',null,p[1])); $('prayers').appendChild(c); });
+if(!pt.length) $('prayers').appendChild(el('div','empty','Prayer times not computed for this date. They refresh with the nightly rebuild.'));
+$('today-sub').textContent = pt.length ? 'New York · ISNA' : '';
+
+/* ---- timeline ---- */
+var showRt=false;
+function evsOn(k){ return D.events.filter(function(e){return e.d===k;}).sort(function(a,b){return (a.s||'00:00').localeCompare(b.s||'00:00');}); }
+function drawTimeline(){
+  var box=$('timeline'); box.textContent='';
+  var evs = evsOn(TODAY);
+  var merged = evs.map(function(e){return {s:e.s,e:e.e,t:clean(e.t),rt:ROUTINE.test(e.t),pr:false};})
+    .concat(pt.map(function(p){return {s:p[1],e:'',t:p[0]+' — prayer',rt:false,pr:true};}))
+    .sort(function(a,b){return (a.s||'').localeCompare(b.s||'');});
+  var shown=0;
+  merged.forEach(function(x){
+    if(x.rt && !showRt) return;
+    var past = x.e ? x.e < NOW.hm : (x.s && x.s < NOW.hm && !x.pr);
+    var r=el('div','ev'+(x.rt?' rt':(x.pr?'':' key'))+(past?' past':''));
+    r.appendChild(el('div','tm', x.s ? x.s+(x.e?'–'+x.e:'') : 'all day'));
+    r.appendChild(el('div','tt', x.t));
+    box.appendChild(r); shown++;
+  });
+  if(!shown) box.appendChild(el('div','empty','Nothing fixed on the calendar today beyond the routine blocks.'));
+  $('rtToggle').textContent = showRt ? 'Hide routine' : 'Show routine';
+}
+$('rtToggle').addEventListener('click',function(){ showRt=!showRt; drawTimeline(); });
+drawTimeline();
+
+/* ---- next 14 days ---- */
+(function(){
+  var box=$('days'); var any=false;
+  for(var i=1;i<=14;i++){
+    var k=addD(TODAY,i);
+    var evs=evsOn(k).filter(function(e){return !ROUTINE.test(e.t);});
+    if(!evs.length) continue; any=true;
+    var row=el('div','day'); var dl=el('div','dl',lab(k)); dl.appendChild(el('small',null, i===1?'tomorrow':'in '+i+' days')); row.appendChild(dl);
+    var its=el('div','items');
+    evs.forEach(function(e){ var it=el('div','it'); var dm=domain(e.t);
+      it.appendChild(el('span','tm',e.s||'all day')); it.appendChild(el('span','tag '+dm,DLAB[dm])); it.appendChild(el('span',null,clean(e.t))); its.appendChild(it); });
+    row.appendChild(its); box.appendChild(row);
+  }
+  if(!any) box.appendChild(el('div','empty','No fixed commitments in the next fourteen days.'));
+})();
+
+/* ---- state (db) ---- */
+var state={ triage:{}, day:{ m:0, md:0, e:0, oneThing:'' } };
+var db=null, dayRef=null;
+function tid(t){ return t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,80); }
+
+/* ---- 3-6-9 + one thing ---- */
+var SLOTS=[['m','Morning',3],['md','Midday',6],['e','Evening',9]];
+function draw369(){
+  var box=$('c369'); box.textContent='';
+  SLOTS.forEach(function(s){
+    var n=state.day[s[0]]||0, done=n>=s[2];
+    var c=el('div','cnt'+(done?' done':''));
+    c.appendChild(el('div','lbl',s[1]));
+    c.appendChild(el('div','n',n+' / '+s[2]));
+    var b=el('button',null,done?'Done':'+1'); b.type='button'; b.disabled=done;
+    b.addEventListener('click',function(){ state.day[s[0]]=Math.min(s[2],(state.day[s[0]]||0)+1); draw369(); saveDay(); drawStages(); });
+    c.appendChild(b); box.appendChild(c);
+  });
+}
+var saveT=null;
+function saveDay(){
+  if(!dayRef) return;
+  clearTimeout(saveT);
+  saveT=setTimeout(function(){
+    dayRef.set({date:TODAY,m:state.day.m||0,md:state.day.md||0,e:state.day.e||0,oneThing:state.day.oneThing||'',at:new Date().toISOString()})
+      .catch(function(){ $('saveNote').textContent='Could not save just now. Your entry is still on screen; it will save on the next change.'; });
+  },600);
+}
+$('oneThing').addEventListener('input',function(e){ state.day.oneThing=e.target.value; saveDay(); drawStages(); });
+
+/* ---- backlog ---- */
+var catFilter='All';
+function overdue(t){ return t.due && t.due < TODAY; }
+function drawBacklog(){
+  var open=D.tasks.filter(function(t){ var s=state.triage[tid(t.t)]; return !s || s.state==='today'; });
+  var od=D.tasks.filter(overdue).length;
+  var decided=D.tasks.filter(function(t){ var s=state.triage[tid(t.t)]; return s && (s.state==='done'||s.state==='drop'); }).length;
+  var st=$('stats'); st.textContent='';
+  [[D.tasks.length,'open in Notion'],[od,'past their due date'],[decided,'decided on this page'],[open.length,'still to decide']].forEach(function(x){
+    var s=el('div','stat'); s.appendChild(el('b',null,String(x[0]))); s.appendChild(el('span',null,x[1])); st.appendChild(s); });
+  var cats=['All'].concat(Array.from(new Set(D.tasks.map(function(t){return t.c;}))));
+  var cb=$('cats'); cb.textContent='';
+  cats.forEach(function(c){ var n=c==='All'?D.tasks.length:D.tasks.filter(function(t){return t.c===c;}).length;
+    var b=el('button','chip'+(c===catFilter?' on':''),c+' · '+n); b.type='button';
+    b.addEventListener('click',function(){catFilter=c;drawBacklog();}); cb.appendChild(b); });
+  var box=$('tasks'); box.textContent='';
+  var order={today:0,undefined:1,done:2,drop:3};
+  D.tasks.filter(function(t){return catFilter==='All'||t.c===catFilter;})
+    .sort(function(a,b){ var sa=(state.triage[tid(a.t)]||{}).state, sb=(state.triage[tid(b.t)]||{}).state;
+      return (order[sa]-order[sb]) || ((a.due||'9')<(b.due||'9')?-1:1); })
+    .forEach(function(t){
+      var s=(state.triage[tid(t.t)]||{}).state;
+      var r=el('div','task '+t.p+(s?' st-'+s:''));
+      var l=el('div'); l.style.minWidth='0';
+      l.appendChild(el('div','tt',t.t));
+      var late = overdue(t) ? daysBetween(t.due,TODAY)+' days past due' : (t.due?'due '+lab(t.due):'no date');
+      l.appendChild(el('div','meta',t.c+' · '+t.p+' · '+late+(t.s==='In progress'?' · in progress':'')));
+      l.appendChild(el('div','nx',t.n));
+      var a=el('div','acts');
+      [['today','Today'],['done','Done'],['drop','Drop']].forEach(function(o){
+        var b=el('button',s===o[0]?'sel':null,o[1]); b.type='button';
+        b.addEventListener('click',function(){ setTriage(t,s===o[0]?null:o[0]); });
+        a.appendChild(b); });
+      r.appendChild(l); r.appendChild(a); box.appendChild(r);
+    });
+}
+function setTriage(t,v){
+  var id=tid(t.t);
+  if(v) state.triage[id]={state:v,title:t.t,at:new Date().toISOString()}; else delete state.triage[id];
+  drawBacklog(); drawStages();
+  if(!db) return;
+  var ref=db.doc('triage/'+id);
+  (v ? ref.set({state:v,title:t.t,category:t.c,at:new Date().toISOString()}) : ref.delete())
+    .catch(function(){ $('saveNote').textContent='A triage mark did not save. Tap it again.'; });
+}
+
+/* ---- the three stages, computed ---- */
+function drawStages(){
+  var s1=$('st1'), s2=$('st2'), s3=$('st3'); s1.textContent=''; s2.textContent=''; s3.textContent='';
+  var fixed = evsOn(TODAY).filter(function(e){ return !ROUTINE.test(e.t) && /legal|money/.test(domain(e.t)); });
+  if(pt.length) s1.appendChild(el('li',null,'Five prayers: '+pt.map(function(p){return p[1];}).join(' · ')));
+  fixed.slice(0,4).forEach(function(e){ s1.appendChild(el('li',null,(e.s?e.s+' ':'')+clean(e.t))); });
+  var soon = D.events.filter(function(e){ return e.d>TODAY && e.d<=addD(TODAY,3) && domain(e.t)==='legal' && !ROUTINE.test(e.t); });
+  soon.slice(0,2).forEach(function(e){ s1.appendChild(el('li',null,lab(e.d)+': '+clean(e.t))); });
+  var dropped = Object.values(state.triage).filter(function(x){return x.state==='drop';}).length;
+  var untouched = D.tasks.filter(function(t){ return !state.triage[tid(t.t)]; }).length;
+  s2.appendChild(el('li',null, untouched+' backlog items left undecided. Not today unless marked Today.'));
+  s2.appendChild(el('li',null, dropped ? dropped+' dropped on purpose.' : 'Nothing dropped yet. Start with five.'));
+  var todays = D.tasks.filter(function(t){ var x=state.triage[tid(t.t)]; return x&&x.state==='today'; });
+  if(state.day.oneThing) s3.appendChild(el('li',null,'One thing: '+state.day.oneThing));
+  todays.slice(0,3).forEach(function(t){ s3.appendChild(el('li',null,t.t)); });
+  if(!s3.childNodes.length) s3.appendChild(el('li',null,'Name your one thing in The day, or mark a backlog item Today.'));
+}
+
+/* ---- Ask Mīzān ---- */
+var history=[], sample=null, busy=false;
+var QUICK=['What are my three non-negotiables today?','Which five backlog items should I drop, and why?','Plan my next two hours.','What is due in the next three days?'];
+QUICK.forEach(function(q){ var b=el('button','chip',q); b.type='button'; b.addEventListener('click',function(){ ask(q); }); $('quick').appendChild(b); });
+function context(){
+  var tri = D.tasks.map(function(t){ var s=state.triage[tid(t.t)]; return '- ['+(s?s.state:'undecided')+'] '+t.t+' ('+t.c+'; '+t.p+'; due '+(t.due||'none')+'; '+t.s+') next: '+t.n; }).join('\n');
+  var cal = D.events.filter(function(e){ return e.d>=TODAY && e.d<=addD(TODAY,14); })
+    .map(function(e){ return e.d+' '+(e.s||'all-day')+(e.e?'-'+e.e:'')+' '+clean(e.t)+(ROUTINE.test(e.t)?' (routine)':''); }).join('\n');
+  return 'You are Mīzān, the personal assistant of Yasir A. Malik. You are built on Muhammad Iqbal\'s theory of khudī (selfhood) from Asrār-i-Khudī: the self is strengthened in three stages — iṭāʿat (obedience to law: fixed obligations such as the five prayers, court deadlines, money that is due), ẓabt-e-nafs (self-control: refusing distraction, dropping what does not serve), and niyābat-e-ilāhī (vicegerency: building, creating, leading). Frame advice through these stages when it helps, without preaching.\n'
+   + 'Voice: direct, specific, an examiner\'s memo. Short. Lead with the answer. Use only the data below; if something is not in it, say you do not know. Never invent a deadline, amount, or fact. Never give legal, medical, tax or religious rulings: say which professional to ask. Never claim to have sent, filed or paid anything; you cannot act outside this page.\n'
+   + 'Now (New York): '+TODAY+' '+NOW.hm+'. Data built: '+D.builtAt+'.\n'
+   + 'Prayer times today: '+pt.map(function(p){return p[0]+' '+p[1];}).join(', ')+'\n'
+   + 'One thing today: '+(state.day.oneThing||'(not named)')+'. 3-6-9 today: '+(state.day.m||0)+'/3, '+(state.day.md||0)+'/6, '+(state.day.e||0)+'/9.\n'
+   + 'Calendar, next 14 days:\n'+cal+'\n'
+   + 'Backlog from the Notion Command Center with the triage mark Yasir gave each item on this page:\n'+tri;
+}
+function addMsg(who,txt){ var m=el('div','msg '+who,txt); $('log').appendChild(m); $('log').scrollTop=$('log').scrollHeight; return m; }
+function ask(q){
+  if(busy) return;
+  if(!sample){ $('askNote').textContent='Ask Mīzān is not available in this view. Open the page in claude.ai while signed in.'; return; }
+  q=String(q||'').trim(); if(!q) return;
+  busy=true; $('askBtn').disabled=true; $('askIn').value='';
+  addMsg('me',q);
+  var out=addMsg('ai','Thinking…');
+  var msgs=[{role:'user',content:context()+'\n\n---\nQuestion: '+(history.length?history[0].q:q)}];
+  if(history.length){ msgs=[{role:'user',content:context()+'\n\n---\nQuestion: '+history[0].q},{role:'assistant',content:history[0].a}];
+    history.slice(1).forEach(function(h){ msgs.push({role:'user',content:h.q}); msgs.push({role:'assistant',content:h.a}); });
+    msgs.push({role:'user',content:q}); }
+  sample(msgs,{cache:false,onText:function(u){ out.textContent=u.text; $('log').scrollTop=$('log').scrollHeight; }})
+    .then(function(r){ out.textContent=r.text; history.push({q:q,a:r.text}); if(history.length>8) history.shift(); })
+    .catch(function(e){
+      if(e&&e.code==='not_granted'){ out.textContent='Ask Mīzān needs your permission to use Claude on this page. Use the page\'s Permissions menu to allow it.'; }
+      else if(e&&e.code==='rate_limited'){ out.textContent='Too many questions in a short time. Wait a minute and ask again.'; }
+      else { out.textContent='That question did not go through'+(e&&e.message?': '+e.message:'')+'. Try again.'; }
+    })
+    .then(function(){ busy=false; $('askBtn').disabled=false; });
+}
+$('askForm').addEventListener('submit',function(e){ e.preventDefault(); ask($('askIn').value); });
+$('askIn').addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); ask($('askIn').value); } });
+
+/* ---- first paint, then capabilities ---- */
+draw369(); drawBacklog(); drawStages();
+if(window.claude && window.claude.use){
+  window.claude.use('sample').then(function(s){ sample=s; if(!s) $('askNote').textContent='Ask Mīzān is not available in this view. Open the page in claude.ai while signed in.'; });
+  window.claude.use('db').then(function(d){
+    if(!d){ $('saveNote').textContent='Saving is not available in this view; entries stay on screen only.'; return; }
+    db=d; dayRef=db.doc('days/'+TODAY);
+    dayRef.get().then(function(snap){ if(snap.exists){ var x=snap.data()||{}; state.day={m:x.m||0,md:x.md||0,e:x.e||0,oneThing:x.oneThing||''}; $('oneThing').value=state.day.oneThing; draw369(); drawStages(); } }).catch(function(){});
+    db.collection('triage').get().then(function(qs){ qs.docs.forEach(function(doc){ var x=doc.data()||{}; state.triage[doc.id]={state:x.state,title:x.title,at:x.at}; }); drawBacklog(); drawStages(); }).catch(function(){});
+  });
+} else {
+  $('askNote').textContent='Ask Mīzān is not available in this view. Open the page in claude.ai while signed in.';
+  $('saveNote').textContent='Saving is not available in this view; entries stay on screen only.';
+}
+})();
+</script>
