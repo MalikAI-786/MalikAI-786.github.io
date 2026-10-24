@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Log · Mīzān Lab</title>
+<meta name="description" content="How the Mīzān model changed, and which participant feedback changed it. Participants appear by code only." />
+<link rel="stylesheet" href="../../core.css" />
+</head>
+<body data-page="log" data-root="../">
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="../">Mīzān<em>.</em> <span class="tag">lab</span></a>
+    <div class="nav-links" id="navLinks"></div>
+    <button class="icon-btn" id="themeBtn" title="Toggle theme">◐</button>
+  </div>
+</nav>
+
+<div class="wrap">
+<section>
+  <div class="sec-head">
+    <p class="eyebrow">Change log</p>
+    <h2>How the model changed, and why.</h2>
+    <p class="lede">Every entry names the feedback that caused it, by participant code, and the commit that carried it. <strong>A change with no feedback behind it is marked as the owner’s own.</strong> If something you sent is not here, it was read and not adopted — the entry says so, and says why.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <p class="eyebrow">How to read a packet</p>
+    <div class="small">A packet is plain text between <code class="mono">MIZAN-LAB-PACKET</code> and <code class="mono">END-PACKET</code>. Inside is JSON: your code, your onboarding answers (minus the handle and the commitment line), per-day computed scores, closures, fit ratings, and the three feedback boxes verbatim. Each night the owner’s assistant reads any packet that has arrived, writes an entry here, changes the instrument where the case is made, and drafts a note back to the participant describing what was and was not adopted. <b>Nothing is sent automatically</b>; the owner sends the note.</div>
+  </div>
+
+  <div id="entries">
+
+    <div class="phase" style="margin-bottom:12px">
+      <div class="d">2026-10-24 · owner · <span class="mono">lab created</span></div>
+      <h4>The participant edition exists.</h4>
+      <ul>
+        <li>Same seven measures, weights, phase boundaries and ladder gates as the owner’s instrument, so feedback is about one model and not two.</li>
+        <li>Three computed measures stay computed: Ṣalāh is a count of prayers held in window, ʿAmal a count of blocks plus the One Thing, Badan four ticked inputs. None of them can be self-rated.</li>
+        <li>The stage-2 clean-day gate, which depends on a ledger this edition does not carry, is replaced by <em>Ẓabt ≥ 3 on ≥ 8 of 14 days</em>. Declared here because it is the one place the two instruments differ.</li>
+        <li>Open question for the first participant: whether the four rubric steps of Ẓabt-e-nafs can be told apart on a day with no pressure on the commitment.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+</div>
+
+<footer><div class="wrap"><div class="spread">
+  <div class="tiny">Mīzān Lab · participant edition · entries name participants by code only</div>
+  <div class="tiny mono" id="footVer">—</div>
+</div></div></footer>
+
+<script src="../lab.js"></script>
+</body>
+</html>

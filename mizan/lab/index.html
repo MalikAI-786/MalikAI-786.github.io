@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Lab · Mīzān</title>
+<meta name="description" content="The participant edition of Mīzān: the same seven measures and khudī ladder, for people helping to refine the model. Data stays on your device." />
+<link rel="stylesheet" href="../core.css" />
+</head>
+<body data-page="lab" data-root="">
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="./">Mīzān<em>.</em> <span class="tag">lab</span></a>
+    <div class="nav-links" id="navLinks"></div>
+    <button class="icon-btn" id="themeBtn" title="Toggle theme">◐</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ ONBOARDING ============ -->
+<section id="onboard" hidden>
+  <div class="sec-head">
+    <p class="eyebrow">Participant edition</p>
+    <h2>You are being asked to test an instrument, not to be measured by it.</h2>
+    <p class="lede">Mīzān scores a day against seven measures drawn from the Qur’ān, and reads the result through Iqbal’s three stages of <strong>khudī</strong> — selfhood. The owner built it for himself. This copy exists so that someone else can run it on their own days and tell us where the model is wrong. <strong>Your scores stay on this device.</strong> The only thing that ever leaves is a feedback packet you build and send yourself, and you can read every byte of it before you do.</p>
+  </div>
+
+  <div class="grid g-2-1">
+    <div class="card">
+      <p class="eyebrow">Five questions, once</p>
+      <div class="field"><label class="fl" for="obHandle">How should the page address you? <span class="tiny">(stays on this device; never in a packet)</span></label>
+        <input type="text" id="obHandle" placeholder="a first name or a handle" /></div>
+      <div class="field"><label class="fl" for="obField">What is the work this month? <span class="tiny">(a proof, a paper, a course, a case — the ʿAmal measure counts blocks on <em>this</em>)</span></label>
+        <input type="text" id="obField" placeholder="e.g. the second chapter of the thesis" /></div>
+      <div class="field"><label class="fl" for="obHardest">Which measure do you expect to be hardest to hold?</label>
+        <select id="obHardest"></select>
+        <div class="tiny">A forecast. In two weeks the sheet will tell you whether you were right — that gap is one of the things the model is for.</div></div>
+      <div class="field"><label class="fl" for="obStage">Where would you place yourself today on Iqbal’s ladder?</label>
+        <select id="obStage">
+          <option value="">— choose one —</option>
+          <option value="0">Bekhudī — drift; the line is not holding</option>
+          <option value="1">Iṭāʿat — form holds without negotiation</option>
+          <option value="2">Ẓabt-e-nafs — the self argues with itself and mostly wins</option>
+          <option value="3">Niyābat — strong enough to be entrusted; things leave my hands</option>
+        </select>
+        <div class="tiny">Self-placement. The instrument will compute its own after fourteen days, from gates it publishes. The two rarely agree at first.</div></div>
+      <div class="field"><label class="fl" for="obZabt">The one commitment you are holding this month <span class="tiny">(for Ẓabt-e-nafs; stays on this device)</span></label>
+        <input type="text" id="obZabt" placeholder="e.g. no screen before Fajr" /></div>
+      <div class="field"><label class="fl" for="obIntention">One line: what are these forty days for? <span class="tiny">(optional)</span></label>
+        <input type="text" id="obIntention" placeholder="" /></div>
+    </div>
+
+    <div>
+      <div class="card">
+        <p class="eyebrow">Where feedback goes</p>
+        <div class="field"><label class="fl" for="obPartner">Your research partner’s name</label>
+          <input type="text" id="obPartner" placeholder="who you are refining this with" /></div>
+        <div class="field"><label class="fl" for="obTo">Their email <span class="tiny">(used only to open your own mail app)</span></label>
+          <input type="text" id="obTo" placeholder="" /></div>
+        <div class="tiny">If you arrived by a link they sent, these may already be filled in from that link. This page never sends anything itself — it opens <em>your</em> mail app with the packet in the body, and you press send.</div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <p class="eyebrow">What leaves this device</p>
+        <div class="small">Only when you send a packet, and only this: a participant code the page generates (not your name), your four answers above except the handle and the commitment line, each day’s <b>computed scores</b> and whether you closed it, your fit ratings, and whatever you type in the three feedback boxes. Not the One Thing, not the closing line, not the commitment.</div>
+        <label class="chk" style="margin-top:10px"><input type="checkbox" id="obConsent" /> I have read that, and I know I can erase everything from the Record card at any time.</label>
+        <div class="btn-row" style="margin-top:12px"><button class="btn primary" id="obGo">Start the sheet</button></div>
+        <div class="tiny" id="obErr" style="color:var(--bad);margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="grid g3">
+    <div class="card flat"><p class="eyebrow gold">Iṭāʿat</p><div class="small">Days 1–10. Three measures only: prayer, body, action. Form before judgment. The other four are switched off and the page says so.</div></div>
+    <div class="card flat"><p class="eyebrow gold">Ẓabt-e-nafs</p><div class="small">Days 11–20. Restraint and attention switch on. The week that decides the rest.</div></div>
+    <div class="card flat"><p class="eyebrow gold">ʿIshq → Niyābat</p><div class="small">Days 21–40. All seven, then one external requirement: something leaves your hands each week.</div></div>
+  </div>
+  <div class="tiny" style="margin-top:14px">Iqbal’s three-stage structure is from <em>Asrār-i-Khudī</em>. The measures cite <em>sūrah:āyah</em> so they can be checked against a muṣḥaf. The rubrics, weights, phases and gates are constructed and carry no authority beyond their usefulness — which is exactly what you are here to test.</div>
+</section>
+
+<!-- ============ THE SHEET ============ -->
+<section id="app" hidden>
+  <div id="dayBar" class="sec-head"></div>
+
+  <div class="grid g-2-1" style="margin-bottom:18px">
+    <div class="card">
+      <div class="spread" style="margin-bottom:14px">
+        <div class="dial">
+          <svg width="86" height="86" viewBox="0 0 86 86" id="dialSvg" aria-hidden="true"></svg>
+          <div><div class="num" id="idxNum">—</div><div class="tag">Khudī index · this day</div></div>
+        </div>
+        <div style="text-align:right">
+          <div class="tag">Computed stage</div>
+          <div style="font-size:1.16rem;font-weight:600;margin-top:3px" id="stageNow">—</div>
+          <div class="tiny" id="stageNote"></div>
+        </div>
+      </div>
+      <div class="stat-row" id="facultyRow"></div>
+      <div class="tiny" style="margin-top:10px" id="profileLine"></div>
+    </div>
+    <div class="card">
+      <p class="eyebrow">The One Thing</p>
+      <div class="field"><label class="fl" for="oneThing">What has to move today for the day to count?</label>
+        <input type="text" id="oneThing" /></div>
+      <div class="tiny">Written the night before if you can. Moving it adds one to ʿAmal — the only way a score on this sheet goes up by intention rather than tally.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:18px">
+    <p class="eyebrow">Seven measures · 0–3</p>
+    <div id="measures"></div>
+    <div class="tiny" style="margin-top:12px">Every 0–3 has four written definitions; the one you chose is shown under the control. If two definitions feel indistinguishable on a real day, that is a finding — put it in the feedback box.</div>
+  </div>
+
+  <div class="grid g2" style="margin-bottom:18px">
+    <div class="card">
+      <p class="eyebrow">Close the day</p>
+      <div class="field"><label class="fl" for="closeLine">One line of muḥāsaba — what was true today?</label>
+        <textarea id="closeLine"></textarea></div>
+      <label class="chk"><input type="checkbox" id="closedChk" /> Close this day. Closing is the audit trail; the ladder counts closed days, not good ones.</label>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Feedback to the model</p>
+      <div class="tiny" id="fbCount" style="margin-bottom:8px"></div>
+      <div id="fitSeg" style="margin-bottom:12px"></div>
+      <div class="field"><label class="fl" for="fbMeasure">About</label><select id="fbMeasure"></select></div>
+      <div class="field"><label class="fl" for="fbWorked">What held up</label><textarea id="fbWorked" placeholder="a definition that was exactly right; a weight that felt fair"></textarea></div>
+      <div class="field"><label class="fl" for="fbWrong">What was wrong, and on what kind of day</label><textarea id="fbWrong" placeholder="a rubric step you could not tell from its neighbour; a measure that punished the wrong thing"></textarea></div>
+      <div class="field"><label class="fl" for="fbChange">What you would change</label><textarea id="fbChange" placeholder="specific: a definition, a weight, a gate, a phase boundary"></textarea></div>
+    </div>
+  </div>
+
+  <div class="grid g-2-1" style="margin-bottom:18px">
+    <div class="card">
+      <p class="eyebrow">Thirty days</p>
+      <div class="chartbox"><svg id="trendSvg" style="width:100%;height:auto;display:block" viewBox="0 0 640 160" role="img" aria-label="Khudī index, last thirty days"></svg></div>
+      <div class="tiny" id="trendNote"></div>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Ladder gates · rolling 14 days</p>
+      <div id="ladderGates" style="display:grid;gap:10px"></div>
+      <div class="tiny" style="margin-top:8px">Stages can be lost. No gate is a streak.</div>
+    </div>
+  </div>
+
+  <div class="card" id="record">
+    <p class="eyebrow">Record · send feedback</p>
+    <div class="small">A packet is your computed scores, closures, fit ratings and the three feedback boxes, keyed to your participant code. Build it whenever you have something to say — weekly is plenty. Read it first; nothing leaves this page until you send it from your own mail app.</div>
+    <div class="btn-row" style="margin-top:12px">
+      <button class="btn primary" id="sendBtn">Send packet by email</button>
+      <button class="btn" id="copyBtn">Show &amp; copy packet</button>
+      <button class="btn" id="dlBtn">Download packet</button>
+      <button class="btn danger" id="resetBtn">Erase everything on this device</button>
+    </div>
+    <div class="tiny" id="packetNote" style="margin-top:8px"></div>
+    <pre id="packetOut" hidden class="mono tiny" style="white-space:pre-wrap;overflow-wrap:anywhere;background:var(--sunk);padding:12px;border:1px solid var(--line);margin-top:10px"></pre>
+    <div class="tiny" style="margin-top:10px">What changed because of feedback like yours is published, by participant code only, on the <a href="log/">Log</a>.</div>
+  </div>
+</section>
+
+</div>
+
+<footer><div class="wrap"><div class="spread">
+  <div class="tiny">Mīzān Lab · participant edition · data never leaves this browser unless you send it</div>
+  <div class="tiny mono" id="footVer">—</div>
+</div></div></footer>
+
+<script src="lab.js"></script>
+</body>
+</html>
