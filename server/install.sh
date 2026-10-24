@@ -6,7 +6,7 @@
 #
 # Installs Docker and Caddy if missing, clones the repo, generates its own
 # passwords, gets a TLS certificate, creates the schema, and prints your link
-# and both coach links at the end.
+# and any coach links you asked for at the end.
 #
 # Safe to run twice. It never drops an existing database.
 set -euo pipefail
@@ -163,25 +163,28 @@ SQL
 
 if [ "$FRESH" = 1 ]; then
   say "Creating accounts"
-  A="$(mint 'Yasir A. Malik' athlete full)"
-  S="$(mint 'Shahzaib Bhutto' coach upper)"
-  V="$(mint 'Tanveer Muhammad' coach skills)"
-  cat > /root/mizan-links.txt <<TXT
-Mīzān links — generated $(date -u +%Y-%m-%dT%H:%MZ)
-These do not expire. They are revoked, not timed out.
-Only hashes are stored, so a lost link is re-minted, never recovered.
-
-YOU (also the bearer token for the iOS Shortcut)
-  https://$HOST/j/$A
-  Shortcut: POST https://$HOST/ingest/health
-            Authorization: Bearer $A
-
-SHAHZAIB — spine and upper body
-  https://$HOST/j/$S
-
-TANVEER — flexibility and the three standards
-  https://$HOST/j/$V
-TXT
+  # Names are asked for here, never written into this script: the repository is
+  # public, and who coaches whom is a personal record. A blank coach name skips
+  # that coach; mint one later with ./mint-coach.sh "Name" upper|skills.
+  printf '  Your display name: ';                       read -r ATHLETE < $TTY
+  printf '  Upper-body coach name (blank to skip): ';   read -r COACH_UPPER < $TTY
+  printf '  Skills coach name (blank to skip): ';       read -r COACH_SKILLS < $TTY
+  A="$(mint "${ATHLETE:-athlete}" athlete full)"
+  {
+    printf 'Mīzān links — generated %s\n' "$(date -u +%Y-%m-%dT%H:%MZ)"
+    printf 'These do not expire. They are revoked, not timed out.\n'
+    printf 'Only hashes are stored, so a lost link is re-minted, never recovered.\n\n'
+    printf 'YOU (also the bearer token for the iOS Shortcut)\n  https://%s/j/%s\n' "$HOST" "$A"
+    printf '  Shortcut: POST https://%s/ingest/health\n            Authorization: Bearer %s\n' "$HOST" "$A"
+    if [ -n "$COACH_UPPER" ]; then
+      S="$(mint "$COACH_UPPER" coach upper)"
+      printf '\n%s — spine and upper body\n  https://%s/j/%s\n' "$COACH_UPPER" "$HOST" "$S"
+    fi
+    if [ -n "$COACH_SKILLS" ]; then
+      V="$(mint "$COACH_SKILLS" coach skills)"
+      printf '\n%s — flexibility and the three standards\n  https://%s/j/%s\n' "$COACH_SKILLS" "$HOST" "$V"
+    fi
+  } > /root/mizan-links.txt
   chmod 600 /root/mizan-links.txt
   printf '\n\033[1;32m  Done.\033[0m Your links are in \033[1m/root/mizan-links.txt\033[0m\n\n'
   cat /root/mizan-links.txt

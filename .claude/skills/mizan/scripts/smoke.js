@@ -296,6 +296,44 @@ function check(name, cond, detail) {
       /Mean/.test(await page.locator('#hSleepNote').innerText()));
     check('health charts draw resting heart rate',
       (await page.locator('#hRhr circle').count()) >= 1);
+
+    // --- the same Watch samples inside two phones' exports count once ---
+    // Both copies land in the same source bucket, so the per-source max cannot
+    // catch them; only a per-sample key can. Without it: 7000+7000+2000 steps.
+    const dC = ymd(6), dCprev = ymd(7);
+    const watchSteps = rec('Watch', 'QuantityTypeIdentifierStepCount', `unit="count" value="7000" startDate="${dC} 12:00:00 -0400" endDate="${dC} 13:00:00 -0400"`);
+    const watchSleep = rec('Watch', 'CategoryTypeIdentifierSleepAnalysis', `value="HKCategoryValueSleepAnalysisAsleepCore" startDate="${dCprev} 23:00:00 -0400" endDate="${dC} 06:00:00 -0400"`);
+    const dupX = path.join(os.tmpdir(), 'mizan-dupX.xml'), dupY = path.join(os.tmpdir(), 'mizan-dupY.xml');
+    fs.writeFileSync(dupX, ['<HealthData>', watchSteps, watchSleep, '</HealthData>'].join('\n'));
+    fs.writeFileSync(dupY, ['<HealthData>', watchSteps, watchSleep,
+      rec('Watch', 'QuantityTypeIdentifierStepCount', `unit="count" value="2000" startDate="${dC} 17:00:00 -0400" endDate="${dC} 18:00:00 -0400"`),
+      '</HealthData>'].join('\n'));
+    await page.goto(url('record/index.html')); await page.waitForTimeout(300);
+    await page.setInputFiles('#healthFile', [dupX, dupY]);
+    await page.waitForFunction(() => /new entries|Nothing new/.test(document.querySelector('#healthOut').innerText), { timeout: 30000 });
+    await page.click('#healthApply'); await page.waitForTimeout(400);
+    const dc = await page.evaluate(k => JSON.parse(localStorage.getItem('mizan.v1')).days[k], dC);
+    check('Watch samples repeated across two exports are counted once (steps)',
+      dc && dc.steps === 9000, String(dc && dc.steps));
+    check('Watch samples repeated across two exports are counted once (sleep)',
+      dc && dc.sleepHrs === 7, String(dc && dc.sleepHrs));
+  }
+
+  // --- a scheduled training day with no programmed split must still render ---
+  // Monday is a default training day with no ROT entry; that once threw on
+  // rot.n and blanked every renderer after renderBadan.
+  {
+    const errsBefore = problems.length;
+    const mon = (() => { const d = new Date(); d.setDate(d.getDate() + ((8 - d.getDay()) % 7 || 7));
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); })();
+    await page.goto(url('badan/index.html'));
+    // the continuity check below depends on the day already being viewed; restore it after
+    const prevCur = await page.evaluate(() => sessionStorage.getItem('mizan.cur'));
+    await page.evaluate(k => sessionStorage.setItem('mizan.cur', k), mon);
+    await page.reload(); await page.waitForTimeout(400);
+    check('Badan renders a training day that has no rotation set (Monday)',
+      problems.length === errsBefore && /no rotation set for Mon/.test(await page.locator('#gymToday').innerText()));
+    await page.evaluate(k => k ? sessionStorage.setItem('mizan.cur', k) : sessionStorage.removeItem('mizan.cur'), prevCur);
   }
 
   // --- cross-page day continuity, persistence, theme ---

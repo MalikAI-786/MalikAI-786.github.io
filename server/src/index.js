@@ -75,8 +75,12 @@ async function handle(req, res, url) {
       const [sessions, notes, skills, levels, health, workouts, hand, reqs] = await Promise.all([
         q(`SELECT id, on_date, brief, plan, planned_at, status, rpe, athlete_note, logged_at
              FROM sessions ORDER BY on_date DESC LIMIT 120`),
-        q(`SELECT n.id, n.session_id, n.body, n.created_at, p.display_name AS author
-             FROM session_notes n JOIN people p ON p.id = n.author_id
+        // LEFT JOIN: people_read shows a coach only their own row, so an inner
+        // join silently dropped every note the coach was allowed to read but
+        // did not write. The note stays; only the label falls back.
+        q(`SELECT n.id, n.session_id, n.body, n.created_at,
+                  COALESCE(p.display_name, 'shared brief') AS author
+             FROM session_notes n LEFT JOIN people p ON p.id = n.author_id
             ORDER BY n.created_at DESC LIMIT 200`),
         q(`SELECT id, name, brief, ladder, drills FROM skills ORDER BY sort, id`),
         q(`SELECT DISTINCT ON (skill_id) skill_id, level, tested_on, note
@@ -136,14 +140,17 @@ async function handle(req, res, url) {
     const lvl = Number(b.level);
     if (!b.skill_id || !Number.isInteger(lvl) || lvl < 0 || lvl > 5)
       return json(res, 400, { error: 'skill_id and level 0-5 required' });
+    // skill_levels is append-only by design and RLS grants no UPDATE, so a
+    // second test of the same skill on the same day is a conflict to report,
+    // not a row to overwrite (DO UPDATE was rejected by RLS and surfaced as 500).
     const out = await asPerson(me.id, c => c.query(
       `INSERT INTO skill_levels (skill_id, level, tested_on, set_by, note)
        VALUES ($1,$2,$3,$4,$5)
-       ON CONFLICT (skill_id, tested_on) DO UPDATE
-         SET level = EXCLUDED.level, note = EXCLUDED.note, set_by = EXCLUDED.set_by
+       ON CONFLICT (skill_id, tested_on) DO NOTHING
        RETURNING *`,
       [b.skill_id, lvl, b.tested_on || new Date().toISOString().slice(0, 10), me.id, b.note ?? null])
       .then(r => r.rows[0]));
+    if (!out) return json(res, 409, { error: 'a level is already recorded for this skill on this date; the history is append-only' });
     return json(res, 200, out);
   }
 
