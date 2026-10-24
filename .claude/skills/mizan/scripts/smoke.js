@@ -328,9 +328,81 @@ function check(name, cond, detail) {
   check('theme toggles back to dark',
     (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'dark');
 
-  // --- no network ---
+  // --- Lab (participant edition): standalone shell, own key, same model ---
+  const LAB = ['lab/index.html', 'lab/log/index.html'];
+  await page.goto(url('lab/index.html')); await page.waitForTimeout(350);
+  check('lab shows onboarding before a profile exists', await page.evaluate(() =>
+    !document.querySelector('#onboard').hidden && document.querySelector('#app').hidden));
+  check('lab onboarding lists the seven measures as the hardest-measure choices',
+    (await page.locator('#obHardest option').count()) === 8);
+  await page.click('#obGo'); await page.waitForTimeout(150);
+  check('lab refuses to start with the questions unanswered',
+    /Still needed/.test(await page.locator('#obErr').innerText()));
+  await page.goto(url('lab/index.html?to=partner%40example.test&partner=Partner')); await page.waitForTimeout(350);
+  check('lab prefills the partner from the invitation link', await page.evaluate(() =>
+    document.querySelector('#obTo').value === 'partner@example.test' && document.querySelector('#obPartner').value === 'Partner'));
+  // the owner's pages ran earlier in this same origin; the Lab must leave their state alone
+  const ownerBefore = await page.evaluate(() => localStorage.getItem('mizan.v1'));
+  await page.fill('#obHandle', 'SecretHandle');
+  await page.fill('#obField', 'a proof');
+  await page.selectOption('#obHardest', 'zabt');
+  await page.selectOption('#obStage', '1');
+  await page.fill('#obZabt', 'SecretCommitment');
+  await page.check('#obConsent');
+  await page.click('#obGo'); await page.waitForTimeout(300);
+  check('lab onboarding completes into the sheet', await page.evaluate(() =>
+    document.querySelector('#onboard').hidden && !document.querySelector('#app').hidden));
+  check('lab stores its state under its own key and leaves the owner\'s untouched', await page.evaluate(b =>
+    !!localStorage.getItem('mizan.lab.v1') && localStorage.getItem('mizan.v1') === b, ownerBefore));
+  check('lab day 1 activates exactly three measures (phase 1)',
+    (await page.locator('#measures .seg').count()) === 2 &&            // salah count + sprints
+    (await page.locator('#measures [data-body]').count()) === 4);
+  await page.click('[data-seg="salahCount"][data-v="5"]'); await page.waitForTimeout(100);
+  await page.click('[data-seg="sprints"][data-v="2"]'); await page.waitForTimeout(100);
+  await page.check('[data-chk="oneThingDone"]'); await page.waitForTimeout(100);
+  for (const b of ['slept', 'moved', 'protein']) await page.check(`[data-body="${b}"]`);
+  await page.waitForTimeout(200);
+  check('lab computes a full index from tallies alone (5 prayers, 2 blocks + One Thing, 3 of 4 body)',
+    (await page.locator('#idxNum').innerText()) === '100', await page.locator('#idxNum').innerText());
+  await page.fill('#oneThing', 'SecretOneThing');
+  await page.fill('#closeLine', 'SecretClosingLine');
+  await page.check('#closedChk');
+  await page.click('[data-seg="fit"][data-v="2"]');
+  await page.fill('#fbWrong', 'Step 2 and 3 of Zabt indistinguishable');
+  await page.selectOption('#fbMeasure', 'zabt');
+  await page.waitForTimeout(200);
+  await page.click('#copyBtn'); await page.waitForTimeout(200);
+  const packet = await page.locator('#packetOut').innerText();
+  check('lab packet is framed for ingest', /^MIZAN-LAB-PACKET\n[\s\S]+\nEND-PACKET$/.test(packet));
+  check('lab packet carries code, scores, closure, fit and feedback',
+    /"pid":"P-[2-9A-Z]{4}"/.test(packet) && /"salah":3/.test(packet) && /"closed":true/.test(packet)
+    && /"fit":2/.test(packet) && /indistinguishable/.test(packet) && /"about":"zabt"/.test(packet));
+  check('lab packet withholds the handle, One Thing, closing line and commitment',
+    !/Secret(Handle|OneThing|ClosingLine|Commitment)/.test(packet));
+  check('lab packet withholds the partner email', !/partner@example/.test(packet));
+  await page.reload(); await page.waitForTimeout(350);
+  check('lab state survives reload', (await page.locator('#idxNum').innerText()) === '100');
+  check('lab footer reports the lab key', /^mizan\.lab\.v1/.test(await page.locator('#footVer').innerText()));
+  await page.goto(url('lab/log/index.html')); await page.waitForTimeout(300);
+  check('lab log page boots and marks itself current', await page.evaluate(() =>
+    [...document.querySelectorAll('#navLinks a.on')].length === 1 && document.querySelectorAll('#entries .phase').length >= 1));
+  check('lab log names participants by code only, never a person',
+    !/P-[2-9A-Z]{4}[^<]*\b(Dr|Prof|Mr|Ms|Mrs)\b/.test(require('fs').readFileSync(path.join(ROOT, 'lab/log/index.html'), 'utf8')));
+  // the two engines must carry one model: compare rubrics id-by-id
   const fs = require('fs');
-  const html = [...PAGES, 'core.js', 'core.css']
+  const rubrics = src => { const out = {}; const re = /\{id:'(\w+)'[\s\S]*?rubric:\[([^\]]*)\]/g; let x;
+    while ((x = re.exec(src))) out[x[1]] = x[2].replace(/\s+/g, ' '); return out; };
+  const coreR = rubrics(fs.readFileSync(path.join(ROOT, 'core.js'), 'utf8').split('/* ---------------- state')[0]);
+  const labR = rubrics(fs.readFileSync(path.join(ROOT, 'lab/lab.js'), 'utf8').split('/* ---------------- state')[0]);
+  check('lab.js rubrics mirror core.js for all seven measures',
+    Object.keys(coreR).length === 7 && Object.keys(coreR).every(k => labR[k] === coreR[k]),
+    Object.keys(coreR).filter(k => labR[k] !== coreR[k]).join(','));
+  const weightsOf = src => (src.match(/var DEFW=(\{[^}]*\})/) || [])[1];
+  check('lab.js weights mirror core.js',
+    weightsOf(fs.readFileSync(path.join(ROOT, 'lab/lab.js'), 'utf8')) === weightsOf(fs.readFileSync(path.join(ROOT, 'core.js'), 'utf8')));
+
+  // --- no network ---
+  const html = [...PAGES, ...LAB, 'lab/lab.js', 'core.js', 'core.css']
     .map(f => fs.readFileSync(path.join(ROOT, f), 'utf8')).join('\n');
   check('no external references in any file',
     !/(https?:)?\/\/(?!127\.0\.0\.1)[\w.-]+\.[a-z]{2,}/i.test(
@@ -342,7 +414,7 @@ function check(name, cond, detail) {
   // --- mobile ---
   const m = await browser.newPage({ viewport: { width: 390, height: 844 } });
   m.on('pageerror', e => problems.push('MOBILE PAGE ERROR: ' + e.message));
-  for (const rel of PAGES) {
+  for (const rel of [...PAGES, ...LAB]) {
     await m.goto(url(rel)); await m.waitForTimeout(400);
     const overflow = await m.evaluate(() =>
       document.documentElement.scrollWidth - document.documentElement.clientWidth);
