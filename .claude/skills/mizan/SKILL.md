@@ -286,6 +286,22 @@ otherwise unzip and read `word/document.xml`), reconcile against what the
 calendar says happened, and write the next sheet. Never guess the numbers he
 didn't write.
 
+## The Lab (participant edition)
+
+`mizan/lab/` is the same model for other people: a standalone sheet over
+`mizan/lab/lab.js`, its own key (`mizan.lab.v1`), a five-question onboarding
+that assigns a participant code, three feedback boxes, and a packet the
+participant sends from their own mail app. `mizan/lab/log/` is the public
+record of what their feedback changed, by code only. The protocol — roles, the
+nightly ingest, what is private, the research boundary — is in
+`references/lab-protocol.md`; read it before touching anything under `lab/`.
+
+Two rules that bite: **`lab.js` mirrors `MEASURES`, `DEFW`, `PHASES` and the
+ladder gates from `core.js`** — change both or neither; `smoke.js` fails if the
+rubrics or weights drift. And **nothing a participant sends is ever committed**:
+packets go through `scripts/lab-ingest.js` into the scratchpad, and only the
+decision reaches the Log.
+
 ## Voice
 
 Direct, specific, unsentimental; the register of a good examiner's memo rather
