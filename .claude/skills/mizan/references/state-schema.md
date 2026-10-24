@@ -30,7 +30,7 @@ button.
 | `weights` | `DEFW` | `indexOf()`, `facultyScore()`. Per-measure integer weights. |
 | `gymDays` | `[0,2,4,6]` | `isGymDay()`. JS `getDay()` values — Sun/Tue/Thu/Sat. |
 | `gymHour` | `17` | Spine block, `gymPrayerRule()`. |
-| `partner` | `'Coach A'` | Display only. |
+| `partner` | `'your training partner'` | Display only. |
 | `proteinTarget` | `150` | Food rule label. |
 | `sleepTarget` | `7` | `badanScore()`. |
 

@@ -33,7 +33,9 @@ const MEASURES = [
   ['Iḥsān', 'toward people', ['nothing', 'passive kindness — you were pleasant', 'one deliberate act, named', 'an act that cost you time, money or ego']],
 ];
 const P369 = [['Morning', 3], ['Midday', 6], ['Evening', 9]];
-const EMBER = 'E0662E', VERDIGRIS = '127A70', INK = '1E1B18', MUTED = '6B655E', LINE = 'D9D3CB', RAISE = 'F6F2EC';
+// EMBER is the anchor and may not carry text on a light page (3.11:1, fails AA —
+// AGENTS.md). Text that wants the ember voice uses EMBER_TEXT, the light-safe ink.
+const EMBER = 'E0662E', EMBER_TEXT = 'AD4317', VERDIGRIS = '127A70', INK = '1E1B18', MUTED = '6B655E', LINE = 'D9D3CB', RAISE = 'F6F2EC';
 const PAGE_W = 12240 - 2 * 1000;   // US Letter minus 0.69" margins, in DXA
 
 const [inFile, outDir] = process.argv.slice(2);
@@ -60,7 +62,7 @@ const allDayOn = k => IN.events.filter(e => e.date === k && e.allDay);
 /* ---------- primitives ---------- */
 const run = (t, o = {}) => new TextRun(Object.assign({ text: t, font: 'Calibri', size: 21, color: INK }, o));
 const p = (children, o = {}) => new Paragraph(Object.assign({ children: Array.isArray(children) ? children : [run(children)], spacing: { after: 80 } }, o));
-const eyebrow = t => p([run(t.toUpperCase(), { font: 'Consolas', size: 15, color: EMBER, bold: true, characterSpacing: 40 })], { spacing: { before: 260, after: 60 } });
+const eyebrow = t => p([run(t.toUpperCase(), { font: 'Consolas', size: 15, color: EMBER_TEXT, bold: true, characterSpacing: 40 })], { spacing: { before: 260, after: 60 } });
 const h1 = t => p([run(t, { font: 'Georgia', size: 44, bold: true })], { spacing: { after: 40 } });
 const h2 = t => p([run(t, { font: 'Georgia', size: 28, bold: true })], { spacing: { after: 100 }, heading: HeadingLevel.HEADING_2 });
 const tiny = t => p([run(t, { size: 17, color: MUTED, italics: true })], { spacing: { after: 120 } });
@@ -146,7 +148,7 @@ body.push(table([2300, 900, PAGE_W - 3200], [
   ...MEASURES.map(([n, sub, r]) => row([
     cell([p([run(n, { bold: true, size: 20 })], { spacing: { after: 0 } }), p([run(sub, { size: 16, color: MUTED })], { spacing: { after: 0 } })], 2300),
     cell(p([run(' ', { size: 28 })], { spacing: { after: 0 } }), 900),
-    cell(r.map((x, i) => p([run(i + ' ', { font: 'Consolas', size: 15, color: EMBER, bold: true }), run(x, { size: 17 })], { spacing: { after: 0 } })), PAGE_W - 3200),
+    cell(r.map((x, i) => p([run(i + ' ', { font: 'Consolas', size: 15, color: EMBER_TEXT, bold: true }), run(x, { size: 17 })], { spacing: { after: 0 } })), PAGE_W - 3200),
   ])),
 ]));
 
@@ -171,7 +173,7 @@ for (let i = 1; i <= 7; i++) {
   const g = [];   // the calendar already carries the Workout events; don't double them
   wk.push(row([
     cell([p([run(shortDate(k), { bold: true, size: 19 })], { spacing: { after: 0 } }), p([run((IN.prayers[k] || []).map(x => x[0].slice(0, 1) + ' ' + x[1]).join('  '), { font: 'Consolas', size: 13, color: VERDIGRIS })], { spacing: { after: 0 } })], 2400),
-    cell(fx.concat(g, items).map(t => p([run(t, { size: 18, color: /^●/.test(t) ? EMBER : INK, bold: /^●/.test(t) })], { spacing: { after: 0 } })).concat(items.length + fx.length + g.length ? [] : [p([run('— routine only', { size: 17, color: MUTED })], { spacing: { after: 0 } })]), PAGE_W - 5000),
+    cell(fx.concat(g, items).map(t => p([run(t, { size: 18, color: /^●/.test(t) ? EMBER_TEXT : INK, bold: /^●/.test(t) })], { spacing: { after: 0 } })).concat(items.length + fx.length + g.length ? [] : [p([run('— routine only', { size: 17, color: MUTED })], { spacing: { after: 0 } })]), PAGE_W - 5000),
     cell(' ', 2600),
   ]));
 }
