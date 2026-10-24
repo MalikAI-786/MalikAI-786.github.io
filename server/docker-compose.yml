@@ -1,5 +1,5 @@
 # For a DigitalOcean Droplet. Brings up Postgres and the API together.
-#   1. copy .env.example to .env and fill it in
+#   1. ./deploy-droplet.sh writes .env with generated passwords — set PUBLIC_URL in it
 #   2. docker compose up -d
 #   3. docker compose exec -T db psql -U postgres -d mizan < sql/001_schema.sql   (see README)
 services:

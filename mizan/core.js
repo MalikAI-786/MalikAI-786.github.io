@@ -993,7 +993,7 @@ function renderDash(){
    {k:'Days closed',v:closed14,u:'/14',href:'day/',
     note:closed14>=12?'audit trail complete':closed14>=7?'holding':'the record has gaps'},
    {k:'Next session',v:ng?(ng===todayK()?'today':DOW[parseISO(ng).getDay()]):'—',u:'',href:'badan/',
-    note:ng?hm(gymHourFor(parseISO(ng).getDay()))+' · '+((ROT[parseISO(ng).getDay()]||{}).n||''):'no training days set'},
+    note:ng?hm(gymHourFor(parseISO(ng).getDay()))+' · '+gymRotFor(ng).n:'no training days set'},
    {k:'Training 28d',v:sched?Math.round(done/sched*100):'—',u:sched?'%':'',href:'badan/',
     note:sched?done+' of '+sched+' sessions':'nothing scheduled'},
    {k:'Calibration',v:pairs.length>=3?(mean(pairs)>0?'+':'')+mean(pairs).toFixed(1):'—',u:'',href:'record/',
@@ -1295,7 +1295,14 @@ var B50=[
   drill:['Dead hangs, 3×max, plus scapular pulls — build the hang before the pull.','Negatives, 5×5s descent, then band-assisted reps.','Reduce the band each week; grease the groove with 3 singles across the day.','5×5 at a moderate band, cluster sets, 90s rest.','Weighted holds at the top; add a rep every two weeks.','Add load. This is the one where progress means the next 5lb, not the next rep.']}
 ];
 
-function gymRotFor(k){ return ROT[parseISO(k).getDay()]||null }
+/* A training day with no rotation entry (Monday by default, or any day the
+   owner toggles on) gets a declared placeholder rather than null — null made
+   renderBadan throw on rot.n and blanked every renderer after it. No split is
+   invented for the day; the card says it is unset. */
+function gymRotFor(k){ var dow=parseISO(k).getDay();
+  return ROT[dow]||{n:'Session — no rotation set for '+DOW[dow],
+    work:'This day is on the schedule but has no programmed split yet. Log what you did; set the split when it is decided.',
+    skill:'—'} }
 function isGymDay(k){ return S.settings.gymDays.indexOf(parseISO(k).getDay())>=0 }
 function nextGymDay(){ var k=todayK();
   for(var i=0;i<8;i++){ var kk=addDays(k,i); if(isGymDay(kk)) return kk } return null }
@@ -1331,7 +1338,7 @@ function renderBadan(){
     return DOW[i]+' '+hm(gymHourFor(i))}).join(' · ')+' · 90 min';
   var ng=nextGymDay();
   $('#nextGym').textContent= ng? (ng===todayK()?'today':DOW[parseISO(ng).getDay()])+' '+
-    hm(gymHourFor(parseISO(ng).getDay()))+' — '+(ROT[parseISO(ng).getDay()]||{}).n : '—';
+    hm(gymHourFor(parseISO(ng).getDay()))+' — '+gymRotFor(ng).n : '—';
 
   // today's session
   var rot=gymRotFor(CUR),g=d.gym||{};
@@ -1765,9 +1772,14 @@ function hkDate(s){ return s ? s.slice(0,10) : null }   /* "2026-08-21 14:03:00 
 
 function blankHarvest(){ return {weights:[],sleep:{},work:{},steps:{},rhr:{},
   bySrc:{steps:{},sleep:{}},sources:{},
-  seen:{rec:0,wo:0},bad:{sleep:0},unit:null,fitbitWeightUnit:null} }
+  seen:{rec:0,wo:0,dup:0},bad:{sleep:0},unit:null,fitbitWeightUnit:null} }
 /* accumulate one source's contribution; finalizeHarvest() picks the max */
-function addSrc(H,kind,k,src,v){
+/* uid identifies one source sample. Two phones' exports both carry the
+   Watch's synced records, and the same Fitbit file can be picked twice; the
+   per-day max across sources cannot catch that, because both copies land in
+   the SAME source bucket. Count each sample once. */
+function addSrc(H,kind,k,src,v,uid){
+  if(uid){ H.uids=H.uids||{}; if(H.uids[uid]){ H.seen.dup=(H.seen.dup||0)+1; return } H.uids[uid]=1 }
   var day=H.bySrc[kind][k]=H.bySrc[kind][k]||{};
   day[src]=(day[src]||0)+v; H.sources[src]=1;
 }
@@ -1802,7 +1814,7 @@ function hkScanChunk(t,H){
       var k=hkDate(sd); (H.rhr[k]=H.rhr[k]||[]).push(parseFloat(val));
     }
     else if(type==='QuantityTypeIdentifierStepCount'&&val&&sd){
-      addSrc(H,'steps',hkDate(sd),src,parseFloat(val)||0);
+      addSrc(H,'steps',hkDate(sd),src,parseFloat(val)||0,'s|'+src+'|'+sd+'|'+ed+'|'+val);
     }
     else if(type==='CategoryTypeIdentifierSleepAnalysis'&&sd&&ed){
       /* only actually-asleep intervals; "InBed" overstates it badly */
@@ -1819,7 +1831,7 @@ function hkScanChunk(t,H){
       if(hrs>SLEEP_MAX_BLOCK){ H.bad.sleep++; continue }
       /* attribute the night to the day you WAKE into — that is the day
          whose readiness it explains, and the day the sheet asks about */
-      addSrc(H,'sleep',hkDate(ed),src,hrs);
+      addSrc(H,'sleep',hkDate(ed),src,hrs,'z|'+src+'|'+sd+'|'+ed);
     }
   }
   var rw=/<Workout\s+workoutActivityType="HKWorkoutActivityType([A-Za-z]+)"([^>]*?)>/g, w;
@@ -1853,7 +1865,7 @@ function fitScanCsv(text,H){
     var c=lines[i].split(','); if(c.length<2) continue;
     var k=(c[iDate]||'').trim().slice(0,10); if(!/^\d{4}-\d{2}-\d{2}$/.test(k)) continue;
     H.seen.rec++;
-    if(iStep>=0&&c[iStep]) addSrc(H,'steps',k,'Google Fit',parseFloat(c[iStep])||0);
+    if(iStep>=0&&c[iStep]) addSrc(H,'steps',k,'Google Fit',parseFloat(c[iStep])||0,'gs|'+k);
     if(iWt>=0&&c[iWt]){ var kg=parseFloat(c[iWt]);
       if(isFinite(kg)&&kg>0){ H.unit='kg'; H.weights.push({d:k,w:Math.round(kg*2.20462*10)/10}) } }
     if(iMove>=0&&c[iMove]&&parseFloat(c[iMove])>=30&&!H.work[k])
@@ -1877,11 +1889,11 @@ function fitbitScanJson(name,text,H){
   a.forEach(function(r){
     if(!r||typeof r!=='object') return;
     if(/^steps-/.test(n)){ var k=fbDate(r.dateTime); var v=parseFloat(r.value);
-      if(k&&isFinite(v)){ H.seen.rec++; addSrc(H,'steps',k,'Fitbit',v) } }
+      if(k&&isFinite(v)){ H.seen.rec++; addSrc(H,'steps',k,'Fitbit',v,'fs|'+r.dateTime) } }
     else if(/^sleep-/.test(n)){ var ks=r.dateOfSleep; var mins=parseFloat(r.minutesAsleep);
       if(/^\d{4}-\d{2}-\d{2}$/.test(ks||'')&&isFinite(mins)&&mins>0){
         H.seen.rec++; if(mins/60>SLEEP_MAX_BLOCK){ H.bad.sleep++; return }
-        addSrc(H,'sleep',ks,'Fitbit',mins/60) } }
+        addSrc(H,'sleep',ks,'Fitbit',mins/60,'fz|'+ks+'|'+(r.logId||r.startTime||mins)) } }
     else if(/^resting_heart_rate-/.test(n)){ var kr=fbDate(r.dateTime);
       var hr=r.value&&parseFloat(r.value.value);
       if(kr&&isFinite(hr)&&hr>20){ H.seen.rec++; (H.rhr[kr]=H.rhr[kr]||[]).push(hr) } }
