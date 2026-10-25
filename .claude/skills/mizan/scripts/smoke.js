@@ -333,6 +333,27 @@ function check(name, cond, detail) {
     await page.reload(); await page.waitForTimeout(400);
     check('Badan renders a training day that has no rotation set (Monday)',
       problems.length === errsBefore && /no rotation set for Mon/.test(await page.locator('#gymToday').innerText()));
+    // --- guided session: one beat-counted timeline drives the clock, the reps and the music ---
+    check('Badan offers a guided session for the day',
+      /Guided session · \d+ min/i.test(await page.locator('#sessionCard').innerText()));
+    await page.click('#sessStart'); await page.waitForTimeout(1500);
+    check('session player opens on the first warm-up move with a running clock',
+      (await page.locator('#plName').innerText()) === 'March in place' && /^0:4\d$/.test(await page.locator('#plTime').innerText()),
+      await page.locator('#plTime').innerText());
+    check('session player paces reps on the beat',
+      /(DOWN|UP) · rep \d+/.test(await page.locator('#plRep').innerText()) && (await page.locator('#plBeats b.on').count()) === 1);
+    await page.click('#plPause'); const held = await page.locator('#plTime').innerText(); await page.waitForTimeout(900);
+    check('pause freezes the session clock', (await page.locator('#plTime').innerText()) === held);
+    await page.click('#plPause');
+    await page.click('#plSkip'); await page.waitForTimeout(700);
+    check('skip moves to the next block on its downbeat', (await page.locator('#plName').innerText()) === 'Arm circles');
+    await page.click('#plEnd'); await page.waitForTimeout(300);
+    check('a session under ten minutes is not logged as training',
+      /not logged/.test(await page.locator('#player').innerText()) &&
+      await page.evaluate(k => { const d = JSON.parse(localStorage.getItem('mizan.v1')).days[k]; return !(d && d.gym && d.gym.sessionMin); }, mon));
+    await page.click('#plClose');
+    check('session player closes back to the page', await page.evaluate(() => document.querySelector('#player').hidden));
+
     await page.evaluate(k => k ? sessionStorage.setItem('mizan.cur', k) : sessionStorage.removeItem('mizan.cur'), prevCur);
   }
 
