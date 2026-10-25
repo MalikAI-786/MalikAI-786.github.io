@@ -1381,7 +1381,8 @@ function scheduleBeat(A,t,blk,bi,mode){
 }
 function say(text){ if(!sessionPrefs().voice||!window.speechSynthesis) return;
   try{ var v=speechSynthesis.getVoices().filter(function(x){return x.localService&&/^en/i.test(x.lang)});
-    var u=new SpeechSynthesisUtterance(text); if(v.length) u.voice=v[0]; else if(speechSynthesis.getVoices().length) return;
+    // local voices only: an empty list (voices still loading) means stay silent, never the browser's default
+    if(!v.length) return; var u=new SpeechSynthesisUtterance(text); u.voice=v[0];
     u.rate=1.05; speechSynthesis.cancel(); speechSynthesis.speak(u) }catch(e){} }
 
 function sessionStart(){
@@ -1407,10 +1408,16 @@ function sessionStart(){
 }
 function blockAt(bi){ var t=PL.t; for(var i=t.length-1;i>=0;i--) if(bi>=t[i].start) return i; return 0 }
 function sessionTick(){
-  if(!PL) return; var now=performance.now();
-  if(!PL.paused) PL.activeMs+=now-PL.lastTick; PL.lastTick=now;
+  if(!PL) return; var now=performance.now(),A=PL.A;
+  /* Active time follows the clock the timeline runs on. With audio that is
+     AudioContext.currentTime, which stops whenever the context is suspended
+     or interrupted, so wall-clock time can never be credited to a frozen
+     session. performance.now() is only the fallback when there is no audio. */
+  if(A){ var at=A.ctx.currentTime; if(PL.lastAudio!=null&&!PL.paused) PL.activeMs+=Math.max(0,at-PL.lastAudio)*1000; PL.lastAudio=at }
+  else if(!PL.paused) PL.activeMs+=now-PL.lastTick;
+  PL.lastTick=now;
   if(PL.paused) return;
-  var A=PL.A, clock=A?A.ctx.currentTime:PL.activeMs/1000;
+  var clock=A?A.ctx.currentTime:PL.activeMs/1000;
   if(!A&&PL.next===0) PL.next=clock;
   // schedule ahead
   while(PL.bi<PL.total&&PL.next<clock+0.12){
@@ -1465,12 +1472,12 @@ function sessionEnd(finished){
   if(!PL) return; var P=PL; PL=null; clearInterval(P.timer);
   try{ if(P.A) P.A.ctx.close() }catch(e){} try{ if(P.lock) P.lock.release() }catch(e){}
   try{ speechSynthesis.cancel() }catch(e){}
-  var mins=Math.round(P.activeMs/60000),blocks=Object.keys(P.done).length;
+  var mins=Math.floor(P.activeMs/60000),blocks=Object.keys(P.done).length;
   var el=$('#player'); document.body.style.overflow='';
   var d=day(CUR); d.gym=d.gym||{};
   // Counted by time actually worked, not by reaching the end: skipping to the
   // last block is not a session. Ten minutes of running clock is the floor.
-  var counts=mins>=10;
+  var counts=P.activeMs>=600000;  // the floor is on real time, before any rounding
   if(counts){
     d.gym.sessionMin=(+d.gym.sessionMin||0)+mins; d.gym.blocks=blocks;
     if(isGymDay(CUR)) d.gym.status='done'; else d.moved=true;
