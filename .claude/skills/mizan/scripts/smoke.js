@@ -35,7 +35,7 @@ const url = p => 'file://' + path.join(ROOT, p);
 // public, so the intoxicant ledger stays on a working branch and is never
 // deployed. If it reappears in this list, something republished it.
 const PAGES = ['index.html', 'day/index.html', 'khudi/index.html',
-               'badan/index.html', 'record/index.html', 'coach/index.html'];
+               'badan/index.html', 'money/index.html', 'record/index.html', 'coach/index.html'];
 const PAGE = url('day/index.html');   // the page that carries the daily sheet
 
 const problems = [];
@@ -62,12 +62,12 @@ function check(name, cond, detail) {
     }));
     // coach/ is standalone and builds no nav of its own
     if (rel !== 'coach/index.html')
-      check(`${rel} builds its nav`, nav.links.length === 5, nav.links.join(','));
+      check(`${rel} builds its nav`, nav.links.length === 6, nav.links.join(','));
     if (rel !== 'coach/index.html')
       check(`${rel} boots the shared engine`, /^mizan\.v1/.test(nav.foot), nav.foot);
   }
   // nav targets exist on disk
-  for (const rel of ['day', 'khudi', 'badan', 'record', 'coach']) {
+  for (const rel of ['day', 'khudi', 'badan', 'money', 'record', 'coach']) {
     check(`${rel}/index.html exists`, require('fs').existsSync(path.join(ROOT, rel, 'index.html')));
   }
 
@@ -387,6 +387,51 @@ function check(name, cond, detail) {
   check('theme toggles back to dark',
     (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'dark');
 
+  // --- Money: statement files read on the device, never the network ---
+  {
+    const fs = require('fs'), os = require('os');
+    const ym = n => { const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - n); return d; };
+    const dstr = (d, day) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+    const m2 = ym(2), m1 = ym(1), m0 = ym(0);
+    // synthetic checking export: payroll, a monthly streaming bill (recurring), groceries, a transfer
+    const csv = ['Date,Description,Amount,Balance',
+      `${dstr(m0, 3)},STREAMCO MONTHLY,-15.49,4120.00`, `${dstr(m0, 1)},ACME PAYROLL DIRECT DEP,3000.00,4135.49`,
+      `${dstr(m1, 3)},STREAMCO MONTHLY,-15.49,`, `${dstr(m1, 12)},"WHOLE FOODS #123, NJ",-84.20,`, `${dstr(m1, 15)},ONLINE TRANSFER TO SAVINGS,-500.00,`,
+      `${dstr(m2, 3)},STREAMCO MONTHLY,-15.49,`, `${dstr(m2, 1)},ACME PAYROLL DIRECT DEP,3000.00,`].join('\n');
+    const csvF = path.join(os.tmpdir(), 'mizan-checking.csv'); fs.writeFileSync(csvF, csv);
+    const ofx = `OFXHEADER:100\n<OFX><CREDITCARDMSGSRSV1><CCSTMTTRNRS><CCSTMTRS><CCACCTFROM><ACCTID>4111000011119876</CCACCTFROM>
+<BANKTRANLIST><STMTTRN><TRNTYPE>DEBIT<DTPOSTED>${dstr(m0, 2).replace(/-/g, '')}<TRNAMT>-42.10<FITID>F1<NAME>HALAL GRILL</STMTTRN>
+<STMTTRN><TRNTYPE>DEBIT<DTPOSTED>${dstr(m0, 4).replace(/-/g, '')}<TRNAMT>-19.99<FITID>F2<NAME>SPOTIFY</STMTTRN></BANKTRANLIST>
+<LEDGERBAL><BALAMT>-62.09<DTASOF>${dstr(m0, 5).replace(/-/g, '')}</LEDGERBAL></CCSTMTRS></CCSTMTTRNRS></CREDITCARDMSGSRSV1></OFX>`;
+    const ofxF = path.join(os.tmpdir(), 'mizan-card.ofx'); fs.writeFileSync(ofxF, ofx);
+    const before = await page.evaluate(() => localStorage.getItem('mizan.v1'));
+    await page.goto(url('money/index.html')); await page.waitForTimeout(300);
+    check('Money page boots with an empty-state chart', /Import a statement/.test(await page.locator('#mFlow').innerHTML()));
+    await page.setInputFiles('#mFile', csvF); await page.waitForTimeout(300);
+    check('Money previews a CSV before adding it', /7<\/b> transactions/.test(await page.locator('#mImportOut').innerHTML()));
+    await page.fill('#mNewName', 'Checking'); await page.click('#mApply'); await page.waitForTimeout(300);
+    check('Money adds the CSV and takes its balance', /Added <b>7<\/b>/.test(await page.locator('#mImportOut').innerHTML()) &&
+      /\$4,120\.00/.test(await page.locator('#mAccounts').innerText()));
+    await page.setInputFiles('#mFile', csvF); await page.waitForTimeout(300);
+    await page.selectOption('#mAcct', { label: 'Checking' }); await page.click('#mApply'); await page.waitForTimeout(300);
+    check('Money skips duplicates on a re-import', /Added <b>0<\/b>.*skipped <b>7<\/b>/.test(await page.locator('#mImportOut').innerHTML()));
+    await page.setInputFiles('#mFile', ofxF); await page.waitForTimeout(300);
+    check('Money reads an OFX card file as a credit account', (await page.inputValue('#mType')) === 'credit');
+    await page.click('#mApply'); await page.waitForTimeout(300);
+    const tiles = await page.locator('#mTiles').innerText();
+    check('Money nets cards against cash', /\$4,058/.test(tiles), tiles.replace(/\n/g, ' '));
+    check('Money detects a monthly recurring bill', /STREAMCO MONTHLY/.test(await page.locator('#mRecurring').innerText()));
+    check('Money leaves transfers out of spending', !/Transfers/.test(await page.locator('#mCats').innerText()) &&
+      /Groceries/.test(await page.locator('#mCats').innerText()));
+    await page.fill('#lName', 'Test loan'); await page.fill('#lBal', '300000'); await page.fill('#lRate', '6');
+    await page.fill('#lPay', '1798.65'); await page.fill('#lDue', dstr(m0, 1)); await page.click('#mLoanAdd'); await page.waitForTimeout(300);
+    const loan = await page.locator('#mLoans').innerText();
+    check('Money amortises a fixed-rate loan (300k at 6%, 1798.65 → 360 payments)', /360 payments/.test(loan) && /\$1,500\.00/.test(loan), loan.split('\n').slice(0, 6).join(' | '));
+    check('Money keeps bank data under its own key, out of the Mīzān export', await page.evaluate(b =>
+      !!localStorage.getItem('mizan.money.v1') && localStorage.getItem('mizan.v1') === b, before));
+    await page.click('#mErase'); await page.waitForTimeout(200);
+  }
+
   // --- Lab (participant edition): standalone shell, own key, same model ---
   const LAB = ['lab/index.html', 'lab/log/index.html'];
   await page.goto(url('lab/index.html')); await page.waitForTimeout(350);
@@ -461,7 +506,7 @@ function check(name, cond, detail) {
     weightsOf(fs.readFileSync(path.join(ROOT, 'lab/lab.js'), 'utf8')) === weightsOf(fs.readFileSync(path.join(ROOT, 'core.js'), 'utf8')));
 
   // --- no network ---
-  const html = [...PAGES, ...LAB, 'lab/lab.js', 'core.js', 'core.css']
+  const html = [...PAGES, ...LAB, 'lab/lab.js', 'money/money.js', 'core.js', 'core.css']
     .map(f => fs.readFileSync(path.join(ROOT, f), 'utf8')).join('\n');
   check('no external references in any file',
     !/(https?:)?\/\/(?!127\.0\.0\.1)[\w.-]+\.[a-z]{2,}/i.test(

@@ -296,3 +296,5 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;}
 .session-list{margin:10px 0 0;padding:0;list-style:none;font-size:.82rem;color:var(--muted);}
 .session-list li{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px dashed var(--line);}
 .session-list li span:last-child{font-family:var(--mono);color:var(--faint);white-space:nowrap;}
+.stat-row.four{grid-template-columns:repeat(4,1fr);}
+@media (max-width:700px){ .stat-row.four{grid-template-columns:repeat(2,1fr);} }

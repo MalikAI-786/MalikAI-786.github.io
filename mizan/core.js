@@ -862,7 +862,7 @@ function renderSettings(){
 /* No Ledger entry: that page is not published. This repo is public, so the
    intoxicant ledger lives only on a working branch and is never deployed. */
 var NAV=[['','Dashboard'],['day/','Day'],['khudi/','Khudī'],['badan/','Badan'],
-         ['record/','Record']];
+         ['money/','Money'],['record/','Record']];
 /* ---- khudi force diagram ---- */
 function renderForceDiagram(){
   var el=$('#forceDiagram'); if(!el) return;
