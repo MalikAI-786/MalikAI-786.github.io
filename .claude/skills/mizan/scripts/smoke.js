@@ -35,7 +35,7 @@ const url = p => 'file://' + path.join(ROOT, p);
 // public, so the intoxicant ledger stays on a working branch and is never
 // deployed. If it reappears in this list, something republished it.
 const PAGES = ['index.html', 'day/index.html', 'khudi/index.html',
-               'badan/index.html', 'record/index.html', 'coach/index.html'];
+               'badan/index.html', 'money/index.html', 'record/index.html', 'coach/index.html'];
 const PAGE = url('day/index.html');   // the page that carries the daily sheet
 
 const problems = [];
@@ -62,17 +62,20 @@ function check(name, cond, detail) {
     }));
     // coach/ is standalone and builds no nav of its own
     if (rel !== 'coach/index.html')
-      check(`${rel} builds its nav`, nav.links.length === 5, nav.links.join(','));
+      check(`${rel} builds its nav`, nav.links.length === 6, nav.links.join(','));
     if (rel !== 'coach/index.html')
       check(`${rel} boots the shared engine`, /^mizan\.v1/.test(nav.foot), nav.foot);
   }
   // nav targets exist on disk
-  for (const rel of ['day', 'khudi', 'badan', 'record', 'coach']) {
+  for (const rel of ['day', 'khudi', 'badan', 'money', 'record', 'coach']) {
     check(`${rel}/index.html exists`, require('fs').existsSync(path.join(ROOT, rel, 'index.html')));
   }
 
   await page.goto(url('index.html'));
   await page.waitForTimeout(400);
+  check('dashboard leads with today\'s workout and a start button',
+    /Today.s workout · \d+ min/i.test(await page.locator('#dashWorkout').innerText()) &&
+    (await page.locator('#dashWorkout a[href="badan/#workout"]').count()) === 1);
   check('dashboard renders six kicker tiles',
     (await page.locator('#dashGrid .tile').count()) === 6);
   check('dashboard names a leftmost failing control or says why not',
@@ -333,6 +336,27 @@ function check(name, cond, detail) {
     await page.reload(); await page.waitForTimeout(400);
     check('Badan renders a training day that has no rotation set (Monday)',
       problems.length === errsBefore && /no rotation set for Mon/.test(await page.locator('#gymToday').innerText()));
+    // --- guided session: one beat-counted timeline drives the clock, the reps and the music ---
+    check('Badan offers a guided session for the day',
+      /Guided session · \d+ min/i.test(await page.locator('#sessionCard').innerText()));
+    await page.click('#sessStart'); await page.waitForTimeout(1500);
+    check('session player opens on the first warm-up move with a running clock',
+      (await page.locator('#plName').innerText()) === 'March in place' && /^0:4\d$/.test(await page.locator('#plTime').innerText()),
+      await page.locator('#plTime').innerText());
+    check('session player paces reps on the beat',
+      /(DOWN|UP) · rep \d+/.test(await page.locator('#plRep').innerText()) && (await page.locator('#plBeats b.on').count()) === 1);
+    await page.click('#plPause'); const held = await page.locator('#plTime').innerText(); await page.waitForTimeout(900);
+    check('pause freezes the session clock', (await page.locator('#plTime').innerText()) === held);
+    await page.click('#plPause');
+    await page.click('#plSkip'); await page.waitForTimeout(700);
+    check('skip moves to the next block on its downbeat', (await page.locator('#plName').innerText()) === 'Arm circles');
+    await page.click('#plEnd'); await page.waitForTimeout(300);
+    check('a session under ten minutes is not logged as training',
+      /not logged/.test(await page.locator('#player').innerText()) &&
+      await page.evaluate(k => { const d = JSON.parse(localStorage.getItem('mizan.v1')).days[k]; return !(d && d.gym && d.gym.sessionMin); }, mon));
+    await page.click('#plClose');
+    check('session player closes back to the page', await page.evaluate(() => document.querySelector('#player').hidden));
+
     await page.evaluate(k => k ? sessionStorage.setItem('mizan.cur', k) : sessionStorage.removeItem('mizan.cur'), prevCur);
   }
 
@@ -365,6 +389,51 @@ function check(name, cond, detail) {
   await page.click('#themeBtn'); await page.waitForTimeout(250);
   check('theme toggles back to dark',
     (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'dark');
+
+  // --- Money: statement files read on the device, never the network ---
+  {
+    const fs = require('fs'), os = require('os');
+    const ym = n => { const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - n); return d; };
+    const dstr = (d, day) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+    const m2 = ym(2), m1 = ym(1), m0 = ym(0);
+    // synthetic checking export: payroll, a monthly streaming bill (recurring), groceries, a transfer
+    const csv = ['Date,Description,Amount,Balance',
+      `${dstr(m0, 3)},STREAMCO MONTHLY,-15.49,4120.00`, `${dstr(m0, 1)},ACME PAYROLL DIRECT DEP,3000.00,4135.49`,
+      `${dstr(m1, 3)},STREAMCO MONTHLY,-15.49,`, `${dstr(m1, 12)},"WHOLE FOODS #123, NJ",-84.20,`, `${dstr(m1, 15)},ONLINE TRANSFER TO SAVINGS,-500.00,`,
+      `${dstr(m2, 3)},STREAMCO MONTHLY,-15.49,`, `${dstr(m2, 1)},ACME PAYROLL DIRECT DEP,3000.00,`].join('\n');
+    const csvF = path.join(os.tmpdir(), 'mizan-checking.csv'); fs.writeFileSync(csvF, csv);
+    const ofx = `OFXHEADER:100\n<OFX><CREDITCARDMSGSRSV1><CCSTMTTRNRS><CCSTMTRS><CCACCTFROM><ACCTID>4111000011119876</CCACCTFROM>
+<BANKTRANLIST><STMTTRN><TRNTYPE>DEBIT<DTPOSTED>${dstr(m0, 2).replace(/-/g, '')}<TRNAMT>-42.10<FITID>F1<NAME>HALAL GRILL</STMTTRN>
+<STMTTRN><TRNTYPE>DEBIT<DTPOSTED>${dstr(m0, 4).replace(/-/g, '')}<TRNAMT>-19.99<FITID>F2<NAME>SPOTIFY</STMTTRN></BANKTRANLIST>
+<LEDGERBAL><BALAMT>-62.09<DTASOF>${dstr(m0, 5).replace(/-/g, '')}</LEDGERBAL></CCSTMTRS></CCSTMTTRNRS></CREDITCARDMSGSRSV1></OFX>`;
+    const ofxF = path.join(os.tmpdir(), 'mizan-card.ofx'); fs.writeFileSync(ofxF, ofx);
+    const before = await page.evaluate(() => localStorage.getItem('mizan.v1'));
+    await page.goto(url('money/index.html')); await page.waitForTimeout(300);
+    check('Money page boots with an empty-state chart', /Import a statement/.test(await page.locator('#mFlow').innerHTML()));
+    await page.setInputFiles('#mFile', csvF); await page.waitForTimeout(300);
+    check('Money previews a CSV before adding it', /7<\/b> transactions/.test(await page.locator('#mImportOut').innerHTML()));
+    await page.fill('#mNewName', 'Checking'); await page.click('#mApply'); await page.waitForTimeout(300);
+    check('Money adds the CSV and takes its balance', /Added <b>7<\/b>/.test(await page.locator('#mImportOut').innerHTML()) &&
+      /\$4,120\.00/.test(await page.locator('#mAccounts').innerText()));
+    await page.setInputFiles('#mFile', csvF); await page.waitForTimeout(300);
+    await page.selectOption('#mAcct', { label: 'Checking' }); await page.click('#mApply'); await page.waitForTimeout(300);
+    check('Money skips duplicates on a re-import', /Added <b>0<\/b>.*skipped <b>7<\/b>/.test(await page.locator('#mImportOut').innerHTML()));
+    await page.setInputFiles('#mFile', ofxF); await page.waitForTimeout(300);
+    check('Money reads an OFX card file as a credit account', (await page.inputValue('#mType')) === 'credit');
+    await page.click('#mApply'); await page.waitForTimeout(300);
+    const tiles = await page.locator('#mTiles').innerText();
+    check('Money nets cards against cash', /\$4,058/.test(tiles), tiles.replace(/\n/g, ' '));
+    check('Money detects a monthly recurring bill', /STREAMCO MONTHLY/.test(await page.locator('#mRecurring').innerText()));
+    check('Money leaves transfers out of spending', !/Transfers/.test(await page.locator('#mCats').innerText()) &&
+      /Groceries/.test(await page.locator('#mCats').innerText()));
+    await page.fill('#lName', 'Test loan'); await page.fill('#lBal', '300000'); await page.fill('#lRate', '6');
+    await page.fill('#lPay', '1798.65'); await page.fill('#lDue', dstr(m0, 1)); await page.click('#mLoanAdd'); await page.waitForTimeout(300);
+    const loan = await page.locator('#mLoans').innerText();
+    check('Money amortises a fixed-rate loan (300k at 6%, 1798.65 → 360 payments)', /360 payments/.test(loan) && /\$1,500\.00/.test(loan), loan.split('\n').slice(0, 6).join(' | '));
+    check('Money keeps bank data under its own key, out of the Mīzān export', await page.evaluate(b =>
+      !!localStorage.getItem('mizan.money.v1') && localStorage.getItem('mizan.v1') === b, before));
+    await page.click('#mErase'); await page.waitForTimeout(200);
+  }
 
   // --- Lab (participant edition): standalone shell, own key, same model ---
   const LAB = ['lab/index.html', 'lab/log/index.html'];
@@ -440,7 +509,7 @@ function check(name, cond, detail) {
     weightsOf(fs.readFileSync(path.join(ROOT, 'lab/lab.js'), 'utf8')) === weightsOf(fs.readFileSync(path.join(ROOT, 'core.js'), 'utf8')));
 
   // --- no network ---
-  const html = [...PAGES, ...LAB, 'lab/lab.js', 'core.js', 'core.css']
+  const html = [...PAGES, ...LAB, 'lab/lab.js', 'money/money.js', 'core.js', 'core.css']
     .map(f => fs.readFileSync(path.join(ROOT, f), 'utf8')).join('\n');
   check('no external references in any file',
     !/(https?:)?\/\/(?!127\.0\.0\.1)[\w.-]+\.[a-z]{2,}/i.test(

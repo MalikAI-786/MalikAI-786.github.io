@@ -63,7 +63,7 @@ render function rather than at the point of the mistake.
 | `muhasaba` | `{shukr,khata,kal}` | nightly close | display only |
 | `closed` | bool | Close-the-day button | ladder gates, calibration, trend |
 | `synthetic` | bool | `makeSample()` | **exclusion filter** — see below |
-| `gym` | `{status,rpe,note}` | Badan | `badanScore()`, adherence, package |
+| `gym` | `{status,rpe,note,sessionMin,blocks}` | Badan; the session player adds `sessionMin` (minutes actually worked, summed per day) and `blocks` | `badanScore()`, adherence, package |
 | `food` | `{protein,window,thirds,late}` | Badan | `badanScore()`, coach's read |
 | `weight` | number\|null | Badan, health import | health charts (daily-weight line) |
 | `sleepHrs` | number\|null | Badan | `badanScore()`, sleep-effect panel |
@@ -76,6 +76,8 @@ render function rather than at the point of the mistake.
 Trigger and displaced values come from the `TRIGGERS` / `DISPLACED` tables —
 add there, never inline, or the distribution charts drop the new value
 silently.
+
+The session player writes `gym.status='done'` (or `moved=true` on a non-training day) only when at least ten minutes of clock actually ran — skipping to the end is not a session. Its preferences live in `settings.session = {mode:'beat'|'own'|'silent', bpm, rounds, voice}`, created lazily.
 
 `gym.status` is one of `'done' | 'missed-me' | 'missed-partner' | null`. The
 two miss values are deliberately distinct: a package burned by the trainer's

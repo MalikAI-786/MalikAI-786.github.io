@@ -862,7 +862,7 @@ function renderSettings(){
 /* No Ledger entry: that page is not published. This repo is public, so the
    intoxicant ledger lives only on a working branch and is never deployed. */
 var NAV=[['','Dashboard'],['day/','Day'],['khudi/','Khudī'],['badan/','Badan'],
-         ['record/','Record']];
+         ['money/','Money'],['record/','Record']];
 /* ---- khudi force diagram ---- */
 function renderForceDiagram(){
   var el=$('#forceDiagram'); if(!el) return;
@@ -944,7 +944,7 @@ function renderAll(){
   var d=day(CUR),dt=parseISO(CUR);
   renderNav(); renderDayBar(); renderToday(); renderPrayers(d,dt); renderMeasures(d); renderFriction(d);
   renderHyperLog(); renderLedgerToday(d); renderReference(); renderLadder(); renderPhases();
-  renderTrend(); renderSettings(); renderBadan(); renderHealth(); renderDash(); renderForceDiagram();
+  renderTrend(); renderSettings(); renderBadan(); renderSession(); renderHealth(); renderDash(); renderDashWorkout(); renderForceDiagram();
 }
 
 /* ==================================================================
@@ -1224,6 +1224,299 @@ on('#themeBtn','click',function(){
   renderAll();
 });
 
+/* ==================================================================
+   SESSION PLAYER — a guided workout where the movement, the clock and
+   the music are one timeline. Everything is counted in BEATS, not
+   seconds: a block is a whole number of bars, every change lands on a
+   downbeat, and every rep starts on a beat. That is what "in sync"
+   means here, and it is why the beat is generated rather than streamed:
+   a streamed track cannot be made to change on the downbeat of a set.
+   No network. Web Audio for the beat and cues, the device's own local
+   voices for the announcements, and a screen wake lock while it runs.
+   ================================================================== */
+/* kind: work | hold | rest | stretch.  cad: beats per rep (0 = no rep count). */
+var MOVES={
+ march:{n:'March in place',k:'work',cad:2,c:'Knees up, arms swinging. Land every step on the beat.'},
+ armc:{n:'Arm circles',k:'work',cad:4,c:'Small to big. Reverse direction halfway.'},
+ hipc:{n:'Hip circles',k:'work',cad:4,c:'Hands on hips, slow and wide. Reverse halfway.'},
+ sqbw:{n:'Bodyweight squat',k:'work',cad:4,c:'Two beats down, two up. Hips back, chest up, heels down.'},
+ inch:{n:'Inchworm to plank',k:'work',cad:8,c:'Walk out to plank, walk back. Soft knees if the hamstrings are tight.'},
+ wgs:{n:'World’s greatest stretch',k:'stretch',cad:8,c:'Lunge, elbow to instep, rotate open. Alternate sides each rep.'},
+ sq:{n:'Squat',k:'work',cad:4,c:'Two down, two up. Add a weight held at the chest if bodyweight is easy.'},
+ lunge:{n:'Reverse lunge, alternating',k:'work',cad:4,c:'Step back, back knee toward the floor, drive up through the front heel.'},
+ bridge:{n:'Glute bridge',k:'work',cad:4,c:'Drive through the heels, squeeze at the top for the second beat.'},
+ calf:{n:'Calf raise',k:'work',cad:2,c:'Up on one beat, down on the next. Full range.'},
+ push:{n:'Push-up',k:'work',cad:4,c:'Two down, two up. Body in one line. Knees down is fine — keep the tempo.'},
+ pike:{n:'Pike push-up',k:'work',cad:4,c:'Hips high, head toward the floor between the hands.'},
+ tap:{n:'Plank shoulder taps',k:'work',cad:2,c:'Wide feet, hips still. One tap per beat.'},
+ lat:{n:'Lateral raise',k:'work',cad:4,c:'Light dumbbells or a band. Raise to shoulder height, lower slowly.'},
+ row:{n:'Row',k:'work',cad:4,c:'Inverted row under a table or a band row. Squeeze the shoulder blades at the top.'},
+ sman:{n:'Superman hold',k:'hold',cad:0,c:'Arms and legs lifted, neck long. Breathe.'},
+ hollow:{n:'Hollow body hold',k:'hold',cad:0,c:'Lower back pressed down. Bend the knees to make it easier.'},
+ side:{n:'Side plank',k:'hold',cad:0,c:'Switch sides at the halfway call.'},
+ burpee:{n:'Burpee',k:'work',cad:8,c:'Step back instead of jumping if the shoulders need it. Keep the beat, not the speed.'},
+ gm:{n:'Good morning',k:'work',cad:4,c:'Hands behind the head, hinge at the hips, flat back.'},
+ climb:{n:'Mountain climbers',k:'work',cad:1,c:'One knee per beat. Hips level with the shoulders.'},
+ plank:{n:'Plank',k:'hold',cad:0,c:'Elbows under shoulders, glutes tight.'},
+ child:{n:'Child’s pose',k:'stretch',cad:0,c:'Knees wide, arms long. Breathe into the back.'},
+ hamL:{n:'Hamstring stretch — left',k:'stretch',cad:0,c:'Seated or lying with a strap. Long spine, no bouncing.'},
+ hamR:{n:'Hamstring stretch — right',k:'stretch',cad:0,c:'Same on the right.'},
+ hipL:{n:'Hip flexor stretch — left',k:'stretch',cad:0,c:'Half-kneel, left knee down, tuck the pelvis, lean forward gently.'},
+ hipR:{n:'Hip flexor stretch — right',k:'stretch',cad:0,c:'Right knee down.'},
+ chest:{n:'Chest stretch',k:'stretch',cad:0,c:'Forearm on a doorframe, turn away slowly. Switch arms halfway.'},
+ figL:{n:'Figure-four — left',k:'stretch',cad:0,c:'Lying, left ankle over right knee, pull the right thigh in.'},
+ figR:{n:'Figure-four — right',k:'stretch',cad:0,c:'Right ankle over left knee.'},
+ breathe:{n:'Lie still and breathe',k:'stretch',cad:0,c:'In for four beats, out for four. Let the heart rate come down.'}
+};
+var CIRCUIT={6:['sq','lunge','bridge','calf'],0:['push','pike','tap','lat'],2:['row','sman','hollow','side'],
+  4:['lunge','burpee','gm','climb'],x:['sq','push','bridge','plank']};
+var WARM=[['march',45],['armc',30],['hipc',30],['sqbw',45],['inch',45],['wgs',60]];
+var COOL=[['child',45],['hamL',40],['hamR',40],['hipL',40],['hipR',40],['chest',40],['figL',40],['figR',40],['breathe',60]];
+var MUSIC_MODES=[['beat','Built-in beat'],['own','My own music'],['silent','Voice only']];
+
+function sessionPrefs(){ var p=S.settings.session=S.settings.session||{};
+  if(!p.mode) p.mode='beat'; if(!p.bpm) p.bpm=120; if(!p.rounds) p.rounds=3; if(p.voice==null) p.voice=true; return p }
+/* The plan, in seconds; buildTimeline turns it into beats. */
+function sessionPlan(k){
+  var dow=parseISO(k).getDay(),rot=gymRotFor(k),p=sessionPrefs(),out=[],c=CIRCUIT[ROT[dow]?dow:'x'];
+  WARM.forEach(function(w){out.push({m:w[0],s:w[1],ph:'warm'})});
+  for(var r=1;r<=p.rounds;r++) c.forEach(function(id,i){
+    out.push({m:id,s:40,ph:'round',round:r});
+    if(!(r===p.rounds&&i===c.length-1)) out.push({m:'_rest',s:i===c.length-1?60:20,ph:'round'});
+  });
+  if(rot.skill&&rot.skill!=='—') for(var j=1;j<=3;j++){
+    out.push({m:'_skill',s:25,ph:'skill',name:rot.skill,set:j});
+    out.push({m:'_rest',s:j===3?30:35,ph:'skill'});
+  }
+  COOL.forEach(function(w){out.push({m:w[0],s:w[1],ph:'cool'})});
+  return out;
+}
+function blockMove(b){
+  if(b.m==='_rest') return {n:'Rest',k:'rest',cad:0,c:'Shake it out. Breathe through the nose.'};
+  if(b.m==='_skill') return {n:b.name+' — set '+b.set,k:'hold',cad:0,c:'Skill practice: the hardest progression you can hold cleanly. Stop the set the moment form goes.'};
+  return MOVES[b.m];
+}
+function phaseBpm(ph,mv){ var p=sessionPrefs(),w=+p.bpm||120;
+  if(mv.k==='stretch'||ph==='cool') return p.mode==='own'?w:64;
+  if(ph==='warm') return p.mode==='own'?w:Math.round(w*0.9);
+  if(ph==='skill') return p.mode==='own'?w:90;
+  return w }
+/* Every block is a whole number of 4-beat bars, so transitions land on a downbeat. */
+function buildTimeline(k){
+  var t=[],beat=0;
+  sessionPlan(k).forEach(function(b){ var mv=blockMove(b),bpm=phaseBpm(b.ph,mv);
+    var bars=Math.max(2,Math.round(b.s*bpm/60/4));
+    t.push({b:b,mv:mv,bpm:bpm,start:beat,beats:bars*4,secs:bars*4*60/bpm}); beat+=bars*4 });
+  return t;
+}
+function timelineMins(t){ return Math.round(t.reduce(function(a,x){return a+x.secs},0)/60) }
+
+function renderSession(){
+  var el=$('#sessionCard'); if(!el) return;
+  var p=sessionPrefs(),t=buildTimeline(CUR),rot=gymRotFor(CUR),train=isGymDay(CUR);
+  var ph={warm:0,round:0,skill:0,cool:0}; t.forEach(function(x){ph[x.b.ph]+=x.secs});
+  el.innerHTML='<div class="card flat" style="padding:16px">'+
+    '<div class="spread" style="flex-wrap:wrap;gap:10px"><div><p class="eyebrow" style="margin-bottom:4px">Guided session · '+timelineMins(t)+' min</p>'+
+    '<div style="font-weight:600">'+(train?esc(rot.n):'Full body — not a scheduled day, still counts as moving')+'</div></div>'+
+    '<button class="btn primary" id="sessStart">▶ Start session</button></div>'+
+    '<div class="grid g2" style="gap:10px;margin-top:12px">'+
+      '<div><div class="tag" style="margin-bottom:6px">Music</div><div class="seg sm" id="sessMode">'+MUSIC_MODES.map(function(m){
+        return '<button data-smode="'+m[0]+'" class="'+(p.mode===m[0]?'on':'')+'">'+m[1]+'</button>'}).join('')+'</div></div>'+
+      '<div><div class="tag" style="margin-bottom:6px">Rounds</div><div class="seg sm">'+[1,2,3,4].map(function(n){
+        return '<button data-srounds="'+n+'" class="'+(p.rounds===n?'on':'')+'">'+n+'</button>'}).join('')+'</div></div>'+
+    '</div>'+
+    '<div class="spread" style="margin-top:12px;gap:10px;flex-wrap:wrap"><label class="fl" for="sessBpm" style="margin:0">Work tempo · <b id="sessBpmV">'+p.bpm+'</b> BPM</label>'+
+      '<div class="btn-row"><input type="range" id="sessBpm" min="90" max="140" step="2" value="'+p.bpm+'" style="width:160px" />'+
+      (p.mode==='own'?'<button class="btn" id="sessTap">Tap to the song</button>':'')+'</div></div>'+
+    '<label class="chk"><input type="checkbox" id="sessVoice" '+(p.voice?'checked':'')+' /> Voice calls the next move</label>'+
+    '<div class="tiny">'+(p.mode==='beat'?'The beat is generated on this device and every rep, set and rest change lands on it.'
+      : p.mode==='own'?'Play your playlist in another app, then tap along to the first song (or set its BPM) so the rep clicks land on its beat. Pick songs near one tempo — 118–128 suits strength work. The app plays only quiet cue clicks over your music.'
+      : 'No beat — voice and countdown beeps only. Reps are still paced at the tempo above.')+'</div>'+
+    '<ul class="session-list">'+[['Warm-up',ph.warm],['Rounds · '+p.rounds+'× '+(CIRCUIT[ROT[parseISO(CUR).getDay()]?parseISO(CUR).getDay():'x']).map(function(id){return MOVES[id].n}).join(' · '),ph.round],
+      ['Skill block'+(rot.skill&&rot.skill!=='—'?' · '+esc(rot.skill):''),ph.skill],['Stretch & cool-down',ph.cool]]
+      .filter(function(r){return r[1]>0}).map(function(r){return '<li><span>'+r[0]+'</span><span>'+Math.round(r[1]/60)+' min</span></li>'}).join('')+'</ul>'+
+    '<div class="tiny" style="margin-top:8px">Finishing the session marks today '+(train?'done':'as moved')+' and logs the minutes. Stop any movement that hurts — this is general programming, not advice for a specific body.</div>'+
+  '</div>';
+  on('#sessStart','click',function(){ sessionStart() });
+  if(location.hash==='#workout'&&!renderSession.landed){ renderSession.landed=true;
+    setTimeout(function(){ var c=$('#sessionCard'); if(c){ c.scrollIntoView({block:'start'}); c.firstChild.style.boxShadow='0 0 0 2px var(--accent)' } },60) }
+  on('#sessBpm','input',function(e){ sessionPrefs().bpm=+e.target.value; txt('#sessBpmV',e.target.value) });
+  on('#sessBpm','change',function(){ touch() });
+  on('#sessVoice','change',function(e){ sessionPrefs().voice=e.target.checked; save() });
+  var taps=[]; on('#sessTap','click',function(){ var n=performance.now(); taps=taps.filter(function(x){return n-x<3000}); taps.push(n);
+    if(taps.length>=4){ var iv=[]; for(var i=1;i<taps.length;i++) iv.push(taps[i]-taps[i-1]);
+      var b=clamp(Math.round(60000/median(iv)),70,180); sessionPrefs().bpm=b; txt('#sessBpmV',b); $('#sessBpm').value=clamp(b,90,140); save() } });
+}
+
+/* ---- audio: a lookahead scheduler on the AudioContext clock ---- */
+var PL=null;
+function plAudio(){
+  var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return null;
+  var ctx=new AC(),master=ctx.createGain(); master.gain.value=0.9; master.connect(ctx.destination);
+  var nb=ctx.createBuffer(1,ctx.sampleRate*0.3,ctx.sampleRate),d=nb.getChannelData(0);
+  for(var i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+  return {ctx:ctx,master:master,noise:nb};
+}
+function tone(A,t,f,dur,vol,type,f2){ var o=A.ctx.createOscillator(),g=A.ctx.createGain();
+  o.type=type||'sine'; o.frequency.setValueAtTime(f,t); if(f2) o.frequency.exponentialRampToValueAtTime(f2,t+dur);
+  g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.0008,t+dur);
+  o.connect(g); g.connect(A.master); o.start(t); o.stop(t+dur+0.02) }
+function noiseHit(A,t,dur,vol,hp){ var s=A.ctx.createBufferSource(),f=A.ctx.createBiquadFilter(),g=A.ctx.createGain();
+  s.buffer=A.noise; f.type='highpass'; f.frequency.value=hp; g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.0008,t+dur);
+  s.connect(f); f.connect(g); g.connect(A.master); s.start(t); s.stop(t+dur+0.02) }
+var BASS=[55,55,65.41,49];  // A, A, C, G — one root per bar, four-bar loop
+function scheduleBeat(A,t,blk,bi,mode){
+  var inBlk=bi-blk.start,pos=inBlk%4,bar=Math.floor(bi/4),k=blk.mv.k,spb=60/blk.bpm,left=blk.beats-inBlk;
+  if(mode==='beat'){
+    if(k==='stretch'){ if(pos===0) tone(A,t,BASS[bar%4]*4,spb*3.6,0.05,'sine'),tone(A,t,BASS[bar%4]*6,spb*3.6,0.035,'sine') }
+    else if(k==='rest'){ noiseHit(A,t,0.04,0.05,7000); if(pos===0) tone(A,t,BASS[bar%4],spb*0.9,0.12,'triangle') }
+    else { if(pos===0||pos===2) tone(A,t,120,0.18,0.9,'sine',45);
+      if(pos===1||pos===3) noiseHit(A,t,0.14,0.35,1800);
+      noiseHit(A,t,0.03,0.12,8000); noiseHit(A,t+spb/2,0.03,0.07,8000);
+      if(pos===0) tone(A,t,BASS[bar%4],spb*1.8,0.25,'triangle') }
+  } else if(mode==='own'&&k!=='rest'&&k!=='stretch') noiseHit(A,t,0.02,0.08,9000);
+  // rep cue: a bright blip on the first beat of each rep
+  if(blk.mv.cad&&inBlk%blk.mv.cad===0&&left>blk.mv.cad-1) tone(A,t,1320,0.07,mode==='beat'?0.18:0.22,'square');
+  // last three beats before a change: rising pips; downbeat of a new block: a bell
+  if(left<=3) tone(A,t,660+(3-left)*220,0.12,0.25,'sine');
+  if(inBlk===0) tone(A,t,1760,0.5,0.22,'sine');
+}
+function say(text){ if(!sessionPrefs().voice||!window.speechSynthesis) return;
+  try{ var v=speechSynthesis.getVoices().filter(function(x){return x.localService&&/^en/i.test(x.lang)});
+    // local voices only: an empty list (voices still loading) means stay silent, never the browser's default
+    if(!v.length) return; var u=new SpeechSynthesisUtterance(text); u.voice=v[0];
+    u.rate=1.05; speechSynthesis.cancel(); speechSynthesis.speak(u) }catch(e){} }
+
+function sessionStart(){
+  var t=buildTimeline(CUR),A=plAudio(),p=sessionPrefs();
+  PL={t:t,A:A,mode:p.mode,bi:0,next:0,queue:[],paused:false,startedAt:Date.now(),activeMs:0,lastTick:performance.now(),
+      total:t[t.length-1].start+t[t.length-1].beats,done:{},lock:null,cur:-1,beatShown:-1};
+  if(A){ A.ctx.resume(); PL.next=A.ctx.currentTime+0.15 }
+  try{ if(navigator.wakeLock) navigator.wakeLock.request('screen').then(function(l){PL&&(PL.lock=l)}).catch(function(){}) }catch(e){}
+  var el=$('#player'); if(!el){ el=document.createElement('div'); el.id='player'; el.className='player'; document.body.appendChild(el) }
+  el.hidden=false; document.body.style.overflow='hidden';
+  el.innerHTML='<div class="pl-top"><div class="tag" id="plPhase">—</div><div class="mono tiny" id="plElapsed">0:00</div></div>'+
+    '<div class="pl-bar"><i id="plBar"></i></div>'+
+    '<div class="pl-main"><div class="pl-kind" id="plKind">—</div><div class="pl-name" id="plName">—</div>'+
+    '<div class="pl-cue" id="plCue"></div><div class="pl-time" id="plTime">0:00</div>'+
+    '<div class="pl-beats" id="plBeats"><b></b><b></b><b></b><b></b></div><div class="pl-rep" id="plRep"></div>'+
+    '<div class="pl-next" id="plNext"></div></div>'+
+    '<div class="pl-ctl"><button class="btn" id="plPrev">⏮ back</button><button class="btn primary" id="plPause">❚❚ pause</button>'+
+    '<button class="btn" id="plSkip">skip ⏭</button><button class="btn danger" id="plEnd">end</button></div>';
+  $('#plPause').onclick=sessionPause; $('#plSkip').onclick=function(){sessionJump(+1)};
+  $('#plPrev').onclick=function(){sessionJump(-1)}; $('#plEnd').onclick=function(){sessionEnd(false)};
+  say('Starting. '+t[0].mv.n+'.');
+  PL.timer=setInterval(sessionTick,25);
+}
+function blockAt(bi){ var t=PL.t; for(var i=t.length-1;i>=0;i--) if(bi>=t[i].start) return i; return 0 }
+function sessionTick(){
+  if(!PL) return; var now=performance.now(),A=PL.A;
+  /* Active time follows the clock the timeline runs on. With audio that is
+     AudioContext.currentTime, which stops whenever the context is suspended
+     or interrupted, so wall-clock time can never be credited to a frozen
+     session. performance.now() is only the fallback when there is no audio. */
+  if(A){ var at=A.ctx.currentTime; if(PL.lastAudio!=null&&!PL.paused) PL.activeMs+=Math.max(0,at-PL.lastAudio)*1000; PL.lastAudio=at }
+  else if(!PL.paused) PL.activeMs+=now-PL.lastTick;
+  PL.lastTick=now;
+  if(PL.paused) return;
+  var clock=A?A.ctx.currentTime:PL.activeMs/1000;
+  if(!A&&PL.next===0) PL.next=clock;
+  // schedule ahead
+  while(PL.bi<PL.total&&PL.next<clock+0.12){
+    var i=blockAt(PL.bi),blk=PL.t[i];
+    if(A) scheduleBeat(A,PL.next,blk,PL.bi,PL.mode);
+    PL.queue.push({at:PL.next,bi:PL.bi,i:i});
+    PL.next+=60/blk.bpm; PL.bi++;
+  }
+  // render beats whose time has come
+  while(PL.queue.length&&PL.queue[0].at<=clock){ var q=PL.queue.shift(); sessionShow(q) }
+  if(PL.bi>=PL.total&&!PL.queue.length&&clock>=PL.next) sessionEnd(true);
+}
+function fmt(s){ s=Math.max(0,Math.ceil(s)); return Math.floor(s/60)+':'+pad(s%60) }
+function sessionShow(q){
+  var blk=PL.t[q.i],inBlk=q.bi-blk.start,mv=blk.mv,left=blk.beats-inBlk,spb=60/blk.bpm;
+  if(q.i!==PL.cur){ PL.cur=q.i; PL.done[q.i]=1;
+    var kind=mv.k==='rest'?'rest':mv.k==='stretch'?'stretch':'';
+    $('#plKind').className='pl-kind '+kind;
+    txt('#plKind',(mv.k==='rest'?'Rest':mv.k==='stretch'?'Stretch':mv.k==='hold'?'Hold':'Work')+(blk.b.round?' · round '+blk.b.round:'')+' · '+blk.bpm+' bpm');
+    txt('#plName',mv.n); txt('#plCue',mv.c);
+    txt('#plPhase',{warm:'Warm-up',round:'Rounds',skill:'Skill block',cool:'Stretch & cool-down'}[blk.b.ph]+' · block '+(q.i+1)+' of '+PL.t.length);
+    var nx=PL.t[q.i+1]; txt('#plNext',nx?'Next: '+nx.mv.n+' · '+fmt(nx.secs):'Last block');
+    if(inBlk===0&&q.i>0) say(mv.k==='rest'?'Rest. Next, '+(nx?nx.mv.n:'finish'):'Go. '+mv.n);
+  }
+  if(left===8&&PL.t[q.i+1]&&mv.k!=='rest') say('Next, '+PL.t[q.i+1].mv.n);
+  if(inBlk===Math.floor(blk.beats/2)&&/side|switch|Reverse/i.test(mv.c)) say('Switch');
+  txt('#plTime',fmt(left*spb));
+  var bs=$$('#plBeats b'); bs.forEach(function(b,j){b.className=j===inBlk%4?('on'+(j===0?' one':'')):''});
+  if(mv.cad){ var rep=Math.floor(inBlk/mv.cad)+1,ph=inBlk%mv.cad;
+    txt('#plRep',(mv.cad>=2?(ph<mv.cad/2?'▼ DOWN':'▲ UP'):'●')+'  ·  rep '+rep) }
+  else txt('#plRep',mv.k==='stretch'?(Math.floor(inBlk/4)%2?'exhale':'inhale'):'');
+  $('#plBar').style.width=(q.bi/PL.total*100).toFixed(1)+'%';
+  txt('#plElapsed',fmt(PL.activeMs/1000)+' / '+fmt(PL.t.reduce(function(a,x){return a+x.secs},0)));
+}
+function sessionPause(){
+  if(!PL) return; PL.paused=!PL.paused;
+  if(PL.A) PL.A.ctx[PL.paused?'suspend':'resume']();
+  txt('#plPause',PL.paused?'▶ resume':'❚❚ pause');
+  if(PL.paused) say('Paused');
+}
+function sessionJump(dir){
+  if(!PL) return; var c=PL.cur<0?0:PL.cur;
+  if(dir>0&&c===PL.t.length-1) return sessionEnd(true);
+  var i=clamp(c+dir,0,PL.t.length-1);
+  PL.bi=PL.t[i].start; PL.queue=[]; PL.cur=-1;
+  var clock=PL.A?PL.A.ctx.currentTime:PL.activeMs/1000; PL.next=clock+0.08;
+  if(PL.A){ /* drop already-scheduled sounds by swapping the output */ 
+    try{ PL.A.master.disconnect() }catch(e){} PL.A.master=PL.A.ctx.createGain(); PL.A.master.gain.value=0.9; PL.A.master.connect(PL.A.ctx.destination) }
+  say(PL.t[i].mv.n);
+}
+function sessionEnd(finished){
+  if(!PL) return; var P=PL; PL=null; clearInterval(P.timer);
+  try{ if(P.A) P.A.ctx.close() }catch(e){} try{ if(P.lock) P.lock.release() }catch(e){}
+  try{ speechSynthesis.cancel() }catch(e){}
+  var mins=Math.floor(P.activeMs/60000),blocks=Object.keys(P.done).length;
+  var el=$('#player'); document.body.style.overflow='';
+  var d=day(CUR); d.gym=d.gym||{};
+  // Counted by time actually worked, not by reaching the end: skipping to the
+  // last block is not a session. Ten minutes of running clock is the floor.
+  var counts=P.activeMs>=600000;  // the floor is on real time, before any rounding
+  if(counts){
+    d.gym.sessionMin=(+d.gym.sessionMin||0)+mins; d.gym.blocks=blocks;
+    if(isGymDay(CUR)) d.gym.status='done'; else d.moved=true;
+  }
+  touch();
+  if(el){ el.innerHTML='<div class="pl-main"><div class="pl-kind">'+(finished?'Session complete':'Session ended')+'</div>'+
+    '<div class="pl-name">'+mins+' min · '+blocks+' of '+P.t.length+' blocks</div>'+
+    '<div class="pl-cue">'+(counts?(isGymDay(CUR)?'Logged as done on today’s sheet.':'Logged as moved on today’s sheet.'):'Under ten minutes — not logged. Nothing is lost; start again when you can.')+'</div>'+
+    '<div class="pl-ctl"><button class="btn primary" id="plClose">close</button></div></div>';
+    $('#plClose').onclick=function(){ el.hidden=true; el.innerHTML='' } }
+  if(finished&&counts) say('Done. Well held.');
+}
+on('#sessionCard','click',function(e){
+  var b=e.target.closest('[data-smode],[data-srounds]'); if(!b) return; var p=sessionPrefs();
+  if(b.hasAttribute('data-smode')) p.mode=b.getAttribute('data-smode'); else p.rounds=+b.getAttribute('data-srounds');
+  touch();
+});
+document.addEventListener('visibilitychange',function(){ if(document.hidden&&PL&&!PL.paused&&!PL.A) sessionPause() });
+
+/* Today's workout, on the front page. The player lives on Badan (it needs the
+   day's rotation and the training log); this card is the door to it, so the
+   workout is the first thing the app shows rather than a section to find. */
+function renderDashWorkout(){
+  var el=$('#dashWorkout'); if(!el) return;
+  var k=todayK(),t=buildTimeline(k),rot=gymRotFor(k),train=isGymDay(k),d=S.days[k]||{},g=d.gym||{};
+  var dow=parseISO(k).getDay(),moves=(CIRCUIT[ROT[dow]?dow:'x']).map(function(id){return MOVES[id].n});
+  var done=+g.sessionMin>0||g.status==='done';
+  el.innerHTML='<div class="card" style="border-color:'+(done?'var(--good)':'var(--accent)')+'">'+
+    '<div class="spread" style="flex-wrap:wrap;gap:12px"><div>'+
+      '<p class="eyebrow" style="margin-bottom:4px">Today’s workout · '+timelineMins(t)+' min</p>'+
+      '<div style="font-size:1.25rem;font-weight:700">'+(train?esc(rot.n):'Full body')+'</div>'+
+      '<div class="small" style="margin-top:4px">Warm-up → '+moves.join(' · ')+' → stretch</div>'+
+      (done?'<div class="pill good" style="margin-top:8px">done today'+(g.sessionMin?' · '+g.sessionMin+' min':'')+'</div>'
+           :'<div class="tiny" style="margin-top:6px">Every move timed to the beat, with a voice calling the next one. Sound on.</div>')+
+    '</div>'+
+    '<a class="btn primary" href="badan/#workout" style="font-size:.9rem;padding:14px 20px">'+(done?'Go again':'▶ Start today’s workout')+'</a></div></div>';
+}
 /* ---- sample data (clearly synthetic) ---- */
 function makeSample(){
   var seed=7; function rnd(){seed=(seed*1103515245+12345)%2147483648; return seed/2147483648}

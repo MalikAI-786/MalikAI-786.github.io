@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Money · Mīzān</title>
+<meta name="description" content="Accounts, cash flow, recurring bills and the mortgage, read from statement files on this device." />
+<link rel="stylesheet" href="../core.css" />
+</head>
+<body data-page="money" data-root="../">
+
+<nav class="top">
+  <div class="nav-inner">
+    <a class="brand" href="../">Mīzān<em>.</em></a>
+    <div class="nav-links" id="navLinks"></div>
+    <button class="icon-btn" id="themeBtn" title="Toggle theme">◐</button>
+  </div>
+</nav>
+
+<div class="wrap" id="top">
+<section id="money">
+  <div class="sec-head">
+    <p class="eyebrow">Money</p>
+    <h2>What comes in, what goes out, and what is owed.</h2>
+    <p class="lede">The audit question asked of money: not "am I careful" but <strong>does the record match the story</strong>. Most people can say roughly what they earn. Very few can list their recurring bills from memory, or say what this month's mortgage payment cost in interest. This page computes both from the statements themselves.</p>
+  </div>
+
+  <div class="ayah" style="margin-bottom:18px">
+    <div class="tr">“O you who believe, when you contract a debt for a fixed term, write it down.”</div>
+    <div class="ref">Al-Baqarah 2:282 · working translation</div>
+  </div>
+
+  <div class="stat-row four" id="mTiles" style="margin-bottom:18px"></div>
+
+  <div class="grid g-2-1" style="margin-bottom:18px">
+    <div class="card">
+      <p class="eyebrow">Import a statement</p>
+      <div id="mDrop" style="border:1px dashed var(--line2);border-radius:4px;padding:18px;text-align:center">
+        <div class="small">From your bank or card website: <b>Download transactions</b> as <b>CSV</b>, or <b>OFX / QFX</b> (Quicken format) if offered.</div>
+        <label class="btn primary" style="margin-top:10px;cursor:pointer">Choose file<input type="file" id="mFile" accept=".csv,.ofx,.qfx,text/csv" hidden /></label>
+      </div>
+      <div id="mImportOut"></div>
+      <div class="tiny" style="margin-top:10px">Read on this device only. Duplicates are skipped, so overlapping downloads are safe. Transfers between your own accounts are left out of spending.</div>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Where this data lives</p>
+      <div class="small">In this browser only, under its own storage key, separate from the rest of Mīzān. Nothing is uploaded and this page makes no network calls. The weekly Mīzān export does <b>not</b> include it — use <b>Back up</b> below for that.</div>
+      <div class="tiny" style="margin-top:8px">Live bank sync is stage 2: a private backend you own, connected through Plaid. Until then, nothing here can reach your bank, and your bank cannot reach it.</div>
+      <div class="btn-row" style="margin-top:12px"><button class="btn" id="mExport">Back up</button><button class="btn danger" id="mErase">Erase Money data</button></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:18px">
+    <p class="eyebrow">Accounts</p>
+    <div id="mAccounts"></div>
+    <div class="tiny" style="margin-top:8px">CSV downloads often omit the balance; enter it once and it updates when an OFX file carries a newer one.</div>
+  </div>
+
+  <div class="grid g-2-1" style="margin-bottom:18px">
+    <div class="card">
+      <p class="eyebrow">Six months · in and out</p>
+      <div class="chartbox"><svg id="mFlow" style="width:100%;height:auto;display:block" viewBox="0 0 640 200" role="img" aria-label="Money in and out by month"></svg></div>
+      <div class="tiny" id="mFlowNote"></div>
+    </div>
+    <div class="card">
+      <p class="eyebrow">Spending · last 90 days</p>
+      <div id="mCats"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:18px">
+    <p class="eyebrow">Recurring bills</p>
+    <div id="mRecurring"></div>
+  </div>
+
+  <div class="card" style="margin-bottom:18px">
+    <p class="eyebrow">Mortgage &amp; loans</p>
+    <div id="mLoans"></div>
+    <div class="hr" style="margin:14px 0"></div>
+    <div class="tag" style="margin-bottom:8px">Add from the latest statement</div>
+    <div class="grid g3" style="gap:10px">
+      <div class="field" style="margin:0"><label class="fl" for="lName">Name</label><input type="text" id="lName" placeholder="Mortgage" /></div>
+      <div class="field" style="margin:0"><label class="fl" for="lBal">Principal balance ($)</label><input type="number" id="lBal" step="0.01" /></div>
+      <div class="field" style="margin:0"><label class="fl" for="lRate">Interest rate (%)</label><input type="number" id="lRate" step="0.001" /></div>
+      <div class="field" style="margin:0"><label class="fl" for="lPay">Monthly principal + interest ($)</label><input type="number" id="lPay" step="0.01" /></div>
+      <div class="field" style="margin:0"><label class="fl" for="lEsc">Escrow, if any ($)</label><input type="number" id="lEsc" step="0.01" /></div>
+      <div class="field" style="margin:0"><label class="fl" for="lDue">Next payment due</label><input type="date" id="lDue" /></div>
+    </div>
+    <div class="btn-row" style="margin-top:10px"><button class="btn primary" id="mLoanAdd">Add loan</button><span class="tiny" id="lErr" style="color:var(--bad)"></span></div>
+    <div class="tiny" style="margin-top:10px">Interest is shown as a plain number because that is what it is. Whether a given financing arrangement is permissible is a question for a qualified scholar, not this page.</div>
+  </div>
+</section>
+</div>
+
+<footer><div class="wrap"><div class="spread">
+  <div class="tiny">Mīzān · Money · read from your own statement files · never leaves this browser</div>
+  <div class="tiny mono" id="footVer">—</div>
+</div></div></footer>
+
+<script src="../core.js"></script>
+<script src="money.js"></script>
+</body>
+</html>

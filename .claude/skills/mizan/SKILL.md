@@ -286,6 +286,34 @@ otherwise unzip and read `word/document.xml`), reconcile against what the
 calendar says happened, and write the next sheet. Never guess the numbers he
 didn't write.
 
+## The session player (Badan)
+
+`renderSession()` builds a guided workout for the viewed day: warm-up, the
+day's rotation as a timed circuit, a skill block, and a stretch cool-down. The
+invariant is that **the timeline is counted in beats, not seconds**: every block
+is a whole number of 4-beat bars at its own tempo, so set changes land on a
+downbeat and each rep starts on a beat. The beat is synthesised with Web Audio
+on a lookahead scheduler against `AudioContext.currentTime`; pausing suspends
+the context, which is what keeps the music, the clock and the rep count in
+lockstep. Do not replace it with streamed audio or a `setTimeout` clock. Both
+drift, and drift is the bug the player exists to remove. "My own music" mode
+plays only quiet cue clicks at a tapped or chosen BPM. The voice uses local
+speech voices only (`localService`); with none, it stays silent rather than
+reaching the network. Movement data is `MOVES`, `CIRCUIT`, `WARM` and `COOL`:
+general programming with form cues, no medical claims.
+
+## Money (`mizan/money/`)
+
+Accounts, cash flow, recurring bills and the mortgage, read from statement files
+(CSV / OFX / QFX) **on the device**, under its own key `mizan.money.v1`. It is kept
+apart from `mizan.v1` so the weekly export never carries bank data. Stage 2 (live
+Plaid sync from a private Supabase backend) is designed but not built, and none
+of it may live in this public repo. Read `references/money-plan.md` before
+touching either stage. Two rules bite here. No bank figure, account number or
+credential ever goes into a commit, a test fixture or a screenshot that is
+committed; smoke uses synthetic statements written to the OS temp dir. And the
+page shows interest as a number while referring permissibility to a scholar.
+
 ## The Lab (participant edition)
 
 `mizan/lab/` is the same model for other people: a standalone sheet over

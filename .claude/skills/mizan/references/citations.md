@@ -25,6 +25,7 @@ class. Check here before re-quoting; add here when you add one.
 | 2:177 | Iḥsān measure — righteousness as concrete acts |
 | 2:219 | Ledger, stage one — intoxicants: benefit conceded, harm greater |
 | 2:247 | Badan — Ṭālūt chosen for knowledge *and* stature |
+| 2:282 | Money page — the debt verse: when you contract a debt for a fixed term, write it down |
 | 2:286 | Path, when it breaks — no soul burdened beyond capacity |
 | 2:51, 7:142 | The forty-day interval (Mūsā's appointment) |
 | 4:36 | Iḥsān measure |
