@@ -944,7 +944,7 @@ function renderAll(){
   var d=day(CUR),dt=parseISO(CUR);
   renderNav(); renderDayBar(); renderToday(); renderPrayers(d,dt); renderMeasures(d); renderFriction(d);
   renderHyperLog(); renderLedgerToday(d); renderReference(); renderLadder(); renderPhases();
-  renderTrend(); renderSettings(); renderBadan(); renderSession(); renderHealth(); renderDash(); renderForceDiagram();
+  renderTrend(); renderSettings(); renderBadan(); renderSession(); renderHealth(); renderDash(); renderDashWorkout(); renderForceDiagram();
 }
 
 /* ==================================================================
@@ -1338,6 +1338,8 @@ function renderSession(){
     '<div class="tiny" style="margin-top:8px">Finishing the session marks today '+(train?'done':'as moved')+' and logs the minutes. Stop any movement that hurts — this is general programming, not advice for a specific body.</div>'+
   '</div>';
   on('#sessStart','click',function(){ sessionStart() });
+  if(location.hash==='#workout'&&!renderSession.landed){ renderSession.landed=true;
+    setTimeout(function(){ var c=$('#sessionCard'); if(c){ c.scrollIntoView({block:'start'}); c.firstChild.style.boxShadow='0 0 0 2px var(--accent)' } },60) }
   on('#sessBpm','input',function(e){ sessionPrefs().bpm=+e.target.value; txt('#sessBpmV',e.target.value) });
   on('#sessBpm','change',function(){ touch() });
   on('#sessVoice','change',function(e){ sessionPrefs().voice=e.target.checked; save() });
@@ -1497,6 +1499,24 @@ on('#sessionCard','click',function(e){
 });
 document.addEventListener('visibilitychange',function(){ if(document.hidden&&PL&&!PL.paused&&!PL.A) sessionPause() });
 
+/* Today's workout, on the front page. The player lives on Badan (it needs the
+   day's rotation and the training log); this card is the door to it, so the
+   workout is the first thing the app shows rather than a section to find. */
+function renderDashWorkout(){
+  var el=$('#dashWorkout'); if(!el) return;
+  var k=todayK(),t=buildTimeline(k),rot=gymRotFor(k),train=isGymDay(k),d=S.days[k]||{},g=d.gym||{};
+  var dow=parseISO(k).getDay(),moves=(CIRCUIT[ROT[dow]?dow:'x']).map(function(id){return MOVES[id].n});
+  var done=+g.sessionMin>0||g.status==='done';
+  el.innerHTML='<div class="card" style="border-color:'+(done?'var(--good)':'var(--accent)')+'">'+
+    '<div class="spread" style="flex-wrap:wrap;gap:12px"><div>'+
+      '<p class="eyebrow" style="margin-bottom:4px">Today’s workout · '+timelineMins(t)+' min</p>'+
+      '<div style="font-size:1.25rem;font-weight:700">'+(train?esc(rot.n):'Full body')+'</div>'+
+      '<div class="small" style="margin-top:4px">Warm-up → '+moves.join(' · ')+' → stretch</div>'+
+      (done?'<div class="pill good" style="margin-top:8px">done today'+(g.sessionMin?' · '+g.sessionMin+' min':'')+'</div>'
+           :'<div class="tiny" style="margin-top:6px">Every move timed to the beat, with a voice calling the next one. Sound on.</div>')+
+    '</div>'+
+    '<a class="btn primary" href="badan/#workout" style="font-size:.9rem;padding:14px 20px">'+(done?'Go again':'▶ Start today’s workout')+'</a></div></div>';
+}
 /* ---- sample data (clearly synthetic) ---- */
 function makeSample(){
   var seed=7; function rnd(){seed=(seed*1103515245+12345)%2147483648; return seed/2147483648}

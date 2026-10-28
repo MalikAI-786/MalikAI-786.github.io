@@ -73,6 +73,9 @@ function check(name, cond, detail) {
 
   await page.goto(url('index.html'));
   await page.waitForTimeout(400);
+  check('dashboard leads with today\'s workout and a start button',
+    /Today.s workout · \d+ min/i.test(await page.locator('#dashWorkout').innerText()) &&
+    (await page.locator('#dashWorkout a[href="badan/#workout"]').count()) === 1);
   check('dashboard renders six kicker tiles',
     (await page.locator('#dashGrid .tile').count()) === 6);
   check('dashboard names a leftmost failing control or says why not',
