@@ -944,7 +944,7 @@ function renderAll(){
   var d=day(CUR),dt=parseISO(CUR);
   renderNav(); renderDayBar(); renderToday(); renderPrayers(d,dt); renderMeasures(d); renderFriction(d);
   renderHyperLog(); renderLedgerToday(d); renderReference(); renderLadder(); renderPhases();
-  renderTrend(); renderSettings(); renderBadan(); renderSession(); renderHealth(); renderDash(); renderDashWorkout(); renderForceDiagram();
+  renderTrend(); renderSettings(); renderBadan(); renderSession(); renderHealth(); renderDash(); renderDashWorkout(); renderJarvis(); renderForceDiagram();
 }
 
 /* ==================================================================
@@ -1516,6 +1516,86 @@ function renderDashWorkout(){
            :'<div class="tiny" style="margin-top:6px">Every move timed to the beat, with a voice calling the next one. Sound on.</div>')+
     '</div>'+
     '<a class="btn primary" href="badan/#workout" style="font-size:.9rem;padding:14px 20px">'+(done?'Go again':'▶ Start today’s workout')+'</a></div></div>';
+}
+/* ==================================================================
+   JARVIS DOOR — one tap from a compartment to the assistant. Builds a
+   short brief from what is on THIS device and opens claude.ai with the
+   question already asked. Nothing is sent anywhere until you tap; the
+   brief goes only to your own Claude account. Read-only by design: the
+   prompt itself carries the guardrails.
+   ================================================================== */
+var JARVIS=[
+ {id:'day',n:'Whole day',q:'Brief me on today across all seven compartments. Lead with the one thing that matters most, then anything slipping.'},
+ {id:'din',n:'Dīn',q:'Brief me on Dīn: ṣalāh and dhikr today and the last two weeks. What is the next prayer and what is holding or slipping?'},
+ {id:'badan',n:'Badan',q:'Brief me on Badan: today’s training, sleep and movement. Is the session on, and what would make it happen?'},
+ {id:'amal',n:'ʿAmal',q:'Brief me on ʿAmal: focused blocks and the One Thing. Check my calendar for open work time today and my Notion job pipeline.'},
+ {id:'ilm',n:'ʿIlm',q:'Brief me on ʿIlm: what is due this week in my DBA and courses? Check my calendar and Drive. Mīzān does not track this yet.'},
+ {id:'mal',n:'Māl',q:'Brief me on Māl: cash flow, recurring bills and anything due. Facts only, no financial advice.'},
+ {id:'ahl',n:'Ahl · Iḥsān',q:'Brief me on Ahl · Iḥsān: the named acts toward people this fortnight. Who have I not reached in a while? Suggest one act for today; I decide.'},
+ {id:'shuun',n:'Shuʾūn',q:'Brief me on Shuʾūn: open items in my Notion control center and unread mail that needs me. Draft replies; never send.'}
+];
+var JARVIS_RULES='Rules: read-only. Draft, never send. Never invent my numbers; if a fact is missing, say so. No legal, medical, tax or religious rulings.';
+function jTouched(d){ if(!d||d.synthetic) return false;
+  return !!(d.closed||PRAYERS.some(function(p){return d.prayers[p.id]})||+d.sprints>0||d.oneThing||
+    Object.keys(d.scores||{}).some(function(k){return d.scores[k]!=null})||d.sleepHrs||d.steps||(d.gym&&d.gym.status)) }
+function jSc(d,id){ var v=d?scoreOf(d,id):null; return v==null?'not scored':v+'/3' }
+function jMean(id,n){ var v=recentKeys(n||14).map(function(k){var d=S.days[k];return jTouched(d)?scoreOf(d,id):null})
+  .filter(function(x){return x!=null}); return v.length?mean(v).toFixed(1)+'/3 over '+v.length+' days':'no scored days' }
+function jMoney(){
+  var M=null; try{ M=JSON.parse(localStorage.getItem('mizan.money.v1')||'null') }catch(e){}
+  if(!M||!M.txns||!M.txns.length) return ['no statements imported on this device yet'];
+  var since=addDays(todayK(),-30),inn=0,out=0;
+  M.txns.forEach(function(t){ if(t.date<since||t.cat==='transfer') return; if(t.amt>0) inn+=t.amt; else out+=-t.amt });
+  var last=M.txns.reduce(function(a,t){return t.date>a?t.date:a},'');
+  return [Object.keys(M.accounts||{}).length+' accounts, '+M.txns.length+' transactions, latest '+last,
+          'last 30 days: in $'+Math.round(inn)+' · out $'+Math.round(out),
+          Object.keys(M.loans||{}).length+' loans on file'];
+}
+function jarvisFacts(id){
+  var k=todayK(),d=S.days[k],real=jTouched(d)?d:null,f=[];
+  if(!real&&id!=='mal'&&id!=='ilm'&&id!=='shuun') f.push('Nothing logged in Mīzān yet today');
+  var din=function(){ var pr=real?PRAYERS.filter(function(p){return real.prayers[p.id]==='in'}).length:0;
+    f.push('Ṣalāh today: '+jSc(real,'salah')+' ('+pr+' of 5 in window) · 14-day '+jMean('salah'));
+    f.push('Dhikr today: '+jSc(real,'dhikr')+' · 14-day '+jMean('dhikr')) };
+  var badan=function(){ var rot=gymRotFor(k),g=(real&&real.gym)||{};
+    f.push('Training: '+(isGymDay(k)?rot.n+' today':'not a training day')+(g.status?' · status '+g.status:'')+(g.sessionMin?' · '+g.sessionMin+' min logged':''));
+    f.push('Badan score today: '+jSc(real,'body')+(real&&real.sleepHrs?' · slept '+real.sleepHrs+' h':'')+(real&&real.steps?' · '+real.steps+' steps':'')) };
+  var amal=function(){ f.push('ʿAmal today: '+jSc(real,'amal')+(real?' · '+(+real.sprints||0)+' sprints'+(real.oneThing?' · One Thing '+(real.oneThingDone?'moved':'not yet moved'):' · no One Thing set'):''));
+    f.push('Attention today: '+jSc(real,'attn')+' · 14-day '+jMean('attn')) };
+  var ahl=function(){ f.push('Iḥsān today: '+jSc(real,'ihsan')+' · 14-day '+jMean('ihsan')) };
+  if(id==='day'||id==='din') din();
+  if(id==='day'||id==='badan') badan();
+  if(id==='day'||id==='amal') amal();
+  if(id==='day'||id==='ahl') ahl();
+  if(id==='mal') f=f.concat(jMoney());
+  if(id==='ilm'||id==='shuun') f.push('Mīzān does not hold this compartment; read my calendar, Notion and mail');
+  if(id==='day'){ var idx=indexOf(k),L=ladderEval(); f.unshift('Khudī index today: '+(idx==null||!real?'nothing scored yet':idx)+' · stage '+L.stage+' ('+STAGES[L.stage].t+') · '+(real&&real.closed?'day closed':'day still open')) }
+  return f;
+}
+function jarvisPrompt(id){
+  var c=JARVIS.filter(function(x){return x.id===id})[0]||JARVIS[0];
+  return 'Jarvis — '+c.q+'\n\nFrom my Mīzān on this device, '+todayK()+':\n- '+jarvisFacts(c.id).join('\n- ')+'\n\n'+JARVIS_RULES;
+}
+function jarvisURL(id){ return 'https://claude.ai/new?q='+encodeURIComponent(jarvisPrompt(id)) }
+function jarvisCopy(id,btn){
+  var t=jarvisPrompt(id),done=function(){ if(btn){var o=btn.textContent; btn.textContent='Copied'; setTimeout(function(){btn.textContent=o},1500)} };
+  try{ navigator.clipboard.writeText(t).then(done,function(){ window.prompt('Copy this brief',t) }) }catch(e){ window.prompt('Copy this brief',t) }
+}
+function renderJarvis(){
+  var el=$('#jarvisDoor');
+  if(el) el.innerHTML='<div class="card"><div class="spread" style="flex-wrap:wrap;gap:10px"><div>'+
+    '<p class="eyebrow" style="margin-bottom:4px">Ask Jarvis</p>'+
+    '<div class="small">One tap opens Claude with the question asked and today’s numbers from this device attached. Nothing leaves until you tap.</div></div>'+
+    '<button class="btn" type="button" data-jcopy="day">Copy today’s brief</button></div>'+
+    '<div class="btn-row" style="margin-top:12px">'+JARVIS.map(function(c){
+      return '<a class="btn'+(c.id==='day'?' primary':'')+'" target="_blank" rel="noopener" data-j="'+c.id+'" href="'+esc(jarvisURL(c.id))+'">'+esc(c.n)+'</a>'}).join('')+
+    '</div></div>';
+  [].forEach.call(document.querySelectorAll('[data-jarvis]'),function(x){
+    var id=x.getAttribute('data-jarvis'),c=JARVIS.filter(function(j){return j.id===id})[0]; if(!c) return;
+    x.innerHTML='<div class="btn-row"><a class="btn" target="_blank" rel="noopener" data-j="'+c.id+'" href="'+esc(jarvisURL(c.id))+'">Ask Jarvis about '+esc(c.n)+' ↗</a>'+
+      '<button class="btn" type="button" data-jcopy="'+c.id+'">Copy brief</button></div>';
+  });
+  [].forEach.call(document.querySelectorAll('[data-jcopy]'),function(b){ b.onclick=function(){ jarvisCopy(b.getAttribute('data-jcopy'),b) } });
 }
 /* ---- sample data (clearly synthetic) ---- */
 function makeSample(){

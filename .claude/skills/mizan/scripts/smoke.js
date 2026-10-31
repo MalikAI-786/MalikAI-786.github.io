@@ -76,11 +76,31 @@ function check(name, cond, detail) {
   check('dashboard leads with today\'s workout and a start button',
     /Today.s workout · \d+ min/i.test(await page.locator('#dashWorkout').innerText()) &&
     (await page.locator('#dashWorkout a[href="badan/#workout"]').count()) === 1);
+  {
+    const jd = await page.evaluate(() => ({
+      n: document.querySelectorAll('#jarvisDoor a[data-j]').length,
+      hrefs: [...document.querySelectorAll('#jarvisDoor a[data-j]')].map(a => a.href),
+      blank: [...document.querySelectorAll('#jarvisDoor a[data-j]')].every(a => a.target === '_blank' && /noopener/.test(a.rel)),
+    }));
+    const day = decodeURIComponent((jd.hrefs[0] || '').split('?q=')[1] || '');
+    check('dashboard carries an Ask Jarvis door for the day and all seven compartments',
+      jd.n === 8 && jd.blank && jd.hrefs.every(h => h.startsWith('https://claude.ai/new?q=')), jd.n);
+    check('Jarvis brief asks the question, carries today\'s facts and the guardrails',
+      /^Jarvis — Brief me on today/.test(day) && /Khudī index today/.test(day) && /Draft, never send/.test(day) && /Never invent my numbers/.test(day), day.slice(0, 120));
+    check('Jarvis brief stays short enough for a link', jd.hrefs.every(h => h.length < 4000), Math.max(...jd.hrefs.map(h => h.length)));
+    const mal = decodeURIComponent((jd.hrefs.find(h => /Brief%20me%20on%20M/.test(h)) || '').split('?q=')[1] || '');
+    check('Māl brief says plainly when no statements are on the device', /no statements imported/.test(mal), mal.slice(0, 160));
+  }
   check('dashboard renders six kicker tiles',
     (await page.locator('#dashGrid .tile').count()) === 6);
   check('dashboard names a leftmost failing control or says why not',
     (await page.locator('#dashWorst').innerText()).length > 40);
 
+  for (const [rel, id] of [['badan/index.html', 'badan'], ['money/index.html', 'mal'], ['day/index.html', 'day']]) {
+    await page.goto(url(rel)); await page.waitForTimeout(300);
+    check(`${rel} has its Ask Jarvis door`, (await page.locator(`[data-jarvis="${id}"] a[data-j="${id}"]`).count()) === 1);
+  }
+  await page.goto(url('index.html')); await page.waitForTimeout(200);
   await page.goto(url('khudi/index.html'));
   await page.waitForTimeout(400);
   check('khudi force diagram draws', (await page.locator('#forceDiagram rect').count()) >= 4);

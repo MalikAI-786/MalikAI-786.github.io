@@ -349,3 +349,8 @@ product, it does not belong on this page.
   provenance class.
 - `references/design-system.md` — tokens, component classes, chart and SVG
   conventions.
+
+## Jarvis door
+
+`renderJarvis()` (core.js) fills `#jarvisDoor` on the dashboard and every `[data-jarvis="<id>"]` slot (day/, badan/, money/). Ids: `day din badan amal ilm mal ahl shuun` (the `JARVIS` array). Each button opens `https://claude.ai/new?q=<brief>`: the compartment's question, facts read from this device (`jarvisFacts`), and the guardrail line `JARVIS_RULES`. A day with no input reads "not scored", never 0 (`jTouched`); Māl reads counts and 30-day totals from `mizan.money.v1` only. Nothing is fetched or sent by the page; the user taps. The matching Claude Project instructions live in `references/jarvis-project.md`. Smoke checks cover eight buttons, the guardrail text, the link length and the empty-Māl wording.
+
