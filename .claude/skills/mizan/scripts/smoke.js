@@ -89,6 +89,16 @@ function check(name, cond, detail) {
       /^Jarvis — Brief me on today/.test(day) && /Khudī index today/.test(day) && /Draft, never send/.test(day) && /Never invent my numbers/.test(day), day.slice(0, 120));
     check('Jarvis brief stays short enough for a link', jd.hrefs.every(h => h.length < 4000), Math.max(...jd.hrefs.map(h => h.length)));
     const mal = decodeURIComponent((jd.hrefs.find(h => /Brief%20me%20on%20M/.test(h)) || '').split('?q=')[1] || '');
+    const fresh = await page.evaluate(() => {
+      const S = JSON.parse(localStorage.getItem('mizan.v1')); const M0 = localStorage.getItem('mizan.money.v1');
+      localStorage.setItem('mizan.money.v1', JSON.stringify({v:1,accounts:{a1:{name:'Test',type:'checking'}},txns:[{date:'2026-01-02',desc:'x',amt:-5,acct:'a1',cat:'other'}],loans:{},rules:{},seen:{}}));
+      const a = document.querySelector('#jarvisDoor a[data-j="mal"]');
+      a.addEventListener('click', ev => ev.preventDefault(), { once: true }); a.click();
+      const q = decodeURIComponent(a.href.split('?q=')[1]);
+      if (M0 == null) localStorage.removeItem('mizan.money.v1'); else localStorage.setItem('mizan.money.v1', M0);
+      return q;
+    });
+    check('Jarvis link is rebuilt at tap time from current device data', /1 accounts, 1 transactions/.test(fresh), fresh.slice(0, 160));
     check('Māl brief says plainly when no statements are on the device', /no statements imported/.test(mal), mal.slice(0, 160));
   }
   check('dashboard renders six kicker tiles',
@@ -125,6 +135,15 @@ function check(name, cond, detail) {
     await page.click('#amanahList [data-delamanah="0"]');
     await page.waitForTimeout(100);
     check('Amānah entry can be removed', /Nothing handed over today/.test(await page.locator('#amanahList').innerText()));
+  }
+  {
+    const ctx = await browser.newContext(); const p2 = await ctx.newPage();
+    await p2.goto(url('badan/index.html')); await p2.waitForTimeout(300);
+    await p2.locator('#foodList input[data-food]').first().check(); await p2.waitForTimeout(150);
+    const q = await p2.evaluate(() => { const a = document.querySelector('[data-jarvis="badan"] a[data-j]');
+      a.addEventListener('click', ev => ev.preventDefault(), { once: true }); a.click(); return decodeURIComponent(a.href.split('?q=')[1]); });
+    check('a food-only day counts as logged in the Jarvis brief', !/Nothing logged in Mīzān yet today/.test(q) && /Badan score today: \d\/3/.test(q), q.split('\n').slice(3, 6).join(' | '));
+    await ctx.close();
   }
   await page.goto(url('khudi/index.html'));
   await page.waitForTimeout(400);

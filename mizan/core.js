@@ -1567,7 +1567,8 @@ var JARVIS=[
 var JARVIS_RULES='Rules: read-only. Draft, never send. Never invent my numbers; if a fact is missing, say so. No legal, medical, tax or religious rulings.';
 function jTouched(d){ if(!d||d.synthetic) return false;
   return !!(d.closed||PRAYERS.some(function(p){return d.prayers[p.id]})||+d.sprints>0||d.oneThing||
-    Object.keys(d.scores||{}).some(function(k){return d.scores[k]!=null})||d.sleepHrs||d.steps||(d.gym&&d.gym.status)) }
+    Object.keys(d.scores||{}).some(function(k){return d.scores[k]!=null})||d.sleepHrs||d.steps||d.moved||(d.gym&&d.gym.status)||
+    Object.keys(d.food||{}).some(function(k){return d.food[k]})) }
 function jSc(d,id){ var v=d?scoreOf(d,id):null; return v==null?'not scored':v+'/3' }
 function jMean(id,n){ var v=recentKeys(n||14).map(function(k){var d=S.days[k];return jTouched(d)?scoreOf(d,id):null})
   .filter(function(x){return x!=null}); return v.length?mean(v).toFixed(1)+'/3 over '+v.length+' days':'no scored days' }
@@ -1630,6 +1631,12 @@ function renderJarvis(){
       '<button class="btn" type="button" data-jcopy="'+c.id+'">Copy brief</button></div>';
   });
   [].forEach.call(document.querySelectorAll('[data-jcopy]'),function(b){ b.onclick=function(){ jarvisCopy(b.getAttribute('data-jcopy'),b) } });
+  if(!renderJarvis.bound){ renderJarvis.bound=true;
+    /* rebuild the link at tap time: other engines on the page (money.js)
+       change local data without calling renderAll(), so a link built at
+       render time can go stale. */
+    document.addEventListener('click',function(e){ var a=e.target.closest&&e.target.closest('a[data-j]');
+      if(a) a.href=jarvisURL(a.getAttribute('data-j')) },true); }
 }
 /* ---- sample data (clearly synthetic) ---- */
 function makeSample(){
