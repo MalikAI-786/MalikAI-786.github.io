@@ -53,6 +53,13 @@ class. Check here before re-quoting; add here when you add one.
 | 89:27–28 | Ladder — an-nafs al-muṭma'innah |
 | 94:7 | ʿAmal measure |
 
+**Verified 2026-11-01** against one reference translation (M. A. S. Abdel Haleem, Oxford World's Classics). All 31 Qur'an references above point at verses that say what the page claims; no verse number is wrong. Do not paste this translation's text into the repo: it is under copyright. Cite it by sūrah:āyah only. Notes:
+
+- **73:6** — his main text reads the verse as about *night prayer*. "Getting up at night" appears only as an alternative in his footnote. The Day page uses the Arabic *nāshi'at al-layl*, which stays neutral; keep it that way.
+- **13:11** — he brackets "[for the worse]". The khudī page uses the common general rendering, which is fine, but don't present it as his.
+- **7:142** gives the forty as thirty plus ten; **2:51** gives forty outright.
+- **39:53** "do not despair of God's mercy" has a near-twin at **12:87**. Don't mix them up.
+
 ## A — Ḥadīth
 
 | Text | Collection | Used for |
