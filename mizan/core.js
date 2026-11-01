@@ -105,7 +105,7 @@ function blankDay(k){return {date:k,forecast:null,prayers:{},dhikrMin:0,sprints:
   gym:{},food:{},weight:null,sleepHrs:null,moved:false,steps:null,rhr:null,
   friction:[false,false,false,false,false],hyper:'',
   muhasaba:{shukr:'',khata:'',kal:''},closed:false,synthetic:false,
-  practice369:{morning:0,midday:0,evening:0}}}
+  practice369:{morning:0,midday:0,evening:0},amanah:[]}}
 function defaults(){return {v:1,settings:{lat:40.7128,lng:-74.0060,method:'ISNA',asr:1,
   path:'taper',start:iso(new Date()),cap:2,floorHour:20,weights:Object.assign({},DEFW),
   /* Sun/Sat 07:30, Mon 16:45 — matches the owner's actual recurring calendar
@@ -141,6 +141,7 @@ function day(k){ if(!S.days[k]) S.days[k]=blankDay(k);
   d.muhasaba=d.muhasaba||{shukr:'',khata:'',kal:''};
   d.gym=d.gym||{}; d.food=d.food||{};
   d.practice369=d.practice369||{morning:0,midday:0,evening:0};
+  if(!Array.isArray(d.amanah)) d.amanah=[];
   if(!Array.isArray(d.friction)||d.friction.length!==5) d.friction=[false,false,false,false,false];
   return d}
 function has(k){return Object.prototype.hasOwnProperty.call(S.days,k)}
@@ -468,7 +469,7 @@ function renderToday(){
     .filter(function(x){return x!=null});
   $('#sprint7').textContent=s7.length?mean(s7).toFixed(1):'—';
 
-  render369(d);
+  render369(d); renderAmanah(d);
 }
 
 /* ---- the 3-6-9 practice: write one intention 3× morning, 6× midday, 9×
@@ -492,6 +493,31 @@ function render369(d){
   }).join('');
 }
 
+/* ---- Amānah · the Trust (Q 33:72). Constructed practice (class D):
+   log each piece of work handed to AI, whether you drafted or forecast
+   your own answer first, and whether you checked what came back. It is
+   not scored and carries no weight in the index; it is a record of
+   where judgment went. ---- */
+function amanahStats(keys){
+  var n=0,first=0,chk=0;
+  keys.forEach(function(k){ var d=S.days[k]; if(!d||d.synthetic||!d.amanah) return;
+    d.amanah.forEach(function(a){ n++; if(a.first) first++; if(a.checked) chk++ }) });
+  return {n:n,first:first,chk:chk};
+}
+function renderAmanah(d){
+  if(!$('#amanahList')) return;
+  var L=d.amanah||[];
+  $('#amanahList').innerHTML=L.length? L.map(function(a,i){
+    return '<div class="row" style="align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap">'+
+      '<span class="small" style="flex:1;min-width:0">'+esc(a.t)+'</span>'+
+      '<span class="pill '+(a.first?'good':'warn')+'">'+(a.first?'mine first':'no draft')+'</span>'+
+      '<span class="pill '+(a.checked?'good':'warn')+'">'+(a.checked?'checked':'unchecked')+'</span>'+
+      '<button class="btn" data-delamanah="'+i+'" style="padding:2px 8px" aria-label="Remove">✕</button></div>'}).join('')
+    : '<div class="tiny" style="margin-top:8px">Nothing handed over today.</div>';
+  var w=amanahStats(recentKeys(7,CUR));
+  txt('#amanahWeek', w.n? 'Last 7 days: '+w.n+' handed over · '+w.first+' with your own answer first · '+w.chk+' checked'
+    : 'Last 7 days: nothing logged yet.');
+}
 function renderPrayers(d,dt){
   if(!$('#prayerGrid')) return;
   var pt=prayerTimes(dt),W=windows(pt);
@@ -1040,6 +1066,10 @@ document.addEventListener('click',function(e){
   if(t.hasAttribute('data-fog')){ day(CUR).weed.fog=+t.getAttribute('data-fog'); touch(); return }
   if(t.hasAttribute('data-path')){ S.settings.path=t.getAttribute('data-path'); touch(); return }
   if(t.hasAttribute('data-delsess')){ day(CUR).weed.sessions.splice(+t.getAttribute('data-delsess'),1); touch(); return }
+  if(t.hasAttribute('data-delamanah')){ day(CUR).amanah.splice(+t.getAttribute('data-delamanah'),1); touch(); return }
+  if(t.id==='amanahAdd'){ var at=$('#amanahTask'),tv=(at.value||'').trim(); if(!tv) return;
+    day(CUR).amanah.push({t:tv.slice(0,140),first:$('#amanahFirst').checked,checked:$('#amanahChecked').checked});
+    at.value=''; $('#amanahFirst').checked=false; $('#amanahChecked').checked=false; touch(); return }
   if(t.hasAttribute('data-369')){
     var k369=t.getAttribute('data-369'),max369=+t.getAttribute('data-369-max');
     var p369=day(CUR).practice369; p369[k369]=Math.min(max369,(+p369[k369]||0)+1); touch(); return }
@@ -1525,11 +1555,11 @@ function renderDashWorkout(){
    prompt itself carries the guardrails.
    ================================================================== */
 var JARVIS=[
- {id:'day',n:'Whole day',q:'Brief me on today across all seven compartments. Lead with the one thing that matters most, then anything slipping.'},
+ {id:'day',n:'Whole day',q:'Brief me on today across all seven compartments. Lead with the one thing that matters most, then anything slipping. If my forecast is not set, propose one from my recent days and say why; I set it.'},
  {id:'din',n:'Dīn',q:'Brief me on Dīn: ṣalāh and dhikr today and the last two weeks. What is the next prayer and what is holding or slipping?'},
  {id:'badan',n:'Badan',q:'Brief me on Badan: today’s training, sleep and movement. Is the session on, and what would make it happen?'},
  {id:'amal',n:'ʿAmal',q:'Brief me on ʿAmal: focused blocks and the One Thing. Check my calendar for open work time today and my Notion job pipeline.'},
- {id:'ilm',n:'ʿIlm',q:'Brief me on ʿIlm: what is due this week in my DBA and courses? Check my calendar and Drive. Mīzān does not track this yet.'},
+ {id:'ilm',n:'ʿIlm',q:'Brief me on ʿIlm: what is due this week in my DBA and courses? Check my calendar and Drive. Then read my Amānah numbers: am I keeping my own judgment in the work I hand to AI?'},
  {id:'mal',n:'Māl',q:'Brief me on Māl: cash flow, recurring bills and anything due. Facts only, no financial advice.'},
  {id:'ahl',n:'Ahl · Iḥsān',q:'Brief me on Ahl · Iḥsān: the named acts toward people this fortnight. Who have I not reached in a while? Suggest one act for today; I decide.'},
  {id:'shuun',n:'Shuʾūn',q:'Brief me on Shuʾūn: open items in my Notion control center and unread mail that needs me. Draft replies; never send.'}
@@ -1568,8 +1598,12 @@ function jarvisFacts(id){
   if(id==='day'||id==='amal') amal();
   if(id==='day'||id==='ahl') ahl();
   if(id==='mal') f=f.concat(jMoney());
-  if(id==='ilm'||id==='shuun') f.push('Mīzān does not hold this compartment; read my calendar, Notion and mail');
-  if(id==='day'){ var idx=indexOf(k),L=ladderEval(); f.unshift('Khudī index today: '+(idx==null||!real?'nothing scored yet':idx)+' · stage '+L.stage+' ('+STAGES[L.stage].t+') · '+(real&&real.closed?'day closed':'day still open')) }
+  if(id==='day'||id==='ilm'){ var w=amanahStats(recentKeys(7)); f.push('Amānah, last 7 days: '+(w.n? w.n+' tasks handed to AI · '+w.first+' with my own answer first · '+w.chk+' checked':'nothing logged')) }
+  if(id==='ilm'||id==='shuun') f.push('Mīzān does not hold the rest of this compartment; read my calendar, Notion and mail');
+  if(id==='day'){ var pairs=recentKeys(14).filter(function(x){var y=S.days[x];return jTouched(y)&&y.forecast!=null&&indexOf(x)!=null})
+      .map(function(x){return indexOf(x)-S.days[x].forecast});
+    f.push('Forecast today: '+(d&&d.forecast!=null?d.forecast:'not set')+' · calibration '+(pairs.length>=3?(mean(pairs)>0?'+':'')+mean(pairs).toFixed(1)+' points over '+pairs.length+' days (actual minus forecast)':'needs 3+ forecast days'));
+    var idx=indexOf(k),L=ladderEval(); f.unshift('Khudī index today: '+(idx==null||!real?'nothing scored yet':idx)+' · stage '+L.stage+' ('+STAGES[L.stage].t+') · '+(real&&real.closed?'day closed':'day still open')) }
   return f;
 }
 function jarvisPrompt(id){

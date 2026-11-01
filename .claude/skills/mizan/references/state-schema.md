@@ -71,6 +71,7 @@ render function rather than at the point of the mistake.
 | `steps` | number\|null | health import only | health charts (Badan). Largest single device for the day, never the sum; a later import may raise it |
 | `rhr` | number\|null | health import only | health charts (Badan). Mean of the day's resting-HR readings |
 | `practice369` | `{morning,midday,evening}` counts | 3-6-9 card | display only; capped at 3/6/9 |
+| `amanah` | `[{t, first, checked}]` | Amānah card (Day) | unscored; `t` ≤ 140 chars; feeds the Jarvis ʿIlm and whole-day briefs |
 
 `weed.sessions[]` entries: `{time:'HH:MM', trigger, setting, displaced}`.
 Trigger and displaced values come from the `TRIGGERS` / `DISPLACED` tables —

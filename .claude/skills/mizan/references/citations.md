@@ -22,6 +22,7 @@ class. Check here before re-quoting; add here when you add one.
 
 | Ref | Used for |
 |---|---|
+| 2:31–33 | Khudī page, Amānah section — Adam taught the names; the angels know only what they were taught |
 | 2:177 | Iḥsān measure — righteousness as concrete acts |
 | 2:219 | Ledger, stage one — intoxicants: benefit conceded, harm greater |
 | 2:247 | Badan — Ṭālūt chosen for knowledge *and* stature |
@@ -41,6 +42,7 @@ class. Check here before re-quoting; add here when you add one.
 | 23:1–3 | Attention — the laghw filter |
 | 25:67 | Ẓabt — qawām, the middle way |
 | 33:41 | Dhikr measure |
+| 33:72 | Amānah card (Day) and section (Khudī) — the Trust offered and borne by the human being |
 | 39:53 | Path, when it breaks — do not despair |
 | 53:39–40 | ʿAmal measure; closing note |
 | 55:7–9 | Measures header — the balance is named in the Book |
@@ -53,7 +55,7 @@ class. Check here before re-quoting; add here when you add one.
 | 89:27–28 | Ladder — an-nafs al-muṭma'innah |
 | 94:7 | ʿAmal measure |
 
-**Verified 2026-11-01** against one reference translation (M. A. S. Abdel Haleem, Oxford World's Classics). All 31 Qur'an references above point at verses that say what the page claims; no verse number is wrong. Do not paste this translation's text into the repo: it is under copyright. Cite it by sūrah:āyah only. Notes:
+**Verified 2026-11-01** against one reference translation (M. A. S. Abdel Haleem, Oxford World's Classics). All 31 Qur'an references then on the page, plus 2:31–33 and 33:72 (added the same day), point at verses that say what the page claims; no verse number is wrong. Do not paste this translation's text into the repo: it is under copyright. Cite it by sūrah:āyah only. Notes:
 
 - **73:6** — his main text reads the verse as about *night prayer*. "Getting up at night" appears only as an alternative in his footnote. The Day page uses the Arabic *nāshi'at al-layl*, which stays neutral; keep it that way.
 - **13:11** — he brackets "[for the worse]". The khudī page uses the common general rendering, which is fine, but don't present it as his.
@@ -98,7 +100,7 @@ Rubrics and their four definitions · the seven weights · faculty assignments �
 ladder gates and thresholds · the four-phase 40-day design · the taper
 schedule · the Path-B control set · Best-50 level ladders and drills ·
 shoulder-to-waist target · the four food rules · the coach's-read rule set ·
-the 3-6-9 intention-repetition practice (Day page).
+the 3-6-9 intention-repetition practice (Day page) · the Amānah log (Day page): handed-to-AI, own-answer-first, checked — unscored.
 
 These are declared as constructed on the Provenance card. They carry no
 religious authority and should be argued with.

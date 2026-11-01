@@ -101,8 +101,34 @@ function check(name, cond, detail) {
     check(`${rel} has its Ask Jarvis door`, (await page.locator(`[data-jarvis="${id}"] a[data-j="${id}"]`).count()) === 1);
   }
   await page.goto(url('index.html')); await page.waitForTimeout(200);
+  await page.goto(url('day/index.html')); await page.waitForTimeout(300);
+  {
+    await page.fill('#amanahTask', 'smoke: draft a cover letter');
+    await page.check('#amanahFirst');
+    await page.click('#amanahAdd');
+    await page.waitForTimeout(150);
+    const am = await page.evaluate(() => {
+      const S = JSON.parse(localStorage.getItem('mizan.v1'));
+      const k = sessionStorage.getItem('mizan.cur') || Object.keys(S.days).sort().pop();
+      const all = Object.values(S.days).flatMap(d => d.amanah || []);
+      return { all, list: document.querySelector('#amanahList').innerText, week: document.querySelector('#amanahWeek').innerText };
+    });
+    const row = am.all.find(a => a.t === 'smoke: draft a cover letter');
+    check('Amānah logs a handoff with own-answer-first and unchecked flags',
+      !!row && row.first === true && row.checked === false && /mine first/i.test(am.list) && /unchecked/i.test(am.list), JSON.stringify(row));
+    check('Amānah shows a seven-day tally', /1 handed over · 1 with your own answer first · 0 checked/.test(am.week), am.week);
+    await page.goto(url('index.html')); await page.waitForTimeout(300);
+    const jb = await page.evaluate(() => decodeURIComponent(document.querySelector('#jarvisDoor a[data-j="day"]').href.split('?q=')[1]));
+    check('Jarvis whole-day brief carries the forecast and the Amānah tally',
+      /Forecast today: /.test(jb) && /Amānah, last 7 days: 1 tasks handed to AI/.test(jb), jb.split('\n').slice(3, 6).join(' | '));
+    await page.goto(url('day/index.html')); await page.waitForTimeout(200);
+    await page.click('#amanahList [data-delamanah="0"]');
+    await page.waitForTimeout(100);
+    check('Amānah entry can be removed', /Nothing handed over today/.test(await page.locator('#amanahList').innerText()));
+  }
   await page.goto(url('khudi/index.html'));
   await page.waitForTimeout(400);
+  check('khudi page carries the Amānah section with 33:72', /33:72/.test(await page.locator('#amanah').innerText()));
   check('khudi force diagram draws', (await page.locator('#forceDiagram rect').count()) >= 4);
   check('khudi diagram marks the current stage',
     (await page.locator('#forceDiagram').innerHTML()).includes('YOU ARE HERE'));
