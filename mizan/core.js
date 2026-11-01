@@ -178,7 +178,9 @@ var METHODS={ISNA:{fajr:15,isha:15},MWL:{fajr:18,isha:17},EGYPT:{fajr:19.5,isha:
 function prayerTimes(dateObj){
   var st=S.settings, lat=+st.lat, lng=+st.lng, meth=METHODS[st.method]||METHODS.ISNA;
   var asrF=+st.asr||1;
-  var tz=-dateObj.getTimezoneOffset()/60;
+  /* offset at local noon, not at midnight: on a clock-change day the
+     midnight offset is the old one and every prayer would be an hour off */
+  var tz=-new Date(dateObj.getFullYear(),dateObj.getMonth(),dateObj.getDate(),12).getTimezoneOffset()/60;
   var jd=julian(dateObj.getFullYear(),dateObj.getMonth()+1,dateObj.getDate())-lng/15/24;
   function midDay(t){return fixh(12-sunPos(jd+t/24).eqt)}
   function angleTime(angle,t,ccw){

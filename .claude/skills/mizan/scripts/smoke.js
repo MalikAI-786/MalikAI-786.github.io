@@ -145,6 +145,15 @@ function check(name, cond, detail) {
     check('a food-only day counts as logged in the Jarvis brief', !/Nothing logged in Mīzān yet today/.test(q) && /Badan score today: \d\/3/.test(q), q.split('\n').slice(3, 6).join(' | '));
     await ctx.close();
   }
+  {
+    const ctx = await browser.newContext({ timezoneId: 'America/New_York' }); const p3 = await ctx.newPage();
+    await p3.goto(url('day/index.html')); await p3.waitForTimeout(300);
+    const zuhr = async k => { await p3.fill('#dayPicker', k); await p3.dispatchEvent('#dayPicker', 'change'); await p3.waitForTimeout(120);
+      return p3.evaluate(() => document.querySelectorAll('.pcell .pt')[1].textContent.trim()); };
+    const a = await zuhr('2026-11-01'), b = await zuhr('2026-11-02');
+    check('prayer times use the new clock on a clock-change day', a === b || a.slice(0, 2) === b.slice(0, 2), a + ' vs ' + b);
+    await ctx.close();
+  }
   await page.goto(url('khudi/index.html'));
   await page.waitForTimeout(400);
   check('khudi page carries the Amānah section with 33:72', /33:72/.test(await page.locator('#amanah').innerText()));
