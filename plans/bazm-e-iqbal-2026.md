@@ -37,8 +37,10 @@ The rehearsal **is** the daily exercise you already have. The 07:00 articulation
 
 Order on the night, and why:
 1. **Lab pe aati hai dua** — everyone knows it, so the room settles and joins. Read slow; do not sing it unless the host asks for tarannum.
-2. **Shikwa** — 4–5 stanzas. The daring one. Hold the mic still; let the lines do the work.
-3. **Jawāb-e-Shikwa** — the 4–5 stanzas that answer them, ending on *Ki Muhammad se wafa tu ne to hum tere hain*. That is the line the room is waiting for; land it and stop.
+2. **Shikwa** — bands 1, 13, 14, 18, as one block. The daring one. Hold the mic still; let the lines do the work.
+3. **Jawāb-e-Shikwa** — bands 1, 11, 13, 36, as one block (11 answers 13, 13 answers 14, 36 answers 18), ending on *Ki Muhammad se wafa tu ne to hum tere hain*. That is the line the room is waiting for; land it and stop. Optional if the slot is a full 8 minutes: Shikwa 31 + Jawāb 32 before the finale. Not recommended here: Shikwa 22 (*tu bhi to harjaai hai*) — it is the line that scandalised Lahore and it lands badly at a family dinner.
+
+Texts are Rekhta's (Kulliyāt-e-Iqbāl, Delhi 2014) cross-checked against Urdu Wikisource and Pritchett; three Rekhta typos corrected, variants recorded. Shikwa's first recital is dated April 1909 by some sources and April 1911 by others — say "around 1911" and move on. Jawāb, 1913, is undisputed. Recite spoken (*tahtul-lafz*), not sung: Iqbal himself refused to recite Shikwa in tarannum.
 4. **The original piece** (if the host gives the time) — see §5.
 
 Open with the host's name and one sentence: who you are and why Iqbal. Thirty seconds, not three minutes.
