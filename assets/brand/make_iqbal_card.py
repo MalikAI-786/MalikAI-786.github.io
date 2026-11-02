@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Bazm-e-Iqbal card — same print geometry and mark as the personal card.
-Front: name, the Rooh-e-Iqbal line, handle, contacts. Back: QR to /iqbal/."""
+Front: name, the reading line, contacts. Back: QR to /iqbal/."""
 import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); BRAND = HERE
 sys.path.insert(0, BRAND)
@@ -9,7 +9,7 @@ from make_card import DPI, BLEED_W, BLEED_H, TRIM, SAFE, guides, mark
 from palette import EMBER, EMBER_TINT, INK, PAPER, NIGHT, MUTED, LIGHT, DIM, RULE_L
 import cairosvg, qrcode, qrcode.image.svg
 
-OUT = os.path.join(HERE, "business-cards", "rooh-e-iqbal"); os.makedirs(OUT, exist_ok=True)
+OUT = os.path.join(HERE, "business-cards", "bazm-e-iqbal"); os.makedirs(OUT, exist_ok=True)
 URL = "https://malikai-786.github.io/iqbal/?s=card"
 
 def qr_paths(size_px):
@@ -30,11 +30,10 @@ def front():
 {mark(x, 118, 1.75)}
   <text x="{x+2}" y="330" font-family="{M.SERIF}" font-size="64" font-weight="600" letter-spacing="-1" fill="{INK}">Yasir A. Malik</text>
   <path d="M{x+3} 364 H{x+75}" stroke="{EMBER}" stroke-width="4"/>
-  <text x="{x+2}" y="410" font-family="{M.MONO}" font-size="25" letter-spacing="6.5" fill="{MUTED}">ROOH-E-IQBAL · IQBAL, READ NOT QUOTED</text>
+  <text x="{x+2}" y="410" font-family="{M.MONO}" font-size="25" letter-spacing="6.5" fill="{MUTED}">IQBAL, READ — NOT QUOTED</text>
   <path d="M{x} 448 H{BLEED_W - SAFE - 16}" stroke="{RULE_L}" stroke-width="2"/>
-  <text x="{x}" y="496" font-family="{M.MONO}" font-size="25" letter-spacing="1.2" fill="{MUTED}">@rooheiqbal · @peererumi</text>
-  <text x="{x}" y="540" font-family="{M.MONO}" font-size="25" letter-spacing="1.2" fill="{MUTED}">+1 (786) 704-8536 · YasirAMalik@gmail.com</text>
-  <text x="{x}" y="584" font-family="{M.MONO}" font-size="25" letter-spacing="1.2" fill="{MUTED}">malikai-786.github.io/iqbal</text>
+  <text x="{x}" y="508" font-family="{M.MONO}" font-size="25" letter-spacing="1.2" fill="{MUTED}">+1 (786) 704-8536 · YasirAMalik@gmail.com</text>
+  <text x="{x}" y="556" font-family="{M.MONO}" font-size="25" letter-spacing="1.2" fill="{MUTED}">malikai-786.github.io/iqbal</text>
 </svg>
 '''
 

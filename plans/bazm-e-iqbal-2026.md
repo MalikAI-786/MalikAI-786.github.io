@@ -9,8 +9,9 @@ This file is the plan of record. Private details (phone numbers beyond the publi
 | Date | **Unconfirmed.** The venue's Instagram says Sun 8 Nov, 6:00–8:30 PM; its Facebook page says Iqbal Day, Mon 9 Nov, time TBA. Call before anything is announced. |
 | Set | 1. *Lab pe aati hai dua* (Bāng-e-Darā) · 2. *Shikwa*, selected stanzas · 3. *Jawāb-e-Shikwa*, selected stanzas · 4. a 60–90 s original piece, with a nod to Ayan Maqbool |
 | Landing page | https://malikai-786.github.io/iqbal/ (QR adds `?s=card` so scans are countable in GoatCounter) |
-| Card | `assets/brand/business-cards/rooh-e-iqbal/` — print-ready PDFs, 3.5×2 in with bleed |
-| Accounts | @rooheiqbal (53K) · @peererumi (4.9K) · LinkedIn |
+| Card | `assets/brand/business-cards/bazm-e-iqbal/` — print-ready PDFs, 3.5×2 in with bleed |
+| Your accounts | LinkedIn; your own Instagram handle goes on the card once confirmed |
+| Pages to reach (not yours) | @rooheiqbal (≈53K, Iqbal) · @peererumi (≈4.9K, Iqbal–Rumi) · @ayanmaqbool (≈336K, spoken word) · @burnsroadfoods (venue) |
 
 ## 1 · Timeline
 
@@ -51,7 +52,7 @@ Formal mehfil register, no costume: a black or charcoal sherwani, or a black wai
 
 ## 4 · The card and the page
 
-- Front: name, "Rooh-e-Iqbal · Iqbal, read not quoted", both handles, public phone, email, the page.
+- Front: name, "Iqbal, read — not quoted", public phone, email, the page. No third-party handles: you do not run @rooheiqbal or @peererumi.
 - Back: a QR to the page (decode verified at full size and at 35 %). Nothing else on the back, so it scans in a dim room.
 - The page thanks the scanner, lists the set with the collection and year, says who you are in three lines, and gives three ways to reach you plus a form that opens their own email app. Nothing is stored on a server.
 - Count: GoatCounter shows visits to `/iqbal/?s=card`. Everything else on the page is `/iqbal/`.
@@ -79,7 +80,7 @@ Formats, in the order they go out:
 6. The sources carousel: one slide per couplet, collection and year on every slide.
 7. LinkedIn: 200 words, "why an auditor reads Iqbal out loud", one still, link to the page.
 
-Rules from the Rooh-e-Iqbal skill still hold: collection on screen every time; nothing attributed without a source; saves and shares over likes. Ask the venue to repost; ask three friends in the room to post and tag `#BazmeIqbal2026 @rooheiqbal`.
+Rules from the Rooh-e-Iqbal skill still hold: collection on screen every time; nothing attributed without a source; saves and shares over likes. Ask the venue to repost; ask three friends in the room to post and tag `#BazmeIqbal2026`. Put the pages you do not own in front of the clip by invitation, not by tagging them uninvited — see §9.
 
 ## 7 · Running this with ChatGPT and Grok
 
@@ -104,3 +105,11 @@ The sequence is the same each time: Claude checks the source → you rehearse wi
 - Cards handed out: /100, scans on the page: GoatCounter
 - Reels posted within 72 h: /3, with saves ÷ reach for each
 - One named act of iḥsān on the night: thank the host by name, on stage, and again in the post
+
+## 9 · Getting the Iqbal pages to see it
+
+You do not run @rooheiqbal, @peererumi or @ayanmaqbool. The aim is that they **see** the recitation and choose to share it. The order:
+1. **Before:** one short DM to each, from your own account, saying what you are reciting, where, and that you will send them the clean clip with full credit. No ask to promote.
+2. **After (within 24 h):** DM each the best 30–60 s clip as a file, with the couplet, the collection and year written out, so it is ready to repost. Offer to post it as an Instagram **Collab** (they accept, it appears on both feeds).
+3. **On your own posts:** mention them in the caption only where it is true ("with thanks to @ayanmaqbool, whose way of reading taught me the pause"). No tagging pages in photos they are not in.
+4. One message each, nothing for 72 h after, never ask for money or follows.
