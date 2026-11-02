@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rooh-e-Iqbal — Yasir A. Malik</title>
+<meta name="description" content="Iqbal, read not quoted. The set from Bazm-e-Iqbal 2026, the sources behind every line, and a direct line to Yasir A. Malik." />
+
+<link rel="stylesheet" href="../assets/brand/tokens.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600&display=swap" />
+
+<link rel="icon" href="../assets/brand/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="../assets/brand/icon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
+<meta name="theme-color" content="#E0662E" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Rooh-e-Iqbal — Yasir A. Malik" />
+<meta property="og:description" content="Iqbal, read not quoted. The Bazm-e-Iqbal 2026 set, every source named, and a line to Yasir." />
+<meta property="og:url" content="https://malikai-786.github.io/iqbal/" />
+<meta property="og:image" content="https://malikai-786.github.io/assets/brand/og-card.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<script data-goatcounter="https://malikai786.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+<style>
+  :root{ --urdu:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq","Urdu Typesetting",serif; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--statement);
+       letter-spacing:var(--track-statement);line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-ink)}
+  .wrap{max-width:720px;margin:0 auto;padding:0 max(18px,env(safe-area-inset-left)) 0 max(18px,env(safe-area-inset-right))}
+  .eyebrow{font-family:var(--instrument);font-size:.68rem;letter-spacing:var(--track-instrument);text-transform:uppercase;color:var(--muted)}
+  .eyebrow.ember{color:var(--accent-ink)}
+  h1,h2{font-family:var(--record);letter-spacing:var(--track-record);line-height:1.12;margin:0;text-wrap:balance}
+  h1{font-size:clamp(1.9rem,5.6vw,2.7rem);font-weight:600}
+  h2{font-size:clamp(1.35rem,3.6vw,1.7rem);font-weight:600}
+  p{margin:.6rem 0 0;max-width:62ch}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0;border-bottom:var(--hairline) solid var(--line)}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-family:var(--record);font-weight:600}
+  .brand .ring{stroke:var(--accent)} .brand .node{fill:var(--accent)} .brand .letter{stroke:var(--ink)}
+  .top .ig{font-family:var(--instrument);font-size:.68rem;letter-spacing:.1em;text-decoration:none;color:var(--muted)}
+  .hero{padding:44px 0 26px}
+  .urdu{font-family:var(--urdu);direction:rtl;text-align:right;font-size:clamp(1.35rem,4.4vw,1.9rem);line-height:2.25;margin:18px 0 6px;color:var(--ink)}
+  .urdu span{display:block}
+  .rom{font-family:var(--instrument);font-size:.74rem;letter-spacing:.04em;color:var(--muted);margin-top:4px}
+  .src{font-family:var(--instrument);font-size:.66rem;letter-spacing:var(--track-instrument);text-transform:uppercase;color:var(--accent-ink);margin-top:10px}
+  .rule{height:4px;width:72px;background:var(--accent);margin:22px 0 14px;border-radius:2px}
+  section{padding:26px 0;border-top:var(--hairline) solid var(--line)}
+  .set{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
+  .set li{background:var(--surface);border:var(--hairline) solid var(--line);border-radius:var(--radius-lg);padding:14px 16px;box-shadow:var(--shadow)}
+  .set .t{font-family:var(--record);font-size:1.08rem;font-weight:600}
+  .set .m{font-family:var(--instrument);font-size:.66rem;letter-spacing:var(--track-instrument);text-transform:uppercase;color:var(--muted);margin-top:4px}
+  .set .why{font-size:.93rem;color:var(--ink);margin-top:6px}
+  .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 18px;border-radius:var(--radius-lg);border:var(--hairline) solid var(--line);
+       background:var(--surface);color:var(--ink);text-decoration:none;font-weight:600;font-size:.95rem;box-shadow:var(--shadow)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+  .btn:hover{border-color:var(--accent)}
+  .mono{font-family:var(--instrument);font-size:.78rem;letter-spacing:.04em}
+  .field{display:grid;gap:5px;margin-top:12px}
+  label{font-family:var(--instrument);font-size:.66rem;letter-spacing:var(--track-instrument);text-transform:uppercase;color:var(--muted)}
+  input,select,textarea{font:inherit;font-size:1rem;padding:11px 12px;border-radius:var(--radius);border:var(--hairline) solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+  textarea{min-height:84px;resize:vertical}
+  .tiny{font-size:.8rem;color:var(--muted)}
+  .who{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
+  .who div{padding:12px 14px;border-left:3px solid var(--accent);background:var(--accent-wash);border-radius:0 var(--radius) var(--radius) 0;font-size:.95rem}
+  .foot{padding:28px 0 44px;border-top:var(--hairline) solid var(--line);color:var(--muted);font-size:.85rem;display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+  [hidden]{display:none!important}
+  @media (min-width:640px){ .who{grid-template-columns:1fr 1fr 1fr} }
+</style>
+
+<div class="wrap">
+  <nav class="top">
+    <a class="brand" href="../">
+      <svg width="24" height="24" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M22.28 11.15 A23 23 0 1 1 9.78 26.05" class="ring" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="14.38" cy="17.22" r="5.46" class="node"/>
+        <path d="M19.5 46.5 L32 19 L44.5 46.5" class="letter" stroke-width="8" stroke-linejoin="miter" stroke-linecap="butt"/>
+        <path d="M21.6 38.4 H42.4" class="letter" stroke-width="8" stroke-linecap="butt"/>
+      </svg>
+      Yasir A. Malik
+    </a>
+    <a class="ig" href="https://www.instagram.com/rooheiqbal" rel="noopener">@ROOHEIQBAL</a>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow ember">Rooh-e-Iqbal · Bazm-e-Iqbal 2026 · Franklin Park, NJ</p>
+    <h1>Iqbal, read — not quoted.</h1>
+    <div class="urdu" lang="ur">
+      <span>خودی کو کر بلند اتنا کہ ہر تقدیر سے پہلے</span>
+      <span>خدا بندے سے خود پوچھے، بتا تیری رضا کیا ہے</span>
+    </div>
+    <div class="rom">Khudī ko kar buland itnā ke har taqdīr se pehle / Khudā bande se khud pūchhe, batā terī razā kyā hai</div>
+    <div class="src">Bāl-e-Jibrīl · 1935</div>
+    <div class="rule"></div>
+    <p>Thank you for being in the room. If you scanned the card, this is the page it promised: what was recited, where every line comes from, and a straight way to reach me.</p>
+  </header>
+
+  <section id="set">
+    <p class="eyebrow">The set · in the order it was read</p>
+    <h2>Three pieces, one argument</h2>
+    <ol class="set">
+      <li>
+        <div class="t">Lab pe āti hai duʿā ban ke tamannā merī</div>
+        <div class="m">Bachche kī Duʿā · Bāng-e-Darā · 1902</div>
+        <div class="why">The child's prayer every one of us learned first. Read slowly, it is not a school song — it is a request to be made useful.</div>
+      </li>
+      <li>
+        <div class="t">Shikwa — the complaint</div>
+        <div class="m">Bāng-e-Darā · 1909 · selected stanzas</div>
+        <div class="why">A believer argues with God and is not struck down for it. The daring of the poem is the point.</div>
+      </li>
+      <li>
+        <div class="t">Jawāb-e-Shikwa — the answer</div>
+        <div class="m">Bāng-e-Darā · 1913 · selected stanzas</div>
+        <div class="why">The reply turns the complaint back on the complainant: the loss was not God's absence but ours.</div>
+      </li>
+    </ol>
+    <p class="tiny" style="margin-top:12px">Texts and stanza choices are checked against printed editions before they are read or posted. Where editions differ, the reading used is named. Nothing here is attributed to Iqbal without a collection.</p>
+  </section>
+
+  <section id="who">
+    <p class="eyebrow">Who is reading</p>
+    <h2>Yasir A. Malik</h2>
+    <div class="who">
+      <div><strong>Twenty years in audit, risk and bank supervision</strong> — a regulator's seat, then internal audit leadership at global banks.</div>
+      <div><strong>Doctoral researcher</strong> on how AI reshapes professional judgment, and what governance has to catch.</div>
+      <div><strong>Rooh-e-Iqbal</strong> — an Instagram reading of Iqbal, one argument per post, source on screen every time.</div>
+    </div>
+    <div class="btns">
+      <a class="btn" href="https://www.instagram.com/rooheiqbal" rel="noopener">Instagram · @rooheiqbal</a>
+      <a class="btn" href="https://www.instagram.com/peererumi" rel="noopener">Instagram · @peererumi</a>
+      <a class="btn" href="https://linkedin.com/in/yasiramalik" rel="noopener">LinkedIn</a>
+      <a class="btn" href="../">The full record →</a>
+    </div>
+  </section>
+
+  <section id="contact">
+    <p class="eyebrow ember">Reach me</p>
+    <h2>Leave a line. I answer every one.</h2>
+    <p>For a recitation, a talk, a collaboration on Iqbal, or anything from the evening you want to continue.</p>
+    <div class="btns">
+      <a class="btn primary" href="https://wa.me/17867048536?text=Salam%20Yasir%20%E2%80%94%20we%20met%20at%20Bazm-e-Iqbal." rel="noopener">WhatsApp</a>
+      <a class="btn" href="mailto:yasiramalik@gmail.com?subject=Bazm-e-Iqbal%20%E2%80%94%20we%20met">Email</a>
+      <a class="btn" href="tel:+17867048536">Call</a>
+    </div>
+    <p class="mono" style="margin-top:12px">+1 (786) 704-8536 · yasiramalik@gmail.com</p>
+
+    <form id="line" autocomplete="on">
+      <div class="field"><label for="n">Your name</label><input id="n" name="n" required /></div>
+      <div class="field"><label for="c">Phone or email</label><input id="c" name="c" required /></div>
+      <div class="field"><label for="w">What for</label>
+        <select id="w" name="w">
+          <option>Invite me to recite or speak</option>
+          <option>Work together on Iqbal / Rooh-e-Iqbal</option>
+          <option>Audit, risk or AI governance</option>
+          <option>Just saying salam</option>
+        </select></div>
+      <div class="field"><label for="m">A line (optional)</label><textarea id="m" name="m"></textarea></div>
+      <div class="btns"><button class="btn primary" type="submit">Send it to Yasir</button><button class="btn" type="button" id="copy">Copy instead</button></div>
+      <p class="tiny" id="status">This opens your own email app with the message filled in; nothing is stored on this page.</p>
+    </form>
+  </section>
+
+  <footer class="foot">
+    <span>© 2026 Yasir A. Malik · Newark, NJ</span>
+    <span>Iqbal (1877–1938). Texts in the public domain; readings are my own.</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var f=document.getElementById('line'),st=document.getElementById('status');
+  function body(){
+    return 'Name: '+f.n.value.trim()+'\nContact: '+f.c.value.trim()+'\nWhat for: '+f.w.value+'\n\n'+f.m.value.trim()+'\n\n— sent from malikai-786.github.io/iqbal';
+  }
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    location.href='mailto:yasiramalik@gmail.com?subject='+encodeURIComponent('Bazm-e-Iqbal — '+f.n.value.trim())+'&body='+encodeURIComponent(body());
+    st.textContent='Your email app should have opened with the message ready. If it did not, tap "Copy instead" and send it any way you like.';
+  });
+  document.getElementById('copy').addEventListener('click',function(){
+    var t=body();
+    function done(){st.textContent='Copied. Paste it into WhatsApp or email.'}
+    function fail(){window.prompt('Copy this',t)}
+    try{navigator.clipboard.writeText(t).then(done,fail)}catch(e){fail()}
+  });
+})();
+</script>
+</body>
+</html>
