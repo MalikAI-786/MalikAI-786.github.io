@@ -589,6 +589,17 @@ def render_master():
         "what happens to professional judgment when the evidence arrives "
         "pre-interpreted.\n\n"
 
+        # These four lines used to be set into the hero image. They are a
+        # table, and a table is something you read — so they belong in the
+        # text, where they are selectable, searchable and legible on a phone,
+        # rather than baked into a PNG at 16px.
+        "| | |\n| --- | --- |\n"
+        "| **Regulator** | Safety-and-soundness examination — Florida OFR |\n"
+        "| **Operator** | Fifteen years in audit and risk — Citigroup, "
+        "JPMorgan Chase |\n"
+        "| **Builder** | Production AI shipped into a live audit function |\n"
+        "| **Researcher** | DBA candidate, Florida International University |\n\n"
+
         "### What I work on\n\n"
 
         "**Cognitive bias in audit judgment.** An eleven-construct, "
@@ -639,14 +650,19 @@ def render_master():
          "The LLM walkthrough I hand to audit and risk colleagues"),
     ])
 
-    md += ("#### Foundations\n\n"
-           "Quantitative and machine-learning work from the Columbia Engineering "
-           "FinTech programme. Older, and still the reason the rest of this is "
-           "possible.\n\n")
+    # Four paragraphs of link soup for coursework that is a decade old, sitting
+    # at the same weight as the live work above it. GitHub renders <details>
+    # natively, so the whole block folds into one line and opens for anyone who
+    # actually wants it. Nothing is removed; it just stops shouting.
+    md += ("<details>\n"
+           "<summary><b>Foundations</b> — quantitative and machine-learning "
+           "work from the Columbia Engineering FinTech programme. Older, and "
+           "still the reason the rest of this is possible.</summary>\n\n")
     for heading, repos in FOUNDATIONS:
         row = " · ".join(f"[{n.replace('_', ' ')}](https://github.com/{USER}/{n})"
                          for n, _ in repos)
         md += f"**{heading}** — {row}\n\n"
+    md += "</details>\n\n"
 
     md += (
         "### Where this is pointed\n\n"

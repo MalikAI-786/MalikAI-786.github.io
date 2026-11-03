@@ -10,10 +10,12 @@ inventing one is the failure this whole practice is about.
 
 ## Who is writing
 
-Yasir A. Malik. Twenty years on one question, from three seats: a national bank
-state bank examiner at the Florida Office of Financial Regulation, internal audit leadership inside Citi and JPMorgan Chase,
-and doctoral research at FIU on what happens to professional judgment when the
-analysis arrives already formed.
+Yasir A. Malik. Twenty years on one question, from three seats: a state bank
+examiner at the Florida Office of Financial Regulation, internal audit
+leadership inside Citi and JPMorgan Chase to Vice President, and doctoral
+research at FIU on what happens to professional judgment when the analysis
+arrives already formed. He has never worked for the OCC; the site once said so
+and it was corrected. Do not reintroduce it.
 
 The newsletter is **Proof Over Promise**. The name is the editorial standard: it
 is about what the evidence actually looks like, including the parts that did not
