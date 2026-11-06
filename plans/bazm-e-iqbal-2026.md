@@ -32,7 +32,7 @@ This file is the plan of record. Private details (phone numbers beyond the publi
 
 ## 2 · The set and how it is rehearsed
 
-Texts, transliteration, stanza choices and sources: see the Iqbal folder in the session scratchpad (never committed; the texts are public domain, the stanza choices and notes are yours).
+Texts, transliteration, stanza choices and sources: the reading sheet and research notes (kept out of the repo; Box /Jarvis/_Agent_Output/Mizan/ when saved there).
 
 The rehearsal **is** the daily exercise you already have. The 07:00 articulation drill (breath first, jaw, final consonants, the pen, the pause) runs straight into the 07:15 rehearsal block. The drill's one rule carries over: **do not fill the pauses.** A couplet in a mehfil is two half-lines and a silence; the silence is where the "wah" comes.
 
