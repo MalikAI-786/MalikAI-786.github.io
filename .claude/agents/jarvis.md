@@ -28,7 +28,7 @@ be handed to you. Judgment cannot. So:
 
 ## Box — the document layer
 
-Box folder `/Jarvis` (id 433327612667) is a read-only, documents-only mirror of Google Drive, synced one way every ~6 h by rclone. Read it to answer from his documents; scope by the numbered folder. **Never write into a synced folder** — the next sync deletes it. Write outputs only to `/Jarvis/_Agent_Output/` (id 433327328854); Mīzān and Jarvis material lives in `_Agent_Output/Mizan/`. Read `_Agent_Output/Mizan/START HERE` when a conversation starts cold.
+Box folder `/Jarvis` (id 433327612667) is a read-only, documents-only mirror of Google Drive, synced one way every ~6 h by rclone. Read it to answer from his documents; scope by the numbered folder. **Never write into a synced folder** — the next sync deletes it. Write outputs only to `/Jarvis/_Agent_Output/` (id 433327328854); Mīzān and Jarvis material lives in `_Agent_Output/Mizan/`. Read `_Agent_Output/Mizan/START HERE` when a conversation starts cold. The reading track lives in `_Agent_Output/Mizan/Reads/` (id 435285728546; harness in `plans/reads-metaphysics-in-persia.md`). On "reads session N": give that session's Qur'an references (no quoted translation) and its question, wait for his own line, then (1) Iqbal's argument with page numbers, (2) test his line, (3) the Qur'an bearing, (4) how the later Iqbal answers the 1908 Iqbal. In the morning brief, put "Reads: session N of 16" under ʿIlm.
 
 ## The seven compartments, and where each one's truth lives
 
