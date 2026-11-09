@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Judgment practice · Mīzān</title>
+  <meta name="description" content="An unscored worksheet: form your own answer, inspect evidence, and explain what changed.">
+  <link rel="stylesheet" href="../../assets/brand/tokens.css">
+  <link rel="stylesheet" href="judgment.css">
+  <script src="judgment.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#practice">Skip to practice</a>
+<header class="top">
+  <nav class="shell" aria-label="Worksheet navigation">
+    <a class="brand" href="../">Mīzān<span>.</span></a>
+    <div class="links"><a href="../khudi/">Khudī &amp; sources</a><a href="../">Dashboard</a></div>
+  </nav>
+</header>
+<main class="shell">
+  <header class="hero">
+    <p class="eyebrow">ʿIlm · deliberate practice</p>
+    <h1>Form a judgment.<br>Then test it.</h1>
+    <p class="lede">Put your own answer on record before reading the challenge. Inspect the source, explain what survives, and name what would change your mind.</p>
+    <p class="boundary">Unscored educational practice. This worksheet is not a research instrument or evidence of improved judgment. Use fictional or public material.</p>
+  </header>
+
+  <section id="practice" aria-labelledby="practiceTitle">
+    <div class="section-head"><p class="eyebrow">01 · Your first answer</p><h2 id="practiceTitle">Take a position before the prompt pushes back.</h2></div>
+    <div class="card">
+      <label for="track">Practice track</label>
+      <select id="track">
+        <option value="iqbal">Iqbal · distinguish the author from the account</option>
+        <option value="dba">DBA · evidence before an inherited rating</option>
+        <option value="newsletter">Newsletter · a claim the evidence can carry</option>
+      </select>
+      <div class="prompt"><p class="eyebrow" id="caseLabel">Reading question</p><p id="question">Before reading the source: what would distinguish Iqbal reporting a Sufi thinker's view from Iqbal endorsing that view? State a test you could apply to a passage.</p></div>
+      <form id="firstForm">
+        <label for="firstAnswer">My independent answer</label>
+        <textarea id="firstAnswer" rows="4" maxlength="4000" required placeholder="Write one or two sentences in your own words."></textarea>
+        <div class="confidence"><label for="firstConfidence">Confidence in this answer · 0–100%</label><input id="firstConfidence" type="number" min="0" max="100" step="1" required inputmode="numeric" aria-describedby="confidenceHelp"></div>
+        <p id="confidenceHelp" class="help">Your estimate of how well the evidence supports the answer. A higher number earns nothing here.</p>
+        <button id="reveal" type="submit" disabled>Keep my answer &amp; reveal the challenge</button>
+      </form>
+      <p id="firstStatus" class="help" role="status">Enter your answer and confidence to continue.</p>
+    </div>
+  </section>
+
+  <section id="challengeSection" hidden aria-labelledby="challengeTitle">
+    <div class="section-head"><p class="eyebrow">02 · Examine the evidence</p><h2 id="challengeTitle" tabindex="-1">What would make your answer fail?</h2></div>
+    <div class="card">
+      <p class="tag">Constructed teaching prompt · no AI response</p>
+      <p id="challenge"></p>
+      <p id="readingNote" class="help"></p>
+      <label for="evidence">Evidence checked · source and exact location</label>
+      <textarea id="evidence" rows="3" maxlength="4000" placeholder="Name the text, page, table or fictional case fact you actually inspected."></textarea>
+      <label for="counterEvidence">What supports or challenges my first answer?</label>
+      <textarea id="counterEvidence" rows="3" maxlength="4000" placeholder="Separate what the source says from your interpretation. Include a contrary reading or missing fact."></textarea>
+    </div>
+  </section>
+
+  <section id="revisionSection" hidden aria-labelledby="revisionTitle">
+    <div class="section-head"><p class="eyebrow">03 · Keep responsibility for the conclusion</p><h2 id="revisionTitle">Revise, or explain why you hold.</h2></div>
+    <div class="card">
+      <label for="revision">My revised judgment and reason</label>
+      <textarea id="revision" rows="4" maxlength="4000" placeholder="Say what changed and why. Keeping the original answer is allowed if you can defend it."></textarea>
+      <div class="confidence"><label for="revisedConfidence">Confidence after checking · 0–100%</label><input id="revisedConfidence" type="number" min="0" max="100" step="1" inputmode="numeric"></div>
+      <label for="nextStep">Next check or publication boundary</label>
+      <textarea id="nextStep" rows="2" maxlength="2000" placeholder="What evidence would change your mind? What must stay out of a public claim?"></textarea>
+      <div class="actions"><button id="export" type="button" disabled>Download my worksheet (.txt)</button><button id="clear" class="secondary" type="button">Clear &amp; start again</button></div>
+      <p id="exportStatus" class="help" role="status">Complete the evidence, revision, confidence and next check before exporting.</p>
+    </div>
+  </section>
+
+  <aside class="notes" aria-labelledby="sourcesTitle">
+    <p class="eyebrow">Sources &amp; limits</p><h2 id="sourcesTitle">Keep the source and the exercise separate.</h2>
+    <ol>
+      <li><a href="https://www.gutenberg.org/ebooks/41707" target="_blank" rel="noopener noreferrer">Muhammad Iqbal, <cite>The Development of Metaphysics in Persia</cite> (1908)</a>, introduction pp. x–xi and chapter V, pp. 112–116. Iqbal describes the book as a historical review. The reading prompt asks whose position a passage presents; it does not treat every reported doctrine as his own, or as his later account of khudī.</li>
+      <li><a href="https://doi.org/10.1126/science.185.4157.1124" target="_blank" rel="noopener noreferrer">Amos Tversky and Daniel Kahneman, “Judgment under Uncertainty: Heuristics and Biases” (1974)</a>, <cite>Science</cite> 185(4157), pp. 1124–1131. Their account of anchoring concerns judgments influenced by starting points. The fictional review case is an original teaching example, not a replication or validated test.</li>
+    </ol>
+    <p>The first-answer → challenge → revision sequence is a constructed practice. Its connection to Iqbal, doctoral work and writing is an interpretive application. It does not establish that this sequence reduces bias.</p>
+    <p>Entries remain in this page's memory and disappear when you reload, leave or clear it. Download only when you want a local copy. To discuss the exercise in your ʿIlm review, share the lines you choose yourself.</p>
+  </aside>
+  <noscript><p class="boundary">JavaScript is needed to reveal the challenge and download a worksheet. You can still use the first question and source links as a paper exercise.</p></noscript>
+</main>
+<footer class="shell"><p>Mīzān · judgment practice · constructed, unscored, local</p></footer>
+</body>
+</html>
