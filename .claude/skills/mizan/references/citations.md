@@ -121,3 +121,13 @@ cannabis included in the classical discussions from Ibn Taymiyyah onward —
 under the ruling for khamr. The page **states this and explicitly declines to
 issue a ruling**, directing the question to a scholar. Preserve that framing
 exactly. Do not soften it into approval and do not harden it into a fatwa.
+
+## Judgment worksheet — Iqbal, evidence and writing
+
+The standalone `mizan/judgment/` worksheet adds these bounded sources and applications.
+
+| Class | Source and location | Use and limit |
+| --- | --- | --- |
+| C — paraphrase | Muhammad Iqbal, *The Development of Metaphysics in Persia* (1908), introduction pp. x–xi; chapter V, pp. 112–116. https://www.gutenberg.org/ebooks/41707 | Historical purpose and attribution of the thinkers whose positions are surveyed. A reported doctrine is not automatically Iqbal's endorsement or his later account of khudi. |
+| C — paraphrase of a cited empirical paper | Amos Tversky and Daniel Kahneman, “Judgment under Uncertainty: Heuristics and Biases,” *Science* 185(4157), 1124–1131 (1974). https://doi.org/10.1126/science.185.4157.1124 | Anchoring as influence from a starting point. This citation does not validate the worksheet or its fictional audit case. |
+| D — constructed | `mizan/judgment/judgment.js` and `plans/mizan-judgment.md` | First-answer, challenge, evidence, revision and confidence prompts; fictional review and newsletter cases; manual text export. Unscored education, not a research instrument, research result or demonstrated method of bias reduction. |
