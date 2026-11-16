@@ -91,6 +91,9 @@ SURFACES = {
     "instagram-post":    (1080, 1080, (90, 90, 90, 90)),
     # Stories put UI over the top ~250px and bottom ~250px.
     "instagram-story":   (1080, 1920, (90, 260, 90, 300)),
+    # LinkedIn renders a post image at 1.91:1 and letterboxes anything else.
+    # Under 2:1, so the mark stacks above the type rather than taking a column.
+    "linkedin-post":     (1200, 627, (80, 70, 80, 70)),
 }
 
 
@@ -190,10 +193,17 @@ def assert_safe():
 CARDS = [
     ("hook", ["The most dangerous number", "in the room is the one",
               "nobody questions."], "AUDIT · RISK · GOVERNANCE", False),
+    # The kicker here used to name the newsletter as "Proof Over Promise".
+    # That title is another author's Substack, verified 2026-08-29, and the
+    # site no longer uses it; the settled descriptor carries the card instead.
     ("ethics", ["The auditor everyone", "dreads teaches nobody."],
-     "PROOF OVER PROMISE", False),
+     "AUDIT · RISK · GOVERNANCE", False),
     ("fiu", ["Judgment that holds", "when the machine", "agrees with you."],
      "FIU DBA · COHORT 8.14", True),
+    # The field note of 16 September 2026, as the question it asks. A post
+    # card carries the question, never the answer — the answer is the link.
+    ("certify", ["The proof passed.", "What did the check certify?"],
+     "FIELD NOTE · 16 SEPTEMBER 2026", False),
 ]
 
 if __name__ == "__main__":

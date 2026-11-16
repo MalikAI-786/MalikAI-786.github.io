@@ -19,6 +19,10 @@ Read the root **[AGENTS.md](../../AGENTS.md)** first. Every safeguard there
 applies here, and two of them apply hardest: never invent a fact about him, and
 never send anything as him.
 
+**Running the weekly issue — any agent, Codex included:** execute
+**[RUNBOOK.md](RUNBOOK.md)** Part 1. It is model-agnostic and it ends at an
+open PR with a review request. Part 2 is the spec for the automated harness.
+
 ## What this directory is
 
 `voice.md` is the deliverable. It is the system prompt for **Proof Over

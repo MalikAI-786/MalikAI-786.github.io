@@ -33,34 +33,37 @@ if not os.path.exists(SRC):
 
 W, H = 1280, 440
 
+# Same margin as the repository banners. The two images sit on the same
+# account and are read one after the other; a different inset reads as a
+# mistake even when nobody can say why.
+PAD = 120
+
 # Photograph column. Sits hard against the right edge, bleeds top and bottom.
-PHOTO_W = 470
+# Wider and softer than it was (470/210): with the four-line record gone from
+# the overlay there is room, and a longer dissolve reads as light falling off
+# rather than as a panel with an edge.
+PHOTO_W = 560
 PHOTO_X = W - PHOTO_W
-FADE = 210          # px of left-edge dissolve into the ground
+FADE = 330          # px of left-edge dissolve into the ground
 
 # Crop from the source frame (900x1349): head and shoulders. The aspect is
 # matched to the panel deliberately, so the cover-fit below has nothing left to
-# trim — an automatic centre-crop was taking the top of his head off.
-CROP = (30, 60, 870, 847)
+# trim — an automatic centre-crop was taking the top of his head off. Widening
+# the panel changed that aspect, so the crop gives up chest at the bottom
+# rather than letting the centre-crop take the top of his head again.
+CROP = (30, 60, 870, 720)
 
 THEMES = {
-    "dark": dict(bg="#0E1114", name="#EDEFF1", sub="#A6B0BA", rule="#263039",
-                 meta="#5A646E", letter="#EDEFF1", body="#C4CCD3",
+    "dark": dict(bg="#0E1114", name="#EDEFF1", sub="#A6B0BA", kick="#F58E5C",
+                 letter="#EDEFF1",
                  shadow=(9, 12, 16), highlight=(232, 221, 211)),
     # On paper the shadow point is lifted well off black. A dark suit mapped
     # to true black becomes a slab against a warm ground and the dissolve
     # shows its own edge; a warm mid-dark lets the whole panel sit down.
-    "light": dict(bg="#F6F3F0", name="#171A1D", sub="#5A646E", rule="#E2DAD3",
-                  meta="#8A929B", letter="#171A1D", body="#3C444B",
+    "light": dict(bg="#F6F3F0", name="#171A1D", sub="#5A646E", kick="#AD4317",
+                  letter="#171A1D",
                   shadow=(92, 83, 76), highlight=(248, 245, 241)),
 }
-
-RECORD = [
-    ("REGULATOR",  "Safety-and-soundness examination — Florida OFR"),
-    ("OPERATOR",   "Fifteen years in audit and risk — Citigroup, JPMorgan Chase"),
-    ("BUILDER",    "Production AI shipped into a live audit function"),
-    ("RESEARCHER", "DBA candidate, Florida International University"),
-]
 
 
 def duotone(img, shadow, highlight, ember_mix=0.16):
@@ -119,39 +122,29 @@ def esc(s):
 
 
 def overlay(theme):
-    """Mark, name and record, rendered as one transparent layer."""
+    """Mark, kicker, name, one line. Rendered as one transparent layer.
+
+    The four-line record that used to sit here — regulator, operator, builder,
+    researcher — is a table, and a table is something you read rather than
+    something you see. It moved to the profile README, where a reader is
+    already reading. What is left is the only thing this image has to do in
+    the second before someone scrolls: say whose account this is, and what he
+    claims. The ember stripe and the repeated URL went with it.
+    """
     t = THEMES[theme]
     nx, ny = M.pt(M.GAP_MID)
 
-    rows = []
-    y = 268
-    for label, text in RECORD:
-        rows.append(
-            f'<text x="72" y="{y}" font-family="{M.MONO}" font-size="12.5" '
-            f'letter-spacing="2.4" fill="{EMBER}">{esc(label)}</text>'
-            f'<text x="196" y="{y}" font-family="{M.SERIF}" font-size="16.5" '
-            f'fill="{t["body"]}">{esc(text)}</text>')
-        y += 30
-
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" fill="none">
-  <rect x="0" y="0" width="{W}" height="5" fill="{EMBER}"/>
-
-  <g transform="translate(72 52) scale(1.05)">
+  <g transform="translate({PAD} 52) scale(.72)">
     <path d="{M.ring_path()}" stroke="{EMBER}" stroke-width="{M.f(M.SW)}" stroke-linecap="round"/>
     <circle cx="{M.f(nx)}" cy="{M.f(ny)}" r="3.9" fill="{EMBER}"/>
     <path d="{M.letter_path()}" stroke="{t['letter']}" stroke-width="{M.f(M.AW)}" stroke-linejoin="miter" stroke-linecap="butt"/>
     <path d="{M.bar_path()}" stroke="{t['letter']}" stroke-width="{M.f(M.AW)}" stroke-linecap="butt"/>
   </g>
 
-  <text x="152" y="98" font-family="{M.SERIF}" font-size="52" fill="{t['name']}">Yasir A. Malik</text>
-  <text x="154" y="128" font-family="{M.MONO}" font-size="13.5" letter-spacing="5.2" fill="{t['sub']}">AUDIT · RISK · GOVERNANCE</text>
-
-  <path d="M72 176 H286" stroke="{EMBER}" stroke-width="2.5"/>
-  <text x="72" y="216" font-family="{M.SERIF}" font-size="20.5" fill="{t['sub']}">Judgment that holds when the machine agrees with you.</text>
-
-  {''.join(rows)}
-
-  <text x="72" y="{H-30}" font-family="{M.MONO}" font-size="12" letter-spacing="3" fill="{t['meta']}">MALIKAI-786.GITHUB.IO</text>
+  <text x="{PAD}" y="246" font-family="{M.MONO}" font-size="12.5" letter-spacing="3.25" fill="{t['kick']}">AUDIT · RISK · GOVERNANCE</text>
+  <text x="{PAD}" y="318" font-family="{M.SERIF}" font-size="68" letter-spacing="-1.5" fill="{t['name']}">Yasir A. Malik</text>
+  <text x="{PAD}" y="372" font-family="{M.SERIF}" font-size="23" letter-spacing="-0.35" fill="{t['sub']}">Judgment that holds when the machine agrees with you.</text>
 </svg>
 """
 
@@ -161,8 +154,14 @@ def build(theme):
     base = Image.new("RGBA", (W, H), t["bg"])
     base.alpha_composite(photo_panel(theme), (PHOTO_X, 0))
 
-    png = cairosvg.svg2png(bytestring=overlay(theme).encode(), output_width=W)
-    base.alpha_composite(Image.open(io.BytesIO(png)).convert("RGBA"))
+    # Rasterise the type at 2x and average it down. Cairo antialiases glyphs
+    # with subpixel (RGB-stripe) coverage, which is invisible at 13px and very
+    # visible at 68px: the enlarged name picked up green and yellow fringes
+    # along every stem. Downsampling from 2x averages the three channels back
+    # together, so the name is the grey it is supposed to be.
+    png = cairosvg.svg2png(bytestring=overlay(theme).encode(), output_width=W * 2)
+    layer = Image.open(io.BytesIO(png)).convert("RGBA")
+    base.alpha_composite(layer.resize((W, H), Image.LANCZOS))
 
     path = os.path.join(OUT, f"profile-hero-{theme}.png")
     base.convert("RGB").save(path, optimize=True)

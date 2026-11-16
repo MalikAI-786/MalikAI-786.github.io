@@ -27,6 +27,7 @@ For every substantive task:
 | Court filing, affirmation, motion, discovery, legal letter, opposing counsel, legal chronology or exhibit | `legal-work` | Legal tone, factual discipline, record citations, no invented authority or facts, litigation-ready structure |
 | Website, dashboard, PDF, slide, resume visual, social creative, email signature, logo, palette, typography or layout | `brand-design` | Reference Mark identity, polished visual hierarchy, accessibility, consistent logo/palette/type |
 | Resume, bio, cover letter, interview packet, professional profile | `career-docs` | Evidence-led positioning, quantified achievements, ATS clarity, executive presentation |
+| Newsletter, issue, field note, weekly run, `insights/`, heuristic, LinkedIn syndication | `newsletter-weekly` | Topic queue, verification before drafting, the heuristic spine, the publishing gate, draft-only boundary |
 | GitHub architecture, Pages, workflows, agents, skills, automation, repository governance | `repo-governance` | Safe branching, public/private boundary, invariants, PR discipline, skill discoverability |
 
 ## Combination examples

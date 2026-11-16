@@ -256,6 +256,25 @@ def check_hex_budget(_fix: bool) -> None:
                  "reference it as a variable")
 
 
+def check_newsletter_archive(fix: bool) -> None:
+    """The archive on newsletter.html is generated from insights/*.html. A
+    hand edit there is the same class of drift as a hand-edited README."""
+    gen = ROOT / "tools/newsletter/make_archive.py"
+    if not gen.exists() or not (ROOT / "newsletter.html").exists():
+        return
+    ok = subprocess.run([sys.executable, str(gen), "--check"], cwd=ROOT).returncode == 0
+    if ok:
+        return
+    if fix:
+        subprocess.run([sys.executable, str(gen)], cwd=ROOT, check=True)
+        print("  fixed: newsletter.html archive regenerated from insights/")
+    else:
+        fail("newsletter archive",
+             "the archive block in newsletter.html does not match what "
+             "make_archive.py produces from insights/*.html",
+             "python3 tools/newsletter/make_archive.py — never edit the block by hand")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[1])
     ap.add_argument("--fix", action="store_true",
@@ -264,7 +283,8 @@ def main() -> int:
 
     checks = [check_generated_files, check_tracked_junk, check_nojekyll,
               check_hex_budget, check_palette_matches_css,
-              check_tokens_json_fresh, check_templates_json_fresh]
+              check_tokens_json_fresh, check_templates_json_fresh,
+              check_newsletter_archive]
 
     if args.fix:
         print("Repairing…")

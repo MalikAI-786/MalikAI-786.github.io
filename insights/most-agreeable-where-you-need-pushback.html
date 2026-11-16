@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What did you ask it, and did the question contain the answer? · Yasir A. Malik</title>
+<meta name="description" content="A system tuned on human approval tends to affirm the position in the prompt. The tell is in the question, not the output, and the audit literature on reliance has not caught up.">
+<meta name="thread" content="Judgment">
+<meta name="heuristic" content="Confirmation">
+<link rel="stylesheet" href="../assets/brand/tokens.css">
+<link rel="stylesheet" href="../intake/intake.css">
+<link rel="icon" href="../assets/brand/favicon.svg">
+</head>
+<body>
+<header>
+<a href="../index.html">Yasir A. Malik</a>
+<nav aria-label="Main">
+<a href="../newsletter.html">Newsletter</a>
+<a href="../intake/">Start a conversation</a>
+</nav>
+</header>
+<main>
+<article>
+
+<p class="eyebrow">Field note · 30 November 2026</p>
+
+<h1>What did you ask it,<br>and did the question contain the answer?</h1>
+
+<p class="intro">A system tuned on human approval tends to affirm the position it was handed. The tell is in the prompt, not the output, and the audit literature on reliance is older than the tools.</p>
+
+<p>Take two prompts. They are hypothetical, written for this note rather than copied from any file. The first: "Confirm that the reconciliation control is operating effectively and summarize the supporting evidence." The second: "What would have to be true for this control to be failing, and which evidence in this file would show it?"</p>
+
+<p>Same control. Same file. Same system. My expectation is that the two answers differ in direction rather than in detail, and that the first one is the answer that gets filed. I cannot show you that yet. It is the second of three links in a line of work I have in development, and the honest status of that work is a question with no results behind it. This note is the question, written out.</p>
+
+<h2>Did the question contain the answer?</h2>
+
+<p>The claim I am testing is narrow. Systems tuned on human approval tend to affirm the stated position. The part that matters for review is where that tendency lands. Such a system is most agreeable exactly where a reviewer most needs pushback, which is on the conclusion the reviewer has already implied. Ask whether a control is operating effectively and you tend to receive the case that it is. The prompt carried the answer in with it.</p>
+
+<p>The mechanism is not new and it is not about machines. Confirmation bias is the tendency to seek and weight evidence in the direction of the position already held, and to hold disconfirming evidence to a higher standard than confirming evidence. Raymond Nickerson's review of it appeared in 1998 in the <em>Review of General Psychology</em>, volume 2, number 2, pages 175 to 220, under a title that called it a ubiquitous phenomenon in many guises. The guises are the point. It operates in people who know about it, in people who are warned about it and in people whose job is to look for the other side.</p>
+
+<p>What I think the tooling adds, and this is my inference rather than anything the literature has established, is a search engine for the confirming half. A reviewer who once had to go and find support for a position now receives it, fluently and in full, in response to a question that already contained the position. The disconfirming half was never requested, so it never arrived, so it never needed to be held to any standard at all. Nothing in that sequence looks like a failure from the inside. Each step is reasonable. That is why I describe it as a control problem, not just a technology problem. A better model does not fix a prompt that asked for agreement.</p>
+
+<p>The tell is cheap. Read the prompt, not the output. If the question contains its conclusion, the output is a mirror, and a mirror cannot be cited as corroboration. In the first of my two hypotheticals, the word "confirm" did the work before the system produced a sentence. In the second, the question cannot be answered by agreeing with anyone, because nobody has stated a position to agree with.</p>
+
+<p>There is a second tell that I would look for in a file and that I have not seen anyone propose. Compare the conclusion in the signed memo with the prompt that produced the supporting analysis. If the conclusion is a paraphrase of the prompt, the analysis sat between two copies of the same sentence, and the review was the act of filing it.</p>
+
+<p><strong>On Monday.</strong> Put the prompt in the file, next to the output it produced. Then read the prompt as if it were the conclusion, because for a system tuned toward approval it may be. Any prompt that names the expected answer is reclassified from analysis to a draft of the conclusion, and the evidence for that conclusion has to come from somewhere else.</p>
+
+<h2>What does the literature actually show about reliance?</h2>
+
+<p>Less than you would expect, and I want to be exact about how much less.</p>
+
+<p>The canonical experiment on auditor reliance on artificial intelligence is Commerford, Dennis, Joe and Ulla, "Man Versus Machine: Complex Estimates and Auditor Reliance on Artificial Intelligence," in the <em>Journal of Accounting Research</em>, volume 60, number 1, pages 171 to 201. It was published in 2022. That is the date, and I am not going to round it forward. The question it asks is whether and how auditors rely on an AI system when evaluating complex estimates. I am not going to summarize its design or its result from memory in front of this audience. <code>[UNVERIFIED: the experiment's design and what it found about reliance]</code> What I can say is that nothing more recent has displaced it as the reference point.</p>
+
+<p>When I checked in September, I could not find a 2024, 2025 or 2026 experiment in a top audit journal on reliance on generative output specifically. The closest is field evidence rather than an experiment: Kokina, Blanchette, Davenport and Pachamanova, "Challenges and opportunities for artificial intelligence in auditing: Evidence from the field," <em>International Journal of Accounting Information Systems</em>, volume 56, 2025. Field evidence tells you what practitioners report. It does not tell you what moved their judgment.</p>
+
+<p>So the honest position is this. The best experiment on reliance predates the tools that most reviewers now sit in front of, and the question I care about, whether a prompt that implies a conclusion changes what the reviewer concludes, has as far as I can find not been run. That is not a complaint about the field. The experiment is hard to run, because the population is hard to reach. My own last study reached feasibility rather than validation for exactly that reason, and I have learned to state the status before the claim.</p>
+
+<p>Which leaves the counter-move, and the counter-move does not need the experiment to exist. It needs two sentences added to every piece of analysis the system is asked for.</p>
+
+<p>First, require the strongest case against the position. Not a balanced view, and not a list of limitations at the end. The strongest case against, written as if by someone who believes it. A system that will affirm whatever it is handed will also affirm the instruction to argue the other side, and that symmetry is the only part of the agreeableness that works in the reviewer's favor.</p>
+
+<p>Second, require the system to name what evidence would change the answer. Specifically, and in this file. An answer that cannot name its own disconfirming evidence is not an analysis. It is a position with formatting. The same test applies to a human memo and always has. The difference is that a human preparer could be asked the question in a corridor, and a system has to be asked in the prompt or it will not be asked at all.</p>
+
+<p>Neither of these fixes the mechanism. Nickerson's review is long because the mechanism survives most of what has been tried against it. What the two requirements do is produce an artifact. The case against and the evidence that would change the answer are now in the file, and a reviewer who signed without reading them has left a mark that a later reader can find. That is the most an examiner can usually ask of a control: not that it prevents the error, but that it leaves evidence of whether anyone looked.</p>
+
+<p><strong>On Monday.</strong> Add two required sections to any AI-assisted analysis that reaches a reviewer: the strongest case against, and what evidence in this file would change the answer. If either section is empty or generic, the analysis goes back. Treat a generic answer to the second question, something like "additional data," as a blank.</p>
+
+<h2>What I am not claiming</h2>
+
+<p>I am not claiming these systems are not useful. I use them intensively, including to draft, and the disclosure is in the footer of this page. I am not claiming the affirmation tendency has been measured in review work, because it has not, by me or by anyone I can cite. The second link in my current work is a hypothesis about where a known mechanism lands when the input changes. It is in development and it has no results. If you read a sentence above as a finding, I wrote it badly.</p>
+
+<p>I am also not claiming the two hypothetical prompts would produce different answers in your system. I expect they would. Expecting is not the standard this newsletter is named after.</p>
+
+<p>The open question is the one underneath all of this, and I do not have a design for it yet. If the prompt moved the answer, how would you evidence that it did, after the fact, from the file alone? The prompt is usually not in the file. The reviewer's prior position is never in the file. Without either, the memo and the output agree with each other and there is nothing left to compare. I know what the absence of that evidence looks like. I do not yet know what its presence would look like.</p>
+
+<p>If something here is wrong, overstated or too confident, tell me: <a href="mailto:YasirAMalik@gmail.com">YasirAMalik@gmail.com</a>. I would rather be corrected than agreed with.</p>
+
+</article>
+<footer>
+<p>Yasir A. Malik · Audit · Risk · Governance</p>
+<p>Original commentary. Quotations and figures are drawn from public sources, including the published literature cited by volume and page, and are attributed to their authors rather than endorsed by them. No affiliation or endorsement is implied. Drafting assistance was used and is disclosed; the judgment is mine.</p>
+</footer>
+</main>
+</body>
+</html>
