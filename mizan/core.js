@@ -105,7 +105,7 @@ function blankDay(k){return {date:k,forecast:null,prayers:{},dhikrMin:0,sprints:
   gym:{},food:{},weight:null,sleepHrs:null,moved:false,steps:null,rhr:null,
   friction:[false,false,false,false,false],hyper:'',
   muhasaba:{shukr:'',khata:'',kal:''},closed:false,synthetic:false,
-  practice369:{morning:0,midday:0,evening:0}}}
+  practice369:{morning:0,midday:0,evening:0},amanah:[]}}
 function defaults(){return {v:1,settings:{lat:40.7128,lng:-74.0060,method:'ISNA',asr:1,
   path:'taper',start:iso(new Date()),cap:2,floorHour:20,weights:Object.assign({},DEFW),
   /* Sun/Sat 07:30, Mon 16:45 — matches the owner's actual recurring calendar
@@ -141,6 +141,7 @@ function day(k){ if(!S.days[k]) S.days[k]=blankDay(k);
   d.muhasaba=d.muhasaba||{shukr:'',khata:'',kal:''};
   d.gym=d.gym||{}; d.food=d.food||{};
   d.practice369=d.practice369||{morning:0,midday:0,evening:0};
+  if(!Array.isArray(d.amanah)) d.amanah=[];
   if(!Array.isArray(d.friction)||d.friction.length!==5) d.friction=[false,false,false,false,false];
   return d}
 function has(k){return Object.prototype.hasOwnProperty.call(S.days,k)}
@@ -177,7 +178,9 @@ var METHODS={ISNA:{fajr:15,isha:15},MWL:{fajr:18,isha:17},EGYPT:{fajr:19.5,isha:
 function prayerTimes(dateObj){
   var st=S.settings, lat=+st.lat, lng=+st.lng, meth=METHODS[st.method]||METHODS.ISNA;
   var asrF=+st.asr||1;
-  var tz=-dateObj.getTimezoneOffset()/60;
+  /* offset at local noon, not at midnight: on a clock-change day the
+     midnight offset is the old one and every prayer would be an hour off */
+  var tz=-new Date(dateObj.getFullYear(),dateObj.getMonth(),dateObj.getDate(),12).getTimezoneOffset()/60;
   var jd=julian(dateObj.getFullYear(),dateObj.getMonth()+1,dateObj.getDate())-lng/15/24;
   function midDay(t){return fixh(12-sunPos(jd+t/24).eqt)}
   function angleTime(angle,t,ccw){
@@ -468,7 +471,7 @@ function renderToday(){
     .filter(function(x){return x!=null});
   $('#sprint7').textContent=s7.length?mean(s7).toFixed(1):'—';
 
-  render369(d);
+  render369(d); renderAmanah(d);
 }
 
 /* ---- the 3-6-9 practice: write one intention 3× morning, 6× midday, 9×
@@ -492,6 +495,31 @@ function render369(d){
   }).join('');
 }
 
+/* ---- Amānah · the Trust (Q 33:72). Constructed practice (class D):
+   log each piece of work handed to AI, whether you drafted or forecast
+   your own answer first, and whether you checked what came back. It is
+   not scored and carries no weight in the index; it is a record of
+   where judgment went. ---- */
+function amanahStats(keys){
+  var n=0,first=0,chk=0;
+  keys.forEach(function(k){ var d=S.days[k]; if(!d||d.synthetic||!d.amanah) return;
+    d.amanah.forEach(function(a){ n++; if(a.first) first++; if(a.checked) chk++ }) });
+  return {n:n,first:first,chk:chk};
+}
+function renderAmanah(d){
+  if(!$('#amanahList')) return;
+  var L=d.amanah||[];
+  $('#amanahList').innerHTML=L.length? L.map(function(a,i){
+    return '<div class="row" style="align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap">'+
+      '<span class="small" style="flex:1;min-width:0">'+esc(a.t)+'</span>'+
+      '<span class="pill '+(a.first?'good':'warn')+'">'+(a.first?'mine first':'no draft')+'</span>'+
+      '<span class="pill '+(a.checked?'good':'warn')+'">'+(a.checked?'checked':'unchecked')+'</span>'+
+      '<button class="btn" data-delamanah="'+i+'" style="padding:2px 8px" aria-label="Remove">✕</button></div>'}).join('')
+    : '<div class="tiny" style="margin-top:8px">Nothing handed over today.</div>';
+  var w=amanahStats(recentKeys(7,CUR));
+  txt('#amanahWeek', w.n? 'Last 7 days: '+w.n+' handed over · '+w.first+' with your own answer first · '+w.chk+' checked'
+    : 'Last 7 days: nothing logged yet.');
+}
 function renderPrayers(d,dt){
   if(!$('#prayerGrid')) return;
   var pt=prayerTimes(dt),W=windows(pt);
@@ -944,7 +972,7 @@ function renderAll(){
   var d=day(CUR),dt=parseISO(CUR);
   renderNav(); renderDayBar(); renderToday(); renderPrayers(d,dt); renderMeasures(d); renderFriction(d);
   renderHyperLog(); renderLedgerToday(d); renderReference(); renderLadder(); renderPhases();
-  renderTrend(); renderSettings(); renderBadan(); renderSession(); renderHealth(); renderDash(); renderDashWorkout(); renderForceDiagram();
+  renderTrend(); renderSettings(); renderBadan(); renderSession(); renderHealth(); renderDash(); renderDashWorkout(); renderJarvis(); renderForceDiagram();
 }
 
 /* ==================================================================
@@ -1040,6 +1068,10 @@ document.addEventListener('click',function(e){
   if(t.hasAttribute('data-fog')){ day(CUR).weed.fog=+t.getAttribute('data-fog'); touch(); return }
   if(t.hasAttribute('data-path')){ S.settings.path=t.getAttribute('data-path'); touch(); return }
   if(t.hasAttribute('data-delsess')){ day(CUR).weed.sessions.splice(+t.getAttribute('data-delsess'),1); touch(); return }
+  if(t.hasAttribute('data-delamanah')){ day(CUR).amanah.splice(+t.getAttribute('data-delamanah'),1); touch(); return }
+  if(t.id==='amanahAdd'){ var at=$('#amanahTask'),tv=(at.value||'').trim(); if(!tv) return;
+    day(CUR).amanah.push({t:tv.slice(0,140),first:$('#amanahFirst').checked,checked:$('#amanahChecked').checked});
+    at.value=''; $('#amanahFirst').checked=false; $('#amanahChecked').checked=false; touch(); return }
   if(t.hasAttribute('data-369')){
     var k369=t.getAttribute('data-369'),max369=+t.getAttribute('data-369-max');
     var p369=day(CUR).practice369; p369[k369]=Math.min(max369,(+p369[k369]||0)+1); touch(); return }
@@ -1516,6 +1548,97 @@ function renderDashWorkout(){
            :'<div class="tiny" style="margin-top:6px">Every move timed to the beat, with a voice calling the next one. Sound on.</div>')+
     '</div>'+
     '<a class="btn primary" href="badan/#workout" style="font-size:.9rem;padding:14px 20px">'+(done?'Go again':'▶ Start today’s workout')+'</a></div></div>';
+}
+/* ==================================================================
+   JARVIS DOOR — one tap from a compartment to the assistant. Builds a
+   short brief from what is on THIS device and opens claude.ai with the
+   question already asked. Nothing is sent anywhere until you tap; the
+   brief goes only to your own Claude account. Read-only by design: the
+   prompt itself carries the guardrails.
+   ================================================================== */
+var JARVIS=[
+ {id:'day',n:'Whole day',q:'Brief me on today across all seven compartments. Lead with the one thing that matters most, then anything slipping. If my forecast is not set, propose one from my recent days and say why; I set it.'},
+ {id:'din',n:'Dīn',q:'Brief me on Dīn: ṣalāh and dhikr today and the last two weeks. What is the next prayer and what is holding or slipping?'},
+ {id:'badan',n:'Badan',q:'Brief me on Badan: today’s training, sleep and movement. Is the session on, and what would make it happen?'},
+ {id:'amal',n:'ʿAmal',q:'Brief me on ʿAmal: focused blocks and the One Thing. Check my calendar for open work time today and my Notion job pipeline.'},
+ {id:'ilm',n:'ʿIlm',q:'Brief me on ʿIlm: what is due this week in my DBA and courses? Check my calendar and Drive. Then read my Amānah numbers: am I keeping my own judgment in the work I hand to AI?'},
+ {id:'mal',n:'Māl',q:'Brief me on Māl: cash flow, recurring bills and anything due. Facts only, no financial advice.'},
+ {id:'ahl',n:'Ahl · Iḥsān',q:'Brief me on Ahl · Iḥsān: the named acts toward people this fortnight. Who have I not reached in a while? Suggest one act for today; I decide.'},
+ {id:'shuun',n:'Shuʾūn',q:'Brief me on Shuʾūn: open items in my Notion control center and unread mail that needs me. Draft replies; never send.'}
+];
+var JARVIS_RULES='Rules: read-only. Draft, never send. Never invent my numbers; if a fact is missing, say so. No legal, medical, tax or religious rulings.';
+function jTouched(d){ if(!d||d.synthetic) return false;
+  return !!(d.closed||PRAYERS.some(function(p){return d.prayers[p.id]})||+d.sprints>0||d.oneThing||
+    Object.keys(d.scores||{}).some(function(k){return d.scores[k]!=null})||d.sleepHrs||d.steps||d.moved||(d.gym&&d.gym.status)||
+    Object.keys(d.food||{}).some(function(k){return d.food[k]})) }
+function jSc(d,id){ var v=d?scoreOf(d,id):null; return v==null?'not scored':v+'/3' }
+function jMean(id,n){ var v=recentKeys(n||14).map(function(k){var d=S.days[k];return jTouched(d)?scoreOf(d,id):null})
+  .filter(function(x){return x!=null}); return v.length?mean(v).toFixed(1)+'/3 over '+v.length+' days':'no scored days' }
+function jMoney(){
+  var M=null; try{ M=JSON.parse(localStorage.getItem('mizan.money.v1')||'null') }catch(e){}
+  if(!M||!M.txns||!M.txns.length) return ['no statements imported on this device yet'];
+  var since=addDays(todayK(),-30),inn=0,out=0;
+  M.txns.forEach(function(t){ if(t.date<since||t.cat==='transfer') return; if(t.amt>0) inn+=t.amt; else out+=-t.amt });
+  var last=M.txns.reduce(function(a,t){return t.date>a?t.date:a},'');
+  return [Object.keys(M.accounts||{}).length+' accounts, '+M.txns.length+' transactions, latest '+last,
+          'last 30 days: in $'+Math.round(inn)+' · out $'+Math.round(out),
+          Object.keys(M.loans||{}).length+' loans on file'];
+}
+function jarvisFacts(id){
+  var k=todayK(),d=S.days[k],real=jTouched(d)?d:null,f=[];
+  if(!real&&id!=='mal'&&id!=='ilm'&&id!=='shuun') f.push('Nothing logged in Mīzān yet today');
+  var din=function(){ var pr=real?PRAYERS.filter(function(p){return real.prayers[p.id]==='in'}).length:0;
+    f.push('Ṣalāh today: '+jSc(real,'salah')+' ('+pr+' of 5 in window) · 14-day '+jMean('salah'));
+    f.push('Dhikr today: '+jSc(real,'dhikr')+' · 14-day '+jMean('dhikr')) };
+  var badan=function(){ var rot=gymRotFor(k),g=(real&&real.gym)||{};
+    f.push('Training: '+(isGymDay(k)?rot.n+' today':'not a training day')+(g.status?' · status '+g.status:'')+(g.sessionMin?' · '+g.sessionMin+' min logged':''));
+    f.push('Badan score today: '+jSc(real,'body')+(real&&real.sleepHrs?' · slept '+real.sleepHrs+' h':'')+(real&&real.steps?' · '+real.steps+' steps':'')) };
+  var amal=function(){ f.push('ʿAmal today: '+jSc(real,'amal')+(real?' · '+(+real.sprints||0)+' sprints'+(real.oneThing?' · One Thing '+(real.oneThingDone?'moved':'not yet moved'):' · no One Thing set'):''));
+    f.push('Attention today: '+jSc(real,'attn')+' · 14-day '+jMean('attn')) };
+  var ahl=function(){ f.push('Iḥsān today: '+jSc(real,'ihsan')+' · 14-day '+jMean('ihsan')) };
+  if(id==='day'||id==='din') din();
+  if(id==='day'||id==='badan') badan();
+  if(id==='day'||id==='amal') amal();
+  if(id==='day'||id==='ahl') ahl();
+  if(id==='mal') f=f.concat(jMoney());
+  if(id==='day'||id==='ilm'){ var w=amanahStats(recentKeys(7)); f.push('Amānah, last 7 days: '+(w.n? w.n+' tasks handed to AI · '+w.first+' with my own answer first · '+w.chk+' checked':'nothing logged')) }
+  if(id==='ilm'||id==='shuun') f.push('Mīzān does not hold the rest of this compartment; read my calendar, Notion and mail');
+  if(id==='day'){ var pairs=recentKeys(14).filter(function(x){var y=S.days[x];return jTouched(y)&&y.forecast!=null&&indexOf(x)!=null})
+      .map(function(x){return indexOf(x)-S.days[x].forecast});
+    f.push('Forecast today: '+(d&&d.forecast!=null?d.forecast:'not set')+' · calibration '+(pairs.length>=3?(mean(pairs)>0?'+':'')+mean(pairs).toFixed(1)+' points over '+pairs.length+' days (actual minus forecast)':'needs 3+ forecast days'));
+    var idx=indexOf(k),L=ladderEval(); f.unshift('Khudī index today: '+(idx==null||!real?'nothing scored yet':idx)+' · stage '+L.stage+' ('+STAGES[L.stage].t+') · '+(real&&real.closed?'day closed':'day still open')) }
+  return f;
+}
+function jarvisPrompt(id){
+  var c=JARVIS.filter(function(x){return x.id===id})[0]||JARVIS[0];
+  return 'Jarvis — '+c.q+'\n\nFrom my Mīzān on this device, '+todayK()+':\n- '+jarvisFacts(c.id).join('\n- ')+'\n\n'+JARVIS_RULES;
+}
+function jarvisURL(id){ return 'https://claude.ai/new?q='+encodeURIComponent(jarvisPrompt(id)) }
+function jarvisCopy(id,btn){
+  var t=jarvisPrompt(id),done=function(){ if(btn){var o=btn.textContent; btn.textContent='Copied'; setTimeout(function(){btn.textContent=o},1500)} };
+  try{ navigator.clipboard.writeText(t).then(done,function(){ window.prompt('Copy this brief',t) }) }catch(e){ window.prompt('Copy this brief',t) }
+}
+function renderJarvis(){
+  var el=$('#jarvisDoor');
+  if(el) el.innerHTML='<div class="card"><div class="spread" style="flex-wrap:wrap;gap:10px"><div>'+
+    '<p class="eyebrow" style="margin-bottom:4px">Ask Jarvis</p>'+
+    '<div class="small">One tap opens Claude with the question asked and today’s numbers from this device attached. Nothing leaves until you tap.</div></div>'+
+    '<button class="btn" type="button" data-jcopy="day">Copy today’s brief</button></div>'+
+    '<div class="btn-row" style="margin-top:12px">'+JARVIS.map(function(c){
+      return '<a class="btn'+(c.id==='day'?' primary':'')+'" target="_blank" rel="noopener" data-j="'+c.id+'" href="'+esc(jarvisURL(c.id))+'">'+esc(c.n)+'</a>'}).join('')+
+    '</div></div>';
+  [].forEach.call(document.querySelectorAll('[data-jarvis]'),function(x){
+    var id=x.getAttribute('data-jarvis'),c=JARVIS.filter(function(j){return j.id===id})[0]; if(!c) return;
+    x.innerHTML='<div class="btn-row"><a class="btn" target="_blank" rel="noopener" data-j="'+c.id+'" href="'+esc(jarvisURL(c.id))+'">Ask Jarvis about '+esc(c.n)+' ↗</a>'+
+      '<button class="btn" type="button" data-jcopy="'+c.id+'">Copy brief</button></div>';
+  });
+  [].forEach.call(document.querySelectorAll('[data-jcopy]'),function(b){ b.onclick=function(){ jarvisCopy(b.getAttribute('data-jcopy'),b) } });
+  if(!renderJarvis.bound){ renderJarvis.bound=true;
+    /* rebuild the link at tap time: other engines on the page (money.js)
+       change local data without calling renderAll(), so a link built at
+       render time can go stale. */
+    document.addEventListener('click',function(e){ var a=e.target.closest&&e.target.closest('a[data-j]');
+      if(a) a.href=jarvisURL(a.getAttribute('data-j')) },true); }
 }
 /* ---- sample data (clearly synthetic) ---- */
 function makeSample(){

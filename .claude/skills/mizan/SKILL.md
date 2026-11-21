@@ -349,3 +349,13 @@ product, it does not belong on this page.
   provenance class.
 - `references/design-system.md` — tokens, component classes, chart and SVG
   conventions.
+
+## Jarvis door
+
+`renderJarvis()` (core.js) fills `#jarvisDoor` on the dashboard and every `[data-jarvis="<id>"]` slot (day/, badan/, money/). Ids: `day din badan amal ilm mal ahl shuun` (the `JARVIS` array). Each button opens `https://claude.ai/new?q=<brief>`: the compartment's question, facts read from this device (`jarvisFacts`), and the guardrail line `JARVIS_RULES`. A day with no input reads "not scored", never 0 (`jTouched`); Māl reads counts and 30-day totals from `mizan.money.v1` only. Nothing is fetched or sent by the page; the user taps. The matching Claude Project instructions live in `references/jarvis-project.md`. Smoke checks cover eight buttons, the guardrail text, the link length and the empty-Māl wording.
+
+## Amānah and the single agent
+
+- **Amānah card (Day page).** `d.amanah = [{t, first, checked}]`, rendered by `renderAmanah()`. It is unscored and constructed (class D), citing Q 33:72. The Khudī page section `#amanah` carries the theory, with 2:31–33 and 33:72. `amanahStats(keys)` feeds the Jarvis whole-day and ʿIlm briefs. The whole-day brief also carries the forecast and the 14-day calibration.
+- **Agent.** `.claude/agents/jarvis.md` is the one front-door agent. It routes to chief-of-staff, malik-record, newsletter-editor and git-auditor, plus the domain skills, and holds the same guardrails as `references/jarvis-project.md`. Keep the two in step.
+

@@ -76,13 +76,87 @@ function check(name, cond, detail) {
   check('dashboard leads with today\'s workout and a start button',
     /Today.s workout · \d+ min/i.test(await page.locator('#dashWorkout').innerText()) &&
     (await page.locator('#dashWorkout a[href="badan/#workout"]').count()) === 1);
+  {
+    const jd = await page.evaluate(() => ({
+      n: document.querySelectorAll('#jarvisDoor a[data-j]').length,
+      hrefs: [...document.querySelectorAll('#jarvisDoor a[data-j]')].map(a => a.href),
+      blank: [...document.querySelectorAll('#jarvisDoor a[data-j]')].every(a => a.target === '_blank' && /noopener/.test(a.rel)),
+    }));
+    const day = decodeURIComponent((jd.hrefs[0] || '').split('?q=')[1] || '');
+    check('dashboard carries an Ask Jarvis door for the day and all seven compartments',
+      jd.n === 8 && jd.blank && jd.hrefs.every(h => h.startsWith('https://claude.ai/new?q=')), jd.n);
+    check('Jarvis brief asks the question, carries today\'s facts and the guardrails',
+      /^Jarvis — Brief me on today/.test(day) && /Khudī index today/.test(day) && /Draft, never send/.test(day) && /Never invent my numbers/.test(day), day.slice(0, 120));
+    check('Jarvis brief stays short enough for a link', jd.hrefs.every(h => h.length < 4000), Math.max(...jd.hrefs.map(h => h.length)));
+    const mal = decodeURIComponent((jd.hrefs.find(h => /Brief%20me%20on%20M/.test(h)) || '').split('?q=')[1] || '');
+    const fresh = await page.evaluate(() => {
+      const S = JSON.parse(localStorage.getItem('mizan.v1')); const M0 = localStorage.getItem('mizan.money.v1');
+      localStorage.setItem('mizan.money.v1', JSON.stringify({v:1,accounts:{a1:{name:'Test',type:'checking'}},txns:[{date:'2026-01-02',desc:'x',amt:-5,acct:'a1',cat:'other'}],loans:{},rules:{},seen:{}}));
+      const a = document.querySelector('#jarvisDoor a[data-j="mal"]');
+      a.addEventListener('click', ev => ev.preventDefault(), { once: true }); a.click();
+      const q = decodeURIComponent(a.href.split('?q=')[1]);
+      if (M0 == null) localStorage.removeItem('mizan.money.v1'); else localStorage.setItem('mizan.money.v1', M0);
+      return q;
+    });
+    check('Jarvis link is rebuilt at tap time from current device data', /1 accounts, 1 transactions/.test(fresh), fresh.slice(0, 160));
+    check('Māl brief says plainly when no statements are on the device', /no statements imported/.test(mal), mal.slice(0, 160));
+  }
   check('dashboard renders six kicker tiles',
     (await page.locator('#dashGrid .tile').count()) === 6);
   check('dashboard names a leftmost failing control or says why not',
     (await page.locator('#dashWorst').innerText()).length > 40);
 
+  for (const [rel, id] of [['badan/index.html', 'badan'], ['money/index.html', 'mal'], ['day/index.html', 'day']]) {
+    await page.goto(url(rel)); await page.waitForTimeout(300);
+    check(`${rel} has its Ask Jarvis door`, (await page.locator(`[data-jarvis="${id}"] a[data-j="${id}"]`).count()) === 1);
+  }
+  await page.goto(url('index.html')); await page.waitForTimeout(200);
+  await page.goto(url('day/index.html')); await page.waitForTimeout(300);
+  {
+    await page.fill('#amanahTask', 'smoke: draft a cover letter');
+    await page.check('#amanahFirst');
+    await page.click('#amanahAdd');
+    await page.waitForTimeout(150);
+    const am = await page.evaluate(() => {
+      const S = JSON.parse(localStorage.getItem('mizan.v1'));
+      const k = sessionStorage.getItem('mizan.cur') || Object.keys(S.days).sort().pop();
+      const all = Object.values(S.days).flatMap(d => d.amanah || []);
+      return { all, list: document.querySelector('#amanahList').innerText, week: document.querySelector('#amanahWeek').innerText };
+    });
+    const row = am.all.find(a => a.t === 'smoke: draft a cover letter');
+    check('Amānah logs a handoff with own-answer-first and unchecked flags',
+      !!row && row.first === true && row.checked === false && /mine first/i.test(am.list) && /unchecked/i.test(am.list), JSON.stringify(row));
+    check('Amānah shows a seven-day tally', /1 handed over · 1 with your own answer first · 0 checked/.test(am.week), am.week);
+    await page.goto(url('index.html')); await page.waitForTimeout(300);
+    const jb = await page.evaluate(() => decodeURIComponent(document.querySelector('#jarvisDoor a[data-j="day"]').href.split('?q=')[1]));
+    check('Jarvis whole-day brief carries the forecast and the Amānah tally',
+      /Forecast today: /.test(jb) && /Amānah, last 7 days: 1 tasks handed to AI/.test(jb), jb.split('\n').slice(3, 6).join(' | '));
+    await page.goto(url('day/index.html')); await page.waitForTimeout(200);
+    await page.click('#amanahList [data-delamanah="0"]');
+    await page.waitForTimeout(100);
+    check('Amānah entry can be removed', /Nothing handed over today/.test(await page.locator('#amanahList').innerText()));
+  }
+  {
+    const ctx = await browser.newContext(); const p2 = await ctx.newPage();
+    await p2.goto(url('badan/index.html')); await p2.waitForTimeout(300);
+    await p2.locator('#foodList input[data-food]').first().check(); await p2.waitForTimeout(150);
+    const q = await p2.evaluate(() => { const a = document.querySelector('[data-jarvis="badan"] a[data-j]');
+      a.addEventListener('click', ev => ev.preventDefault(), { once: true }); a.click(); return decodeURIComponent(a.href.split('?q=')[1]); });
+    check('a food-only day counts as logged in the Jarvis brief', !/Nothing logged in Mīzān yet today/.test(q) && /Badan score today: \d\/3/.test(q), q.split('\n').slice(3, 6).join(' | '));
+    await ctx.close();
+  }
+  {
+    const ctx = await browser.newContext({ timezoneId: 'America/New_York' }); const p3 = await ctx.newPage();
+    await p3.goto(url('day/index.html')); await p3.waitForTimeout(300);
+    const zuhr = async k => { await p3.fill('#dayPicker', k); await p3.dispatchEvent('#dayPicker', 'change'); await p3.waitForTimeout(120);
+      return p3.evaluate(() => document.querySelectorAll('.pcell .pt')[1].textContent.trim()); };
+    const a = await zuhr('2026-11-01'), b = await zuhr('2026-11-02');
+    check('prayer times use the new clock on a clock-change day', a === b || a.slice(0, 2) === b.slice(0, 2), a + ' vs ' + b);
+    await ctx.close();
+  }
   await page.goto(url('khudi/index.html'));
   await page.waitForTimeout(400);
+  check('khudi page carries the Amānah section with 33:72', /33:72/.test(await page.locator('#amanah').innerText()));
   check('khudi force diagram draws', (await page.locator('#forceDiagram rect').count()) >= 4);
   check('khudi diagram marks the current stage',
     (await page.locator('#forceDiagram').innerHTML()).includes('YOU ARE HERE'));
