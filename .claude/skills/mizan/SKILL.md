@@ -252,6 +252,18 @@ Beyond the smoke test, exercise the specific thing you changed and say in your
 report what you actually ran. A change to scoring should be verified by
 setting scores and reading the index, not by the page merely loading.
 
+## Mīzān Today (the live check-in page; replaces the day sheet)
+
+Since Nov 2026 the daily loop runs through a private claude.ai artifact,
+"Mīzān Today", with a `db` store: `plan/<date>` (written nightly from
+Calendar + prayers.js + Gmail/Notion/Box, by the nightly routine) and
+`log/<date>` (what he ticked on his phone, or told Jarvis). Read and write it
+with the `ArtifactData` tool; the schema is in `.claude/agents/jarvis.md`.
+The page has a Jarvis bar (`sample` + `dictation`) that turns his words into a
+patch on `log/`. Personal content stays in the artifact's database and the
+scratchpad — never in this repo. The Word/OneNote sheet below remains as a
+fallback.
+
 ## The day sheet (Word / OneNote loop)
 
 The owner keeps notes in OneNote. Each evening a one-day Word document is
