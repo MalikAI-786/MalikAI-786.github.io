@@ -17,6 +17,9 @@ description: >-
 
 # Roohe Iqbal — decoding reels, and building on them
 
+## Ownership — read first
+The owner of this repository does **not** run @rooheiqbal or @peererumi (confirmed 2 Nov 2026). Treat them as third-party Iqbal pages: never put their handles on the owner's cards, pages or merch as if they were his, never speak for them, and reach them only by a respectful DM from the owner's own account. The content system below is a method the owner applies on his own channels.
+
 ## Positioning
 The account is a **reading** account rather than a quote account. Every post makes one argument and names where the line comes from. Misattribution is therefore a first-order failure.
 

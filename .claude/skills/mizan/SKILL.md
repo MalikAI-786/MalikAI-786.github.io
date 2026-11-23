@@ -252,6 +252,18 @@ Beyond the smoke test, exercise the specific thing you changed and say in your
 report what you actually ran. A change to scoring should be verified by
 setting scores and reading the index, not by the page merely loading.
 
+## Mīzān Today (the live check-in page; replaces the day sheet)
+
+Since Nov 2026 the daily loop runs through a private claude.ai artifact,
+"Mīzān Today", with a `db` store: `plan/<date>` (written nightly from
+Calendar + prayers.js + Gmail/Notion/Box, by the nightly routine) and
+`log/<date>` (what he ticked on his phone, or told Jarvis). Read and write it
+with the `ArtifactData` tool; the schema is in `.claude/agents/jarvis.md`.
+The page has a Jarvis bar (`sample` + `dictation`) that turns his words into a
+patch on `log/`. Personal content stays in the artifact's database and the
+scratchpad — never in this repo. The Word/OneNote sheet below remains as a
+fallback.
+
 ## The day sheet (Word / OneNote loop)
 
 The owner keeps notes in OneNote. Each evening a one-day Word document is
@@ -349,3 +361,13 @@ product, it does not belong on this page.
   provenance class.
 - `references/design-system.md` — tokens, component classes, chart and SVG
   conventions.
+
+## Jarvis door
+
+`renderJarvis()` (core.js) fills `#jarvisDoor` on the dashboard and every `[data-jarvis="<id>"]` slot (day/, badan/, money/). Ids: `day din badan amal ilm mal ahl shuun` (the `JARVIS` array). Each button opens `https://claude.ai/new?q=<brief>`: the compartment's question, facts read from this device (`jarvisFacts`), and the guardrail line `JARVIS_RULES`. A day with no input reads "not scored", never 0 (`jTouched`); Māl reads counts and 30-day totals from `mizan.money.v1` only. Nothing is fetched or sent by the page; the user taps. The matching Claude Project instructions live in `references/jarvis-project.md`. Smoke checks cover eight buttons, the guardrail text, the link length and the empty-Māl wording.
+
+## Amānah and the single agent
+
+- **Amānah card (Day page).** `d.amanah = [{t, first, checked}]`, rendered by `renderAmanah()`. It is unscored and constructed (class D), citing Q 33:72. The Khudī page section `#amanah` carries the theory, with 2:31–33 and 33:72. `amanahStats(keys)` feeds the Jarvis whole-day and ʿIlm briefs. The whole-day brief also carries the forecast and the 14-day calibration.
+- **Agent.** `.claude/agents/jarvis.md` is the one front-door agent. It routes to chief-of-staff, malik-record, newsletter-editor and git-auditor, plus the domain skills, and holds the same guardrails as `references/jarvis-project.md`. Keep the two in step.
+
