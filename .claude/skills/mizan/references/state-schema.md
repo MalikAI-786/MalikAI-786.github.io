@@ -15,6 +15,7 @@ button.
 | `ships` | object | Map of ISO week-start `YYYY-MM-DD` → bool. Phase-4 output requirement. |
 | `measures` | array | Body-measurement index. Sparse — every field except `date` is optional. |
 | `best50` | object | Map of standard id → level `0–5`. |
+| `reads` | object | `{mip:{'<n>':{line, done, date}}}` — the Metaphysics in Persia tab (Khudī). `line` ≤ 600 chars, the owner's own answer before any AI; `done` + `date` feed `mipStats()` → the Jarvis ʿIlm and whole-day briefs. Normalised in `load()`. |
 
 ## `settings`
 

@@ -164,6 +164,17 @@ function check(name, cond, detail) {
     (await page.locator('#ladderGrid .rung').count()) === 4 &&
     (await page.locator('#measureRef .card').count()) === 7 &&
     (await page.locator('#phaseGrid .phase').count()) === 4);
+  check('khudi Metaphysics tab starts hidden', await page.locator('[data-kpane="mip"]').isHidden());
+  await page.locator('[data-ktab="mip"]').click();
+  check('khudi Metaphysics tab opens and lists 16 sessions',
+    (await page.locator('[data-kpane="mip"]').isVisible()) && (await page.locator('#mipSessions details.mip').count()) === 16);
+  check('theory pane hides when Metaphysics is open', await page.locator('[data-kpane="theory"]').isHidden());
+  await page.locator('#mipl1').fill('test line');
+  await page.locator('[data-mipdone="1"]').click();
+  check('a session can be marked done and counts', /<b>1<\/b> of 16/.test(await page.locator('#mipProgress').innerHTML()));
+  check('the session line is kept in state',
+    await page.evaluate(() => JSON.parse(localStorage.getItem('mizan.v1')).reads.mip['1'].line === 'test line'));
+  check('Metaphysics map table has 6 rows', (await page.locator('.mipmap tbody tr').count()) === 6);
 
   await page.goto(PAGE);
   await page.waitForTimeout(400);

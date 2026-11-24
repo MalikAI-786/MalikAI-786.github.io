@@ -43,6 +43,7 @@ class. Check here before re-quoting; add here when you add one.
 | 25:67 | Ẓabt — qawām, the middle way |
 | 33:41 | Dhikr measure |
 | 33:72 | Amānah card (Day) and section (Khudī) — the Trust offered and borne by the human being |
+| Reads sessions (Khudī → Metaphysics in Persia) | The 16-session list (`MIP` in core.js) carries the Qur'an references from `plans/reads-metaphysics-in-persia.md`, by sūrah:āyah only, standard numbering (Iqbal's 1908 footnotes use Flügel's; the mapping table lives in the harness). They are reading pairings, not claims about what the verse rules. |
 | 39:53 | Path, when it breaks — do not despair |
 | 53:39–40 | ʿAmal measure; closing note |
 | 55:7–9 | Measures header — the balance is named in the Book |
@@ -95,6 +96,8 @@ collection off and say the attribution is unverified, or do not use it.
   (1930). Restatement, not quotation.
 
 ## D — Constructed for this instrument
+
+- **Metaphysics in Persia map (Khudī tab):** the "kept / changed / reversed / reworked / sharpened" column comparing the 1908 dissertation with *Asrār-i-Khudī* and the *Reconstruction* is this instrument's reading for discussion. *Reconstruction* is paraphrased (lect. 1, 3, 5, 7). The forces-to-sessions mapping is the owner's analysis, also constructed.
 
 Rubrics and their four definitions · the seven weights · faculty assignments ·
 ladder gates and thresholds · the four-phase 40-day design · the taper

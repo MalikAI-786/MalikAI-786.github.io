@@ -131,6 +131,7 @@ function load(){
   S.settings.gymHourByDay=S.settings.gymHourByDay||{};
   S.days=S.days||{}; S.urges=S.urges||[]; S.ships=S.ships||{};
   S.measures=S.measures||[]; S.best50=S.best50||{};
+  S.reads=S.reads||{}; S.reads.mip=S.reads.mip||{};
   if(!Array.isArray(S.settings.gymDays)) S.settings.gymDays=[0,1,6];
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
@@ -972,7 +973,7 @@ function renderAll(){
   var d=day(CUR),dt=parseISO(CUR);
   renderNav(); renderDayBar(); renderToday(); renderPrayers(d,dt); renderMeasures(d); renderFriction(d);
   renderHyperLog(); renderLedgerToday(d); renderReference(); renderLadder(); renderPhases();
-  renderTrend(); renderSettings(); renderBadan(); renderSession(); renderHealth(); renderDash(); renderDashWorkout(); renderJarvis(); renderForceDiagram();
+  renderTrend(); renderSettings(); renderBadan(); renderSession(); renderHealth(); renderDash(); renderDashWorkout(); renderJarvis(); renderForceDiagram(); renderMip();
 }
 
 /* ==================================================================
@@ -1048,6 +1049,75 @@ function renderDash(){
       '<div class="small">Not enough scored days yet — this needs four scored days on an active measure '+
       'before it will name anything. Ranking a control on two observations is how audits get overturned.</div>');
 }
+
+/* ==================================================================
+   READS — The Development of Metaphysics in Persia (1908), 16 sessions.
+   The table mirrors plans/reads-metaphysics-in-persia.md; change both or
+   neither. Qur'an is given by reference only (the page quotes no
+   translation). The owner's lines live in S.reads.mip, on this device.
+   ================================================================== */
+var MIP=[
+ {n:1,sec:'Preface, dedication',pp:'ix–xii',pdf:'20–25',q:'96:1–5 · 2:151',iq:'Nāla-e-Firāq (Bāng-e-Darā), his farewell to Arnold',ask:'What does he say he will not do in this book?'},
+ {n:2,sec:'Ch I §I Zoroaster',pp:'1–11',pdf:'30–40',q:'6:1 · 112',iq:'Jāvīd Nāma, Sphere of the Moon',ask:'Is evil a second power or an absence?'},
+ {n:3,sec:'Ch I §II–III Mānī, Mazdak, retrospect',pp:'12–21',pdf:'41–50',q:'16:51 · 59:7',iq:'Farmān-e-Khudā (Farishton se), Bāl-e-Jibrīl',ask:'Mazdak shared out property; where does 59:7 stop short of him?'},
+ {n:4,sec:'Ch II §I Ibn Maskawaih',pp:'22–37',pdf:'51–66',q:'23:12–14 · 91:7–10',iq:'Reconstruction lect. 5 · “Sitāron se āge…” (Bāl-e-Jibrīl)',ask:'Is the soul made, or does it grow?'},
+ {n:5,sec:'Ch II §II Avicenna',pp:'38–44',pdf:'67–73',q:'57:3',iq:'Pīr-o-Murīd (Bāl-e-Jibrīl): intellect against love',ask:'Where does Avicenna’s love sit, in the intellect or above it?'},
+ {n:6,sec:'Ch III §I Metaphysics of rationalism',pp:'45–54',pdf:'74–83',q:'13:11 · 18:29',iq:'“Khudī ko kar buland itnā…” (Bāl-e-Jibrīl)',ask:'The Muʿtazila made man free so that God could be just. Do you accept that trade?'},
+ {n:7,sec:'Ch III §II Contemporary movements',pp:'55–64',pdf:'84–93',q:'3:7',iq:'Rumūz-i-Bekhudī: the community as the check on private meaning',ask:'When is an inner reading of a verse honest?'},
+ {n:8,sec:'Ch III §III The Ashʿarite reaction',pp:'65–80',pdf:'94–109',q:'55:29 · 2:255',iq:'Reconstruction lect. 3 · Masjid-e-Qurṭuba (Bāl-e-Jibrīl)',ask:'If God creates the world anew each moment, what is a habit?'},
+ {n:9,sec:'Ch IV Idealism and realism',pp:'81–95',pdf:'110–124',q:'17:36',iq:'Rūḥ-e-Arẓī Ādam kā Istiqbāl Kartī Hai (Bāl-e-Jibrīl) · Reconstruction lect. 1',ask:'What do you know that you have not perceived?'},
+ {n:10,sec:'Ch V §I Origin and Qur’anic justification of Sufism',pp:'96–110',pdf:'125–139',q:'2:3 · 51:20–21 · 50:16 · 24:35 · 42:11 · 17:85 · 88:17–20 · 16:90',iq:'Asrār-i-Khudī, preface and opening (1915)',ask:'Iqbal calls Sufism “a necessary product”. Does the 1915 Iqbal agree?'},
+ {n:11,sec:'Ch V §II A–B Reality as Will, as Beauty',pp:'111–120',pdf:'140–150',q:'2:115 · 5:54',iq:'Ḥusn-o-ʿIshq (Bāng-e-Darā) · “Sitāron se āge…”',ask:'Is love a feeling, or a will?'},
+ {n:12,sec:'al-Ishrāqī I: Reality as Light',pp:'121–136',pdf:'151–166',q:'24:35 · 24:40',iq:'Lab pe ātī hai duʿā (Bāng-e-Darā)',ask:'What in your day is “not-light”?'},
+ {n:13,sec:'al-Ishrāqī II: knowledge, action, stages',pp:'137–150',pdf:'167–180',q:'20:114 · 53:39',iq:'“Yaqīn-e-muḥkam, ʿamal-e-paiham…”',ask:'His stages run through “I am not”. Yours?'},
+ {n:14,sec:'al-Jīlī: Reality as Thought; the Perfect Man',pp:'151–173',pdf:'181–204',q:'2:30–33 · 33:72',iq:'Asrār-i-Khudī, the vicegerent (nāʾib) · the Amānah card',ask:'Al-Jīlī’s Perfect Man absorbs; Iqbal’s vicegerent acts. Which one keeps the Trust?'},
+ {n:15,sec:'Ch VI Later thought: Ṣadrā, Sabzawārī, the Bāb',pp:'174–191',pdf:'205–222',q:'55:26–27 · 33:40',iq:'Jāvīd Nāma, Sphere of Jupiter · Shikwa / Jawāb-e-Shikwa',ask:'What made a new claim to revelation possible in 19th-century Persia? (history, not a ruling)'},
+ {n:16,sec:'Conclusion',pp:'192–200',pdf:'223–231',q:'3:190–191',iq:'Reconstruction lect. 7 · “Nahīñ terā nasheman…” (Bāl-e-Jibrīl)',ask:'Write the one sentence the 1908 Iqbal got right and the one he later took back.'}
+];
+function mipState(){ S.reads=S.reads||{}; S.reads.mip=S.reads.mip||{}; return S.reads.mip }
+function mipStats(){ var m=mipState(),done=MIP.filter(function(s){return m[s.n]&&m[s.n].done}),
+    lines=MIP.filter(function(s){return m[s.n]&&(m[s.n].line||'').trim()}).length,
+    next=MIP.filter(function(s){return !(m[s.n]&&m[s.n].done)})[0];
+  return {done:done.length,lines:lines,next:next?next.n:null} }
+function showKhudiTab(id){
+  var panes=document.querySelectorAll('[data-kpane]'); if(!panes.length) return;
+  for(var i=0;i<panes.length;i++) panes[i].hidden=panes[i].getAttribute('data-kpane')!==id;
+  var bs=document.querySelectorAll('[data-ktab]');
+  for(var j=0;j<bs.length;j++) bs[j].className=bs[j].getAttribute('data-ktab')===id?'on':'';
+}
+function renderMip(){
+  if(!$('#mipSessions')) return;
+  var m=mipState(),st=mipStats();
+  html('#mipProgress','<b>'+st.done+'</b> of 16 sessions done · <b>'+st.lines+'</b> lines written'+
+    (st.next?' · next: session '+st.next:' · track complete')+
+    '<div class="bar" style="margin-top:8px"><i style="width:'+Math.round(st.done/16*100)+'%"></i></div>');
+  html('#mipSessions',MIP.map(function(s){
+    var r=m[s.n]||{},done=!!r.done;
+    return '<details class="card mip'+(done?' done':'')+'"'+(st.next===s.n?' open':'')+'>'+
+      '<summary><span class="mono">'+(done?'✓':s.n)+'</span> '+esc(s.sec)+' <span class="tiny">pp. '+s.pp+'</span></summary>'+
+      '<div class="mipgrid"><div><div class="tiny">Qur\'an first (read in your translation)</div><div>'+s.q+'</div></div>'+
+      '<div><div class="tiny">Iqbal alongside</div><div>'+esc(s.iq)+'</div></div></div>'+
+      '<p class="mipq">'+esc(s.ask)+'</p>'+
+      '<label class="tiny" for="mipl'+s.n+'">Your line, before any AI</label>'+
+      '<textarea id="mipl'+s.n+'" data-mipline="'+s.n+'" rows="2">'+esc(r.line||'')+'</textarea>'+
+      '<div class="btn-row"><button class="btn'+(done?'':' gold')+'" data-mipdone="'+s.n+'">'+(done?'Mark not done':'Session done')+'</button>'+
+      (r.date?'<span class="tiny">done '+r.date+'</span>':'')+'<a class="btn" href="../../reads/metaphysics-in-persia/MiP-'+(s.n<10?'0':'')+s.n+'.txt">Text</a><span class="tiny">PDF pp. '+s.pdf+'</span></div></details>'}).join(''));
+  if(location.hash==='#mip') showKhudiTab('mip');
+}
+document.addEventListener('click',function(e){
+  var t=e.target; if(!t||!t.closest) return;
+  var tab=t.closest('[data-ktab]');
+  if(tab){ var id=tab.getAttribute('data-ktab'); showKhudiTab(id);
+    try{history.replaceState(null,'',id==='mip'?'#mip':location.pathname)}catch(_){ } return }
+  var b=t.closest('[data-mipdone]');
+  if(b){ var n=b.getAttribute('data-mipdone'),m=mipState(),r=m[n]||(m[n]={line:'',done:false,date:''});
+    r.done=!r.done; r.date=r.done?todayK():''; touch() }
+});
+document.addEventListener('input',function(e){
+  var t=e.target; if(!t||!t.getAttribute||!t.hasAttribute('data-mipline')) return;
+  var n=t.getAttribute('data-mipline'),m=mipState(),r=m[n]||(m[n]={line:'',done:false,date:''});
+  r.line=t.value.slice(0,600); save();
+});
 
 /* ==================================================================
    EVENTS
@@ -1602,6 +1672,7 @@ function jarvisFacts(id){
   if(id==='day'||id==='ahl') ahl();
   if(id==='mal') f=f.concat(jMoney());
   if(id==='day'||id==='ilm'){ var w=amanahStats(recentKeys(7)); f.push('Amānah, last 7 days: '+(w.n? w.n+' tasks handed to AI · '+w.first+' with my own answer first · '+w.chk+' checked':'nothing logged')) }
+  if(id==='day'||id==='ilm'){ var ms=mipStats(); f.push('Reads (Metaphysics in Persia): '+ms.done+' of 16 sessions done, '+ms.lines+' own lines written'+(ms.next?', next is session '+ms.next:'')) }
   if(id==='ilm'||id==='shuun') f.push('Mīzān does not hold the rest of this compartment; read my calendar, Notion and mail');
   if(id==='day'){ var pairs=recentKeys(14).filter(function(x){var y=S.days[x];return jTouched(y)&&y.forecast!=null&&indexOf(x)!=null})
       .map(function(x){return indexOf(x)-S.days[x].forecast});
